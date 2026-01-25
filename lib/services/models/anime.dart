@@ -4,6 +4,7 @@ class Translated {
   final String uz;
   final String rus;
   const Translated({required this.rus, required this.uz});
+
   factory Translated.fromJson(dynamic json) {
     return Translated(rus: json['ru'], uz: json['uz']);
   }
