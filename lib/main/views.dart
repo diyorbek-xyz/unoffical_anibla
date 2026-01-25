@@ -1,11 +1,8 @@
 import 'package:application/services/animes.dart';
 import 'package:application/services/models/anime.dart';
-import 'package:application/widgets/layout/mobile_container.dart';
-import 'package:application/widgets/layout/responsive.dart';
 import 'package:application/widgets/layout/sidebar.dart';
 import 'package:application/widgets/ui/anime_card.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class Views extends StatefulWidget {
   const Views({super.key});
