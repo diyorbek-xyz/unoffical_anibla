@@ -1,15 +1,11 @@
-import 'package:application/datas/tabs.dart';
+import 'package:application/constants/tabs.dart';
 import 'package:flutter/material.dart';
 
 class WidgetSidebar extends StatefulWidget {
   final int selectedIndex;
   final void Function(int) onDestinationSelected;
 
-  const WidgetSidebar({
-    super.key,
-    required this.selectedIndex,
-    required this.onDestinationSelected,
-  });
+  const WidgetSidebar({super.key, required this.selectedIndex, required this.onDestinationSelected});
   @override
   State<StatefulWidget> createState() => _Sidebar();
 }
@@ -26,20 +22,13 @@ class _Sidebar extends State<WidgetSidebar> {
         leadingAtTop: true,
         leading: SizedBox(
           height: 100,
-          child: Center(
-            child: Image(
-              width: 200,
-              image: AssetImage('assets/images/logo.png'),
-            ),
-          ),
+          child: Center(child: Image(width: 200, image: AssetImage('assets/images/logo.png'))),
         ),
         destinations: tabs.map((tab) {
-          return NavigationRailDestination(
-            icon: tab['icon'],
-            label: tab['label'],
-            selectedIcon: tab['selected'],
-          );
+          return NavigationRailDestination(icon: tab['icon'], label: tab['label'], selectedIcon: tab['selected']);
         }).toList(),
+        trailingAtBottom: true,
+        trailing: ListTile(onTap: () {}, minTileHeight: 60, title: Text('data')),
       ),
     );
   }

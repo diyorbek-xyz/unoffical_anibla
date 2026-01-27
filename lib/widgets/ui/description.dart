@@ -1,5 +1,5 @@
-import 'package:application/datas/colors.dart';
-import 'package:application/services/models/anime.dart';
+import 'package:application/constants/colors.dart';
+import 'package:application/models/anime.dart';
 import 'package:application/widgets/ui/badge.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -25,25 +25,19 @@ class _WidgetDescriptionState extends State<WidgetDescription> {
       splashColor: primaryTint,
       highlightColor: primaryTint,
       borderRadius: BorderRadius.circular(15),
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 100),
+      child: Padding(
         padding: EdgeInsetsGeometry.all(10),
         child: Column(
           spacing: 5,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: .spaceBetween,
-              crossAxisAlignment: .start,
+            Wrap(
+              direction: Axis.horizontal,
+              spacing: 10,
               children: [
-                Row(
-                  spacing: 10,
-                  children: [
-                    WidgetBage(text: "${compact.format(widget.anime.views)} ko'rishlar"),
-                    WidgetBage(text: "${DateTime.now().year - widget.anime.year} years ago"),
-                    ...widget.anime.categories.map((category) => WidgetBage(text: category.uz)),
-                  ],
-                ),
-                Icon(_collapsed ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_up, color: primary),
+                WidgetBage(text: "${compact.format(widget.anime.views)} ko'rishlar"),
+                WidgetBage(text: "${DateTime.now().year - widget.anime.year} years ago"),
+                ...widget.anime.categories.map((category) => WidgetBage(text: category.title.uz)),
               ],
             ),
             Text(widget.anime.description.uz, overflow: TextOverflow.ellipsis, maxLines: _collapsed ? 3 : 999),

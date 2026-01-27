@@ -1,4 +1,5 @@
-import 'package:application/services/models/anime.dart';
+import 'package:application/models/anime.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -24,7 +25,7 @@ class _AnimeCardState extends State<WidgetAnimeCard> {
         onTapCancel: () => setState(() => _active = false),
         onTapDown: (details) => setState(() => _active = true),
         onTapUp: (details) {
-          context.go("/anime/${widget.anime.id}");
+          context.pushNamed("anime", pathParameters: {'id': widget.anime.id});
           setState(() => _active = false);
         },
         onHover: (value) => setState(() => _hover = value),
@@ -33,7 +34,7 @@ class _AnimeCardState extends State<WidgetAnimeCard> {
         focusColor: Colors.amber.withValues(alpha: 0.05),
         highlightColor: Colors.amber.withValues(alpha: 0.05),
         child: Ink.image(
-          image: NetworkImage(widget.anime.thumbnail),
+          image: CachedNetworkImageProvider(widget.anime.thumbnail),
           fit: BoxFit.cover,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -41,12 +42,19 @@ class _AnimeCardState extends State<WidgetAnimeCard> {
             children: [
               AnimatedContainer(
                 duration: Duration(milliseconds: 100),
-                height: _hover ? 110 : 90,
+                height: _hover ? 100 : 80,
                 color: _hover ? Colors.white : Colors.black38,
                 padding: EdgeInsets.all(_hover ? 10 : 5),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [Text(widget.anime.title.uz, style: TextStyle(fontSize: 16, color: _hover ? Colors.black : Colors.white))],
+                  children: [
+                    Text(
+                      widget.anime.title.uz,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 16, color: _hover ? Colors.black : Colors.white),
+                    ),
+                  ],
                 ),
               ),
             ],

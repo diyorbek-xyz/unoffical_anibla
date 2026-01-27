@@ -1,4 +1,4 @@
-import 'package:application/datas/colors.dart';
+import 'package:application/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class WidgetBage extends StatelessWidget {
