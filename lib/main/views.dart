@@ -1,4 +1,5 @@
 import 'package:application/main/views/animes.dart';
+import 'package:application/main/views/home.dart';
 import 'package:application/widgets/layout/sidebar.dart';
 import 'package:flutter/material.dart';
 
@@ -24,8 +25,8 @@ class _ViewsState extends State<Views> {
       body: IndexedStack(
         index: _selectedIndex,
         children: [
+          HomeView(),
           AnimesView(),
-          Container(color: Colors.amber),
           Container(color: Colors.blue),
           Container(color: Colors.green),
         ],

@@ -1,9 +1,9 @@
 import 'package:application/constants/colors.dart';
 import 'package:flutter/material.dart';
 
-class WidgetBage extends StatelessWidget {
+class WidgetBadge extends StatelessWidget {
   final String text;
-  const WidgetBage({super.key, required this.text});
+  const WidgetBadge({super.key, required this.text});
   @override
   Widget build(BuildContext context) {
     return Container(

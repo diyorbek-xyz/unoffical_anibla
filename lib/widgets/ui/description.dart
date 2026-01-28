@@ -12,9 +12,9 @@ class WidgetDescription extends StatefulWidget {
   State<WidgetDescription> createState() => _WidgetDescriptionState();
 }
 
-class _WidgetDescriptionState extends State<WidgetDescription> {
-  final compact = NumberFormat.compact(locale: "uz");
+final compact = NumberFormat.compact(locale: "uz");
 
+class _WidgetDescriptionState extends State<WidgetDescription> {
   bool _collapsed = true;
 
   @override
@@ -35,9 +35,9 @@ class _WidgetDescriptionState extends State<WidgetDescription> {
               direction: Axis.horizontal,
               spacing: 10,
               children: [
-                WidgetBage(text: "${compact.format(widget.anime.views)} ko'rishlar"),
-                WidgetBage(text: "${DateTime.now().year - widget.anime.year} years ago"),
-                ...widget.anime.categories.map((category) => WidgetBage(text: category.title.uz)),
+                WidgetBadge(text: "${compact.format(widget.anime.views)} ko'rishlar"),
+                WidgetBadge(text: "${DateTime.now().year - widget.anime.year} years ago"),
+                ...widget.anime.categories.map((category) => WidgetBadge(text: category.title.uz)),
               ],
             ),
             Text(widget.anime.description.uz, overflow: TextOverflow.ellipsis, maxLines: _collapsed ? 3 : 999),
