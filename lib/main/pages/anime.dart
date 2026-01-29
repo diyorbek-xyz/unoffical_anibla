@@ -5,7 +5,7 @@ import 'package:application/widgets/layout/responsive.dart';
 import 'package:application/widgets/ui/comments.dart';
 import 'package:application/widgets/ui/description.dart';
 import 'package:application/widgets/ui/episode_selector.dart';
-import 'package:application/widgets/ui/recomends.dart';
+import 'package:application/widgets/ui/recommends.dart';
 import 'package:application/widgets/ui/watch_video.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -25,6 +25,7 @@ class _AnimePageState extends State<AnimePage> {
 
   Future<void> fetchEpisode() async {
     final data = await FetchAnime().get(widget.id);
+
     if (!mounted) return;
     setState(() {
       _data = data;
@@ -55,7 +56,6 @@ class _AnimePageState extends State<AnimePage> {
               }
               if (_data != null) {
                 WatchAnime data = _data as WatchAnime;
-                int index = context.watch<AnimeProvider>().episode;
                 return SingleChildScrollView(
                   child: Padding(
                     padding: EdgeInsetsGeometry.all(10),
@@ -68,7 +68,7 @@ class _AnimePageState extends State<AnimePage> {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             spacing: 10,
                             children: [
-                              WidgetWatchVideo(anime: data.anime, episode: data.series[index]),
+                              WidgetWatchVideo(anime: data.anime, episode: data.series),
                               WidgetWatchInfo(data: data),
                               WidgetDescription(anime: data.anime),
                               WidgetComments(comments: data.comments),
@@ -81,9 +81,8 @@ class _AnimePageState extends State<AnimePage> {
                             spacing: 15,
                             crossAxisAlignment: .start,
                             children: [
-                              WidgetEpisodeSelector(data: data),
-                              WidgetRecommends(header: 'Shunga oxshashlar', category: data.anime.categories[1].id),
-                              WidgetRecommends(header: "Sizga yoqishi mumkin"),
+                              if (!data.anime.isMovie) WidgetEpisodeSelector(data: data),
+                              WidgetRecommends(category: data.anime.categories[0]),
                             ],
                           ),
                         ),
@@ -92,6 +91,7 @@ class _AnimePageState extends State<AnimePage> {
                   ),
                 );
               }
+
               return Text("No data");
             },
           ),

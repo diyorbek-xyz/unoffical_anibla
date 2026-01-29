@@ -1,7 +1,6 @@
 import 'package:application/constants/colors.dart';
 import 'package:application/provider/anime.dart';
 import 'package:application/models/anime.dart';
-import 'package:application/widgets/ui/recomends.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,12 +10,11 @@ class WidgetEpisodeSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       spacing: 15,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        WidgetHeader(title: "Barcha qismlar"),
+        Text("Barcha qismlar", style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold)),
         ConstrainedBox(
           constraints: BoxConstraints(minHeight: 30, maxHeight: 230),
           child: Material(

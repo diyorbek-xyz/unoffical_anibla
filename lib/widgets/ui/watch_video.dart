@@ -1,8 +1,10 @@
 import 'package:application/constants/colors.dart';
 import 'package:application/models/anime.dart';
+import 'package:application/provider/anime.dart';
 import 'package:application/widgets/ui/episode_selector.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void _showMyModalBottomSheet(BuildContext context, WatchAnime data) {
   showModalBottomSheet<void>(
@@ -107,11 +109,14 @@ class WidgetWatchInfo extends StatelessWidget {
 
 class WidgetWatchVideo extends StatelessWidget {
   final Anime anime;
-  final Series episode;
+  final List<Series> episode;
   const WidgetWatchVideo({super.key, required this.anime, required this.episode});
 
   @override
   Widget build(BuildContext context) {
+    int index = context.watch<AnimeProvider>().episode;
+    if (episode.isEmpty) return Container(height: 470, alignment: Alignment.center, child: Text("Video topilmadi"));
+
     return Column(
       spacing: 10,
       crossAxisAlignment: .start,
@@ -134,7 +139,7 @@ class WidgetWatchVideo extends StatelessWidget {
             ),
           ),
         ),
-        SelectableText("${episode.title.uz} ${anime.title.uz}", style: TextStyle(fontSize: 23)),
+        SelectableText("${episode[index].title.uz} ${anime.title.uz}", style: TextStyle(fontSize: 23)),
       ],
     );
   }
