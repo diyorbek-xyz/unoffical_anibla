@@ -3,23 +3,20 @@
 // Check in to version control
 
 import 'package:hive_ce/hive_ce.dart';
-import 'package:application/models/anime.dart';
-import 'package:application/models/category.dart';
-import 'package:application/models/filtered.dart';
-import 'package:application/models/translated.dart';
-import 'package:application/models/user.dart';
+import 'package:application/data/models/anime.dart';
+import 'package:application/data/models/filter.dart';
+import 'package:application/data/models/translated.dart';
+import 'package:application/data/models/user.dart';
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
     registerAdapter(AnimeAdapter());
     registerAdapter(CategoryAdapter());
-    registerAdapter(CategoryFilteredAdapter());
     registerAdapter(CommentAdapter());
     registerAdapter(GenreAdapter());
-    registerAdapter(SeriesAdapter());
+    registerAdapter(SerieAdapter());
     registerAdapter(TranslatedAdapter());
     registerAdapter(UserAdapter());
-    registerAdapter(WatchAnimeAdapter());
   }
 }
 
@@ -27,12 +24,10 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
     registerAdapter(AnimeAdapter());
     registerAdapter(CategoryAdapter());
-    registerAdapter(CategoryFilteredAdapter());
     registerAdapter(CommentAdapter());
     registerAdapter(GenreAdapter());
-    registerAdapter(SeriesAdapter());
+    registerAdapter(SerieAdapter());
     registerAdapter(TranslatedAdapter());
     registerAdapter(UserAdapter());
-    registerAdapter(WatchAnimeAdapter());
   }
 }

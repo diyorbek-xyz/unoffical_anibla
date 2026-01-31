@@ -1,13 +1,10 @@
-import 'package:application/boxes/boxes.dart';
+import 'package:application/data/local/boxes.dart';
 import 'package:application/constants/colors.dart';
 import 'package:application/hive_registrar.g.dart';
-import 'package:application/main/pages/anime.dart';
-import 'package:application/main/views.dart';
-import 'package:application/models/anime.dart';
-import 'package:application/models/category.dart';
-import 'package:application/models/filtered.dart';
-import 'package:application/services/animes.dart';
-import 'package:application/services/categories.dart';
+import 'package:application/ui/pages/anime.dart';
+import 'package:application/ui/views.dart';
+import 'package:application/data/models/anime.dart';
+import 'package:application/data/models/filter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
@@ -23,16 +20,13 @@ void main() async {
   // await Hive.deleteBoxFromDisk("categoriesBox");
   // await Hive.deleteBoxFromDisk("genresBox");
   // await Hive.deleteBoxFromDisk("categoryFilteredBox");
+  // await Hive.deleteBoxFromDisk("calendarBox");
 
   animesBox = await Hive.openBox<Anime>("animesBox");
   carouselBox = await Hive.openBox<Anime>("carouselBox");
+  calendarBox = await Hive.openBox<Anime>("calendarBox");
   categoriesBox = await Hive.openBox<Category>("categoriesBox");
   genresBox = await Hive.openBox<Genre>("genresBox");
-  categoryFilteredBox = await Hive.openBox<CategoryFiltered>("categoryFilteredBox");
-  await FetchAnimes().getAll();
-  await FetchCarousel().get();
-  await FetchCategories().get();
-  await FetchGenres().get();
 
   runApp(const MainApp());
 }
@@ -65,6 +59,16 @@ class MainApp extends StatelessWidget {
       routerConfig: _router,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        pageTransitionsTheme: PageTransitionsTheme(
+          builders: {
+            TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.fuchsia: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.windows: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.linux: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+          },
+        ),
         colorScheme: ColorScheme(
           brightness: Brightness.light,
           primary: primaryDark,

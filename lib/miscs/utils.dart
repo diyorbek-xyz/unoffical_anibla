@@ -1,4 +1,5 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:intl/intl.dart';
 
 int parseString(String str) {
   try {
@@ -17,3 +18,5 @@ String addBaseUrl(String? path) {
     return dotenv.env['BASE_URL']! + path;
   }
 }
+
+final compact = NumberFormat.compact(locale: "uz");
