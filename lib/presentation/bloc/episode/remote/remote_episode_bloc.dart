@@ -1,5 +1,5 @@
 import 'package:application/core/resources/data_state.dart';
-import 'package:application/domain/entities/episode_entity.dart';
+import 'package:application/domain/entities/animes/episode_entity.dart';
 import 'package:application/domain/usecases/episode_usecase.dart';
 import 'package:application/presentation/bloc/episode/remote/remote_episode_event.dart';
 import 'package:application/presentation/bloc/episode/remote/remote_episode_state.dart';

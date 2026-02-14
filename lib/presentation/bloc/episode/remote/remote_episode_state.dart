@@ -1,4 +1,4 @@
-import 'package:application/domain/entities/episode_entity.dart';
+import 'package:application/domain/entities/animes/episode_entity.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 

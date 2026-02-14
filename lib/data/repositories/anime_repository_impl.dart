@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:application/core/resources/data_state.dart';
 import 'package:application/data/sources/remote/anime_api_service.dart';
-import 'package:application/domain/entities/anime_entity.dart';
+import 'package:application/domain/entities/animes/anime_entity.dart';
 import 'package:application/domain/repositories/anime_repository.dart';
 import 'package:dio/dio.dart';
 
@@ -23,6 +23,7 @@ class AnimeRepositoryImpl implements AnimeRepository {
             type: DioExceptionType.badResponse,
             requestOptions: httpResponse.response.requestOptions,
           ),
+          httpResponse.response,
         );
       }
     } on DioException catch (e) {

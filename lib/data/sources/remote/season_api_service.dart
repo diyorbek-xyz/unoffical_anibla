@@ -8,9 +8,9 @@ part 'season_api_service.g.dart';
 abstract class SeasonApiService {
   factory SeasonApiService(Dio dio) = _SeasonApiService;
 
-  @GET('/api/v1/seasons/{anime}')
+  @GET('/v1/seasons/{anime}')
   Future<HttpResponse<SeasonsResponseModel>> getSeasons({@Path("anime") String animeSlug = ''});
 
-  @GET("/api/v1/seasons/{anime}/{season}")
+  @GET("/v1/seasons/{anime}/{season}")
   Future<HttpResponse<SeasonResponseModel>> getSeasonBySlug({@Path("anime") String animeSlug = '', @Path("season") String seasonSlug = ''});
 }

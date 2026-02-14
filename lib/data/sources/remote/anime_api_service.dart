@@ -8,6 +8,6 @@ part 'anime_api_service.g.dart';
 abstract class AnimeApiService {
   factory AnimeApiService(Dio dio) = _AnimeApiService;
 
-  @GET('/api/v1/series')
+  @GET('/v1/series')
   Future<HttpResponse<AnimeResponseModel>> getAnimes({@Query("limit") int? limit = 10, @Query("page") int? page = 1});
 }

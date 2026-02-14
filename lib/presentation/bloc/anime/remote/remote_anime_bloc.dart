@@ -9,10 +9,23 @@ class RemoteAnimeBloc extends Bloc<RemoteAnimeEvent, RemoteAnimeState> {
 
   RemoteAnimeBloc(this._getAnimesUseCase) : super(RemoteAnimeLoading()) {
     on<GetAnimes>(onGetAnimes);
+    on<RefreshAnimes>(onRefreshAnimes);
   }
 
   void onGetAnimes(GetAnimes event, Emitter<RemoteAnimeState> emit) async {
     final dataState = await _getAnimesUseCase(event.params);
+    if (dataState is DataSuccess && dataState.data!.isNotEmpty) {
+      emit(RemoteAnimeDone(dataState.data!));
+    }
+    if (dataState is DataFailed) {
+      emit(RemoteAnimeFailed(dataState.exception!));
+    }
+  }
+
+  void onRefreshAnimes(RefreshAnimes event, Emitter<RemoteAnimeState> emit) async {
+    emit(RemoteAnimeLoading());
+    final dataState = await _getAnimesUseCase(event.params);
+    print(dataState.response);
     if (dataState is DataSuccess && dataState.data!.isNotEmpty) {
       emit(RemoteAnimeDone(dataState.data!));
     }

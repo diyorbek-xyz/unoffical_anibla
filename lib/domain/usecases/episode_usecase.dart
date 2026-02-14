@@ -1,6 +1,6 @@
 import 'package:application/core/resources/data_state.dart';
 import 'package:application/core/usecases/usecase.dart';
-import 'package:application/domain/entities/episode_entity.dart';
+import 'package:application/domain/entities/animes/episode_entity.dart';
 import 'package:application/domain/repositories/episode_repository.dart';
 
 class GetEpisodesParams {

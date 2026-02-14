@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:application/core/resources/data_state.dart';
 import 'package:application/data/sources/remote/episode_api_service.dart';
-import 'package:application/domain/entities/episode_entity.dart';
+import 'package:application/domain/entities/animes/episode_entity.dart';
 import 'package:application/domain/repositories/episode_repository.dart';
 import 'package:application/domain/usecases/episode_usecase.dart';
 import 'package:dio/dio.dart';

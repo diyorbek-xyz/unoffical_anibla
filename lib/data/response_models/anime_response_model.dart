@@ -1,6 +1,6 @@
 import 'package:application/data/models/animes/anime_model.dart';
 import 'package:application/data/models/common/miscs_model.dart';
-import 'package:application/domain/entities/anime_entity.dart';
+import 'package:application/domain/entities/animes/anime_entity.dart';
 
 class AnimeResponseModel {
   final bool success;

@@ -1,6 +1,6 @@
 import 'package:application/core/resources/data_state.dart';
 import 'package:application/core/usecases/usecase.dart';
-import 'package:application/domain/entities/anime_entity.dart';
+import 'package:application/domain/entities/animes/anime_entity.dart';
 import 'package:application/domain/repositories/anime_repository.dart';
 
 class GetAnimesParams {

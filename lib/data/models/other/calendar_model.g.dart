@@ -17,9 +17,9 @@ class CalendarModelAdapter extends TypeAdapter<CalendarModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return CalendarModel(
-      pagination: fields[1] as PaginationModel,
-      timers: (fields[0] as List).cast<ReleaseTimerModel>(),
-      day: fields[2] as DateTime,
+      pagination: fields[1] as PaginationModel?,
+      timers: (fields[0] as List?)?.cast<ReleaseTimerModel>(),
+      day: fields[2] as DateTime?,
     );
   }
 

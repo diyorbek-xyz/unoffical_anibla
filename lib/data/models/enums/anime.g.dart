@@ -8,7 +8,7 @@ part of 'anime.dart';
 
 class AnimeTypeAdapter extends TypeAdapter<AnimeType> {
   @override
-  final typeId = 20;
+  final typeId = 100;
 
   @override
   AnimeType read(BinaryReader reader) {
@@ -45,7 +45,7 @@ class AnimeTypeAdapter extends TypeAdapter<AnimeType> {
 
 class AnimePriceAdapter extends TypeAdapter<AnimePrice> {
   @override
-  final typeId = 21;
+  final typeId = 101;
 
   @override
   AnimePrice read(BinaryReader reader) {

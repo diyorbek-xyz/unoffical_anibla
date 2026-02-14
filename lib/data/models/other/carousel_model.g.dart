@@ -17,11 +17,11 @@ class CarouselItemModelAdapter extends TypeAdapter<CarouselItemModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return CarouselItemModel(
-      anime: fields[1] as AnimeModel,
-      type: fields[2] as AnimeType,
-      image: fields[3] as String,
-      mobileImage: fields[4] as String,
-      id: fields[0] as String,
+      anime: fields[1] as AnimeModel?,
+      type: fields[2] as AnimeType?,
+      image: fields[3] as String?,
+      mobileImage: fields[4] as String?,
+      id: fields[0] as String?,
     );
   }
 

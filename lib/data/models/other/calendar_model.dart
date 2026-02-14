@@ -3,7 +3,7 @@ import 'package:application/data/models/animes/anime_model.dart';
 import 'package:application/data/models/animes/episode_model.dart';
 import 'package:application/data/models/common/miscs_model.dart';
 import 'package:application/data/models/animes/season_model.dart';
-import 'package:application/domain/entities/calendar_entity.dart';
+import 'package:application/domain/entities/other/calendar_entity.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 part 'calendar_model.g.dart';
@@ -11,19 +11,19 @@ part 'calendar_model.g.dart';
 @HiveType(typeId: 20)
 class CalendarModel {
   @HiveField(0)
-  final List<ReleaseTimerModel> timers;
+  final List<ReleaseTimerModel>? timers;
   @HiveField(1)
-  final PaginationModel pagination;
+  final PaginationModel? pagination;
   @HiveField(2)
-  final DateTime day;
-  const CalendarModel({required this.pagination, required this.timers, required this.day});
+  final DateTime? day;
+  const CalendarModel({this.pagination, this.timers, this.day});
 
   factory CalendarModel.fromJson(dynamic json, DateTime day) {
     List<ReleaseTimerModel> timers = (json['timers'] as List).map((e) => ReleaseTimerModel.fromJson(e)).toList();
     return CalendarModel(timers: timers, pagination: PaginationModel.fromJson(json['pagination']), day: day);
   }
   CalendarEntity toEntity() {
-    return CalendarEntity(day: day, pagination: pagination.toEntity(), releases: timers.cast<TimerEntity>());
+    return CalendarEntity(day: day, pagination: pagination, releases: timers?.cast<TimerEntity>());
   }
 }
 

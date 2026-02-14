@@ -1,46 +1,37 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'season_model.dart';
+part of 'genre_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class SeasonModelAdapter extends TypeAdapter<SeasonModel> {
+class GenreModelAdapter extends TypeAdapter<GenreModel> {
   @override
-  final typeId = 11;
+  final typeId = 60;
 
   @override
-  SeasonModel read(BinaryReader reader) {
+  GenreModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return SeasonModel(
+    return GenreModel(
       id: fields[0] as String?,
-      seasonNumber: (fields[2] as num?)?.toInt(),
-      title: fields[1] as TranslatedModel?,
-      anime: fields[3] as AnimeModel?,
-      slug: fields[5] as String?,
-      animeId: fields[4] as String?,
+      name: fields[1] as TranslatedEntity?,
+      slug: fields[2] as String?,
     );
   }
 
   @override
-  void write(BinaryWriter writer, SeasonModel obj) {
+  void write(BinaryWriter writer, GenreModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.title)
+      ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.seasonNumber)
-      ..writeByte(3)
-      ..write(obj.anime)
-      ..writeByte(4)
-      ..write(obj.animeId)
-      ..writeByte(5)
       ..write(obj.slug);
   }
 
@@ -50,7 +41,7 @@ class SeasonModelAdapter extends TypeAdapter<SeasonModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SeasonModelAdapter &&
+      other is GenreModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

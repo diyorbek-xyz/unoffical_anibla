@@ -8,3 +8,8 @@ class GetAnimes extends RemoteAnimeEvent {
   final GetAnimesParams params;
   const GetAnimes(this.params);
 }
+
+class RefreshAnimes extends RemoteAnimeEvent {
+  final GetAnimesParams params;
+  const RefreshAnimes(this.params);
+}

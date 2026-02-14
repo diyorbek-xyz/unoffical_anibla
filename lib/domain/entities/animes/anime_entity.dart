@@ -1,19 +1,23 @@
-import 'package:application/domain/entities/translated_entity.dart';
+import 'package:application/domain/entities/common/translated_entity.dart';
+import 'package:application/domain/entities/filter/category_entity.dart';
+import 'package:application/domain/entities/filter/genre_entity.dart';
+import 'package:application/domain/entities/other/country_entity.dart';
+import 'package:application/domain/entities/users/account_entity.dart';
 import 'package:equatable/equatable.dart';
 
 class AnimeEntity extends Equatable {
   final String? id;
   final String? slug;
-  final String? country;
-  final String? studio;
-  final String? director;
+  final CountryEntity? country;
+  final AccountEntity? studio;
+  final AccountEntity? director;
   final String? thumbnail;
   final String? cover;
   final String? trailer;
   final List<String>? images;
-  final List<String>? creators;
-  final List<String>? genres;
-  final List<String>? categories;
+  final List<AccountEntity>? creators;
+  final List<GenreEntity>? genres;
+  final List<CategoryEntity>? categories;
   final TranslatedEntity? title;
   final TranslatedEntity? description;
   final int? publishedYear;

@@ -17,10 +17,10 @@ class PaginationModelAdapter extends TypeAdapter<PaginationModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return PaginationModel(
-      total: (fields[0] as num).toInt(),
-      limit: (fields[1] as num).toInt(),
-      page: (fields[2] as num).toInt(),
-      pages: (fields[3] as num).toInt(),
+      total: (fields[0] as num?)?.toInt(),
+      limit: (fields[1] as num?)?.toInt(),
+      page: (fields[2] as num?)?.toInt(),
+      pages: (fields[3] as num?)?.toInt(),
     );
   }
 
@@ -60,9 +60,9 @@ class VideoModelAdapter extends TypeAdapter<VideoModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return VideoModel(
-      file: fields[0] as String,
-      introStart: (fields[1] as num).toInt(),
-      introEnd: (fields[2] as num).toInt(),
+      file: fields[0] as String?,
+      introStart: (fields[1] as num?)?.toInt(),
+      introEnd: (fields[2] as num?)?.toInt(),
     );
   }
 

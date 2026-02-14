@@ -2,7 +2,7 @@ import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 part 'anime.g.dart';
 
-@HiveType(typeId: 20)
+@HiveType(typeId: 100)
 enum AnimeType {
   @HiveField(0)
   movie("movie"),
@@ -17,7 +17,7 @@ enum AnimeType {
   }
 }
 
-@HiveType(typeId: 21)
+@HiveType(typeId: 101)
 enum AnimePrice {
   @HiveField(0)
   free("free"),

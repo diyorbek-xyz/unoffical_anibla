@@ -1,5 +1,5 @@
 import 'package:application/data/models/animes/season_model.dart';
-import 'package:application/domain/entities/season_entity.dart';
+import 'package:application/domain/entities/animes/season_entity.dart';
 
 class SeasonsResponseModel {
   final List<SeasonModel> seasons;

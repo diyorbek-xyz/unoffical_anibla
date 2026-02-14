@@ -1,6 +1,6 @@
 import 'package:application/data/models/enums/anime.dart';
 import 'package:application/data/models/animes/anime_model.dart';
-import 'package:application/domain/entities/carousel_entity.dart';
+import 'package:application/domain/entities/other/carousel_entity.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
@@ -9,15 +9,15 @@ part 'carousel_model.g.dart';
 @HiveType(typeId: 22)
 class CarouselItemModel {
   @HiveField(0)
-  final String id;
+  final String? id;
   @HiveField(1)
-  final AnimeModel anime;
+  final AnimeModel? anime;
   @HiveField(2)
-  final AnimeType type;
+  final AnimeType? type;
   @HiveField(3)
-  final String image;
+  final String? image;
   @HiveField(4)
-  final String mobileImage;
+  final String? mobileImage;
 
   const CarouselItemModel({required this.anime, required this.type, required this.image, required this.mobileImage, required this.id});
   factory CarouselItemModel.fromJson(dynamic json) {
@@ -32,6 +32,6 @@ class CarouselItemModel {
   }
 
   CarouselItemEntity toEntity() {
-    return CarouselItemEntity(id: id, anime: anime.toEntity(), image: image, mobileImage: mobileImage, type: type);
+    return CarouselItemEntity(id: id, anime: anime?.toEntity(), image: image, mobileImage: mobileImage, type: type);
   }
 }

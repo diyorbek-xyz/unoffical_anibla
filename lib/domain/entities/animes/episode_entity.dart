@@ -1,7 +1,7 @@
 import 'package:application/data/models/enums/anime.dart';
-import 'package:application/domain/entities/anime_entity.dart';
-import 'package:application/domain/entities/season_entity.dart';
-import 'package:application/domain/entities/translated_entity.dart';
+import 'package:application/domain/entities/animes/anime_entity.dart';
+import 'package:application/domain/entities/animes/season_entity.dart';
+import 'package:application/domain/entities/common/translated_entity.dart';
 import 'package:equatable/equatable.dart';
 
 class VideoEntity extends Equatable {

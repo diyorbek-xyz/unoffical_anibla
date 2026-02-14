@@ -17,13 +17,13 @@ class EpisodeModelAdapter extends TypeAdapter<EpisodeModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return EpisodeModel(
-      id: fields[0] as String,
-      episodeNumber: (fields[2] as num).toInt(),
-      title: fields[1] as TranslatedModel,
-      anime: fields[3] as AnimeModel,
-      price: fields[5] as AnimePrice,
+      id: fields[0] as String?,
+      episodeNumber: (fields[2] as num?)?.toInt(),
+      title: fields[1] as TranslatedModel?,
+      anime: fields[3] as AnimeModel?,
+      price: fields[5] as AnimePrice?,
       video: fields[6] as String?,
-      slug: fields[7] as String,
+      slug: fields[7] as String?,
       season: fields[4] as SeasonModel?,
     );
   }

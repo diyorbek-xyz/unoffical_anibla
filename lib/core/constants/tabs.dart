@@ -2,22 +2,22 @@ import 'package:flutter/material.dart';
 
 const List tabs = [
   {
-    "label": Text("Home"),
+    "label": "Home",
     "icon": Icon(Icons.home_outlined),
     "selected": Icon(Icons.home),
   },
   {
-    "label": Text("Search"),
+    "label": "Search",
     "icon": Icon(Icons.folder_copy_outlined),
     "selected": Icon(Icons.folder_copy),
   },
   {
-    "label": Text("Categories"),
+    "label": "Categories",
     "icon": Icon(Icons.grid_view_outlined),
     "selected": Icon(Icons.grid_view_sharp),
   },
   {
-    "label": Text("Profile"),
+    "label": "Profile",
     "icon": Icon(Icons.people_alt_outlined),
     "selected": Icon(Icons.people_alt),
   },

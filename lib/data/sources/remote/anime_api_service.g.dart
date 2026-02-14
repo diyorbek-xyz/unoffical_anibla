@@ -33,7 +33,7 @@ class _AnimeApiService implements AnimeApiService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/v1/series',
+            '/v1/series',
             queryParameters: queryParameters,
             data: _data,
           )

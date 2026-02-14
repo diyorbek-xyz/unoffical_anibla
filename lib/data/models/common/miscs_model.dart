@@ -1,50 +1,49 @@
-import 'package:application/domain/entities/calendar_entity.dart';
-import 'package:application/domain/entities/episode_entity.dart';
-import 'package:application/domain/entities/translated_entity.dart';
+import 'package:application/domain/entities/common/pagination_entity.dart';
+import 'package:application/domain/entities/animes/episode_entity.dart';
+import 'package:application/domain/entities/common/translated_entity.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 part 'miscs_model.g.dart';
 
 @HiveType(typeId: 0)
-class PaginationModel {
+class PaginationModel extends PaginationEntity {
   @HiveField(0)
-  final int total;
+  @override
+  int? get total => super.total;
   @HiveField(1)
-  final int limit;
+  @override
+  int? get limit => super.limit;
   @HiveField(2)
-  final int page;
+  @override
+  int? get page => super.page;
   @HiveField(3)
-  final int pages;
-  const PaginationModel({required this.total, required this.limit, required this.page, required this.pages});
+  @override
+  int? get pages => super.pages;
+  const PaginationModel({super.total, super.limit, super.page, super.pages});
 
   factory PaginationModel.fromJson(dynamic json) {
     return PaginationModel(total: json['total'], limit: json['limit'], page: json['page'], pages: json['pages']);
   }
-
-  PaginationEntity toEntity() {
-    return PaginationEntity(limit: limit, page: page, pages: pages, total: total);
-  }
 }
 
 @HiveType(typeId: 1)
-class VideoModel {
+class VideoModel extends VideoEntity {
   @HiveField(0)
-  final String file;
+  @override
+  String? get file => super.file;
   @HiveField(1)
-  final int introStart;
+  @override
+  int? get introStart => super.introStart;
   @HiveField(2)
-  final int introEnd;
+  @override
+  int? get introEnd => super.introEnd;
 
-  const VideoModel({required this.file, required this.introStart, required this.introEnd});
+  const VideoModel({super.file, super.introStart, super.introEnd});
 
   factory VideoModel.fromJson(dynamic json) {
     int? start = int.tryParse(json['skip'].toString().split("-")[0]);
     int? end = int.tryParse(json['skip'].toString().split("-")[1]);
     return VideoModel(file: json['file'] ?? "", introStart: start ?? 0, introEnd: end ?? 1);
-  }
-
-  VideoEntity toEntity() {
-    return VideoEntity(file: file, introEnd: introEnd, introStart: introStart);
   }
 }
 
@@ -62,8 +61,8 @@ class TranslatedModel extends TranslatedEntity {
 
   factory TranslatedModel.fromJson(dynamic json) {
     if (json is String) return TranslatedModel(ru: json, uz: json);
-    if (json is Map) return TranslatedModel(ru: json['ru'] ?? "?", uz: json['uz'] ?? "?");
-    return TranslatedModel(ru: "?", uz: "?");
+    if (json is Map<String, dynamic>) return TranslatedModel(ru: json['ru'], uz: json['uz']);
+    throw Exception("Invalid json format: $json");
   }
   Map<String, dynamic> toJson() => {'uz': uz, 'ru': ru};
 }

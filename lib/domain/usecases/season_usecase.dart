@@ -1,6 +1,6 @@
 import 'package:application/core/resources/data_state.dart';
 import 'package:application/core/usecases/usecase.dart';
-import 'package:application/domain/entities/season_entity.dart';
+import 'package:application/domain/entities/animes/season_entity.dart';
 import 'package:application/domain/repositories/season_repository.dart';
 
 class GetSeasonsParams {

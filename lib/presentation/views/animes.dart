@@ -15,14 +15,14 @@ class AnimesView extends StatefulWidget {
 }
 
 class _AnimesViewState extends State<AnimesView> {
-  final getAnimes = const GetAnimes(GetAnimesParams(limit: 10, page: 1));
+  final params = const GetAnimesParams(limit: 10, page: 1);
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => sl<RemoteAnimeBloc>()..add(getAnimes),
+      create: (context) => sl<RemoteAnimeBloc>()..add(GetAnimes(params)),
       child: RefreshIndicator.adaptive(
-        onRefresh: () async {},
+        onRefresh: () async => context.read<RemoteAnimeBloc>().add(RefreshAnimes(params)),
         child: BlocBuilder<RemoteAnimeBloc, RemoteAnimeState>(
           builder: (context, state) {
             if (state is RemoteAnimeLoading) {
@@ -36,7 +36,11 @@ class _AnimesViewState extends State<AnimesView> {
                   spacing: 10,
                   children: [
                     Text(state.exception!.error.toString()),
-                    ElevatedButton.icon(onPressed: () => getAnimes, icon: Icon(Icons.replay_outlined), label: Text("Yanglilash")),
+                    ElevatedButton.icon(
+                      onPressed: () => context.read<RemoteAnimeBloc>().add(RefreshAnimes(params)),
+                      icon: Icon(Icons.replay_outlined),
+                      label: Text("Yanglilash"),
+                    ),
                   ],
                 ),
               );
@@ -45,8 +49,12 @@ class _AnimesViewState extends State<AnimesView> {
               return Padding(
                 padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
                 child: GridView.extent(
-                  maxCrossAxisExtent: 270,
-                  childAspectRatio: 6 / 8,
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  semanticChildCount: state.animes!.length,
+                  maxCrossAxisExtent: 300,
+                  
+                  childAspectRatio: 2 / 3,
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 15,
                   children: state.animes!.map((anime) => WidgetAnimeCard(anime: anime)).toList(),

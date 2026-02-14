@@ -3,18 +3,22 @@
 // Check in to version control
 
 import 'package:hive_ce/hive_ce.dart';
-import 'package:application/data/models/enums/anime.dart';
 import 'package:application/data/models/animes/anime_model.dart';
+import 'package:application/data/models/animes/episode_model.dart';
+import 'package:application/data/models/animes/season_model.dart';
+import 'package:application/data/models/common/miscs_model.dart';
+import 'package:application/data/models/enums/anime.dart';
+import 'package:application/data/models/enums/user_role.dart';
+import 'package:application/data/models/filter/category_model.dart';
+import 'package:application/data/models/filter/genre_model.dart';
 import 'package:application/data/models/other/calendar_model.dart';
 import 'package:application/data/models/other/carousel_model.dart';
-import 'package:application/data/models/animes/episode_model.dart';
-import 'package:application/data/models/filter/filter_model.dart';
-import 'package:application/data/models/common/miscs_model.dart';
-import 'package:application/data/models/animes/season_model.dart';
+import 'package:application/data/models/other/country_model.dart';
 import 'package:application/data/models/users/user_model.dart';
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
+    registerAdapter(AccountModelAdapter());
     registerAdapter(AnimeModelAdapter());
     registerAdapter(AnimePriceAdapter());
     registerAdapter(AnimeTypeAdapter());
@@ -22,6 +26,7 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(CarouselItemModelAdapter());
     registerAdapter(CategoryModelAdapter());
     registerAdapter(CommentModelAdapter());
+    registerAdapter(CountryModelAdapter());
     registerAdapter(EpisodeModelAdapter());
     registerAdapter(GenreModelAdapter());
     registerAdapter(PaginationModelAdapter());
@@ -29,12 +34,14 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(SeasonModelAdapter());
     registerAdapter(TranslatedModelAdapter());
     registerAdapter(UserAdapter());
+    registerAdapter(UserRoleAdapter());
     registerAdapter(VideoModelAdapter());
   }
 }
 
 extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
+    registerAdapter(AccountModelAdapter());
     registerAdapter(AnimeModelAdapter());
     registerAdapter(AnimePriceAdapter());
     registerAdapter(AnimeTypeAdapter());
@@ -42,6 +49,7 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
     registerAdapter(CarouselItemModelAdapter());
     registerAdapter(CategoryModelAdapter());
     registerAdapter(CommentModelAdapter());
+    registerAdapter(CountryModelAdapter());
     registerAdapter(EpisodeModelAdapter());
     registerAdapter(GenreModelAdapter());
     registerAdapter(PaginationModelAdapter());
@@ -49,6 +57,7 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
     registerAdapter(SeasonModelAdapter());
     registerAdapter(TranslatedModelAdapter());
     registerAdapter(UserAdapter());
+    registerAdapter(UserRoleAdapter());
     registerAdapter(VideoModelAdapter());
   }
 }
