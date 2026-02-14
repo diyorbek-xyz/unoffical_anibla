@@ -1,32 +1,28 @@
-import 'package:application/data/local/boxes.dart';
-import 'package:application/constants/colors.dart';
-import 'package:application/hive_registrar.g.dart';
-import 'package:application/ui/pages/anime.dart';
-import 'package:application/ui/views.dart';
-import 'package:application/data/models/anime.dart';
-import 'package:application/data/models/filter.dart';
+import 'package:application/core/constants/colors.dart';
+import 'package:application/injection_container.dart';
+import 'package:application/presentation/pages/anime.dart';
+import 'package:application/presentation/pages/tracemoe.dart';
+import 'package:application/presentation/views.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: '.env');
-  await Hive.initFlutter();
-  Hive.registerAdapters();
-  // await Hive.deleteBoxFromDisk("animesBox");
-  // await Hive.deleteBoxFromDisk("carouselBox");
-  // await Hive.deleteBoxFromDisk("categoriesBox");
-  // await Hive.deleteBoxFromDisk("genresBox");
-  // await Hive.deleteBoxFromDisk("categoryFilteredBox");
-  // await Hive.deleteBoxFromDisk("calendarBox");
+  await initializeDependencies();
 
-  animesBox = await Hive.openBox<Anime>("animesBox");
-  carouselBox = await Hive.openBox<Anime>("carouselBox");
-  calendarBox = await Hive.openBox<Anime>("calendarBox");
-  categoriesBox = await Hive.openBox<Category>("categoriesBox");
-  genresBox = await Hive.openBox<Genre>("genresBox");
+  await Hive.deleteBoxFromDisk("animesBox");
+  await Hive.deleteBoxFromDisk("carouselBox");
+  await Hive.deleteBoxFromDisk("categoriesBox");
+  await Hive.deleteBoxFromDisk("genresBox");
+  await Hive.deleteBoxFromDisk("calendarBox");
+
+  // animesBox = await Hive.openBox<AnimeModel>("animesBox");
+  // carouselBox = await Hive.openBox<CarouselItemModel>("carouselBox");
+  // calendarBox = await Hive.openBox<CalendarModel>("calendarBox");
+  // categoriesBox = await Hive.openBox<CategoryModel>("categoriesBox");
+  // genresBox = await Hive.openBox<GenreModel>("genresBox");
+  // searchBox = await Hive.openBox<AnimeModel>("searchBox");
 
   runApp(const MainApp());
 }
@@ -47,6 +43,7 @@ final GoRouter _router = GoRouter(
         return AnimePage(key: ValueKey(id), id: id);
       },
     ),
+    GoRoute(name: 'trace', path: '/tracemoe', builder: (context, state) => TraceMoePage()),
   ],
 );
 
@@ -77,8 +74,8 @@ class MainApp extends StatelessWidget {
           onSecondary: Colors.white,
           error: Colors.red,
           onError: Colors.white,
-          surface: Colors.white,
-          onSurface: Colors.black,
+          surface: Color(0xFF202028),
+          onSurface: Colors.white,
         ),
       ),
     );

@@ -3,31 +3,52 @@
 // Check in to version control
 
 import 'package:hive_ce/hive_ce.dart';
-import 'package:application/data/models/anime.dart';
-import 'package:application/data/models/filter.dart';
-import 'package:application/data/models/translated.dart';
-import 'package:application/data/models/user.dart';
+import 'package:application/data/models/enums/anime.dart';
+import 'package:application/data/models/animes/anime_model.dart';
+import 'package:application/data/models/other/calendar_model.dart';
+import 'package:application/data/models/other/carousel_model.dart';
+import 'package:application/data/models/animes/episode_model.dart';
+import 'package:application/data/models/filter/filter_model.dart';
+import 'package:application/data/models/common/miscs_model.dart';
+import 'package:application/data/models/animes/season_model.dart';
+import 'package:application/data/models/users/user_model.dart';
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
-    registerAdapter(AnimeAdapter());
-    registerAdapter(CategoryAdapter());
-    registerAdapter(CommentAdapter());
-    registerAdapter(GenreAdapter());
-    registerAdapter(SerieAdapter());
-    registerAdapter(TranslatedAdapter());
+    registerAdapter(AnimeModelAdapter());
+    registerAdapter(AnimePriceAdapter());
+    registerAdapter(AnimeTypeAdapter());
+    registerAdapter(CalendarModelAdapter());
+    registerAdapter(CarouselItemModelAdapter());
+    registerAdapter(CategoryModelAdapter());
+    registerAdapter(CommentModelAdapter());
+    registerAdapter(EpisodeModelAdapter());
+    registerAdapter(GenreModelAdapter());
+    registerAdapter(PaginationModelAdapter());
+    registerAdapter(ReleaseTimerModelAdapter());
+    registerAdapter(SeasonModelAdapter());
+    registerAdapter(TranslatedModelAdapter());
     registerAdapter(UserAdapter());
+    registerAdapter(VideoModelAdapter());
   }
 }
 
 extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
-    registerAdapter(AnimeAdapter());
-    registerAdapter(CategoryAdapter());
-    registerAdapter(CommentAdapter());
-    registerAdapter(GenreAdapter());
-    registerAdapter(SerieAdapter());
-    registerAdapter(TranslatedAdapter());
+    registerAdapter(AnimeModelAdapter());
+    registerAdapter(AnimePriceAdapter());
+    registerAdapter(AnimeTypeAdapter());
+    registerAdapter(CalendarModelAdapter());
+    registerAdapter(CarouselItemModelAdapter());
+    registerAdapter(CategoryModelAdapter());
+    registerAdapter(CommentModelAdapter());
+    registerAdapter(EpisodeModelAdapter());
+    registerAdapter(GenreModelAdapter());
+    registerAdapter(PaginationModelAdapter());
+    registerAdapter(ReleaseTimerModelAdapter());
+    registerAdapter(SeasonModelAdapter());
+    registerAdapter(TranslatedModelAdapter());
     registerAdapter(UserAdapter());
+    registerAdapter(VideoModelAdapter());
   }
 }
