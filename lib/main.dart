@@ -1,3 +1,4 @@
+
 import 'package:application/core/constants/colors.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/presentation/pages/anime.dart';
@@ -16,7 +17,7 @@ void main() async {
   await Hive.deleteBoxFromDisk("categoriesBox");
   await Hive.deleteBoxFromDisk("genresBox");
   await Hive.deleteBoxFromDisk("calendarBox");
-
+  
   // animesBox = await Hive.openBox<AnimeModel>("animesBox");
   // carouselBox = await Hive.openBox<CarouselItemModel>("carouselBox");
   // calendarBox = await Hive.openBox<CalendarModel>("calendarBox");
@@ -37,10 +38,10 @@ final GoRouter _router = GoRouter(
     ),
     GoRoute(
       name: 'anime',
-      path: '/anime/:id',
+      path: '/anime/:slug',
       builder: (context, state) {
-        String id = state.pathParameters["id"] ?? "";
-        return AnimePage(key: ValueKey(id), id: id);
+        String slug = state.pathParameters["slug"] ?? "";
+        return AnimePage(key: ValueKey(slug), slug: slug);
       },
     ),
     GoRoute(name: 'trace', path: '/tracemoe', builder: (context, state) => TraceMoePage()),

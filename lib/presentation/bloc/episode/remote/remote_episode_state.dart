@@ -8,7 +8,7 @@ sealed class RemoteEpisodeState extends Equatable {
   const RemoteEpisodeState({this.episodes, this.exception});
 
   @override
-  List<Object?> get props => [episodes!, exception!];
+  List<Object?> get props => [episodes, exception];
 }
 
 final class RemoteEpisodeLoading extends RemoteEpisodeState {

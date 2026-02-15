@@ -21,16 +21,14 @@ class _ViewsState extends State<Views> {
     return Scaffold(
       drawer: _sideBar(false),
       appBar: _appBar(),
-      body: SingleChildScrollView(
-        child: IndexedStack(
-          index: _selectedIndex,
-          children: [
-            AnimesView(),
-            Text("home"),
-            Text("search"),
-            Container(color: Colors.green),
-          ],
-        ),
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: [
+          AnimesView(),
+          Text("home"),
+          Text("search"),
+          Container(color: Colors.green),
+        ],
       ),
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: _onDestinationSelected,

@@ -1,4 +1,4 @@
-import 'package:application/domain/usecases/episode_usecase.dart';
+import 'package:application/data/models/param_models/episode_params.dart';
 
 sealed class RemoteEpisodeEvent {
   const RemoteEpisodeEvent();
@@ -7,4 +7,9 @@ sealed class RemoteEpisodeEvent {
 final class GetEpisodes extends RemoteEpisodeEvent {
   final GetEpisodesParams params;
   const GetEpisodes(this.params);
+}
+
+final class RefreshEpisodes extends RemoteEpisodeEvent {
+  final GetEpisodesParams params;
+  const RefreshEpisodes(this.params);
 }

@@ -30,4 +30,25 @@ class AnimeRepositoryImpl implements AnimeRepository {
       return DataFailed(e);
     }
   }
+
+  @override
+  Future<DataState<AnimeEntity>> getAnime({required String animeSlug}) async {
+    try {
+      final httpResponse = await _animeApiService.getAnime(anime: animeSlug);
+      if (httpResponse.response.statusCode == HttpStatus.ok) {
+        return DataSuccess(httpResponse.data.getEntity());
+      } else {
+        return DataFailed(
+          DioException(
+            requestOptions: httpResponse.response.requestOptions,
+            error: httpResponse.response.statusMessage,
+            response: httpResponse.response,
+            type: DioExceptionType.badResponse,
+          ),
+        );
+      }
+    } on DioException catch (e) {
+      return DataFailed(e);
+    }
+  }
 }

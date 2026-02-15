@@ -1,4 +1,5 @@
 import 'package:application/core/resources/data_state.dart';
+import 'package:application/data/models/param_models/season_params.dart';
 import 'package:application/domain/entities/animes/season_entity.dart';
 import 'package:application/domain/usecases/season_usecase.dart';
 import 'package:application/presentation/bloc/season/remote/remote_season_event.dart';

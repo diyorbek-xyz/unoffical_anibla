@@ -1,4 +1,4 @@
-import 'package:application/domain/usecases/anime_usecase.dart';
+import 'package:application/data/models/param_models/anime_params.dart';
 
 abstract class RemoteAnimeEvent {
   const RemoteAnimeEvent();

@@ -3,4 +3,5 @@ import 'package:application/domain/entities/animes/anime_entity.dart';
 
 abstract class AnimeRepository {
   Future<DataState<List<AnimeEntity>>> getAnimes({int limit, int page});
+  Future<DataState<AnimeEntity>> getAnime({required String animeSlug});
 }

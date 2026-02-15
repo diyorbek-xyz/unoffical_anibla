@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:application/core/resources/data_state.dart';
+import 'package:application/data/models/param_models/season_params.dart';
 import 'package:application/data/sources/remote/season_api_service.dart';
 import 'package:application/domain/entities/animes/season_entity.dart';
 import 'package:application/domain/repositories/season_repository.dart';
-import 'package:application/domain/usecases/season_usecase.dart';
 import 'package:dio/dio.dart';
 
 class SeasonRepositoryImpl implements SeasonRepository {

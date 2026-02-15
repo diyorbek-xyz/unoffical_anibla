@@ -1,4 +1,4 @@
-import 'package:application/domain/usecases/season_usecase.dart';
+import 'package:application/data/models/param_models/season_params.dart';
 
 sealed class RemoteSeasonEvent {
   const RemoteSeasonEvent();

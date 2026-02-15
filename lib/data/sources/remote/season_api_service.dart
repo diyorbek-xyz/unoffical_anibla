@@ -1,4 +1,4 @@
-import 'package:application/data/response_models/season_response_model.dart';
+import 'package:application/data/models/response_models/season_response_model.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 

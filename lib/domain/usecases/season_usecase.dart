@@ -1,18 +1,9 @@
 import 'package:application/core/resources/data_state.dart';
 import 'package:application/core/usecases/usecase.dart';
+import 'package:application/data/models/param_models/season_params.dart';
 import 'package:application/domain/entities/animes/season_entity.dart';
 import 'package:application/domain/repositories/season_repository.dart';
 
-class GetSeasonsParams {
-  final String animeSlug;
-  const GetSeasonsParams({required this.animeSlug});
-}
-
-class GetSeasonParams {
-  final String seasonSlug;
-  final String animeSlug;
-  const GetSeasonParams({required this.animeSlug, required this.seasonSlug});
-}
 
 class GetSeasonsUseCase implements UseCase<DataState<List<SeasonEntity>>, GetSeasonsParams> {
   final SeasonRepository repository;

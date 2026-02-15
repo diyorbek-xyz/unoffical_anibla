@@ -41,8 +41,8 @@ class VideoModel extends VideoEntity {
   const VideoModel({super.file, super.introStart, super.introEnd});
 
   factory VideoModel.fromJson(dynamic json) {
-    int? start = int.tryParse(json['skip'].toString().split("-")[0]);
-    int? end = int.tryParse(json['skip'].toString().split("-")[1]);
+    int? start = json['skip'] != null ? int.tryParse(json['skip'].toString().split("-")[0]) : null;
+    int? end = json['skip'] != null ? int.tryParse(json['skip'].toString().split("-")[1]) : null;
     return VideoModel(file: json['file'] ?? "", introStart: start ?? 0, introEnd: end ?? 1);
   }
 }

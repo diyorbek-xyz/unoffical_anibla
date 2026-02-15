@@ -31,7 +31,7 @@ class _SeasonApiService implements SeasonApiService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/v1/seasons/${animeSlug}',
+            '/v1/seasons/${animeSlug}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -62,7 +62,7 @@ class _SeasonApiService implements SeasonApiService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/api/v1/seasons/${animeSlug}/${seasonSlug}',
+            '/v1/seasons/${animeSlug}/${seasonSlug}',
             queryParameters: queryParameters,
             data: _data,
           )
