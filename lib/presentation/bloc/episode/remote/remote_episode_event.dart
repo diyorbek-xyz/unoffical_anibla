@@ -1,15 +1,19 @@
 import 'package:application/data/models/param_models/episode_params.dart';
 
-sealed class RemoteEpisodeEvent {
-  const RemoteEpisodeEvent();
+sealed class RemoteEpisodesListEvent {
+  const RemoteEpisodesListEvent();
 }
 
-final class GetEpisodes extends RemoteEpisodeEvent {
+final class GetEpisodesList extends RemoteEpisodesListEvent {
   final GetEpisodesParams params;
-  const GetEpisodes(this.params);
+  const GetEpisodesList(this.params);
 }
 
-final class RefreshEpisodes extends RemoteEpisodeEvent {
-  final GetEpisodesParams params;
-  const RefreshEpisodes(this.params);
+sealed class RemoteEpisodeDetailsEvent {
+  const RemoteEpisodeDetailsEvent();
+}
+
+final class GetEpisodeDetails {
+  final GetEpisodeParams episodeParams;
+  const GetEpisodeDetails(this.episodeParams);
 }

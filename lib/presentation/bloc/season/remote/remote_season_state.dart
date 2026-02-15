@@ -1,29 +1,44 @@
-import 'package:application/domain/entities/animes/season_entity.dart';
+import 'package:application/presentation/model/season_ui.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 
-sealed class RemoteSeasonState extends Equatable {
-  final List<SeasonEntity>? seasons;
-  final SeasonEntity? season;
+sealed class RemoteSeasonsListState extends Equatable {
+  final List<SeasonUiModel>? seasons;
   final DioException? exception;
-  const RemoteSeasonState({this.exception, this.seasons, this.season});
+  const RemoteSeasonsListState({this.exception, this.seasons});
 
   @override
-  List<Object?> get props => [seasons, exception, season];
+  List<Object?> get props => [seasons, exception];
 }
 
-final class RemoteSeasonDone extends RemoteSeasonState {
-  const RemoteSeasonDone(SeasonEntity season) : super(season: season);
+final class RemoteSeasonsListLoading extends RemoteSeasonsListState {
+  const RemoteSeasonsListLoading();
 }
 
-final class RemoteSeasonsLoading extends RemoteSeasonState {
-  const RemoteSeasonsLoading();
+final class RemoteSeasonsListDone extends RemoteSeasonsListState {
+  const RemoteSeasonsListDone(List<SeasonUiModel> seasons) : super(seasons: seasons);
 }
 
-final class RemoteSeasonsDone extends RemoteSeasonState {
-  const RemoteSeasonsDone(List<SeasonEntity> seasons) : super(seasons: seasons);
+final class RemoteSeasonsListFailed extends RemoteSeasonsListState {
+  const RemoteSeasonsListFailed(DioException exception) : super(exception: exception);
 }
 
-final class RemoteSeasonsFailed extends RemoteSeasonState {
-  const RemoteSeasonsFailed(DioException exception) : super(exception: exception);
+sealed class RemoteSeasonDetailsState extends Equatable {
+  final SeasonUiModel? season;
+  final DioException? exception;
+  const RemoteSeasonDetailsState({this.season, this.exception});
+  @override
+  List<Object?> get props => [season, exception];
+}
+
+final class RemoteSeasonDetailsLoading extends RemoteSeasonDetailsState {
+  const RemoteSeasonDetailsLoading();
+}
+
+final class RemoteSeasonDetailsDone extends RemoteSeasonDetailsState {
+  const RemoteSeasonDetailsDone(SeasonUiModel season) : super(season: season);
+}
+
+final class RemoteSeasonDetailsFailed extends RemoteSeasonDetailsState {
+  const RemoteSeasonDetailsFailed(DioException exception) : super(exception: exception);
 }

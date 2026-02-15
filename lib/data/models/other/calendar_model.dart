@@ -23,7 +23,7 @@ class CalendarModel {
     return CalendarModel(timers: timers, pagination: PaginationModel.fromJson(json['pagination']), day: day);
   }
   CalendarEntity toEntity() {
-    return CalendarEntity(day: day, pagination: pagination, releases: timers?.cast<TimerEntity>());
+    return CalendarEntity(day: day, pagination: pagination, releases: timers?.map((timer) => timer.toEntity()).toList());
   }
 }
 

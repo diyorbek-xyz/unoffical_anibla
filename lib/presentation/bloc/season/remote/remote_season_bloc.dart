@@ -1,78 +1,41 @@
 import 'package:application/core/resources/data_state.dart';
-import 'package:application/data/models/param_models/season_params.dart';
-import 'package:application/domain/entities/animes/season_entity.dart';
 import 'package:application/domain/usecases/season_usecase.dart';
 import 'package:application/presentation/bloc/season/remote/remote_season_event.dart';
 import 'package:application/presentation/bloc/season/remote/remote_season_state.dart';
-import 'package:flutter/material.dart';
+import 'package:application/presentation/model/season_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SeasonsProvider extends ChangeNotifier {
-  final GetSeasonsUseCase getSeasons;
-  SeasonsProvider(this.getSeasons);
-
-  bool isLoading = false;
-  List<SeasonEntity> seasons = [];
-
-  Future<void> fetchSeasons({String animeSlug = ""}) async {
-    isLoading = true;
-    notifyListeners();
-
-    seasons.clear();
-    final result = await getSeasons(GetSeasonsParams(animeSlug: animeSlug));
-    if (result is DataSuccess) {
-      seasons.addAll(result.data ?? []);
-    }
-    isLoading = true;
-    notifyListeners();
-  }
-}
-
-class SeasonProvider extends ChangeNotifier {
-  final GetSeasonBySlugUseCase getSeasonBySlug;
-  SeasonProvider(this.getSeasonBySlug);
-  bool isLoading = false;
-  String? error;
-  SeasonEntity season = SeasonEntity();
-  Future<void> fetchSeasonBySlug(GetSeasonParams params) async {
-    isLoading = true;
-    notifyListeners();
-    final result = await getSeasonBySlug(params);
-    if (result is DataSuccess) {
-      season = result.data!;
-    } else if (result is DataFailed) {
-      error = result.exception.toString();
-    }
-    isLoading = false;
-    notifyListeners();
-  }
-}
-
-class RemoteSeasonBloc extends Bloc<RemoteSeasonEvent, RemoteSeasonState> {
-  final GetSeasonBySlugUseCase _getSeasonBySlugUseCase;
-  final GetSeasonsUseCase _getSeasonsUseCase;
-  RemoteSeasonBloc(this._getSeasonBySlugUseCase, this._getSeasonsUseCase) : super(RemoteSeasonsLoading()) {
+class RemoteSeasonsListBloc extends Bloc<RemoteSeasonEvent, RemoteSeasonsListState> {
+  final GetSeasonsListUseCase _getSeasonsUseCase;
+  RemoteSeasonsListBloc(this._getSeasonsUseCase) : super(RemoteSeasonsListLoading()) {
     on<GetSeasons>(onGetSeasons);
-    on<GetSeasonBySlug>(onGetSeasonBySlug);
   }
 
-  void onGetSeasons(GetSeasons event, Emitter<RemoteSeasonState> emit) async {
+  void onGetSeasons(GetSeasons event, Emitter<RemoteSeasonsListState> emit) async {
     final dataState = await _getSeasonsUseCase(event.params);
     if (dataState is DataSuccess) {
-      emit(RemoteSeasonsDone(dataState.data!));
+      final uidata = dataState.data?.map((e) => SeasonUiModel.fromEntity(e)).toList() ?? [];
+      emit(RemoteSeasonsListDone(uidata));
     }
     if (dataState is DataFailed) {
-      emit(RemoteSeasonsFailed(dataState.exception!));
+      emit(RemoteSeasonsListFailed(dataState.exception!));
     }
   }
+}
 
-  void onGetSeasonBySlug(GetSeasonBySlug event, Emitter<RemoteSeasonState> emit) async {
-    final dataState = await _getSeasonBySlugUseCase(event.params);
+class RemoteSeasonDetailsBloc extends Bloc<RemoteSeasonDetailsEvent, RemoteSeasonDetailsState> {
+  final GetSeasonDetailsUseCase _getSeasonDetailsUseCase;
+  RemoteSeasonDetailsBloc(this._getSeasonDetailsUseCase) : super(RemoteSeasonDetailsLoading()) {
+    on<GetSeasonDetails>(onGetSeasonDetails);
+  }
+  void onGetSeasonDetails(GetSeasonDetails event, Emitter<RemoteSeasonDetailsState> emit) async {
+    final dataState = await _getSeasonDetailsUseCase(event.getSeasonParams);
     if (dataState is DataSuccess) {
-      emit(RemoteSeasonDone(dataState.data!));
+      final uidata = SeasonUiModel.fromEntity(dataState.data!);
+      emit(RemoteSeasonDetailsDone(uidata));
     }
     if (dataState is DataFailed) {
-      emit(RemoteSeasonsFailed(dataState.exception!));
+      emit(RemoteSeasonDetailsFailed(dataState.exception!));
     }
   }
 }

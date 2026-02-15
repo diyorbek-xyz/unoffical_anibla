@@ -1,24 +1,47 @@
-import 'package:application/domain/entities/animes/episode_entity.dart';
+import 'package:application/presentation/model/episode_ui.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 
-sealed class RemoteEpisodeState extends Equatable {
-  final List<EpisodeEntity>? episodes;
+sealed class RemoteEpisodesListState extends Equatable {
+  final List<EpisodeUiModel>? episodes;
   final DioException? exception;
-  const RemoteEpisodeState({this.episodes, this.exception});
+  const RemoteEpisodesListState({this.episodes, this.exception});
 
   @override
   List<Object?> get props => [episodes, exception];
 }
 
-final class RemoteEpisodeLoading extends RemoteEpisodeState {
-  const RemoteEpisodeLoading();
+final class RemoteEpisodesListLoading extends RemoteEpisodesListState {
+  const RemoteEpisodesListLoading();
 }
 
-final class RemoteEpisodeDone extends RemoteEpisodeState {
-  const RemoteEpisodeDone(List<EpisodeEntity> episodes) : super(episodes: episodes);
+final class RemoteEpisodesListDone extends RemoteEpisodesListState {
+  const RemoteEpisodesListDone(List<EpisodeUiModel> episodes) : super(episodes: episodes);
 }
 
-final class RemoteEpisodeFailed extends RemoteEpisodeState {
-  const RemoteEpisodeFailed(DioException exception) : super(exception: exception);
+final class RemoteEpisodesListFailed extends RemoteEpisodesListState {
+  const RemoteEpisodesListFailed(DioException exception) : super(exception: exception);
+}
+
+
+
+sealed class RemoteEpisodeDetailsState extends Equatable {
+  final EpisodeUiModel? episode;
+  final DioException? exception;
+  const RemoteEpisodeDetailsState({this.episode, this.exception});
+
+  @override
+  List<Object?> get props => [episode, exception];
+}
+
+final class RemoteEpisodeDetailsLoading extends RemoteEpisodeDetailsState {
+  const RemoteEpisodeDetailsLoading();
+}
+
+final class RemoteEpisodeDetailsDone extends RemoteEpisodeDetailsState {
+  const RemoteEpisodeDetailsDone(EpisodeUiModel episode) : super(episode: episode);
+}
+
+final class RemoteEpisodeDetailsFailed extends RemoteEpisodeDetailsState {
+  const RemoteEpisodeDetailsFailed(DioException exception) : super(exception: exception);
 }

@@ -1,10 +1,9 @@
-
-import 'package:application/domain/entities/animes/episode_entity.dart';
+import 'package:application/presentation/model/episode_ui.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 
 sealed class RemoteVideoState extends Equatable {
-  final VideoEntity? video;
+  final VideoUiModel? video;
   final DioException? exception;
   const RemoteVideoState({this.video, this.exception});
   @override
@@ -16,7 +15,7 @@ final class RemoteVideoLoading extends RemoteVideoState {
 }
 
 final class RemoteVideoDone extends RemoteVideoState {
-  const RemoteVideoDone(VideoEntity video) : super(video: video);
+  const RemoteVideoDone(VideoUiModel video) : super(video: video);
 }
 
 final class RemoteVideoFailed extends RemoteVideoState{

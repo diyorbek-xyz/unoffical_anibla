@@ -5,9 +5,9 @@ import 'package:application/domain/entities/animes/anime_entity.dart';
 import 'package:application/domain/repositories/anime_repository.dart';
 
 
-class GetAnimesUseCase implements UseCase<DataState<List<AnimeEntity>>, GetAnimesParams> {
+class GetAnimesListUseCase implements UseCase<DataState<List<AnimeEntity>>, GetAnimesParams> {
   final AnimeRepository repository;
-  GetAnimesUseCase(this.repository);
+  GetAnimesListUseCase(this.repository);
 
   @override
   Future<DataState<List<AnimeEntity>>> call(GetAnimesParams params) async {
@@ -15,9 +15,9 @@ class GetAnimesUseCase implements UseCase<DataState<List<AnimeEntity>>, GetAnime
   }
 }
 
-class GetAnimeUseCase implements UseCase<DataState<AnimeEntity>, String> {
+class GetAnimeDetailsUseCase implements UseCase<DataState<AnimeEntity>, String> {
   final AnimeRepository repository;
-  GetAnimeUseCase(this.repository);
+  GetAnimeDetailsUseCase(this.repository);
   @override
   Future<DataState<AnimeEntity>> call(String animeSlug) {
     return repository.getAnime(animeSlug: animeSlug);

@@ -21,7 +21,7 @@ class _SeasonApiService implements SeasonApiService {
 
   @override
   Future<HttpResponse<SeasonsResponseModel>> getSeasons({
-    String animeSlug = '',
+    required String animeSlug,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -51,8 +51,8 @@ class _SeasonApiService implements SeasonApiService {
 
   @override
   Future<HttpResponse<SeasonResponseModel>> getSeasonBySlug({
-    String animeSlug = '',
-    String seasonSlug = '',
+    required String animeSlug,
+    required String seasonSlug,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};

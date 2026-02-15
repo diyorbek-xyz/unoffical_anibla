@@ -9,7 +9,11 @@ final class GetSeasons extends RemoteSeasonEvent {
   const GetSeasons(this.params);
 }
 
-final class GetSeasonBySlug extends RemoteSeasonEvent {
-  final GetSeasonParams params;
-  const GetSeasonBySlug(this.params);
+sealed class RemoteSeasonDetailsEvent {
+  const RemoteSeasonDetailsEvent();
+}
+
+final class GetSeasonDetails extends RemoteSeasonDetailsEvent {
+  final GetSeasonParams getSeasonParams;
+  const GetSeasonDetails(this.getSeasonParams);
 }

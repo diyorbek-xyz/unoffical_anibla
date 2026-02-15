@@ -62,7 +62,7 @@ class MainApp extends StatelessWidget {
             TargetPlatform.android: CupertinoPageTransitionsBuilder(),
             TargetPlatform.fuchsia: CupertinoPageTransitionsBuilder(),
             TargetPlatform.windows: CupertinoPageTransitionsBuilder(),
-            TargetPlatform.linux: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.linux: ZoomPageTransitionsBuilder(),
             TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
             TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
           },

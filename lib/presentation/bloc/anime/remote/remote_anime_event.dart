@@ -1,15 +1,24 @@
 import 'package:application/data/models/param_models/anime_params.dart';
 
-abstract class RemoteAnimeEvent {
-  const RemoteAnimeEvent();
+sealed class RemoteAnimesListEvent {
+  const RemoteAnimesListEvent();
 }
 
-class GetAnimes extends RemoteAnimeEvent {
+final class GetAnimesList extends RemoteAnimesListEvent {
   final GetAnimesParams params;
-  const GetAnimes(this.params);
+  const GetAnimesList(this.params);
 }
 
-class RefreshAnimes extends RemoteAnimeEvent {
+final class RefreshAnimesList extends RemoteAnimesListEvent {
   final GetAnimesParams params;
-  const RefreshAnimes(this.params);
+  const RefreshAnimesList(this.params);
+}
+
+sealed class RemoteAnimeDetailsEvent {
+  const RemoteAnimeDetailsEvent();
+}
+
+final class GetAnimeDetails extends RemoteAnimeDetailsEvent {
+  final String animeSlug;
+  const GetAnimeDetails(this.animeSlug);
 }

@@ -23,8 +23,8 @@ class _AnimePageState extends State<AnimePage> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<RemoteEpisodeBloc>(
-          create: (context) => sl()..add(GetEpisodes(GetEpisodesParams(animeSlug: widget.slug, seasonSlug: "1"))),
+        BlocProvider<RemoteEpisodesListBloc>(
+          create: (context) => sl()..add(GetEpisodesList(GetEpisodesParams(animeSlug: widget.slug, seasonSlug: "1"))),
         ),
         BlocProvider<RemoteVideoBloc>(create: (context) => sl()),
       ],
@@ -32,10 +32,10 @@ class _AnimePageState extends State<AnimePage> {
     );
   }
 
-  BlocBuilder<RemoteEpisodeBloc, RemoteEpisodeState> _bodyBuilder() {
-    return BlocBuilder<RemoteEpisodeBloc, RemoteEpisodeState>(
+  BlocBuilder<RemoteEpisodesListBloc, RemoteEpisodesListState> _bodyBuilder() {
+    return BlocBuilder<RemoteEpisodesListBloc, RemoteEpisodesListState>(
       builder: (context, state) {
-        if (state is RemoteEpisodeFailed) {
+        if (state is RemoteEpisodesListFailed) {
           return Center(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -44,8 +44,9 @@ class _AnimePageState extends State<AnimePage> {
               children: [
                 Text("${state.exception?.response} ${state.exception}"),
                 ElevatedButton.icon(
-                  onPressed: () =>
-                      context.read<RemoteEpisodeBloc>().add(GetEpisodes(GetEpisodesParams(animeSlug: widget.slug, seasonSlug: "1-fasl"))),
+                  onPressed: () => context.read<RemoteEpisodesListBloc>().add(
+                    GetEpisodesList(GetEpisodesParams(animeSlug: widget.slug, seasonSlug: "1-fasl")),
+                  ),
                   icon: Icon(Icons.replay_outlined),
                   label: Text("Yanglilash"),
                 ),
@@ -53,13 +54,13 @@ class _AnimePageState extends State<AnimePage> {
             ),
           );
         }
-        if (state is RemoteEpisodeDone || state is RemoteEpisodeLoading) {
+        if (state is RemoteEpisodesListDone || state is RemoteEpisodesListLoading) {
           return Skeletonizer(
-            enabled: state is RemoteEpisodeLoading,
+            enabled: state is RemoteEpisodesListLoading,
             child: RefreshIndicator.adaptive(
               triggerMode: RefreshIndicatorTriggerMode.onEdge,
               onRefresh: () async =>
-                  context.read<RemoteEpisodeBloc>().add(RefreshEpisodes(GetEpisodesParams(animeSlug: widget.slug, seasonSlug: "1"))),
+                  context.read<RemoteEpisodesListBloc>().add(GetEpisodesList(GetEpisodesParams(animeSlug: widget.slug, seasonSlug: "1"))),
               child: SingleChildScrollView(physics: PageScrollPhysics(), child: _layout(state)),
             ),
           );
@@ -69,7 +70,7 @@ class _AnimePageState extends State<AnimePage> {
     );
   }
 
-  Padding _layout(RemoteEpisodeState state) {
+  Padding _layout(RemoteEpisodesListState state) {
     return Padding(
       padding: EdgeInsetsGeometry.symmetric(horizontal: 20),
       child: Row(
@@ -99,16 +100,16 @@ class _AnimePageState extends State<AnimePage> {
     );
   }
 
-  AspectRatio _videoPlayer(RemoteEpisodeState state) {
+  AspectRatio _videoPlayer(RemoteEpisodesListState state) {
     return AspectRatio(
       aspectRatio: 15 / 9,
-      child: state.episodes != null && state.episodes!.isNotEmpty
+      child: state.episodes != null
           ? BlocBuilder<RemoteVideoBloc, RemoteVideoState>(
               builder: (context, videoState) {
-                if (state.episodes![0].video == null) {
+                if (state.episodes != null) {
                   return Center(child: Text("Bu animeni ko'rish uchun pul to'lang"));
                 }
-                context.read<RemoteVideoBloc>().add(GetVideo(state.episodes![0].video!));
+                context.read<RemoteVideoBloc>().add(GetVideo(state.episodes![0].video));
                 if (videoState is RemoteVideoFailed) {
                   return Center(child: Text(videoState.exception.toString()));
                 }
@@ -129,13 +130,9 @@ class _AnimePageState extends State<AnimePage> {
   AppBar _appBar(BuildContext context) {
     return AppBar(
       leading: IconButton(onPressed: () => context.pop(), icon: Icon(Icons.arrow_back)),
-      title: BlocSelector<RemoteEpisodeBloc, RemoteEpisodeState, String>(
+      title: BlocSelector<RemoteEpisodesListBloc, RemoteEpisodesListState, String>(
         selector: (state) {
-          if (state is RemoteEpisodeDone) {
-            if (state.episodes != null && state.episodes!.isNotEmpty && state.episodes?.first.anime?.title?.uz != null) {
-              return state.episodes!.first.anime!.title!.uz!;
-            }
-          }
+          if (state is RemoteEpisodesListDone && state.episodes!.isNotEmpty) return state.episodes!.first.anime.title.uz;
           return "Loading...";
         },
         builder: (context, state) {

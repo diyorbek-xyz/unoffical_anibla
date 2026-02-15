@@ -9,7 +9,10 @@ abstract class EpisodeApiService {
   factory EpisodeApiService(Dio dio) = _EpisodeApiService;
 
   @GET('/v1/episodes/{anime}/{season}')
-  Future<HttpResponse<EpisodesResponseModel>> getEpisodes({@Path("anime") String animeSlug = '', @Path("season") String seasonSlug = ''});
+  Future<HttpResponse<EpisodesResponseModel>> getEpisodes({
+    @Path("anime") required String animeSlug,
+    @Path("season") required String seasonSlug,
+  });
 
   @GET('/v1/episodes/{anime}/{season}/{episode}')
   Future<HttpResponse<EpisodeResponseModel>> getEpisode({
