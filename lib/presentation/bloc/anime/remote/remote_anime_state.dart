@@ -7,7 +7,7 @@ abstract class RemoteAnimesListState extends Equatable {
   final DioException? exception;
   const RemoteAnimesListState({this.animes, this.exception});
   @override
-  List<Object?> get props => [animes!, exception!];
+  List<Object?> get props => [animes, exception];
 }
 
 final class RemoteAnimesListLoading extends RemoteAnimesListState {

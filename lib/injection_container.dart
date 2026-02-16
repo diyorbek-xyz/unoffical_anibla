@@ -1,25 +1,30 @@
 import 'package:application/core/constants/constants.dart';
 import 'package:application/data/repositories/anime_repository_impl.dart';
 import 'package:application/data/repositories/calendar_repository_impl.dart';
+import 'package:application/data/repositories/carousel_repository_impl.dart';
 import 'package:application/data/repositories/episode_repository_impl.dart';
 import 'package:application/data/repositories/season_repository_impl.dart';
 import 'package:application/data/sources/remote/anime_api_service.dart';
 import 'package:application/data/sources/remote/calendar_api_service.dart';
+import 'package:application/data/sources/remote/carousel_api_service.dart';
 import 'package:application/data/sources/remote/episode_api_service.dart';
 import 'package:application/data/sources/remote/season_api_service.dart';
 import 'package:application/data/sources/remote/video_api_service.dart';
 import 'package:application/domain/repositories/anime_repository.dart';
 import 'package:application/domain/repositories/calendar_repository.dart';
+import 'package:application/domain/repositories/carousel_repository.dart';
 import 'package:application/domain/repositories/episode_repository.dart';
 import 'package:application/domain/repositories/season_repository.dart';
 import 'package:application/domain/usecases/anime_usecase.dart';
 import 'package:application/domain/usecases/calendar_usecase.dart';
+import 'package:application/domain/usecases/carousel_usecase.dart';
 import 'package:application/domain/usecases/episode_usecase.dart';
 import 'package:application/domain/usecases/season_usecase.dart';
 import 'package:application/domain/usecases/video_usecase.dart';
 import 'package:application/hive_registrar.g.dart';
 import 'package:application/presentation/bloc/anime/remote/remote_anime_bloc.dart';
 import 'package:application/presentation/bloc/calendar/remote/remote_calendar_bloc.dart';
+import 'package:application/presentation/bloc/carousel/remote/remote_carousel_bloc.dart';
 import 'package:application/presentation/bloc/episode/remote/remote_episode_bloc.dart';
 import 'package:application/presentation/bloc/season/remote/remote_season_bloc.dart';
 import 'package:application/presentation/bloc/video/remote/remote_video_bloc.dart';
@@ -56,11 +61,13 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<EpisodeApiService>(EpisodeApiService(sl()));
   sl.registerSingleton<VideoApiService>(VideoApiService(sl()));
   sl.registerSingleton<CalendarApiService>(CalendarApiService(sl()));
+  sl.registerSingleton<CarouselApiService>(CarouselApiService(sl()));
 
   sl.registerSingleton<AnimeRepository>(AnimeRepositoryImpl(sl()));
   sl.registerSingleton<SeasonRepository>(SeasonRepositoryImpl(sl()));
   sl.registerSingleton<EpisodeRepository>(EpisodeRepositoryImpl(sl(), sl()));
   sl.registerSingleton<CalendarRepository>(CalendarRepositoryImpl(sl()));
+  sl.registerSingleton<CarouselRepository>(CarouselRepositoryImpl(sl()));
 
   sl.registerSingleton<GetAnimesListUseCase>(GetAnimesListUseCase(sl()));
   sl.registerSingleton<GetAnimeDetailsUseCase>(GetAnimeDetailsUseCase(sl()));
@@ -70,6 +77,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<GetEpisodeDetailsUseCase>(GetEpisodeDetailsUseCase(sl()));
   sl.registerSingleton<GetVideoUsecase>(GetVideoUsecase(sl()));
   sl.registerSingleton<GetCalendarUsecase>(GetCalendarUsecase(sl()));
+  sl.registerSingleton<GetCarouselItemsUsecase>(GetCarouselItemsUsecase(sl()));
 
   sl.registerFactory<RemoteAnimesListBloc>(() => RemoteAnimesListBloc(sl()));
   sl.registerFactory<RemoteAnimeDetailsBloc>(() => RemoteAnimeDetailsBloc(sl()));
@@ -79,4 +87,5 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<RemoteSeasonDetailsBloc>(() => RemoteSeasonDetailsBloc(sl()));
   sl.registerFactory<RemoteVideoBloc>(() => RemoteVideoBloc(sl()));
   sl.registerFactory<RemoteCalendarBloc>(() => RemoteCalendarBloc(sl()));
+  sl.registerFactory<RemoteCarouselBloc>(() => RemoteCarouselBloc(sl()));
 }

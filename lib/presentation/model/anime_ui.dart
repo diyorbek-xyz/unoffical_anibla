@@ -62,7 +62,7 @@ class AnimeUiModel {
       totalEpisodes: anime.totalEpisodes ?? 1,
       images: anime.images ?? [],
       title: TranslatedUiModel.fromEntity(anime.title ?? TranslatedEntity()),
-      description: TranslatedUiModel.fromEntity(anime.title ?? TranslatedEntity()),
+      description: TranslatedUiModel.fromEntity(anime.description ?? TranslatedEntity()),
       country: CountryUiModel.fromEntity(anime.country ?? CountryEntity()),
       director: AccountUiModel.fromEntity(anime.director ?? AccountEntity()),
       studio: AccountUiModel.fromEntity(anime.studio ?? AccountEntity()),

@@ -10,5 +10,5 @@ abstract class CalendarApiService {
   factory CalendarApiService(Dio dio) = _CalendarApiService;
 
   @GET("/v1/timer/time/{time}")
-  Future<HttpResponse<CalendarResponseModel>> getCalendar(@Path("time") CalendarParams time);
+  Future<HttpResponse<CalendarResponseModel>> getCalendar(@Path("time") GetCalendarParams time);
 }

@@ -1,4 +1,3 @@
-
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:intl/intl.dart';
 
@@ -42,12 +41,20 @@ class FormatDate {
     final compact = DateFormat("d-MM-y", 'uz-UZ').format(date);
     final title = DateFormat(DateFormat.YEAR_MONTH_DAY, 'uz-UZ').format(date);
     final weekday = DateFormat("EEEE", "uz-UZ").format(date);
-    final now = DateTime.now();
+    final today = DateTime.now();
+    final tomorrow = today.add(Duration(days: 1));
+    final yesterday = today.subtract(Duration(days: 1));
     String dynamicWeekday() {
-      if ((now.day - date.day).abs() > 6 || (date.month - now.month).abs() != 0) {
+      if ((today.day - date.day).abs() > 6 || (date.month - today.month).abs() != 0) {
         return title;
       }
-      if (date.weekday == now.weekday) {
+      if (date.weekday == yesterday.weekday && date.day == yesterday.day && date.month == yesterday.month && date.year == yesterday.year) {
+        return "kecha";
+      }
+      if (date.weekday == tomorrow.weekday && date.day == tomorrow.day && date.month == tomorrow.month && date.year == tomorrow.year) {
+        return "ertaga";
+      }
+      if (date.weekday == today.weekday && date.day == today.day && date.month == today.month && date.year == today.year) {
         return "bugun";
       }
       return weekday;

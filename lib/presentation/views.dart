@@ -42,13 +42,12 @@ class _ViewsState extends State<Views> {
           );
         }
         return Scaffold(
+          drawer: _drawer(),
+          drawerEdgeDragWidth: 10,
           body: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: .start,
             children: [
-              Expanded(flex: 2, child: _sideBar(false)),
-              Expanded(flex: 8, child: stack),
+              SizedBox(width: 100, child: _navRail()),
+              Expanded(flex: 5, child: stack),
             ],
           ),
         );
@@ -56,19 +55,35 @@ class _ViewsState extends State<Views> {
     );
   }
 
-  Widget _sideBar(bool expanded) {
-    return NavigationDrawer(
-      selectedIndex: _selectedIndex,
-      onDestinationSelected: _onDestinationSelected,
-      header: Container(
-        height: 100,
-        alignment: Alignment.topLeft,
-        padding: EdgeInsets.all(20),
-        child: Image.asset('assets/images/logo.png', scale: 0.8),
+  Widget _drawer() {
+    return Drawer(
+      child: NavigationDrawer(
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: _onDestinationSelected,
+        header: UserAccountsDrawerHeader(
+          accountName: Text("Account"),
+          accountEmail: Text("Emial"),
+          currentAccountPicture: CircleAvatar(backgroundImage: AssetImage("assets/images/avatar.png")),
+        ),
+        children: tabs
+            .map((tab) => NavigationDrawerDestination(icon: tab['icon'], label: Text(tab['label']), selectedIcon: tab['selected']))
+            .toList(),
       ),
-      children: tabs
-          .map((tab) => NavigationDrawerDestination(icon: tab['icon'], label: Text(tab['label']), selectedIcon: tab['selected']))
-          .toList(),
+    );
+  }
+
+  Builder _navRail() {
+    return Builder(
+      builder: (context) {
+        return NavigationRail(
+          elevation: 10,
+          labelType: NavigationRailLabelType.all,
+          leading: IconButton(onPressed: () => Scaffold.of(context).openDrawer(), icon: Icon(Icons.menu)),
+          destinations: tabs.map((e) => NavigationRailDestination(icon: e['icon'], label: Text(e['label']))).toList(),
+          selectedIndex: _selectedIndex,
+          onDestinationSelected: _onDestinationSelected,
+        );
+      },
     );
   }
 }

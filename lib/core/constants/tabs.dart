@@ -8,17 +8,17 @@ const List tabs = [
   },
   {
     "label": "Search",
-    "icon": Icon(Icons.folder_copy_outlined),
-    "selected": Icon(Icons.folder_copy),
+    "icon": Icon(Icons.search),
+    "selected": Icon(Icons.search),
   },
   {
-    "label": "Categories",
+    "label": "Explore",
     "icon": Icon(Icons.grid_view_outlined),
     "selected": Icon(Icons.grid_view_sharp),
   },
   {
     "label": "Profile",
-    "icon": Icon(Icons.people_alt_outlined),
-    "selected": Icon(Icons.people_alt),
+    "icon": Icon(Icons.person_outline),
+    "selected": Icon(Icons.person),
   },
 ];

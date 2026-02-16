@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'calendar_api_service.dart';
+part of 'carousel_api_service.dart';
 
 // dart format off
 
@@ -10,8 +10,8 @@ part of 'calendar_api_service.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter,avoid_unused_constructor_parameters,unreachable_from_main
 
-class _CalendarApiService implements CalendarApiService {
-  _CalendarApiService(this._dio, {this.baseUrl, this.errorLogger});
+class _CarouselApiService implements CarouselApiService {
+  _CarouselApiService(this._dio, {this.baseUrl, this.errorLogger});
 
   final Dio _dio;
 
@@ -20,27 +20,25 @@ class _CalendarApiService implements CalendarApiService {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HttpResponse<CalendarResponseModel>> getCalendar(
-    GetCalendarParams time,
-  ) async {
+  Future<HttpResponse<CarouselResponseModel>> getCarousel() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<CalendarResponseModel>>(
+    final _options = _setStreamType<HttpResponse<CarouselResponseModel>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v1/timer/time/${time.compact()}',
+            '/v1/sliders',
             queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late CalendarResponseModel _value;
+    late CarouselResponseModel _value;
     try {
-      _value = CalendarResponseModel.fromJson(_result.data!,time.day);
+      _value = CarouselResponseModel.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;

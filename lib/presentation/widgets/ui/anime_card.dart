@@ -16,17 +16,7 @@ class _AnimeCardState extends State<WidgetAnimeCard> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 250,
-      child: AspectRatio(
-        aspectRatio: 9 / 16,
-        child: Skeletonizer(
-          effect: PulseEffect(from: Colors.white, to: Colors.white10),
-          enabled: widget.anime.id == "id",
-          enableSwitchAnimation: true,
-          justifyMultiLineText: true,
-          textBoneBorderRadius: TextBoneBorderRadius(BorderRadiusGeometry.circular(5)),
-          child: _cardDatas(context),
-        ),
-      ),
+      child: AspectRatio(aspectRatio: 9 / 16, child: _cardDatas(context)),
     );
   }
 

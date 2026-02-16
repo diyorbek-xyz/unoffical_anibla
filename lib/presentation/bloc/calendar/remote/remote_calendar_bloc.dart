@@ -1,8 +1,10 @@
 import 'package:application/core/resources/data_state.dart';
+import 'package:application/data/models/param_models/calendar_params.dart';
 import 'package:application/domain/usecases/calendar_usecase.dart';
 import 'package:application/presentation/bloc/calendar/remote/remote_calendar_event.dart';
 import 'package:application/presentation/bloc/calendar/remote/remote_calendar_state.dart';
 import 'package:application/presentation/model/calendar_ui.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RemoteCalendarBloc extends Bloc<RemoteCalendarEvent, RemoteCalendarState> {
@@ -12,14 +14,22 @@ class RemoteCalendarBloc extends Bloc<RemoteCalendarEvent, RemoteCalendarState> 
   }
 
   void onGetCalendar(GetCalendar event, Emitter<RemoteCalendarState> emit) async {
-    emit(RemoteCalendarLoading());
-    final dataState = await _getCalendarUsecase(event.params);
-    if (dataState is DataSuccess) {
-      final uidata = CalendarUiModel.fromEntity(dataState.data!);
-      emit(RemoteCalendarDone(uidata));
-    }
-    if (dataState is DataFailed) {
-      emit(RemoteCalendarFailed(dataState.exception!));
+    try {
+      emit(RemoteCalendarLoading());
+      List<CalendarUiModel> list = [];
+      for (var date in event.params) {
+        final dataState = await _getCalendarUsecase(GetCalendarParams(date));
+        if (dataState is DataSuccess) {
+          final uidata = CalendarUiModel.fromEntity(dataState.data!);
+          list.add(uidata);
+        }
+        if (dataState is DataFailed) {
+          throw dataState.exception!;
+        }
+      }
+      emit(RemoteCalendarDone(list));
+    } on DioException catch (e) {
+      emit(RemoteCalendarFailed(e));
     }
   }
 }

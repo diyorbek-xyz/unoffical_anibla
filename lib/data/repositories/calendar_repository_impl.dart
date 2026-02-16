@@ -13,7 +13,7 @@ class CalendarRepositoryImpl implements CalendarRepository {
   const CalendarRepositoryImpl(this._calendarApiService);
 
   @override
-  Future<DataState<CalendarEntity>> getCalendar(CalendarParams params) async {
+  Future<DataState<CalendarEntity>> getCalendar(GetCalendarParams params) async {
     try {
       final httpResponse = await _calendarApiService.getCalendar(params);
       if (httpResponse.data.success && httpResponse.response.statusCode == HttpStatus.ok) {
