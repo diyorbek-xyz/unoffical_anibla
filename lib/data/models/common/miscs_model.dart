@@ -24,6 +24,9 @@ class PaginationModel extends PaginationEntity {
   factory PaginationModel.fromJson(dynamic json) {
     return PaginationModel(total: json['total'], limit: json['limit'], page: json['page'], pages: json['pages']);
   }
+  factory PaginationModel.empty() {
+    return PaginationModel(total: 0, limit: 0, page: 0, pages: 0);
+  }
 }
 
 @HiveType(typeId: 1)

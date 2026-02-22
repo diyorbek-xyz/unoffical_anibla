@@ -39,10 +39,12 @@ class RemoteAnimesListBloc extends Bloc<RemoteAnimesListEvent, RemoteAnimesListS
 
 class RemoteAnimeDetailsBloc extends Bloc<RemoteAnimeDetailsEvent, RemoteAnimeDetailsState> {
   final GetAnimeDetailsUseCase _getAnimeDetailsUseCase;
-  RemoteAnimeDetailsBloc(this._getAnimeDetailsUseCase) : super(RemoteAnimeDetailsLoading());
+  RemoteAnimeDetailsBloc(this._getAnimeDetailsUseCase) : super(RemoteAnimeDetailsLoading()) {
+    on<GetAnimeDetails>(onGetAnimeDetails);
+  }
 
   void onGetAnimeDetails(GetAnimeDetails event, Emitter<RemoteAnimeDetailsState> emit) async {
-    final dataState = await _getAnimeDetailsUseCase(event.animeSlug);
+    final dataState = await _getAnimeDetailsUseCase(event.params);
     if (dataState is DataSuccess) {
       final uidata = AnimeUiModel.fromEntity(dataState.data!);
       emit(RemoteAnimeDetailsDone(uidata));

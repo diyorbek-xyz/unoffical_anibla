@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'dart:ui';
-
 import 'package:application/data/models/param_models/anime_params.dart';
 import 'package:application/domain/entities/animes/anime_entity.dart';
 import 'package:application/injection_container.dart';
@@ -17,7 +16,6 @@ import 'package:application/presentation/widgets/ui/calendar.dart';
 import 'package:application/presentation/widgets/ui/carousel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:responsive_grid_list/responsive_grid_list.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class HomePage extends StatefulWidget {
@@ -28,7 +26,13 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  final params = const GetAnimesParams(limit: 10, page: 1);
+  static const _limit = 10;
+  static const _skeletonCount = 12;
+  static const _desktopWidth = 1100;
+  static const double _carouselHeight = 500;
+  static const double _calendarWidth = 450;
+
+  late final params = const GetAnimesParams(type: "movies", from: "mobile", limit: _limit, page: 1);
   late final dates = List.generate(7, (index) => DateTime.now().add(Duration(days: index)));
 
   @override
@@ -39,87 +43,99 @@ class HomePageState extends State<HomePage> {
         BlocProvider(create: (_) => sl<RemoteCalendarBloc>()..add(GetCalendar(dates))),
         BlocProvider(create: (_) => sl<RemoteCarouselBloc>()..add(GetCarouselItems())),
       ],
-      child: RefreshIndicator.adaptive(
-        triggerMode: RefreshIndicatorTriggerMode.onEdge,
-        onRefresh: () async {
-          sl<RemoteAnimesListBloc>().add(RefreshAnimesList(params));
-          sl<RemoteCalendarBloc>().add(GetCalendar(dates));
+      child: BlocBuilder<RemoteAnimesListBloc, RemoteAnimesListState>(
+        builder: (context, state) {
+          return RefreshIndicator.adaptive(
+            triggerMode: RefreshIndicatorTriggerMode.onEdge,
+            onRefresh: () async {
+              context.read<RemoteAnimesListBloc>().add(RefreshAnimesList(params));
+              context.read<RemoteCalendarBloc>().add(GetCalendar(dates));
+              context.read<RemoteCarouselBloc>().add(GetCarouselItems());
+            },
+            child: SingleChildScrollView(child: Column(children: [_buildCarouselSection(), _buildAnimesList()])),
+          );
         },
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Builder(
-                builder: (context) {
-                  final width = MediaQuery.of(context).size.width;
-                  if (width > 1100) {
-                    return Row(
-                      children: [
-                        Expanded(child: SizedBox(height: 500, child: WidgetCarousel())),
-                        SizedBox(width: 450, height: 500, child: WidgetCalendar()),
-                      ],
-                    );
-                  }
-                  return Column(
-                    children: [
-                      SizedBox(height: max(width / 2, 400), child: WidgetCarousel()),
-                      SizedBox(height: clampDouble(width * 0.9, 420, 500), child: WidgetCalendar()),
-                    ],
-                  );
-                },
-              ),
-              BlocBuilder<RemoteAnimesListBloc, RemoteAnimesListState>(
-                builder: (context, state) {
-                  if (state is RemoteAnimesListFailed) {
-                    return SizedBox(
-                      height: 500,
-                      child: Center(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          spacing: 10,
-                          children: [
-                            Text((state.exception?.error ?? "Nimadur xato ketti.").toString()),
-                            ElevatedButton.icon(
-                              onPressed: () => context.read<RemoteAnimesListBloc>().add(RefreshAnimesList(params)),
-                              icon: Icon(Icons.replay_outlined),
-                              label: Text("Yanglilash"),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }
-                  if (state is RemoteAnimesListDone || state is RemoteAnimesListLoading) {
-                    final animes = state.animes ?? List.generate(12, (index) => AnimeUiModel.fromEntity(AnimeEntity()));
-                    return Padding(
-                      padding: EdgeInsetsGeometry.all(10),
-                      child: SizedBox(
-                        child: Skeletonizer(
-                          effect: PulseEffect(from: Colors.white, to: Colors.white10),
-                          enabled: state is RemoteAnimesListLoading,
-                          enableSwitchAnimation: true,
-                          justifyMultiLineText: true,
-                          textBoneBorderRadius: TextBoneBorderRadius(BorderRadiusGeometry.circular(5)),
-                          child: ResponsiveGridList(
-                            minItemWidth: 180,
-                            minItemsPerRow: 2,
-                            maxItemsPerRow: 6,
-                            verticalGridSpacing: 10,
-                            horizontalGridSpacing: 0,
-                            listViewBuilderOptions: ListViewBuilderOptions(physics: NeverScrollableScrollPhysics(), shrinkWrap: true),
-                            children: animes.map((anime) => WidgetAnimeCard(anime: anime)).toList(),
-                          ),
-                        ),
-                      ),
-                    );
-                  }
-                  return Text('no data');
-                },
-              ),
-            ],
-          ),
-        ),
       ),
     );
+  }
+
+  Widget _buildCarouselSection() => Builder(
+    builder: (context) {
+      final width = MediaQuery.of(context).size.width;
+      if (width > _desktopWidth) {
+        return Row(
+          children: [
+            Expanded(
+              child: SizedBox(height: _carouselHeight, child: const WidgetCarousel()),
+            ),
+            SizedBox(width: _calendarWidth, height: _carouselHeight, child: const WidgetCalendar()),
+          ],
+        );
+      }
+      return Column(
+        children: [
+          SizedBox(height: max(width / 2, 400), child: const WidgetCarousel()),
+          SizedBox(height: clampDouble(width * 0.9, 420, 500), child: const WidgetCalendar()),
+        ],
+      );
+    },
+  );
+
+  Widget _buildAnimesList() => BlocBuilder<RemoteAnimesListBloc, RemoteAnimesListState>(
+    builder: (context, state) {
+      if (state is RemoteAnimesListFailed) {
+        return _buildErrorState(context, state);
+      }
+      if (state is RemoteAnimesListDone || state is RemoteAnimesListLoading) {
+        final animes = state.animes ?? List.generate(_skeletonCount, (i) => AnimeUiModel.fromEntity(AnimeEntity()));
+        return _buildAnimesGrid(animes, state is RemoteAnimesListLoading);
+      }
+      return const Text('no data');
+    },
+  );
+
+  Widget _buildErrorState(BuildContext context, RemoteAnimesListFailed state) => SizedBox(
+    height: 500,
+    child: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        spacing: 10,
+        children: [
+          Text((state.exception?.error ?? "Nimadur xato ketti.").toString()),
+          ElevatedButton.icon(
+            onPressed: () => context.read<RemoteAnimesListBloc>().add(RefreshAnimesList(params)),
+            icon: const Icon(Icons.replay_outlined),
+            label: const Text("Yanglilash"),
+          ),
+        ],
+      ),
+    ),
+  );
+
+  Widget _buildAnimesGrid(List<AnimeUiModel> animes, bool isLoading) => Skeletonizer(
+    enabled: isLoading,
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(children: animes.map((anime) => WidgetAnimeCard(anime: anime)).toList()),
+      ),
+    ),
+  );
+}
+
+class _RecommendBuilder extends StatefulWidget {
+  final String? categoryId;
+  final String? genreId;
+  const _RecommendBuilder({super.key, this.categoryId, this.genreId});
+
+  @override
+  State<_RecommendBuilder> createState() => __RecommendBuilderState();
+}
+
+class __RecommendBuilderState extends State<_RecommendBuilder> {
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }

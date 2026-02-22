@@ -1,6 +1,8 @@
 import 'package:application/core/constants/tabs.dart';
 import 'package:application/presentation/pages/home.dart';
+import 'package:application/presentation/pages/search.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class Views extends StatefulWidget {
   const Views({super.key});
@@ -18,40 +20,38 @@ class _ViewsState extends State<Views> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final stack = IndexedStack(
-          index: _selectedIndex,
+    final width = MediaQuery.of(context).size.width;
+    final stack = IndexedStack(
+      index: _selectedIndex,
+      children: [
+        HomePage(),
+        SearchPage(),
+        TextButton(onPressed: () => context.pushNamed("login"), child: Text("Login")),
+        Container(color: Colors.green),
+      ],
+    );
+    return SafeArea(
+      child: Scaffold(
+        drawer: width < 800 ? null : _drawer(),
+        bottomNavigationBar: width < 800 ? _navBar() : null,
+        drawerEdgeDragWidth: 10,
+        body: Row(
           children: [
-            HomePage(),
-            Text("home"),
-            Text("search"),
-            Container(color: Colors.green),
+            width > 800 ? _navRail() : Container(),
+            Expanded(child: stack),
           ],
-        );
-        if (constraints.maxWidth < 800) {
-          return Scaffold(
-            body: stack,
-            bottomNavigationBar: NavigationBar(
-              onDestinationSelected: _onDestinationSelected,
-              selectedIndex: _selectedIndex,
-              destinations: tabs
-                  .map((tab) => NavigationDestination(icon: tab['icon'], label: tab['label'], selectedIcon: tab['selected']))
-                  .toList(),
-            ),
-          );
-        }
-        return Scaffold(
-          drawer: _drawer(),
-          drawerEdgeDragWidth: 10,
-          body: Row(
-            children: [
-              SizedBox(width: 100, child: _navRail()),
-              Expanded(flex: 5, child: stack),
-            ],
-          ),
-        );
-      },
+        ),
+      ),
+    );
+  }
+
+  NavigationBar _navBar() {
+    return NavigationBar(
+      onDestinationSelected: _onDestinationSelected,
+      selectedIndex: _selectedIndex,
+      destinations: tabs
+          .map((tab) => NavigationDestination(icon: tab['icon'], label: tab['label'], selectedIcon: tab['selected']))
+          .toList(),
     );
   }
 
@@ -72,18 +72,23 @@ class _ViewsState extends State<Views> {
     );
   }
 
-  Builder _navRail() {
-    return Builder(
-      builder: (context) {
-        return NavigationRail(
-          elevation: 10,
-          labelType: NavigationRailLabelType.all,
-          leading: IconButton(onPressed: () => Scaffold.of(context).openDrawer(), icon: Icon(Icons.menu)),
-          destinations: tabs.map((e) => NavigationRailDestination(icon: e['icon'], label: Text(e['label']))).toList(),
-          selectedIndex: _selectedIndex,
-          onDestinationSelected: _onDestinationSelected,
-        );
-      },
+  Widget _navRail() {
+    return SizedBox(
+      width: 100,
+      child: Builder(
+        builder: (context) {
+          return NavigationRail(
+            elevation: 10,
+            labelType: NavigationRailLabelType.all,
+            leading: IconButton(onPressed: () => Scaffold.of(context).openDrawer(), icon: Icon(Icons.menu)),
+            destinations: tabs
+                .map((e) => NavigationRailDestination(icon: e['icon'], label: Text(e['label']), selectedIcon: e['selected']))
+                .toList(),
+            selectedIndex: _selectedIndex,
+            onDestinationSelected: _onDestinationSelected,
+          );
+        },
+      ),
     );
   }
 }

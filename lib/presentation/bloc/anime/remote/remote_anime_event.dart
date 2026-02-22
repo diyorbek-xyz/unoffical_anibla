@@ -19,6 +19,6 @@ sealed class RemoteAnimeDetailsEvent {
 }
 
 final class GetAnimeDetails extends RemoteAnimeDetailsEvent {
-  final String animeSlug;
-  const GetAnimeDetails(this.animeSlug);
+  final GetAnimeDetailsParams params;
+  const GetAnimeDetails(this.params);
 }

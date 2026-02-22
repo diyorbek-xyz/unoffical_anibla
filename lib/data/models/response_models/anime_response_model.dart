@@ -25,7 +25,11 @@ class AnimeResponseModel extends ResponseModel<AnimeModel> {
   const AnimeResponseModel({required super.data, required super.success, required super.message});
 
   factory AnimeResponseModel.fromJson(Map<String, dynamic> json) {
-    return AnimeResponseModel(data: AnimeModel.fromJson(json['data']), message: json['message'], success: json['success']);
+    return AnimeResponseModel(
+      data: json['data'] != null ? AnimeModel.fromJson(json['data']) : AnimeModel(),
+      message: json['message'],
+      success: json['success'],
+    );
   }
   AnimeEntity getEntity() {
     return data.toEntity();

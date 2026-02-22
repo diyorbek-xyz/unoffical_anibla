@@ -39,7 +39,7 @@ class FormatDate {
 
   factory FormatDate.format(DateTime date) {
     final compact = DateFormat("d-MM-y", 'uz-UZ').format(date);
-    final title = DateFormat(DateFormat.YEAR_MONTH_DAY, 'uz-UZ').format(date);
+    final title = DateFormat(DateFormat.MONTH_DAY, 'uz-UZ').format(date);
     final weekday = DateFormat("EEEE", "uz-UZ").format(date);
     final today = DateTime.now();
     final tomorrow = today.add(Duration(days: 1));

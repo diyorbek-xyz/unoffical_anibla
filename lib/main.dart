@@ -1,8 +1,7 @@
-
-import 'package:application/core/constants/colors.dart';
+import 'package:application/core/constants/theme.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/presentation/pages/anime.dart';
-import 'package:application/presentation/pages/tracemoe.dart';
+import 'package:application/presentation/pages/login.dart';
 import 'package:application/presentation/views.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -17,7 +16,7 @@ void main() async {
   await Hive.deleteBoxFromDisk("categoriesBox");
   await Hive.deleteBoxFromDisk("genresBox");
   await Hive.deleteBoxFromDisk("calendarBox");
-  
+
   // animesBox = await Hive.openBox<AnimeModel>("animesBox");
   // carouselBox = await Hive.openBox<CarouselItemModel>("carouselBox");
   // calendarBox = await Hive.openBox<CalendarModel>("calendarBox");
@@ -31,7 +30,8 @@ void main() async {
 final GoRouter _router = GoRouter(
   routes: <RouteBase>[
     GoRoute(
-      path: "/",
+      name: "view",
+      path: "/view",
       builder: (context, state) {
         return const Views();
       },
@@ -40,45 +40,25 @@ final GoRouter _router = GoRouter(
       name: 'anime',
       path: '/anime/:slug',
       builder: (context, state) {
-        String slug = state.pathParameters["slug"] ?? "";
-        return AnimePage(key: ValueKey(slug), slug: slug);
+        final String slug = state.pathParameters["slug"] ?? "";
+        final String type = state.uri.queryParameters['type'] ?? "";
+        return AnimePage(key: ValueKey(slug), slug: slug, type: type);
       },
     ),
-    GoRoute(name: 'trace', path: '/tracemoe', builder: (context, state) => TraceMoePage()),
+    GoRoute(
+      name: "login",
+      path: "/",
+      builder: (context, state) {
+        return const LoginPage();
+      },
+    ),
   ],
 );
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: _router,
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        pageTransitionsTheme: PageTransitionsTheme(
-          builders: {
-            TargetPlatform.android: CupertinoPageTransitionsBuilder(),
-            TargetPlatform.fuchsia: CupertinoPageTransitionsBuilder(),
-            TargetPlatform.windows: CupertinoPageTransitionsBuilder(),
-            TargetPlatform.linux: ZoomPageTransitionsBuilder(),
-            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-            TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
-          },
-        ),
-        colorScheme: ColorScheme(
-          brightness: Brightness.light,
-          primary: primaryDark,
-          onPrimary: Colors.white,
-          secondary: Colors.green,
-          onSecondary: Colors.white,
-          error: Colors.red,
-          onError: Colors.white,
-          surface: Color(0xFF202028),
-          onSurface: Colors.white,
-        ),
-      ),
-    );
+    return MaterialApp.router(routerConfig: _router, debugShowCheckedModeBanner: false, theme: themeData);
   }
 }

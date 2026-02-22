@@ -26,7 +26,11 @@ class SeasonResponseModel {
   const SeasonResponseModel({required this.message, required this.season, required this.success});
 
   factory SeasonResponseModel.fromJson(Map<String, dynamic> json) {
-    return SeasonResponseModel(message: json['message'], season: SeasonModel.fromJson(json['data']), success: json['success']);
+    return SeasonResponseModel(
+      message: json['message'],
+      season: json['data'] != null ? SeasonModel.fromJson(json['data']) : SeasonModel(),
+      success: json['success'],
+    );
   }
 
   SeasonEntity getEntity() {

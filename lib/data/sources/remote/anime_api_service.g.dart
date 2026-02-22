@@ -21,6 +21,8 @@ class _AnimeApiService implements AnimeApiService {
 
   @override
   Future<HttpResponse<AnimesResponseModel>> getAnimes({
+    required String type,
+    required String from,
     int? limit = 10,
     int? page = 1,
   }) async {
@@ -33,7 +35,7 @@ class _AnimeApiService implements AnimeApiService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v1/series',
+            '/v1/${type}/${from}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -53,6 +55,7 @@ class _AnimeApiService implements AnimeApiService {
 
   @override
   Future<HttpResponse<AnimeResponseModel>> getAnime({
+    required String type,
     required String anime,
   }) async {
     final _extra = <String, dynamic>{};
@@ -63,7 +66,7 @@ class _AnimeApiService implements AnimeApiService {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v1/series/${anime}',
+            '/v1/${type}/${anime}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -73,6 +76,44 @@ class _AnimeApiService implements AnimeApiService {
     late AnimeResponseModel _value;
     try {
       _value = AnimeResponseModel.fromJson(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, response: _result);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<AnimesResponseModel>> searchAnimes({
+    required String type,
+    required String search,
+    int? limit = 10,
+    int? page = 1,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'search': search,
+      r'limit': limit,
+      r'page': page,
+    };
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<HttpResponse<AnimesResponseModel>>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/v1/${type}',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late AnimesResponseModel _value;
+    try {
+      _value = AnimesResponseModel.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;

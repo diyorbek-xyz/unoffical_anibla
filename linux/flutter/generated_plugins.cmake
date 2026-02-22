@@ -3,6 +3,8 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  desktop_webview_auth
+  gtk
   media_kit_libs_linux
   media_kit_video
 )

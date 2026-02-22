@@ -78,10 +78,10 @@ class AnimeModel {
       List<CategoryModel> categories = json['categories'] != null ? (json['categories'] as List).map(CategoryModel.fromJson).toList() : [];
       return AnimeModel(
         id: json['_id'],
-        title: TranslatedModel(ru: json['ru']['title'], uz: json['uz']['title']),
-        description: TranslatedModel(ru: json['ru']['description'], uz: json['uz']['description']),
+        title: TranslatedModel(ru: json['ru']['title'] ?? "", uz: json['uz']['title'] ?? ""),
+        description: TranslatedModel(ru: json['ru']['description'] ?? "", uz: json['uz']['description'] ?? ""),
         frames: frames,
-        thumbnail: json['thumbnail'] != null ? "$baseUrl/${json['thumbnail']}" : null,
+        thumbnail: json['thumbnail'] != null ? Uri.https(baseUrl.replaceAll("https://", ""),  json['thumbnail']).toString() : null,
         slug: json['slug'],
         categories: categories,
         creators: creators,
@@ -134,7 +134,7 @@ class CommentModel {
   @HiveField(1)
   final String message;
   @HiveField(2)
-  final User user;
+  final UserModel user;
   @HiveField(3)
   final int? likes;
   @HiveField(4)
@@ -143,17 +143,17 @@ class CommentModel {
   const CommentModel({required this.id, this.dislikes, this.likes, required this.message, required this.user});
 
   factory CommentModel.fromJson(dynamic json) {
-    if (json is String) return CommentModel(id: json, message: "?", user: User.fromJson(null));
+    if (json is String) return CommentModel(id: json, message: "?", user: UserModel.fromJson(null));
     if (json is Map) {
       return CommentModel(
         id: json["_id"],
         message: json['message'],
-        user: User.fromJson(json['user']),
+        user: UserModel.fromJson(json['user']),
         dislikes: json['likesCount']['countDislike'],
         likes: json['likesCount']['countLike'],
       );
     }
-    return CommentModel(id: "?", message: "?", user: User.fromJson(null));
+    return CommentModel(id: "?", message: "?", user: UserModel.fromJson(null));
   }
   Map<String, dynamic> toJson() {
     return {

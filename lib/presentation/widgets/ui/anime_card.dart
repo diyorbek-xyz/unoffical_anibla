@@ -15,7 +15,7 @@ class _AnimeCardState extends State<WidgetAnimeCard> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 250,
+      width: 180,
       child: AspectRatio(aspectRatio: 9 / 16, child: _cardDatas(context)),
     );
   }
@@ -23,7 +23,8 @@ class _AnimeCardState extends State<WidgetAnimeCard> {
   InkWell _cardDatas(BuildContext context) {
     return InkWell(
       mouseCursor: WidgetStateMouseCursor.clickable,
-      onTapUp: (details) => context.pushNamed("anime", pathParameters: {'slug': widget.anime.slug}),
+      onTapUp: (details) =>
+          context.pushNamed("anime", pathParameters: {'slug': widget.anime.slug}, queryParameters: {"type": widget.anime}),
       splashColor: Colors.amberAccent.withValues(alpha: 0.1),
       hoverColor: Colors.amber.withValues(alpha: 0.05),
       focusColor: Colors.amber.withValues(alpha: 0.05),
@@ -94,7 +95,7 @@ class _AnimeCardState extends State<WidgetAnimeCard> {
   }
 
   Widget _inkImage(String? image) {
-    if (image == null || image.endsWith(".avif")) {
+    if (image == null || image == "thumbnail" || image.endsWith(".avif")) {
       return Center(child: Text("Invalid image"));
     }
     return Ink.image(fit: BoxFit.cover, image: CachedNetworkImageProvider(image));

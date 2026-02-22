@@ -6,7 +6,7 @@ import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 part 'user_model.g.dart';
 
 @HiveType(typeId: 30)
-class User {
+class UserModel {
   @HiveField(0)
   final String? id;
   @HiveField(1)
@@ -22,13 +22,13 @@ class User {
   @HiveField(6)
   final String? avatar;
 
-  const User({this.id, this.avatar, this.balance, this.name, this.phone, this.role, this.status});
-  factory User.fromJson(dynamic json) {
+  const UserModel({this.id, this.avatar, this.balance, this.name, this.phone, this.role, this.status});
+  factory UserModel.fromJson(dynamic json) {
     if (json is String) {
-      return User(id: json, avatar: "?", balance: 0.0, name: "?", phone: "?", role: UserRole.user, status: "?");
+      return UserModel(id: json, avatar: "?", balance: 0.0, name: "?", phone: "?", role: UserRole.user, status: "?");
     }
     if (json is Map) {
-      return User(
+      return UserModel(
         id: json['_id'],
         avatar: addBaseUrl(json['photo']),
         balance: double.parse(json['balance'].toString()),

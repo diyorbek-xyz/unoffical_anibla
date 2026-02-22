@@ -106,7 +106,7 @@ class CommentModelAdapter extends TypeAdapter<CommentModel> {
       dislikes: (fields[4] as num?)?.toInt(),
       likes: (fields[3] as num?)?.toInt(),
       message: fields[1] as String,
-      user: fields[2] as User,
+      user: fields[2] as UserModel,
     );
   }
 

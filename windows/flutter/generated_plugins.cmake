@@ -3,6 +3,10 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  app_links
+  desktop_webview_auth
+  firebase_auth
+  firebase_core
   media_kit_libs_windows_video
   media_kit_video
 )

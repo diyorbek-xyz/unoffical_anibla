@@ -1,4 +1,4 @@
-import 'package:application/core/constants/colors.dart';
+import 'package:application/core/constants/theme.dart';
 import 'package:flutter/material.dart';
 
 class WidgetBadge extends StatelessWidget {

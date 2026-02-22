@@ -1,10 +1,10 @@
-import 'package:application/domain/entities/animes/episode_entity.dart';
+import 'package:application/presentation/model/episode_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
 class VideoPlayer extends StatefulWidget {
-  final VideoEntity? video;
+  final VideoUiModel? video;
   const VideoPlayer({super.key, required this.video});
 
   @override
@@ -26,15 +26,15 @@ class _VideoPlayerState extends State<VideoPlayer> {
   @override
   void initState() {
     super.initState();
-    if (widget.video != null && widget.video!.file != null) {
-      _loadVideo(widget.video!.file!);
+    if (widget.video != null) {
+      _loadVideo(widget.video!.file);
     }
   }
 
   @override
   void didChangeDependencies() {
-    if (widget.video != null && widget.video!.file != null) {
-      _loadVideo(widget.video!.file!);
+    if (widget.video != null) {
+      _loadVideo(widget.video!.file);
     }
     super.didChangeDependencies();
   }
@@ -43,7 +43,6 @@ class _VideoPlayerState extends State<VideoPlayer> {
   void dispose() {
     super.dispose();
     _controller.player.dispose();
-    _player.dispose();
   }
 
   @override

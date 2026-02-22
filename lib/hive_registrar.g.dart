@@ -33,7 +33,7 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(ReleaseTimerModelAdapter());
     registerAdapter(SeasonModelAdapter());
     registerAdapter(TranslatedModelAdapter());
-    registerAdapter(UserAdapter());
+    registerAdapter(UserModelAdapter());
     registerAdapter(UserRoleAdapter());
     registerAdapter(VideoModelAdapter());
   }
@@ -56,7 +56,7 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
     registerAdapter(ReleaseTimerModelAdapter());
     registerAdapter(SeasonModelAdapter());
     registerAdapter(TranslatedModelAdapter());
-    registerAdapter(UserAdapter());
+    registerAdapter(UserModelAdapter());
     registerAdapter(UserRoleAdapter());
     registerAdapter(VideoModelAdapter());
   }

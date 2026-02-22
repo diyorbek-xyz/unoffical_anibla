@@ -7,14 +7,14 @@ const List tabs = [
     "selected": Icon(Icons.home),
   },
   {
-    "label": "Search",
-    "icon": Icon(Icons.search),
-    "selected": Icon(Icons.search),
-  },
-  {
     "label": "Explore",
     "icon": Icon(Icons.grid_view_outlined),
     "selected": Icon(Icons.grid_view_sharp),
+  },
+  {
+    "label": "Saved",
+    "icon": Icon(Icons.bookmark_outline),
+    "selected": Icon(Icons.bookmark),
   },
   {
     "label": "Profile",

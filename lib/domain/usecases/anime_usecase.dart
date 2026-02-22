@@ -11,15 +11,15 @@ class GetAnimesListUseCase implements UseCase<DataState<List<AnimeEntity>>, GetA
 
   @override
   Future<DataState<List<AnimeEntity>>> call(GetAnimesParams params) async {
-    return repository.getAnimes(limit: params.limit, page: params.page);
+    return repository.getAnimes(params);
   }
 }
 
-class GetAnimeDetailsUseCase implements UseCase<DataState<AnimeEntity>, String> {
+class GetAnimeDetailsUseCase implements UseCase<DataState<AnimeEntity>, GetAnimeDetailsParams> {
   final AnimeRepository repository;
   GetAnimeDetailsUseCase(this.repository);
   @override
-  Future<DataState<AnimeEntity>> call(String animeSlug) {
-    return repository.getAnime(animeSlug: animeSlug);
+  Future<DataState<AnimeEntity>> call(GetAnimeDetailsParams params) {
+    return repository.getAnime(params);
   }
 }
