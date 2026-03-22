@@ -8,7 +8,6 @@ environment:
 
 dependencies:
     cached_network_image: ^3.4.1
-    carousel_slider: ^5.1.1
     dio: ^5.9.0
     flutter:
         sdk: flutter
@@ -25,7 +24,6 @@ dependencies:
     media_kit_libs_linux: ^1.2.1
     flutter_timer_countdown: ^1.0.7
     equatable: ^2.0.8
-
     retrofit: ^4.9.2
     logger: ^2.6.2
     json_annotation: ^4.10.0

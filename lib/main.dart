@@ -1,4 +1,5 @@
 import 'package:application/core/constants/theme.dart';
+import 'package:application/features/auth/presentation/pages/login_page.dart';
 import 'package:application/features/home/presentation/pages/main_page.dart';
 import 'package:application/injection_container.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,7 @@ import 'package:go_router/go_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await initializeDependencies();
+  await initializeDependencies();
 
   runApp(const MainApp());
 }
@@ -18,6 +19,13 @@ final GoRouter _router = GoRouter(
       path: "/",
       builder: (context, state) {
         return const MainPage();
+      },
+    ),
+    GoRoute(
+      name: "login",
+      path: "/login",
+      builder: (context, state) {
+        return const LoginPage();
       },
     ),
   ],

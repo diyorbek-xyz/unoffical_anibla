@@ -1,5 +1,6 @@
+import 'package:application/features/auth/presentation/pages/login_page.dart';
 import 'package:application/features/home/presentation/pages/home_page.dart';
-import 'package:application/features/home/presentation/widgets/bottom_bar.dart';
+import 'package:application/features/home/presentation/widgets/sidebar.dart';
 import 'package:flutter/material.dart';
 
 class MainPage extends StatefulWidget {
@@ -11,7 +12,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int _index = 0;
-  List<Widget> pages = [HomePage(), Text("Hello"), Text("World"), Text("End")];
+  List<Widget> pages = [HomePage(), Text("Hello"), Text("World"), LoginPage()];
 
   void setIndex(int index) {
     setState(() {
@@ -22,8 +23,18 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(index: _index, children: pages),
-      bottomNavigationBar: BottomBar(index: _index, setIndex: setIndex),
+      body: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Sidebar(index: _index, setIndex: setIndex),
+          Expanded(
+            child: IndexedStack(index: _index, children: pages),
+          ),
+        ],
+      ),
+      // bottomNavigationBar: BottomBar(index: _index, setIndex: setIndex),
     );
   }
 }
