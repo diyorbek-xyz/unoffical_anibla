@@ -1,4 +1,3 @@
-import 'package:application/features/auth/presentation/pages/login_page.dart';
 import 'package:application/features/home/presentation/pages/home_page.dart';
 import 'package:application/features/home/presentation/widgets/sidebar.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +11,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int _index = 0;
-  List<Widget> pages = [HomePage(), Text("Hello"), Text("World"), LoginPage()];
+  List<Widget> pages = [HomePage(), Text("Hello"), Text("World"), Text("Profile")];
 
   void setIndex(int index) {
     setState(() {

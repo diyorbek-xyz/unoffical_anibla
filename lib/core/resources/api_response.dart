@@ -14,4 +14,5 @@ class ApiResponse<T> extends Equatable {
   List<Object?> get props => [success, message, data];
 
   factory ApiResponse.fromJson(Map<String, dynamic> json, T Function(Object? json) fromJsonT) => _$ApiResponseFromJson(json, fromJsonT);
+  Map<String, dynamic> toJson(Object? Function(T value) toJsonT) => _$ApiResponseToJson(this, toJsonT);
 }

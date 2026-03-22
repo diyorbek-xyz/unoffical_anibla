@@ -1,5 +1,7 @@
 import 'package:application/core/constants/constants.dart';
+import 'package:application/core/network/interceptors/auth_interceptor.dart';
 import 'package:application/features/auth/data/repository/auth_repository_impl.dart';
+import 'package:application/features/auth/data/source/local/auth_storage.dart';
 import 'package:application/features/auth/data/source/remote/login_api.dart';
 import 'package:application/features/auth/domain/repository/auth_repository.dart';
 import 'package:application/features/auth/presentation/bloc/auth_bloc.dart';
@@ -16,53 +18,71 @@ import 'package:application/features/slider/presentation/bloc/slider_bloc.dart';
 import 'package:application/hive_registrar.g.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:media_kit/media_kit.dart';
 
-final headers = {
-  "User-Agent": "okhttp/4.12.0",
-  "x-platform": "mobile",
-  "Accept-Encoding": "gzip",
-  "accept": "application/json",
-  "x-platform-os": "android",
-  "Host": "amediatv.up-it.uz",
-  "x-device": "Redmi 6A",
-  "Connection": "Keep-Alive",
-  "x-app-version": "2.4.9",
-  "Authorization":
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjZmYjliNzcwYzY1MjcxMGJlNTUxZjRmIiwidG9rZW5faWQiOiJkMzAyMDYyOS1hMmUzLTQyYjQtYjkxMy01MjRlNTViM2I3OTgiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzczNjY0MTMxLCJleHAiOjE3NzQ4NzM3MzF9.eQRqxKBQC70ES3L0dJz0tZxZTOHRPQjuklytMYsLZdM",
-};
-
 final sl = GetIt.instance;
-final dio = Dio(BaseOptions(baseUrl: "$amediatvBaseUrl/api", headers: headers));
+final dio = Dio(
+  BaseOptions(
+    baseUrl: "$amediatvBaseUrl/api",
+    headers: {
+      "User-Agent": "okhttp/4.12.0",
+      "x-platform": "mobile",
+      "Accept-Encoding": "gzip",
+      "accept": "application/json",
+      "x-platform-os": "android",
+      "Host": "amediatv.up-it.uz",
+      "x-device": "Redmi 6A",
+      "Connection": "Keep-Alive",
+      "x-app-version": "2.4.9",
+    },
+  ),
+);
+final secureStorage = FlutterSecureStorage();
 
 Future<void> initializeDependencies() async {
-  await dotenv.load(fileName: '.env');
-
+  // Setup local Storage ;
   await Hive.initFlutter();
   Hive.registerAdapters();
 
+  // Setup miscs
+  await dotenv.load(fileName: '.env');
   await initializeDateFormatting('uz');
   MediaKit.ensureInitialized();
 
+  // Open boxes ;
   final calendarBox = await Hive.openBox<CalendarModel>("calendarBox");
+
+  // Register / Setup network logic;
+  sl.registerSingleton<FlutterSecureStorage>(secureStorage);
+  sl.registerSingleton<AuthStorage>(AuthStorageImpl(sl()));
+  sl.registerLazySingleton<AuthInterceptor>(() => AuthInterceptor(sl()));
+  dio.interceptors.add(sl<AuthInterceptor>());
+
+  // Register local storages ;
   sl.registerLazySingleton<Box<CalendarModel>>(() => calendarBox);
 
-  sl.registerLazySingleton<Dio>(() => dio);
-  sl.registerLazySingleton<DotEnv>(() => dotenv);
+  // Register miscs;
+  sl.registerSingleton<Dio>(dio);
+  sl.registerSingleton<DotEnv>(dotenv);
 
-  sl.registerLazySingleton<SliderApi>(() => SliderApi(sl()));
-  sl.registerLazySingleton<CalendarApi>(() => CalendarApi(sl()));
-  sl.registerLazySingleton<LoginApi>(() => LoginApi(sl()));
+  // Register remote Api Services;
+  sl.registerSingleton<SliderApi>(SliderApi(sl()));
+  sl.registerSingleton<CalendarApi>(CalendarApi(sl()));
+  sl.registerSingleton<LoginApi>(LoginApi(sl()));
 
-  sl.registerLazySingleton<CalendarLocal>(() => CalendarLocalImpl(sl()));
+  // Register Local Storage Services;
+  sl.registerSingleton<CalendarLocal>(CalendarLocalImpl(sl()));
 
-  sl.registerLazySingleton<SliderRepository>(() => SliderRepositoryImpl(sl()));
-  sl.registerLazySingleton<CalendarRepository>(() => CalendarRepositoryImpl(sl(), sl()));
-  sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl()));
+  // Register Repositories;
+  sl.registerSingleton<SliderRepository>(SliderRepositoryImpl(sl()));
+  sl.registerSingleton<CalendarRepository>(CalendarRepositoryImpl(sl(), sl()));
+  sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl(), sl()));
 
+  // Register State managers;
   sl.registerFactory<SliderBloc>(() => SliderBloc(sl()));
   sl.registerFactory<AuthBloc>(() => AuthBloc(sl()));
   sl.registerFactory<CalendarBloc>(() => CalendarBloc(sl()));
