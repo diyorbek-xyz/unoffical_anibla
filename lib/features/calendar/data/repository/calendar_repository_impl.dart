@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:application/core/network/errors.dart';
 import 'package:application/core/resources/data_state.dart';
 import 'package:application/core/utils/utils.dart';
 import 'package:application/features/calendar/data/models/calendar_model.dart';
@@ -27,7 +28,7 @@ class CalendarRepositoryImpl implements CalendarRepository {
           final local = await calendarLocal.getCalendar(date);
           return DataSuccess(local!.toEntity());
         } catch (e) {
-          return DataFailed(DioException(requestOptions: httpResponse.response.requestOptions), httpResponse.response);
+          return DataFailed(screamFromResponse(httpResponse.response));
         }
       }
     } on DioException catch (e) {

@@ -7,13 +7,18 @@ import 'package:application/core/entites/pagination.dart';
 import 'package:application/core/entites/translated.dart';
 import 'package:application/features/calendar/data/models/calendar_model.dart';
 import 'package:application/features/calendar/data/models/timer_model.dart';
+import 'package:application/features/profile/data/models/account_model.dart';
+import 'package:application/features/profile/data/models/session_model.dart';
 import 'package:application/features/slider/data/models/slider_model.dart';
 import 'package:application/features/template/data/models/template_model.dart';
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
+    registerAdapter(AccountModelAdapter());
     registerAdapter(CalendarModelAdapter());
     registerAdapter(PaginationModelAdapter());
+    registerAdapter(SessionModelAdapter());
+    registerAdapter(SessionsModelAdapter());
     registerAdapter(SliderModelAdapter());
     registerAdapter(TemplateModelAdapter());
     registerAdapter(TimerModelAdapter());
@@ -23,8 +28,11 @@ extension HiveRegistrar on HiveInterface {
 
 extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
+    registerAdapter(AccountModelAdapter());
     registerAdapter(CalendarModelAdapter());
     registerAdapter(PaginationModelAdapter());
+    registerAdapter(SessionModelAdapter());
+    registerAdapter(SessionsModelAdapter());
     registerAdapter(SliderModelAdapter());
     registerAdapter(TemplateModelAdapter());
     registerAdapter(TimerModelAdapter());

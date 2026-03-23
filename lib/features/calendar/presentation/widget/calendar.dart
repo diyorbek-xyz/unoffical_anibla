@@ -24,24 +24,3 @@ class Calendar extends StatelessWidget {
     );
   }
 }
-
-Map<String, dynamic> sample = {
-  "_id": "696b87486b38bc666fb20000",
-  "uz": {
-    "title": "Friren: So'ngi manzilga kuzatuvchi 2",
-    "description":
-        "Bir vaqtlar qahramon hamrohlari Himmel, Xayter va Ayzen bilan birga Jinlar Qirolni mag'lub etgan elf sehrgar Friren dunyo bo'ylab kezishda davom etmoqda. Odamlarning his-tuyg'ularini yaxshiroq tushunish va vafot etgan do'stlarining so'nggi tilaklarini bajarishga intilib, Friren shogirdi Fern va jangchi Stark bilan sayohatga chiqadi. Uning sayohati shimolga olib boradi, u yerda muzli xavf nafaqat yomon ob-havoda, balki mahalliy aholining niyatlarida ham yashiringan.\nYer yuzidagi jannat deb hisoblangan yo'lda Friren va uning hamrohlari yangi do'stlar bilan uchrashadilar va o'tib bo'lmaydigan o'rmon tubida yashiringan kuchli yovuzlikka duch kelishadi.",
-    "_id": "696b88a0cb300d9b0ed88164",
-  },
-  "ru": {
-    "title": "Провожающая в последний путь Фрирен 2",
-    "description":
-        "Эльфийская волшебница Фрирен, в прошлом одолевшая Короля демонов вместе со своими героическими товарищами Химмелем, Хайтером и Айзеном, продолжает странствовать по миру. Пытаясь лучше понять чувства людей и исполнить последние желания ушедших друзей, Фрирен отправляется в путешествие со своей ученицей Ферн и воином Штарком. Её путь лежит на север, где леденящая опасность скрывается не только в ненастной погоде, но и в намерениях местных обитателей.\nПо дороге к месту, которое, по преданию, является раем на земле, Фрирен и компании предстоит как встретиться с новыми друзьями, так и столкнуться лицом к лицу с могущественным злом, затаившимся в чаще непролазного леса.",
-    "_id": "696b88a0cb300d9b0ed88165",
-  },
-  "slug": "friren-so-ngi-manzilga-kuzatuvchi-2",
-  "genres": [],
-  "categories": [],
-  "thumbnail": "uploads/1768653973447-806721670.jpg",
-  "images": ["/uploads/1768653983963-51707128.jpg"],
-};

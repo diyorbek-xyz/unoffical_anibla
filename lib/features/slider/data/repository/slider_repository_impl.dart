@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:application/core/network/errors.dart';
 import 'package:application/core/resources/data_state.dart';
 import 'package:application/features/slider/data/source/remote/slider_api.dart';
 import 'package:application/features/slider/domain/entities/slider_entity.dart';
@@ -16,7 +17,7 @@ class SliderRepositoryImpl implements SliderRepository {
       if (httpResponse.response.statusCode == HttpStatus.ok) {
         return DataSuccess(httpResponse.data.data);
       } else {
-        return DataFailed(DioException(requestOptions: httpResponse.response.requestOptions), httpResponse.response);
+        return DataFailed(screamFromResponse(httpResponse.response));
       }
     } on DioException catch (e) {
       return DataFailed(e);

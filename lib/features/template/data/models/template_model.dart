@@ -4,7 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'template_model.g.dart';
 
-@HiveType(typeId: -1)
+@HiveType(typeId: 9999)
 @JsonSerializable()
 class TemplateModel {
   const TemplateModel();

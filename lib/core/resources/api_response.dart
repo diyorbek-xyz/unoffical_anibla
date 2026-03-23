@@ -7,8 +7,9 @@ part 'api_response.g.dart';
 class ApiResponse<T> extends Equatable {
   final bool success;
   final String message;
+  final String? error;
   final T data;
-  const ApiResponse({required this.message, required this.success, required this.data});
+  const ApiResponse({required this.message, required this.success, required this.data, this.error});
 
   @override
   List<Object?> get props => [success, message, data];

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:application/core/network/errors.dart';
 import 'package:application/core/resources/data_state.dart';
 import 'package:application/features/template/data/source/remote/template_api.dart';
 import 'package:application/features/template/domain/entities/template_entity.dart';
@@ -16,7 +17,7 @@ class TemplateRepositoryImpl implements TemplateRepository {
       if (httpResponse.response.statusCode == HttpStatus.ok) {
         return DataSuccess(httpResponse.data.data.toEntity());
       } else {
-        return DataFailed(DioException(requestOptions: httpResponse.response.requestOptions), httpResponse.response);
+        return DataFailed(screamFromResponse(httpResponse.response));
       }
     } on DioException catch (e) {
       return DataFailed(e);

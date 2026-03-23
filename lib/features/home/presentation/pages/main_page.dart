@@ -1,5 +1,6 @@
 import 'package:application/features/home/presentation/pages/home_page.dart';
 import 'package:application/features/home/presentation/widgets/sidebar.dart';
+import 'package:application/features/profile/presentation/pages/profile_page.dart';
 import 'package:flutter/material.dart';
 
 class MainPage extends StatefulWidget {
@@ -11,7 +12,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int _index = 0;
-  List<Widget> pages = [HomePage(), Text("Hello"), Text("World"), Text("Profile")];
+  List<Widget> pages = [HomePage(), Text("Hello"), Text("World"), ProfilePage()];
 
   void setIndex(int index) {
     setState(() {

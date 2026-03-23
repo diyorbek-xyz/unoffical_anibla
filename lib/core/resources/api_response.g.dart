@@ -13,6 +13,7 @@ ApiResponse<T> _$ApiResponseFromJson<T>(
   message: json['message'] as String,
   success: json['success'] as bool,
   data: fromJsonT(json['data']),
+  error: json['error'] as String?,
 );
 
 Map<String, dynamic> _$ApiResponseToJson<T>(
@@ -21,5 +22,6 @@ Map<String, dynamic> _$ApiResponseToJson<T>(
 ) => <String, dynamic>{
   'success': instance.success,
   'message': instance.message,
+  'error': instance.error,
   'data': toJsonT(instance.data),
 };

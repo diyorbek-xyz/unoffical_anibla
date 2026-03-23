@@ -1,5 +1,6 @@
 import 'package:application/core/constants/constants.dart';
 import 'package:application/core/network/interceptors/auth_interceptor.dart';
+import 'package:application/core/network/interceptors/error_interceptor.dart';
 import 'package:application/features/auth/data/repository/auth_repository_impl.dart';
 import 'package:application/features/auth/data/source/local/auth_storage.dart';
 import 'package:application/features/auth/data/source/remote/login_api.dart';
@@ -11,6 +12,10 @@ import 'package:application/features/calendar/data/source/local/calendar_local.d
 import 'package:application/features/calendar/data/source/remote/calendar_api.dart';
 import 'package:application/features/calendar/domain/repository/calendar_repository.dart';
 import 'package:application/features/calendar/presentation/bloc/calendar_bloc.dart';
+import 'package:application/features/profile/data/repository/account_repository_impl.dart';
+import 'package:application/features/profile/data/source/remote/profile_api.dart';
+import 'package:application/features/profile/domain/repository/profile_repository.dart';
+import 'package:application/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:application/features/slider/data/repository/slider_repository_impl.dart';
 import 'package:application/features/slider/data/source/remote/slider_api.dart';
 import 'package:application/features/slider/domain/repository/slider_repository.dart';
@@ -44,25 +49,27 @@ final dio = Dio(
 final secureStorage = FlutterSecureStorage();
 
 Future<void> initializeDependencies() async {
-  // Setup local Storage ;
+  // Setup local Storage;
   await Hive.initFlutter();
   Hive.registerAdapters();
 
-  // Setup miscs
+  // Setup miscs;
   await dotenv.load(fileName: '.env');
   await initializeDateFormatting('uz');
   MediaKit.ensureInitialized();
 
-  // Open boxes ;
+  // Open boxes;
   final calendarBox = await Hive.openBox<CalendarModel>("calendarBox");
 
   // Register / Setup network logic;
   sl.registerSingleton<FlutterSecureStorage>(secureStorage);
   sl.registerSingleton<AuthStorage>(AuthStorageImpl(sl()));
+  sl.registerLazySingleton<ErrorInterceptor>(() => ErrorInterceptor());
   sl.registerLazySingleton<AuthInterceptor>(() => AuthInterceptor(sl()));
+  dio.interceptors.add(sl<ErrorInterceptor>());
   dio.interceptors.add(sl<AuthInterceptor>());
 
-  // Register local storages ;
+  // Register local storages;
   sl.registerLazySingleton<Box<CalendarModel>>(() => calendarBox);
 
   // Register miscs;
@@ -73,6 +80,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<SliderApi>(SliderApi(sl()));
   sl.registerSingleton<CalendarApi>(CalendarApi(sl()));
   sl.registerSingleton<LoginApi>(LoginApi(sl()));
+  sl.registerSingleton<ProfileApi>(ProfileApi(sl()));
 
   // Register Local Storage Services;
   sl.registerSingleton<CalendarLocal>(CalendarLocalImpl(sl()));
@@ -81,9 +89,11 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<SliderRepository>(SliderRepositoryImpl(sl()));
   sl.registerSingleton<CalendarRepository>(CalendarRepositoryImpl(sl(), sl()));
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl(), sl()));
+  sl.registerSingleton<ProfileRepository>(ProfileRepositoryImpl(sl()));
 
   // Register State managers;
   sl.registerFactory<SliderBloc>(() => SliderBloc(sl()));
   sl.registerFactory<AuthBloc>(() => AuthBloc(sl()));
   sl.registerFactory<CalendarBloc>(() => CalendarBloc(sl()));
+  sl.registerFactory<ProfileBloc>(() => ProfileBloc(sl()));
 }

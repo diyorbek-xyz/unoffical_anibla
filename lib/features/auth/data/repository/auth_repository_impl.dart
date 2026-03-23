@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:application/core/network/errors.dart';
 import 'package:application/core/resources/data_state.dart';
 import 'package:application/features/auth/data/models/login_model.dart';
 import 'package:application/features/auth/data/source/local/auth_storage.dart';
@@ -20,15 +21,7 @@ class AuthRepositoryImpl implements AuthRepository {
         await authStorage.saveTokens(httpResponse.data.token);
         return DataSuccess(httpResponse.data);
       } else {
-        return DataFailed(
-          DioException(
-            response: httpResponse.response,
-            message: httpResponse.response.data.toString(),
-            error: httpResponse.response.statusMessage,
-            requestOptions: httpResponse.response.requestOptions,
-          ),
-          httpResponse.response,
-        );
+        return DataFailed(screamFromResponse(httpResponse.response));
       }
     } on DioException catch (e) {
       return DataFailed(e);
@@ -42,15 +35,7 @@ class AuthRepositoryImpl implements AuthRepository {
       if (httpResponse.response.statusCode == HttpStatus.created) {
         return DataSuccess(httpResponse.data);
       } else {
-        return DataFailed(
-          DioException(
-            response: httpResponse.response,
-            message: httpResponse.response.data.toString(),
-            error: httpResponse.response.statusMessage,
-            requestOptions: httpResponse.response.requestOptions,
-          ),
-          httpResponse.response,
-        );
+        return DataFailed(screamFromResponse(httpResponse.response));
       }
     } on DioException catch (e) {
       return DataFailed(e);

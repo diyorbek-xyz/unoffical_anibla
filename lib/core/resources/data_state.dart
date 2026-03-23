@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:retrofit/retrofit.dart';
 
 abstract class DataState<T> {
   final T? data;
@@ -12,5 +13,5 @@ class DataSuccess<T> extends DataState<T> {
 }
 
 class DataFailed<T> extends DataState<T> {
-  const DataFailed(DioException exception, [Response? response]) : super(exception: exception, response: response);
+  const DataFailed(DioException exception, {super.response, super.data}) : super(exception: exception);
 }
