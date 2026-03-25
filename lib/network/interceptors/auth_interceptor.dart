@@ -24,6 +24,7 @@ class AuthInterceptor extends Interceptor {
               error: response.data['error'],
               message: response.data['message'],
               response: response,
+              type: DioExceptionType.badResponse,
             ),
           );
           return;

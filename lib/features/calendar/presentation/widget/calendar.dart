@@ -18,7 +18,13 @@ class Calendar extends StatelessWidget {
           if (state is CalendarSuccess) {
             return Column(children: state.data.timers.map((e) => TimerWidget(timer: e)).toList());
           }
-          return CircularProgressIndicator.adaptive();
+          if (state is CalendarError) {
+            return Text(state.message);
+          }
+          if (state is CalendarLoading) {
+            return CircularProgressIndicator.adaptive();
+          }
+          return Text("loaded");
         },
       ),
     );

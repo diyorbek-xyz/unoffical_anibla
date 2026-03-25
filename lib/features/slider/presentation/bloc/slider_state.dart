@@ -13,7 +13,6 @@ final class SliderSuccess extends SliderState {
 }
 
 final class SliderError extends SliderState {
-  final Response? response;
   final DioException exception;
-  SliderError(this.exception, [this.response]);
+  SliderError(this.exception);
 }

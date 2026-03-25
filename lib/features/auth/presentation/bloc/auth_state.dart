@@ -18,13 +18,11 @@ final class ConfirmSuccess extends AuthState {
 }
 
 final class LoginFailed extends AuthState {
-  final Response? response;
   final DioException exception;
-  LoginFailed(this.exception, [this.response]);
+  LoginFailed(this.exception);
 }
 
 final class ConfirmFailed extends AuthState {
-  final Response? response;
   final DioException exception;
-  ConfirmFailed(this.exception, [this.response]);
+  ConfirmFailed(this.exception);
 }

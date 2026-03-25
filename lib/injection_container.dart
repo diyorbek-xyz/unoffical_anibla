@@ -1,6 +1,7 @@
 import 'package:application/core/constants/constants.dart';
-import 'package:application/core/network/interceptors/auth_interceptor.dart';
-import 'package:application/core/network/interceptors/error_interceptor.dart';
+import 'package:application/features/profile/presentation/bloc/session/session_bloc.dart';
+import 'package:application/network/interceptors/auth_interceptor.dart';
+import 'package:application/network/interceptors/error_interceptor.dart';
 import 'package:application/features/auth/data/repository/auth_repository_impl.dart';
 import 'package:application/features/auth/data/source/local/auth_storage.dart';
 import 'package:application/features/auth/data/source/remote/login_api.dart';
@@ -15,7 +16,7 @@ import 'package:application/features/calendar/presentation/bloc/calendar_bloc.da
 import 'package:application/features/profile/data/repository/account_repository_impl.dart';
 import 'package:application/features/profile/data/source/remote/profile_api.dart';
 import 'package:application/features/profile/domain/repository/profile_repository.dart';
-import 'package:application/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:application/features/profile/presentation/bloc/profile/profile_bloc.dart';
 import 'package:application/features/slider/data/repository/slider_repository_impl.dart';
 import 'package:application/features/slider/data/source/remote/slider_api.dart';
 import 'package:application/features/slider/domain/repository/slider_repository.dart';
@@ -96,4 +97,5 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<AuthBloc>(() => AuthBloc(sl()));
   sl.registerFactory<CalendarBloc>(() => CalendarBloc(sl()));
   sl.registerFactory<ProfileBloc>(() => ProfileBloc(sl()));
+  sl.registerFactory<SessionBloc>(() => SessionBloc(sl()));
 }

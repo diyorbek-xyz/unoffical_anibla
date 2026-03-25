@@ -13,7 +13,6 @@ final class TemplateSuccess extends TemplateState {
 }
 
 final class TemplateError extends TemplateState {
-  final Response? response;
   final DioException exception;
-  TemplateError(this.exception, [this.response]);
+  TemplateError(this.exception);
 }

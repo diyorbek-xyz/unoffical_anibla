@@ -1,3 +1,5 @@
+import 'package:application/core/resources/api_response.dart';
+import 'package:application/features/profile/data/models/account_model.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -8,5 +10,8 @@ abstract class ProfileApi {
   factory ProfileApi(Dio dio) = _ProfileApi;
 
   @GET('/v1/users/me')
-  Future<HttpResponse<dynamic>> getProfile();
+  Future<HttpResponse<ApiResponse<AccountModel>>> getProfile();
+
+  @DELETE("/v1/sessions/{tokenId}")
+  Future<HttpResponse<ApiResponse<dynamic>>> exitSession(@Path("tokenId") String tokenId);
 }

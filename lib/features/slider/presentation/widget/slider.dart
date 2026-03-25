@@ -22,7 +22,7 @@ class CarouselWidget extends StatelessWidget {
             return SizedBox(width: 100, height: 100, child: Center(child: CircularProgressIndicator.adaptive()));
           }
           if (state is SliderError) {
-            return SizedBox(width: 100, height: 100, child: Center(child: Text(state.exception.toString() + state.response.toString())));
+            return SizedBox(width: 100, height: 100, child: Center(child: Text(state.exception.toString())));
           }
           if (state is SliderSuccess) {
             return SliderWidget(items: state.data, animationDuration: Duration(milliseconds: 400));

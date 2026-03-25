@@ -1,24 +1,28 @@
 import 'package:application/features/calendar/domain/entities/calendar_entity.dart';
-import 'package:dio/dio.dart';
 
-sealed class CalendarState {}
+sealed class CalendarState {
+  const CalendarState();
+}
 
-final class CalendarInitial extends CalendarState {}
+final class CalendarInitial extends CalendarState {
+  const CalendarInitial();
+}
 
-final class CalendarLoading extends CalendarState {}
+final class CalendarLoading extends CalendarState {
+  const CalendarLoading();
+}
 
 final class CalendarFullSuccess extends CalendarState {
   final List<CalendarEntity> data;
-  CalendarFullSuccess(this.data);
+  const CalendarFullSuccess(this.data);
 }
 
 final class CalendarSuccess extends CalendarState {
   final CalendarEntity data;
-  CalendarSuccess(this.data);
+  const CalendarSuccess(this.data);
 }
 
 final class CalendarError extends CalendarState {
-  final Response? response;
-  final DioException exception;
-  CalendarError(this.exception, [this.response]);
+  final String message;
+  const CalendarError(this.message);
 }

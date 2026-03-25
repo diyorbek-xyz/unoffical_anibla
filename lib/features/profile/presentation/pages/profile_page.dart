@@ -1,6 +1,8 @@
-import 'package:application/features/profile/presentation/bloc/profile_bloc.dart';
-import 'package:application/features/profile/presentation/bloc/profile_event.dart';
-import 'package:application/features/profile/presentation/bloc/profile_state.dart';
+import 'package:application/features/profile/presentation/bloc/profile/profile_bloc.dart';
+import 'package:application/features/profile/presentation/bloc/profile/profile_event.dart';
+import 'package:application/features/profile/presentation/bloc/profile/profile_state.dart';
+import 'package:application/features/profile/presentation/widget/profile_main.dart';
+import 'package:application/features/profile/presentation/widget/sessions.dart';
 import 'package:application/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,27 +17,27 @@ class ProfilePage extends StatelessWidget {
       create: (context) => sl<ProfileBloc>()..add(GetProfile()),
       child: BlocBuilder<ProfileBloc, ProfileState>(
         builder: (context, state) {
-          if (state is ProfileUnauthorized) {
+          if (state is ProfileError) {
             return Column(
               children: [
-                Text("Akkountga kirish"),
+                Text(state.message),
                 ElevatedButton(onPressed: () => context.pushNamed("login"), child: Text("login")),
               ],
             );
           }
           if (state is ProfileLimitSession) {
-            return Column(
-              children: [
-                Text("${state.sessions.name} ${state.sessions.total}"),
-                ...state.sessions.sessions.map((e) => ListTile(title: Text(e.device))),
-              ],
+            return SessionsFailureWidget(sessions: state.sessions);
+          }
+          if (state is ProfileLoading) {
+            return Container(
+              alignment: AlignmentGeometry.center,
+              child: CircularProgressIndicator.adaptive(),
             );
           }
-          return SingleChildScrollView(
-            child: Column(
-              children: [ElevatedButton(onPressed: () => context.read<ProfileBloc>().add(GetProfile()), child: Text("refresh"))],
-            ),
-          );
+          if (state is ProfileSuccess) {
+            return ProfileMain(data: state.data);
+          }
+          return Text("Nimadur xato ketti");
         },
       ),
     );

@@ -16,7 +16,7 @@ class TemplateBloc extends Bloc<TemplateEvent, TemplateState> {
       emit(TemplateSuccess(dataState.data!));
     }
     if (dataState is DataFailed) {
-      emit(TemplateError(dataState.exception!, dataState.response));
+      emit(TemplateError(dataState.exception!));
     }
   }
 }

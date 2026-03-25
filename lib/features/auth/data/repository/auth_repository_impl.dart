@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:application/core/network/errors.dart';
+import 'package:application/network/errors.dart';
 import 'package:application/core/resources/data_state.dart';
 import 'package:application/features/auth/data/models/login_model.dart';
 import 'package:application/features/auth/data/source/local/auth_storage.dart';

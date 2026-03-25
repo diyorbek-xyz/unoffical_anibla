@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 
-class Errors {
+abstract class Errors {
   static final tooManySessions = "too_many_sessions";
 }
 
@@ -10,5 +10,6 @@ DioException screamFromResponse(Response response) {
     error: response.statusMessage,
     message: response.toString(),
     response: response,
+    type: DioExceptionType.badResponse,
   );
 }

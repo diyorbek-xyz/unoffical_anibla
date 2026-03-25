@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:application/core/network/errors.dart';
+import 'package:application/network/errors.dart';
 import 'package:application/core/resources/data_state.dart';
 import 'package:application/features/template/data/source/remote/template_api.dart';
 import 'package:application/features/template/domain/entities/template_entity.dart';

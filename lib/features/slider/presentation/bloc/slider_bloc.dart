@@ -16,7 +16,7 @@ class SliderBloc extends Bloc<SliderEvent, SliderState> {
       emit(SliderSuccess(dataState.data!));
     }
     if (dataState is DataFailed) {
-      emit(SliderError(dataState.exception!, dataState.response));
+      emit(SliderError(dataState.exception!));
     }
   }
 }

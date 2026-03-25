@@ -12,10 +12,13 @@ int parseString(String str) {
 
 String addBaseUrl(String? path) {
   if (path == null) return "";
+  if (path.contains('profile_not_found.png')) return "assets/images/avatar.png";
   if (path.startsWith(dotenv.env['NEW_BASE_URL']!)) {
     return path;
-  } else {
+  } else if (path.startsWith("/")) {
     return dotenv.env['NEW_BASE_URL']! + path;
+  } else {
+    return "${dotenv.env['NEW_BASE_URL']}/$path";
   }
 }
 
@@ -35,7 +38,13 @@ class FormatDate {
   final String weekday;
   final String dynamicWeekday;
   final String time;
-  const FormatDate({required this.compact, required this.dynamicWeekday, required this.weekday, required this.title, required this.time});
+  const FormatDate({
+    required this.compact,
+    required this.dynamicWeekday,
+    required this.weekday,
+    required this.title,
+    required this.time,
+  });
 
   factory FormatDate.format(DateTime date) {
     final compact = DateFormat("d-MM-y", 'uz-UZ').format(date);
@@ -48,13 +57,22 @@ class FormatDate {
       if ((today.day - date.day).abs() > 6 || (date.month - today.month).abs() != 0) {
         return title;
       }
-      if (date.weekday == yesterday.weekday && date.day == yesterday.day && date.month == yesterday.month && date.year == yesterday.year) {
+      if (date.weekday == yesterday.weekday &&
+          date.day == yesterday.day &&
+          date.month == yesterday.month &&
+          date.year == yesterday.year) {
         return "kecha";
       }
-      if (date.weekday == tomorrow.weekday && date.day == tomorrow.day && date.month == tomorrow.month && date.year == tomorrow.year) {
+      if (date.weekday == tomorrow.weekday &&
+          date.day == tomorrow.day &&
+          date.month == tomorrow.month &&
+          date.year == tomorrow.year) {
         return "ertaga";
       }
-      if (date.weekday == today.weekday && date.day == today.day && date.month == today.month && date.year == today.year) {
+      if (date.weekday == today.weekday &&
+          date.day == today.day &&
+          date.month == today.month &&
+          date.year == today.year) {
         return "bugun";
       }
       return weekday;
@@ -78,9 +96,12 @@ extension StringExt on String {
 }
 
 extension DateFormatting on DateTime {
-  String formatCompact({String divider = "-"}) => DateFormat("d${divider}MM${divider}y", 'uz-UZ').format(this);
-  String formatDay() => toBeginningOfSentenceCase(DateFormat(DateFormat.MONTH_DAY, 'uz-UZ').format(this));
-  String formatFull() => toBeginningOfSentenceCase(DateFormat("d-MMMM hh:mm", 'uz-UZ').format(this));
+  String formatCompact({String divider = "-"}) =>
+      DateFormat("d${divider}MM${divider}y", 'uz-UZ').format(this);
+  String formatDay() =>
+      toBeginningOfSentenceCase(DateFormat(DateFormat.MONTH_DAY, 'uz-UZ').format(this));
+  String formatFull() =>
+      toBeginningOfSentenceCase(DateFormat("d-MMMM hh:mm", 'uz-UZ').format(this));
   String formatWeekday() => toBeginningOfSentenceCase(DateFormat("EEEE", "uz-UZ").format(this));
   String formatTime() => DateFormat(DateFormat.HOUR24_MINUTE, 'uz-UZ').format(this);
   String formatDynamicWeeks() {
