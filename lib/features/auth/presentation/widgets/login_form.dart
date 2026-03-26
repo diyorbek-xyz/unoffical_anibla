@@ -18,12 +18,21 @@ class _LoginFormState extends State<LoginForm> {
   final confirmController = TextEditingController();
 
   void getConfirmCode(BuildContext context) {
-    context.read<AuthBloc>().add(LoginEvent(LoginRequestModel(phoneController.text.parseInt())));
+    context.read<AuthBloc>().add(
+      LoginEvent(
+        LoginRequestModel(phoneController.text.isNotEmpty ? phoneController.text.parseInt() : 0),
+      ),
+    );
   }
 
   void confirmCode(BuildContext context) {
     context.read<AuthBloc>().add(
-      ConfirmEvent(ConfirmModel(code: confirmController.text.parseInt(), login: phoneController.text.parseInt())),
+      ConfirmEvent(
+        ConfirmModel(
+          code: confirmController.text.parseInt(),
+          login: phoneController.text.parseInt(),
+        ),
+      ),
     );
   }
 
@@ -48,9 +57,13 @@ class _LoginFormState extends State<LoginForm> {
                   controller: phoneController,
                   keyboardType: TextInputType.phone,
                   enabled: !receivedCode,
-                  decoration: InputDecoration(border: OutlineInputBorder(), icon: Icon(Icons.phone)),
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    icon: Icon(Icons.phone),
+                  ),
                 ),
-                if (receivedFailed) Text(state.exception.message.toString(), style: TextStyle(color: Colors.red)),
+                if (receivedFailed)
+                  Text(state.exception.message.toString(), style: TextStyle(color: Colors.red)),
                 if (!receivedCode && !codeCorrect)
                   ElevatedButton(
                     onPressed: () => getConfirmCode(context),
@@ -61,7 +74,10 @@ class _LoginFormState extends State<LoginForm> {
                     controller: confirmController,
                     keyboardType: TextInputType.number,
                     enabled: (!codeCorrect || !receivedCode),
-                    decoration: InputDecoration(border: OutlineInputBorder(), icon: Icon(Icons.sms)),
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      icon: Icon(Icons.sms),
+                    ),
                   ),
                 if (receivedCode && !codeCorrect)
                   ElevatedButton(

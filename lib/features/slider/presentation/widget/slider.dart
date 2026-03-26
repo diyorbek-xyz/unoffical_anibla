@@ -29,7 +29,7 @@ class CarouselWidget extends StatelessWidget {
             return SizedBox(
               width: 100,
               height: 100,
-              child: Center(child: Text(state.exception.toString())),
+              child: Center(child: Text(state.message)),
             );
           }
           if (state is SliderSuccess) {

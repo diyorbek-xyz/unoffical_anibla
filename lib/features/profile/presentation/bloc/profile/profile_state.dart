@@ -9,7 +9,9 @@ final class ProfileInitial extends ProfileState {}
 
 final class ProfileLoading extends ProfileState {}
 
-final class ProfileUnauthorized extends ProfileState {}
+final class ProfileUnauthorized extends ProfileState {
+  const ProfileUnauthorized();
+}
 
 final class ProfileLimitSession extends ProfileState {
   final SessionsEntity sessions;

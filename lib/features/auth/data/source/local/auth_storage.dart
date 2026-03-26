@@ -6,6 +6,8 @@ abstract class AuthStorage {
   Future<void> saveTokens(TokensModel tokens);
   Future<void> saveAccessToken(String accessToken);
   Future<void> saveRefreshToken(String refreshToken);
+  Future<void> removeToken(String key);
+  Future<void> clearTokens();
   Future<TokensModel?> getTokens();
   Future<String?> getAccessToken();
   Future<String?> getRefreshToken();
@@ -47,5 +49,16 @@ class AuthStorageImpl implements AuthStorage {
   @override
   Future<String?> getRefreshToken() async {
     return await storage.read(key: StorageKeys.refreshToken);
+  }
+
+  @override
+  Future<void> removeToken(String key) async {
+    await storage.delete(key: key);
+  }
+
+  @override
+  Future<void> clearTokens() async {
+    await storage.delete(key: StorageKeys.accessToken);
+    await storage.delete(key: StorageKeys.refreshToken);
   }
 }

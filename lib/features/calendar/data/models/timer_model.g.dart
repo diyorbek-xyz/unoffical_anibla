@@ -47,7 +47,9 @@ class TimerModelAdapter extends TypeAdapter<TimerModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is TimerModelAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
+      other is TimerModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }
 
 // **************************************************************************
@@ -56,16 +58,17 @@ class TimerModelAdapter extends TypeAdapter<TimerModel> {
 
 TimerModel _$TimerModelFromJson(Map<String, dynamic> json) => TimerModel(
   anime: json['media'],
-  message: TranslatedModel.fromJson2(json, 'message'),
+  message: TranslatedModel.fromJson(json['message'] as Map<String, dynamic>),
   id: json['_id'] as String,
   time: DateTime.parse(json['time'] as String),
   type: json['mediaType'] as String,
 );
 
-Map<String, dynamic> _$TimerModelToJson(TimerModel instance) => <String, dynamic>{
-  'media': instance.anime,
-  '_id': instance.id,
-  'message': instance.message,
-  'time': instance.time.toIso8601String(),
-  'mediaType': instance.type,
-};
+Map<String, dynamic> _$TimerModelToJson(TimerModel instance) =>
+    <String, dynamic>{
+      'media': instance.anime,
+      '_id': instance.id,
+      'message': instance.message,
+      'time': instance.time.toIso8601String(),
+      'mediaType': instance.type,
+    };

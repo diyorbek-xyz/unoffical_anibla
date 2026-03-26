@@ -41,6 +41,16 @@ class SessionModel {
   });
 
   factory SessionModel.fromJson(Map<String, dynamic> json) => _$SessionModelFromJson(json);
+  factory SessionModel.fromEntity(SessionEntity entity) => SessionModel(
+    device: entity.device,
+    id: entity.id,
+    ip: entity.ip,
+    lastIp: entity.lastIp,
+    lastLogin: entity.lastLogin,
+    platform: entity.platform,
+    tokenId: entity.tokenId,
+    userId: entity.userId,
+  );
   Map<String, dynamic> toJson() => _$SessionModelToJson(this);
   SessionEntity toEntity() => SessionEntity(
     device: device,
@@ -66,10 +76,25 @@ class SessionsModel {
   final int total;
   @HiveField(3)
   final List<SessionModel> sessions;
-  const SessionsModel({required this.tokenId, required this.name, required this.sessions, required this.total});
+  const SessionsModel({
+    required this.tokenId,
+    required this.name,
+    required this.sessions,
+    required this.total,
+  });
 
   factory SessionsModel.fromJson(Map<String, dynamic> json) => _$SessionsModelFromJson(json);
+  factory SessionsModel.fromEntity(SessionsEntity entity) => SessionsModel(
+    tokenId: entity.tokenId,
+    name: entity.name,
+    sessions: entity.sessions.map((e) => SessionModel.fromEntity(e)).toList(),
+    total: entity.total,
+  );
   Map<String, dynamic> toJson() => _$SessionsModelToJson(this);
-  SessionsEntity toEntity() =>
-      SessionsEntity(tokenId: tokenId, name: name, sessions: sessions.map((e) => e.toEntity()).toList(), total: total);
+  SessionsEntity toEntity() => SessionsEntity(
+    tokenId: tokenId,
+    name: name,
+    sessions: sessions.map((e) => e.toEntity()).toList(),
+    total: total,
+  );
 }

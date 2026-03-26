@@ -2,40 +2,26 @@ import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/features/profile/domain/entities/account_entity.dart';
 import 'package:application/features/profile/presentation/bloc/profile/profile_bloc.dart';
 import 'package:application/features/profile/presentation/bloc/profile/profile_event.dart';
-import 'package:application/features/profile/presentation/widget/tabs/infos.dart';
+import 'package:application/features/profile/presentation/widget/menus/devices.dart';
+import 'package:application/features/profile/presentation/widget/menus/infos.dart';
+import 'package:application/features/profile/presentation/widget/modals/logout_modal.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TabModel {
-  final Icon icon;
-  final Icon activeIcon;
+  final IconData icon;
+  final IconData activeIcon;
   final String label;
   const TabModel({required this.activeIcon, required this.icon, required this.label});
 }
 
 final List<TabModel> tabs = [
-  TabModel(
-    activeIcon: Icon(Icons.info),
-    icon: Icon(Icons.info_outline),
-    label: "Profil ma'lumotlari",
-  ),
-  TabModel(activeIcon: Icon(Icons.history), icon: Icon(Icons.history), label: "So'ngi anime"),
-  TabModel(
-    activeIcon: Icon(Icons.bookmark),
-    icon: Icon(Icons.bookmark_outline),
-    label: "Saqlangan animelar",
-  ),
-  TabModel(
-    activeIcon: Icon(Icons.devices),
-    icon: Icon(Icons.devices_outlined),
-    label: "Qurilmalar",
-  ),
-  TabModel(
-    activeIcon: Icon(Icons.verified),
-    icon: Icon(Icons.verified_outlined),
-    label: "Obunalar",
-  ),
+  TabModel(activeIcon: Icons.info, icon: Icons.info_outline, label: "Profil ma'lumotlari"),
+  TabModel(activeIcon: Icons.history, icon: Icons.history, label: "So'ngi anime"),
+  TabModel(activeIcon: Icons.bookmark, icon: Icons.bookmark_outline, label: "Saqlangan animelar"),
+  TabModel(activeIcon: Icons.devices, icon: Icons.devices_outlined, label: "Qurilmalar"),
+  TabModel(activeIcon: Icons.verified, icon: Icons.verified_outlined, label: "Obunalar"),
 ];
 
 class ProfileMain extends StatefulWidget {
@@ -56,12 +42,16 @@ class _ProfileMainState extends State<ProfileMain> {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator.adaptive(
+    return RefreshIndicator(
       onRefresh: () async => context.read<ProfileBloc>().add(GetProfile()),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-        width: double.infinity,
-        child: Column(spacing: 30, children: [basicInfo(), menu()]),
+      triggerMode: RefreshIndicatorTriggerMode.anywhere,
+      child: SingleChildScrollView(
+        physics: AlwaysScrollableScrollPhysics(),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+          width: double.infinity,
+          child: Column(spacing: 30, children: [basicInfo(), menu()]),
+        ),
       ),
     );
   }
@@ -69,40 +59,60 @@ class _ProfileMainState extends State<ProfileMain> {
   Row menu() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 50,
       children: [
-        SizedBox(
-          width: 300,
-          child: ListView(
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            physics: NeverScrollableScrollPhysics(),
-            children: tabs.map((e) {
-              int index = tabs.indexOf(e);
-              return ListTile(
-                title: Text(e.label),
-                onTap: () => setCurrentIndex(index),
-                tileColor: Colors.transparent,
-                selected: index == currentIndex,
-                selectedTileColor: context.appColors.primary,
-                leading: e.icon,
-              );
-            }).toList(),
-          ),
-        ),
+        customTabs(),
         Expanded(
           flex: 7,
           child: IndexedStack(
             index: currentIndex,
             children: [
-              InfosMenu(data: widget.data),
+              ProfileInfosMenu(data: widget.data),
               Text("songi"),
               Text("saqlangan"),
-              Text("qurilmalar"),
+              ProfileDevicesMenu(currentId: widget.data.tokenId, sessions: widget.data.sessions),
               Text("obunalar"),
             ],
           ),
         ),
       ],
+    );
+  }
+
+  SizedBox customTabs() {
+    return SizedBox(
+      width: 300,
+      child: ListView.separated(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        scrollDirection: Axis.vertical,
+        itemCount: tabs.length,
+        separatorBuilder: (context, index) => SizedBox(height: 2),
+        itemBuilder: (context, index) {
+          TabModel tab = tabs[index];
+          final selected = index == currentIndex;
+          return ListTile(
+            title: Text(tab.label),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(100)),
+            onTap: () => setCurrentIndex(index),
+            tileColor: Colors.transparent,
+            selected: selected,
+            selectedTileColor: context.appColors.primaryFixed.withValues(alpha: 0.1),
+            contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 11),
+            leading: Ink(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                color: selected ? context.appColors.primary : context.appColors.onPrimary,
+              ),
+              padding: EdgeInsets.all(10),
+              child: Icon(
+                tab.icon,
+                color: selected ? context.appColors.onPrimary : context.appColors.primary,
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -139,7 +149,13 @@ class _ProfileMainState extends State<ProfileMain> {
         ),
         Expanded(child: Container()),
         Column(
-          children: [IconButton(onPressed: () => {}, icon: Icon(Icons.exit_to_app))],
+          children: [
+            IconButton(
+              onPressed: () =>
+                  showLogoutModal(context, tokenId: widget.data.tokenId, isCurrent: true),
+              icon: Icon(Icons.exit_to_app),
+            ),
+          ],
         ),
       ],
     );

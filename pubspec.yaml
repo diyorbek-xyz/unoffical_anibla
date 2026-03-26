@@ -37,6 +37,7 @@ dependencies:
     firebase_auth: ^6.1.4
     firebase_ui_auth: ^3.0.1
     dartz: ^0.10.1
+    device_info_plus: 
 
 dev_dependencies:
     flutter_test:

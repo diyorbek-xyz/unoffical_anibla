@@ -7,6 +7,12 @@ final class LoginEvent extends AuthEvent {
   LoginEvent(this.body);
 }
 
+final class LogOutEvent extends AuthEvent {
+  final bool isCurrent;
+  final String tokenId;
+  LogOutEvent(this.tokenId, this.isCurrent);
+}
+
 final class ConfirmEvent extends AuthEvent {
   final ConfirmModel body;
   ConfirmEvent(this.body);

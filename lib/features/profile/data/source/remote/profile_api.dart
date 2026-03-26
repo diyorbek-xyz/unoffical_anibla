@@ -11,7 +11,4 @@ abstract class ProfileApi {
 
   @GET('/v1/users/me')
   Future<HttpResponse<ApiResponse<AccountModel>>> getProfile();
-
-  @DELETE("/v1/sessions/{tokenId}")
-  Future<HttpResponse<ApiResponse<dynamic>>> exitSession(@Path("tokenId") String tokenId);
 }

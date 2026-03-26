@@ -110,6 +110,35 @@ class AccountModel {
   });
 
   factory AccountModel.fromJson(Map<String, dynamic> json) => _$AccountModelFromJson(json);
+  factory AccountModel.fromEntity(AccountEntity entity) => AccountModel(
+    activated: entity.activated,
+    balance: entity.balance,
+    email: entity.email,
+    id: entity.id,
+    name: entity.name,
+    phoneNumber: entity.phoneNumber,
+    role: entity.role,
+    image: entity.image,
+    subscription: entity.subscription,
+    transactions: entity.transactions,
+    createdAt: entity.createdAt,
+    createdByAdmin: entity.createdByAdmin,
+    nameLC: entity.nameLC,
+    paymentId: entity.paymentId,
+    paymentIdStr: entity.paymentIdStr,
+    phoneStr: entity.phoneStr,
+    savedMovies: entity.savedMovies,
+    savedSeries: entity.savedSeries,
+    sessions: entity.sessions.map((e) => SessionModel.fromEntity(e)).toList(),
+    tokenId: entity.tokenId,
+    total: entity.total,
+    updatedAt: entity.updatedAt,
+    appleId: entity.appleId,
+    emailLC: entity.emailLC,
+    lastAnime: entity.lastAnime,
+    lastAnimeType: entity.lastAnimeType,
+    telegramToken: entity.telegramToken,
+  );
   Map<String, dynamic> toJson() => _$AccountModelToJson(this);
   AccountEntity toEntity() => AccountEntity(
     activated: activated ?? false,

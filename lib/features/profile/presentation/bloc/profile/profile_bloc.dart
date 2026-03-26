@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:application/features/profile/domain/repository/profile_repository.dart';
 import 'package:application/features/profile/presentation/bloc/profile/profile_event.dart';
 import 'package:application/features/profile/presentation/bloc/profile/profile_state.dart';
@@ -17,7 +19,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         if (failure is SessionLimitedFailure) {
           return ProfileLimitSession(failure.sessions);
         } else if (failure is ServerFailure) {
-          return ProfileError(ExceptionMapper.mapStatusToMessage(failure.status));
+          if (failure.status == HttpStatus.unauthorized) {
+            return ProfileUnauthorized();
+          } else {
+            return ProfileError(ExceptionMapper.mapStatusToMessage(failure.status));
+          }
         } else {
           return ProfileError(ExceptionMapper.mapFailureToMessage(failure));
         }

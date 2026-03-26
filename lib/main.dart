@@ -35,6 +35,10 @@ class MainApp extends StatelessWidget {
   const MainApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(routerConfig: _router, debugShowCheckedModeBanner: false, theme: AppThemes.darkTheme);
+    return MaterialApp.router(
+      routerConfig: _router,
+      debugShowCheckedModeBanner: false,
+      theme: AppThemes.darkTheme,
+    );
   }
 }

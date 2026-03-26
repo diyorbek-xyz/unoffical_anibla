@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class BottomBar extends StatelessWidget {
@@ -7,20 +8,17 @@ class BottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = ColorScheme.of(context);
-    return BottomNavigationBar(
-      currentIndex: index,
-      onTap: setIndex,
-      unselectedItemColor: colorScheme.onSurface.withValues(alpha: 0.5),
-      iconSize: 30,
-      useLegacyColorScheme: false,
-      items: tabs
+    return NavigationBar(
+      onDestinationSelected: setIndex,
+      selectedIndex: index,
+      maintainBottomViewPadding: false,
+      destinations: tabs
           .map(
-            (e) => BottomNavigationBarItem(
+            (e) => NavigationDestination(
               tooltip: e['label'],
               icon: Icon(e['icon']),
               label: e['label'],
-              activeIcon: Icon(e['selectedIcon']),
+              selectedIcon: Icon(e['selectedIcon']),
             ),
           )
           .toList(),

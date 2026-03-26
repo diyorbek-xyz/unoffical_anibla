@@ -1,4 +1,3 @@
-import 'package:application/core/resources/data_state.dart';
 import 'package:application/features/slider/domain/repository/slider_repository.dart';
 import 'package:application/features/slider/presentation/bloc/slider_event.dart';
 import 'package:application/features/slider/presentation/bloc/slider_state.dart';
@@ -11,12 +10,8 @@ class SliderBloc extends Bloc<SliderEvent, SliderState> {
   }
   void onGetFullSlider(GetFullSlider event, Emitter<SliderState> emit) async {
     emit(SliderLoading());
-    final dataState = await repository.getSlider();
-    if (dataState is DataSuccess) {
-      emit(SliderSuccess(dataState.data!));
-    }
-    if (dataState is DataFailed) {
-      emit(SliderError(dataState.exception!));
-    }
+    final either = await repository.getSlider();
+
+    emit(either.fold((failure) => SliderError(failure.message), (slider) => SliderSuccess(slider)));
   }
 }

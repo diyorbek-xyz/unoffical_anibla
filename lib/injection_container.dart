@@ -1,10 +1,12 @@
 import 'package:application/core/constants/constants.dart';
+import 'package:application/features/profile/data/models/account_model.dart';
+import 'package:application/features/profile/data/source/local/profile_local.dart';
 import 'package:application/features/profile/presentation/bloc/session/session_bloc.dart';
 import 'package:application/network/interceptors/auth_interceptor.dart';
 import 'package:application/network/interceptors/error_interceptor.dart';
 import 'package:application/features/auth/data/repository/auth_repository_impl.dart';
 import 'package:application/features/auth/data/source/local/auth_storage.dart';
-import 'package:application/features/auth/data/source/remote/login_api.dart';
+import 'package:application/features/auth/data/source/remote/auth_api.dart';
 import 'package:application/features/auth/domain/repository/auth_repository.dart';
 import 'package:application/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:application/features/calendar/data/models/calendar_model.dart';
@@ -36,13 +38,13 @@ final dio = Dio(
     baseUrl: "$amediatvBaseUrl/api",
     headers: {
       "User-Agent": "okhttp/4.12.0",
-      "x-platform": "mobile",
       "Accept-Encoding": "gzip",
       "accept": "application/json",
-      "x-platform-os": "android",
       "Host": "amediatv.up-it.uz",
-      "x-device": "Redmi 6A",
       "Connection": "Keep-Alive",
+      "x-platform": "mobile",
+      "x-platform-os": "android",
+      "x-device": "Redmi 6A",
       "x-app-version": "2.4.9",
     },
   ),
@@ -61,6 +63,7 @@ Future<void> initializeDependencies() async {
 
   // Open boxes;
   final calendarBox = await Hive.openBox<CalendarModel>("calendarBox");
+  final profileBox = await Hive.openBox<AccountModel>("profileBox");
 
   // Register / Setup network logic;
   sl.registerSingleton<FlutterSecureStorage>(secureStorage);
@@ -71,7 +74,8 @@ Future<void> initializeDependencies() async {
   dio.interceptors.add(sl<AuthInterceptor>());
 
   // Register local storages;
-  sl.registerLazySingleton<Box<CalendarModel>>(() => calendarBox);
+  sl.registerSingleton<Box<CalendarModel>>(calendarBox);
+  sl.registerSingleton<Box<AccountModel>>(profileBox);
 
   // Register miscs;
   sl.registerSingleton<Dio>(dio);
@@ -80,17 +84,18 @@ Future<void> initializeDependencies() async {
   // Register remote Api Services;
   sl.registerSingleton<SliderApi>(SliderApi(sl()));
   sl.registerSingleton<CalendarApi>(CalendarApi(sl()));
-  sl.registerSingleton<LoginApi>(LoginApi(sl()));
+  sl.registerSingleton<AuthApi>(AuthApi(sl()));
   sl.registerSingleton<ProfileApi>(ProfileApi(sl()));
 
   // Register Local Storage Services;
   sl.registerSingleton<CalendarLocal>(CalendarLocalImpl(sl()));
+  sl.registerSingleton<ProfileLocal>(ProfileLocalImpl(sl()));
 
   // Register Repositories;
   sl.registerSingleton<SliderRepository>(SliderRepositoryImpl(sl()));
   sl.registerSingleton<CalendarRepository>(CalendarRepositoryImpl(sl(), sl()));
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl(), sl()));
-  sl.registerSingleton<ProfileRepository>(ProfileRepositoryImpl(sl()));
+  sl.registerSingleton<ProfileRepository>(ProfileRepositoryImpl(sl(), sl(), sl()));
 
   // Register State managers;
   sl.registerFactory<SliderBloc>(() => SliderBloc(sl()));

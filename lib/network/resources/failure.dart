@@ -16,6 +16,10 @@ final class ServerFailure extends Failure {
   const ServerFailure(this.status) : super("$status");
 }
 
+final class SimpleFailure extends Failure {
+  const SimpleFailure(super.message);
+}
+
 final class NetworkFailure extends Failure {
   const NetworkFailure() : super("connection_timeout");
 }
@@ -67,6 +71,8 @@ abstract class ExceptionMapper {
       return "Internetga ulanmagansiz";
     } else if (failure is ServerFailure) {
       return mapStatusToMessage(failure.status);
+    } else if (failure is SimpleFailure) {
+      return failure.message;
     }
     return "Nimadur xato ketti: ${(failure as UnknownFailure).exception.toString()}";
   }
@@ -94,5 +100,9 @@ abstract class ExceptionMapper {
       default:
         return "Nimadur xato ketti: $status";
     }
+  }
+
+  static Failure mapMessageToFailure(String message) {
+    return SimpleFailure(message);
   }
 }

@@ -1,5 +1,4 @@
 import 'package:application/features/slider/domain/entities/slider_entity.dart';
-import 'package:dio/dio.dart';
 
 sealed class SliderState {}
 
@@ -13,6 +12,6 @@ final class SliderSuccess extends SliderState {
 }
 
 final class SliderError extends SliderState {
-  final DioException exception;
-  SliderError(this.exception);
+  final String message;
+  SliderError(this.message);
 }

@@ -1,9 +1,8 @@
-import 'dart:io';
-import 'package:application/network/errors.dart';
-import 'package:application/core/resources/data_state.dart';
 import 'package:application/features/slider/data/source/remote/slider_api.dart';
 import 'package:application/features/slider/domain/entities/slider_entity.dart';
 import 'package:application/features/slider/domain/repository/slider_repository.dart';
+import 'package:application/network/resources/failure.dart';
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
 class SliderRepositoryImpl implements SliderRepository {
@@ -11,16 +10,12 @@ class SliderRepositoryImpl implements SliderRepository {
   SliderRepositoryImpl(this._apiService);
 
   @override
-  Future<DataState<List<SliderEntity>>> getSlider() async {
+  Future<Either<Failure, List<SliderEntity>>> getSlider() async {
     try {
       final httpResponse = await _apiService.getCarousel();
-      if (httpResponse.response.statusCode == HttpStatus.ok) {
-        return DataSuccess(httpResponse.data.data);
-      } else {
-        return DataFailed(screamFromResponse(httpResponse.response));
-      }
+      return Right(httpResponse.data.data);
     } on DioException catch (e) {
-      return DataFailed(e);
+      return Left(ExceptionMapper.mapDioToFailure(e));
     }
   }
 }

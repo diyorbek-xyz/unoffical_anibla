@@ -52,29 +52,27 @@ class _SidebarState extends State<Sidebar> {
   }) {
     final selected = widget.index == index;
     final colors = context.appColors;
+    final tintcolor = selected ? colors.onPrimary.withAlpha(50) : colors.primary.withAlpha(10);
     return InkWell(
       onTap: () => widget.setIndex(index),
       mouseCursor: SystemMouseCursors.click,
-      splashColor: colors.primary.withValues(alpha: 0.1),
-      focusColor: colors.primary.withValues(alpha: 0.1),
-      hoverColor: colors.primary.withValues(alpha: 0.1),
-      highlightColor: colors.primary.withValues(alpha: 0.1),
-      child: Container(
+      splashColor: tintcolor,
+      focusColor: tintcolor,
+      hoverColor: tintcolor,
+      highlightColor: tintcolor,
+      child: Ink(
         height: size,
         color: selected ? colors.primary : Colors.transparent,
+        padding: EdgeInsets.symmetric(horizontal: 10),
         child: Row(
           spacing: 10,
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: expanded ? MainAxisAlignment.start : MainAxisAlignment.center,
           children: [
-            AnimatedContainer(
-              duration: Duration(milliseconds: 200),
-              color: selected ? colors.onPrimary : colors.primary,
-              width: selected ? 5 : 0,
-            ),
             Icon(
               selected ? selectedIcon : icon,
               color: selected ? colors.onPrimary : colors.primary,
-              size: size - 15,
+              size: size - (selected ? 15 : 20),
             ),
             if (expanded)
               Text(label, style: TextStyle(color: selected ? colors.onPrimary : colors.primary)),
