@@ -1,4 +1,3 @@
-import 'package:application/core/constants/theme.dart';
 import 'package:flutter/material.dart';
 
 class BottomBar extends StatelessWidget {
@@ -8,16 +7,21 @@ class BottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = ColorScheme.of(context);
     return BottomNavigationBar(
       currentIndex: index,
       onTap: setIndex,
-      unselectedItemColor: onSurface.withValues(alpha: 0.5),
+      unselectedItemColor: colorScheme.onSurface.withValues(alpha: 0.5),
       iconSize: 30,
       useLegacyColorScheme: false,
       items: tabs
           .map(
-            (e) =>
-                BottomNavigationBarItem(tooltip: e['label'], icon: Icon(e['icon']), label: e['label'], activeIcon: Icon(e['selectedIcon'])),
+            (e) => BottomNavigationBarItem(
+              tooltip: e['label'],
+              icon: Icon(e['icon']),
+              label: e['label'],
+              activeIcon: Icon(e['selectedIcon']),
+            ),
           )
           .toList(),
     );

@@ -1,4 +1,4 @@
-import 'package:application/core/constants/theme.dart';
+import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/utils/utils.dart';
 import 'package:application/features/profile/domain/entities/session_entity.dart';
 import 'package:application/features/profile/presentation/bloc/profile/profile_bloc.dart';
@@ -42,8 +42,8 @@ class SessionsFailureWidget extends StatelessWidget {
                     children: [
                       ...sessions.sessions.map(
                         (e) => ListTile(
-                          textColor: onSurface,
-                          iconColor: onSurface,
+                          textColor: context.appColors.onSurface,
+                          iconColor: context.appColors.onSurface,
                           onTap: () {},
                           isThreeLine: true,
                           leading: PlatformWidget(platform: e.platform),

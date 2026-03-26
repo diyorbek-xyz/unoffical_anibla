@@ -1,4 +1,4 @@
-import 'package:application/core/constants/theme.dart';
+import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/features/profile/domain/entities/account_entity.dart';
 import 'package:application/features/profile/presentation/bloc/profile/profile_bloc.dart';
 import 'package:application/features/profile/presentation/bloc/profile/profile_event.dart';
@@ -82,11 +82,8 @@ class _ProfileMainState extends State<ProfileMain> {
                 title: Text(e.label),
                 onTap: () => setCurrentIndex(index),
                 tileColor: Colors.transparent,
-                hoverColor: primaryTint.withValues(alpha: 0.05),
-                focusColor: primaryTint.withValues(alpha: 0.05),
-                splashColor: primaryTint.withValues(alpha: 0.05),
                 selected: index == currentIndex,
-                selectedTileColor: primaryTint,
+                selectedTileColor: context.appColors.primary,
                 leading: e.icon,
               );
             }).toList(),
@@ -128,7 +125,7 @@ class _ProfileMainState extends State<ProfileMain> {
                 children: [
                   TextSpan(text: "${widget.data.name} ", style: TextStyle(fontSize: 24)),
                   if (widget.data.subscription != null)
-                    WidgetSpan(child: Icon(Icons.verified, color: onSurface)),
+                    WidgetSpan(child: Icon(Icons.verified, color: context.appColors.onSurface)),
                 ],
               ),
             ),

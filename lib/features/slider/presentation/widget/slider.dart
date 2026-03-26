@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/features/slider/domain/entities/slider_entity.dart';
 import 'package:application/features/slider/presentation/bloc/slider_bloc.dart';
 import 'package:application/features/slider/presentation/bloc/slider_event.dart';
@@ -6,7 +7,6 @@ import 'package:application/features/slider/presentation/bloc/slider_state.dart'
 import 'package:application/injection_container.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:application/core/constants/theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CarouselWidget extends StatelessWidget {
@@ -19,10 +19,18 @@ class CarouselWidget extends StatelessWidget {
       child: BlocBuilder<SliderBloc, SliderState>(
         builder: (context, state) {
           if (state is SliderLoading) {
-            return SizedBox(width: 100, height: 100, child: Center(child: CircularProgressIndicator.adaptive()));
+            return SizedBox(
+              width: 100,
+              height: 100,
+              child: Center(child: CircularProgressIndicator.adaptive()),
+            );
           }
           if (state is SliderError) {
-            return SizedBox(width: 100, height: 100, child: Center(child: Text(state.exception.toString())));
+            return SizedBox(
+              width: 100,
+              height: 100,
+              child: Center(child: Text(state.exception.toString())),
+            );
           }
           if (state is SliderSuccess) {
             return SliderWidget(items: state.data, animationDuration: Duration(milliseconds: 400));
@@ -106,7 +114,9 @@ class _SliderWidgetState extends State<SliderWidget> {
                           height: 10,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
-                            color: e.key == currentIndex ? primary : primaryTint,
+                            color: e.key == currentIndex
+                                ? context.appColors.primary
+                                : context.appColors.primary.withAlpha(40),
                           ),
                         ),
                       ),
@@ -121,13 +131,14 @@ class _SliderWidgetState extends State<SliderWidget> {
         key: ValueKey(currentIndex),
         width: double.infinity,
         height: 500,
-        color: surface,
+        color: context.appColors.surface,
         child: sliderItem(widget.items[currentIndex]),
       ),
     );
   }
 
   Widget sliderItem(SliderEntity entity) {
+    final colorScheme = ColorScheme.of(context);
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(fit: BoxFit.cover, image: CachedNetworkImageProvider(entity.image)),
@@ -135,7 +146,7 @@ class _SliderWidgetState extends State<SliderWidget> {
       child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.transparent, surface.withValues(alpha: 0.9)],
+            colors: [Colors.transparent, colorScheme.surface.withValues(alpha: 0.95)],
             begin: AlignmentGeometry.topCenter,
             end: AlignmentGeometry.bottomCenter,
           ),
@@ -147,12 +158,18 @@ class _SliderWidgetState extends State<SliderWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 5,
             children: [
-              Text("${entity.anime['uz']['title']} [${entity.anime['age']}+]", style: TextStyle(fontSize: 32, color: onSurface)),
+              Text(
+                "${entity.anime['uz']['title']} [${entity.anime['age']}+]",
+                style: TextStyle(fontSize: 32, color: context.appColors.onSurface),
+              ),
               Text(
                 entity.anime['uz']['description'],
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 16, color: onSurface.withValues(alpha: 0.5)),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: context.appColors.onSurface.withValues(alpha: 0.5),
+                ),
               ),
             ],
           ),

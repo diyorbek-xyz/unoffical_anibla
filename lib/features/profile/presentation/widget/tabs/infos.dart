@@ -1,4 +1,3 @@
-import 'package:application/core/constants/theme.dart';
 import 'package:application/features/profile/domain/entities/account_entity.dart';
 import 'package:flutter/material.dart';
 

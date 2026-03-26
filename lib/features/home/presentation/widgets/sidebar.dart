@@ -1,4 +1,4 @@
-import 'package:application/core/constants/theme.dart';
+import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/features/home/presentation/widgets/bottom_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -31,7 +31,12 @@ class _SidebarState extends State<Sidebar> {
           ),
 
           ...tabs.asMap().entries.map(
-            (e) => item(icon: e.value['icon'], label: e.value['label'], selectedIcon: e.value['selectedIcon'], index: e.key),
+            (e) => item(
+              icon: e.value['icon'],
+              label: e.value['label'],
+              selectedIcon: e.value['selectedIcon'],
+              index: e.key,
+            ),
           ),
         ],
       ),
@@ -46,23 +51,33 @@ class _SidebarState extends State<Sidebar> {
     IconData icon = Icons.home_outlined,
   }) {
     final selected = widget.index == index;
+    final colors = context.appColors;
     return InkWell(
       onTap: () => widget.setIndex(index),
       mouseCursor: SystemMouseCursors.click,
-      splashColor: primaryTint.withValues(alpha: 0.1),
-      focusColor: primaryTint.withValues(alpha: 0.1),
-      hoverColor: primaryTint.withValues(alpha: 0.1),
-      highlightColor: primaryTint.withValues(alpha: 0.1),
+      splashColor: colors.primary.withValues(alpha: 0.1),
+      focusColor: colors.primary.withValues(alpha: 0.1),
+      hoverColor: colors.primary.withValues(alpha: 0.1),
+      highlightColor: colors.primary.withValues(alpha: 0.1),
       child: Container(
         height: size,
-        color: selected ? primaryTint : Colors.transparent,
+        color: selected ? colors.primary : Colors.transparent,
         child: Row(
           spacing: 10,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(color: selected ? primaryDark : Colors.transparent, width: 3),
-            Icon(selected ? selectedIcon : icon, color: primary, size: size - 15),
-            if (expanded) Text(label),
+            AnimatedContainer(
+              duration: Duration(milliseconds: 200),
+              color: selected ? colors.onPrimary : colors.primary,
+              width: selected ? 5 : 0,
+            ),
+            Icon(
+              selected ? selectedIcon : icon,
+              color: selected ? colors.onPrimary : colors.primary,
+              size: size - 15,
+            ),
+            if (expanded)
+              Text(label, style: TextStyle(color: selected ? colors.onPrimary : colors.primary)),
           ],
         ),
       ),

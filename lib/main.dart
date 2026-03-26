@@ -1,4 +1,4 @@
-import 'package:application/core/constants/theme.dart';
+import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/features/auth/presentation/pages/login_page.dart';
 import 'package:application/features/home/presentation/pages/main_page.dart';
 import 'package:application/injection_container.dart';
@@ -35,6 +35,6 @@ class MainApp extends StatelessWidget {
   const MainApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(routerConfig: _router, debugShowCheckedModeBanner: false, theme: themeData);
+    return MaterialApp.router(routerConfig: _router, debugShowCheckedModeBanner: false, theme: AppThemes.darkTheme);
   }
 }
