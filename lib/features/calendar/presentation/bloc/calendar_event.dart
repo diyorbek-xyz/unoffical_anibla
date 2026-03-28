@@ -1,6 +1,12 @@
-sealed class CalendarEvent {}
+sealed class CalendarEvent {
+  const CalendarEvent();
+}
 
 final class GetCalendar extends CalendarEvent {
   final DateTime date;
-  GetCalendar(this.date);
+  const GetCalendar(this.date);
+}
+
+final class GetCalendarWeekly extends CalendarEvent {
+  const GetCalendarWeekly();
 }

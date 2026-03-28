@@ -47,6 +47,8 @@ extension DateFormatting on DateTime {
     }
     return formatWeekday();
   }
+
+  List<DateTime> getWeekDays() => List.generate(7, (index) => add(Duration(days: index)));
 }
 
 extension DurationFormatting on Duration {

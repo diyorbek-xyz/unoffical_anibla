@@ -20,9 +20,9 @@ class _CalendarApi implements CalendarApi {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HttpResponse<ApiResponse<dynamic>>> getCalendar(String date) async {
+  Future<HttpResponse<ApiResponse<dynamic>>> getCalendar(String date,{ limit = 10 }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{"limit":limit};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<HttpResponse<ApiResponse<dynamic>>>(

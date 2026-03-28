@@ -12,14 +12,14 @@ final class CalendarLoading extends CalendarState {
   const CalendarLoading();
 }
 
-final class CalendarFullSuccess extends CalendarState {
-  final List<CalendarEntity> data;
-  const CalendarFullSuccess(this.data);
-}
-
 final class CalendarSuccess extends CalendarState {
   final CalendarEntity data;
   const CalendarSuccess(this.data);
+}
+
+final class CalendarWeeklySuccess extends CalendarState {
+  final List<CalendarEntity?> data;
+  const CalendarWeeklySuccess(this.data);
 }
 
 final class CalendarError extends CalendarState {

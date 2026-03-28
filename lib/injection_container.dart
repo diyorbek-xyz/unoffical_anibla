@@ -25,12 +25,12 @@ import 'package:application/features/slider/domain/repository/slider_repository.
 import 'package:application/features/slider/presentation/bloc/slider_bloc.dart';
 import 'package:application/hive_registrar.g.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:media_kit/media_kit.dart';
 
 final sl = GetIt.instance;
 final dio = Dio(
@@ -52,6 +52,7 @@ final dio = Dio(
 final secureStorage = FlutterSecureStorage();
 
 Future<void> initializeDependencies() async {
+  WidgetsFlutterBinding.ensureInitialized();
   // Setup local Storage;
   await Hive.initFlutter();
   Hive.registerAdapters();
@@ -59,7 +60,6 @@ Future<void> initializeDependencies() async {
   // Setup miscs;
   await dotenv.load(fileName: '.env');
   await initializeDateFormatting('uz');
-  MediaKit.ensureInitialized();
 
   // Open boxes;
   final calendarBox = await Hive.openBox<CalendarModel>("calendarBox");

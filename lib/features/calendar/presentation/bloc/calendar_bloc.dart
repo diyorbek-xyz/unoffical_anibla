@@ -1,3 +1,5 @@
+import 'package:application/core/utils/utils.dart';
+import 'package:application/features/calendar/domain/entities/calendar_entity.dart';
 import 'package:application/features/calendar/domain/repository/calendar_repository.dart';
 import 'package:application/features/calendar/presentation/bloc/calendar_event.dart';
 import 'package:application/features/calendar/presentation/bloc/calendar_state.dart';
@@ -8,6 +10,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   final CalendarRepository repository;
   CalendarBloc(this.repository) : super(CalendarLoading()) {
     on<GetCalendar>(onGetCalendar);
+    on<GetCalendarWeekly>(onGetWeekly);
   }
   void onGetCalendar(GetCalendar event, Emitter<CalendarState> emit) async {
     emit(CalendarLoading());
@@ -18,5 +21,22 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
         (calendar) => CalendarSuccess(calendar),
       ),
     );
+  }
+
+  void onGetWeekly(GetCalendarWeekly event, Emitter<CalendarState> emit) async {
+    emit(CalendarLoading());
+    final days = DateTime.now().getWeekDays();
+    List<CalendarEntity?> calendars = [];
+
+    for (DateTime day in days) {
+      final either = await repository.getCalendar(day);
+      calendars.add(
+        either.fold((failure) {
+          emit(CalendarError(ExceptionMapper.mapFailureToMessage(failure)));
+          return null;
+        }, (calendar) => calendar),
+      );
+    }
+    emit(CalendarWeeklySuccess(calendars));
   }
 }

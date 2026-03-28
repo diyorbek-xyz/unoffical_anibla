@@ -29,15 +29,106 @@ class CarouselWidget extends StatelessWidget {
             return SizedBox(
               width: 100,
               height: 100,
-              child: Center(child: Text(state.message)),
+              child: Center(
+                child: Column(
+                  children: [
+                    Text(state.message),
+                    ElevatedButton(
+                      onPressed: () => context.read<SliderBloc>().add(GetFullSlider()),
+                      child: Text("Yangilash"),
+                    ),
+                  ],
+                ),
+              ),
             );
           }
           if (state is SliderSuccess) {
-            return SliderWidget(items: state.data, animationDuration: Duration(milliseconds: 400));
+            return Carousel(items: state.data);
           }
           return Text('data');
         },
       ),
+    );
+  }
+}
+
+class Carousel extends StatefulWidget {
+  final List<SliderEntity> items;
+  const Carousel({super.key, required this.items});
+
+  @override
+  State<Carousel> createState() => _CarouselState();
+}
+
+class _CarouselState extends State<Carousel> {
+  final _controller = CarouselController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final carouselWidth = constraints.maxWidth;
+        final weights = carouselWidth > 500 ? [1, 5, 1] : [1];
+        final height = carouselWidth > 500 ? 600.0 : 400.0;
+        return SizedBox(
+          height: height,
+          child: CarouselView.weighted(
+            elevation: 1,
+            flexWeights: weights,
+            itemSnapping: true,
+            enableSplash: true,
+            controller: _controller,
+            children: widget.items.map((e) {
+              return Ink.image(
+                image: CachedNetworkImageProvider(e.image),
+                fit: BoxFit.cover,
+                child: Ink(
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [context.appColors.surface, Colors.transparent],
+                      begin: AlignmentGeometry.bottomCenter,
+                      end: AlignmentGeometry.center,
+                    ),
+                  ),
+                  child: LayoutBuilder(
+                    builder: (context, constrains) {
+                      final itemWidth = constrains.maxWidth;
+                      final opacity = (carouselWidth / 2) > (itemWidth) ? 0.0 : 1.0;
+                      final hidden = ((carouselWidth - 100) / 2) > itemWidth ? false : true;
+                      return AnimatedOpacity(
+                        opacity: opacity,
+                        duration: Duration(milliseconds: 200),
+                        child: hidden
+                            ? Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(e.anime['uz']['title'], style: TextStyle(fontSize: 30)),
+                                  Text(
+                                    e.anime['uz']['description'],
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(fontSize: 18),
+                                  ),
+                                ],
+                              )
+                            : Container(),
+                      );
+                    },
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        );
+      },
     );
   }
 }

@@ -9,5 +9,8 @@ abstract class CalendarApi {
   factory CalendarApi(Dio dio) = _CalendarApi;
 
   @GET('/v1/timer/time/{date}')
-  Future<HttpResponse<ApiResponse<dynamic>>> getCalendar(@Path("date") String date);
+  Future<HttpResponse<ApiResponse<dynamic>>> getCalendar(
+    @Path("date") String date, {
+    @Query("limit") limit = 10,
+  });
 }

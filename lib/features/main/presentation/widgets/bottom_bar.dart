@@ -1,16 +1,17 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class BottomBar extends StatelessWidget {
-  final int index;
-  final Function(int) setIndex;
-  const BottomBar({super.key, required this.index, required this.setIndex});
+  final StatefulNavigationShell shell;
+  const BottomBar({super.key, required this.shell});
 
   @override
   Widget build(BuildContext context) {
     return NavigationBar(
-      onDestinationSelected: setIndex,
-      selectedIndex: index,
+      onDestinationSelected: (index) {
+        shell.goBranch(index, initialLocation: index == shell.currentIndex);
+      },
+      selectedIndex: shell.currentIndex,
       maintainBottomViewPadding: false,
       destinations: tabs
           .map(

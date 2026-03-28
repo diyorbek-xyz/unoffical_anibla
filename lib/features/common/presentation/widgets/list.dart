@@ -34,6 +34,7 @@ class ListBorderRadius {
     bottomLeft: outerRadius,
     bottomRight: outerRadius,
   );
+  BorderRadiusGeometry get single => BorderRadiusGeometry.all(outerRadius);
   BorderRadiusGeometry fromPosition(ListPosition position) {
     switch (position) {
       case ListPosition.first:
@@ -46,6 +47,7 @@ class ListBorderRadius {
   }
 
   BorderRadiusGeometry fromIndex(int current, int all) {
+    if (all == 1) return single;
     if (current == all - 1) return last;
     if (current == 0) return first;
     return middle;
