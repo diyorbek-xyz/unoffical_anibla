@@ -20,12 +20,12 @@ class _ProfileApi implements ProfileApi {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HttpResponse<ApiResponse<AccountModel>>> getProfile() async {
+  Future<HttpResponse<ApiResponse<ProfileModel>>> getProfile() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<ApiResponse<AccountModel>>>(
+    final _options = _setStreamType<HttpResponse<ApiResponse<ProfileModel>>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -36,11 +36,11 @@ class _ProfileApi implements ProfileApi {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late ApiResponse<AccountModel> _value;
+    late ApiResponse<ProfileModel> _value;
     try {
-      _value = ApiResponse<AccountModel>.fromJson(
+      _value = ApiResponse<ProfileModel>.fromJson(
         _result.data!,
-        (json) => AccountModel.fromJson(json as Map<String, dynamic>),
+        (json) => ProfileModel.fromJson(json as Map<String, dynamic>),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);

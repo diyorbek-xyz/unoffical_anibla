@@ -1,4 +1,3 @@
-import 'package:application/core/resources/data_state.dart';
 import 'package:application/features/auth/domain/repository/auth_repository.dart';
 import 'package:application/features/auth/presentation/bloc/auth_event.dart';
 import 'package:application/features/auth/presentation/bloc/auth_state.dart';
@@ -14,24 +13,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
   void onLogin(LoginEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
-    final dataState = await repository.getConfirm(event.body);
-    if (dataState is DataSuccess) {
-      emit(LoginSuccess(dataState.data!));
-    }
-    if (dataState is DataFailed) {
-      emit(LoginFailed(dataState.exception!));
-    }
+    final either = await repository.getConfirm(event.body);
+    emit(
+      either.fold(
+        (failure) => LoginFailed(ExceptionMapper.mapFailureToMessage(failure)),
+        (success) => LoginSuccess(success),
+      ),
+    );
   }
 
   void onConfirm(ConfirmEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
-    final dataState = await repository.confirmCode(event.body);
-    if (dataState is DataSuccess) {
-      emit(ConfirmSuccess(dataState.data!));
-    }
-    if (dataState is DataFailed) {
-      emit(ConfirmFailed(dataState.exception!));
-    }
+    final either = await repository.confirmCode(event.body);
+    emit(
+      either.fold(
+        (failure) =>
+            ConfirmFailed(ExceptionMapper.mapFailureToMessage(failure)),
+        (success) => ConfirmSuccess(success),
+      ),
+    );
   }
 
   void onLogOut(LogOutEvent event, Emitter<AuthState> emit) async {

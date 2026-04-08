@@ -1,18 +1,21 @@
-import 'package:application/features/template/domain/entities/template_entity.dart';
-import 'package:dio/dio.dart';
+sealed class TemplateState {
+  const TemplateState();
+}
 
-sealed class TemplateState {}
+final class TemplateInitial extends TemplateState {
+  const TemplateInitial();
+}
 
-final class TemplateInitial extends TemplateState {}
-
-final class TemplateLoading extends TemplateState {}
+final class TemplateLoading extends TemplateState {
+  const TemplateLoading();
+}
 
 final class TemplateSuccess extends TemplateState {
-  final TemplateEntity data;
-  TemplateSuccess(this.data);
+  final dynamic data;
+  const TemplateSuccess(this.data);
 }
 
 final class TemplateError extends TemplateState {
-  final DioException exception;
-  TemplateError(this.exception);
+  final String message;
+  const TemplateError(this.message);
 }

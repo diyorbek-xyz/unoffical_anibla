@@ -1,4 +1,4 @@
-import 'package:application/features/profile/domain/entities/account_entity.dart';
+import 'package:application/features/profile/domain/entities/profile_entity.dart';
 import 'package:application/features/profile/domain/entities/session_entity.dart';
 
 sealed class ProfileState {
@@ -19,7 +19,7 @@ final class ProfileLimitSession extends ProfileState {
 }
 
 final class ProfileSuccess extends ProfileState {
-  final AccountEntity data;
+  final ProfileEntity data;
   ProfileSuccess(this.data);
 }
 

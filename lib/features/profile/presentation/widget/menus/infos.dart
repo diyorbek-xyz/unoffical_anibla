@@ -1,10 +1,10 @@
 import 'package:application/core/utils/utils.dart';
 import 'package:application/features/common/presentation/widgets/list.dart';
-import 'package:application/features/profile/domain/entities/account_entity.dart';
+import 'package:application/features/profile/domain/entities/profile_entity.dart';
 import 'package:flutter/material.dart';
 
 class ProfileInfosMenu extends StatefulWidget {
-  final AccountEntity data;
+  final ProfileEntity data;
   const ProfileInfosMenu({super.key, required this.data});
 
   @override

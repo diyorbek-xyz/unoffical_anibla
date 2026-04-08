@@ -9,17 +9,21 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final isMobile = width < 700;
     return Scaffold(
-      body: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Sidebar(shell: shell),
-          Expanded(child: shell),
-        ],
-      ),
-      // bottomNavigationBar: BottomBar(shell: shell),
+      body: !isMobile
+          ? Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Sidebar(shell: shell),
+                Expanded(child: shell),
+              ],
+            )
+          : shell,
+      bottomNavigationBar: isMobile ? BottomBar(shell: shell) : null,
     );
   }
 }

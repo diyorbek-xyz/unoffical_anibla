@@ -1,9 +1,8 @@
-import 'dart:io';
-import 'package:application/network/errors.dart';
-import 'package:application/core/resources/data_state.dart';
 import 'package:application/features/template/data/source/remote/template_api.dart';
 import 'package:application/features/template/domain/entities/template_entity.dart';
 import 'package:application/features/template/domain/repository/template_repository.dart';
+import 'package:application/network/resources/failure.dart';
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
 class TemplateRepositoryImpl implements TemplateRepository {
@@ -11,16 +10,22 @@ class TemplateRepositoryImpl implements TemplateRepository {
   TemplateRepositoryImpl(this._apiService);
 
   @override
-  Future<DataState<TemplateEntity>> getTemplate() async {
+  Future<Either<Failure, TemplateEntity>> getTemplate() async {
     try {
       final httpResponse = await _apiService.getTemplate();
-      if (httpResponse.response.statusCode == HttpStatus.ok) {
-        return DataSuccess(httpResponse.data.data.toEntity());
-      } else {
-        return DataFailed(screamFromResponse(httpResponse.response));
-      }
+      return Right(httpResponse.data.data.toEntity());
     } on DioException catch (e) {
-      return DataFailed(e);
+      return Left(ExceptionMapper.mapDioToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, dynamic>> getTest() async {
+    try {
+      final httpResponse = await _apiService.getTest();
+      return Right(httpResponse.data.data.toEntity());
+    } on DioException catch (e) {
+      return Left(ExceptionMapper.mapDioToFailure(e));
     }
   }
 }

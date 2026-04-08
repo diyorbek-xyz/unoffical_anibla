@@ -8,7 +8,7 @@ part of 'slider_model.dart';
 
 class SliderModelAdapter extends TypeAdapter<SliderModel> {
   @override
-  final typeId = 4;
+  final typeId = 10;
 
   @override
   SliderModel read(BinaryReader reader) {
@@ -17,10 +17,10 @@ class SliderModelAdapter extends TypeAdapter<SliderModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return SliderModel(
-      id: fields[0] as String,
-      anime: fields[3] as dynamic,
-      image: fields[1] as String,
-      mobileImage: fields[2] as String,
+      id: fields[0] as String?,
+      anime: fields[3] as AnimeModel?,
+      image: fields[1] as String?,
+      mobileImage: fields[2] as String?,
       type: fields[4] as dynamic,
     );
   }
@@ -57,8 +57,10 @@ class SliderModelAdapter extends TypeAdapter<SliderModel> {
 // **************************************************************************
 
 SliderModel _$SliderModelFromJson(Map<String, dynamic> json) => SliderModel(
-  id: json['_id'] as String,
-  anime: json['media'],
+  id: json['_id'] as String?,
+  anime: json['media'] == null
+      ? null
+      : AnimeModel.fromJson(json['media'] as Map<String, dynamic>),
   image: addBaseUrl(json['image'] as String?),
   mobileImage: addBaseUrl(json['mobile_image'] as String?),
   type: json['mediaType'],

@@ -11,6 +11,6 @@ abstract class CalendarApi {
   @GET('/v1/timer/time/{date}')
   Future<HttpResponse<ApiResponse<dynamic>>> getCalendar(
     @Path("date") String date, {
-    @Query("limit") limit = 10,
+    @Query("limit") int limit = 10,
   });
 }

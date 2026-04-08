@@ -1,5 +1,5 @@
-import 'dart:io';
 import 'package:application/core/utils/utils.dart';
+import 'package:application/features/calendar/data/mapper/calendar_mapper.dart';
 import 'package:application/features/calendar/data/models/calendar_model.dart';
 import 'package:application/features/calendar/data/source/local/calendar_local.dart';
 import 'package:application/features/calendar/data/source/remote/calendar_api.dart';
@@ -17,14 +17,21 @@ class CalendarRepositoryImpl implements CalendarRepository {
   @override
   Future<Either<Failure, CalendarEntity>> getCalendar(DateTime date) async {
     try {
-      final httpResponse = await calendarApi.getCalendar(date.formatCompact());
-      if (httpResponse.response.statusCode == HttpStatus.ok) {
+      try {
+        final httpResponse = await calendarApi.getCalendar(
+          date.formatCompact(),
+        );
         final model = CalendarModel.fromJson(httpResponse.data.data, date);
         await calendarLocal.saveCalendar(model);
-        return Right(model.toEntity());
-      } else {
-        final local = await calendarLocal.getCalendar(date);
-        return Right(local!.toEntity());
+        return Right(CalendarMapper.modelToEntity(model));
+      } on DioException catch (e) {
+        final failure = ExceptionMapper.mapDioToFailure(e);
+        if (failure is NetworkFailure) {
+          final local = await calendarLocal.getCalendar(date);
+          return Right(CalendarMapper.modelToEntity(local));
+        } else {
+          rethrow;
+        }
       }
     } on DioException catch (e) {
       return Left(ExceptionMapper.mapDioToFailure(e));

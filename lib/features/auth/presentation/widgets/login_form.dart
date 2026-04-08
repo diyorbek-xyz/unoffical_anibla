@@ -63,7 +63,7 @@ class _LoginFormState extends State<LoginForm> {
                   ),
                 ),
                 if (receivedFailed)
-                  Text(state.exception.message.toString(), style: TextStyle(color: Colors.red)),
+                  Text(state.message.toString(), style: TextStyle(color: Colors.red)),
                 if (!receivedCode && !codeCorrect)
                   ElevatedButton(
                     onPressed: () => getConfirmCode(context),

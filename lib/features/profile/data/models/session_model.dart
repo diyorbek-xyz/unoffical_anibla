@@ -4,7 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'session_model.g.dart';
 
-@HiveType(typeId: 10)
+@HiveType(typeId: 8)
 @JsonSerializable()
 class SessionModel {
   @HiveField(0)
@@ -65,7 +65,7 @@ class SessionModel {
 }
 
 @JsonSerializable()
-@HiveType(typeId: 11)
+@HiveType(typeId: 9)
 class SessionsModel {
   @HiveField(0)
   @JsonKey(name: "token_id")

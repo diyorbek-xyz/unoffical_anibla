@@ -1,8 +1,9 @@
+import 'package:application/features/animes/domain/entities/anime_entity.dart';
 import 'package:equatable/equatable.dart';
 
 class SliderEntity extends Equatable {
   final String id;
-  final dynamic anime;
+  final AnimeEntity anime;
   final dynamic type;
   final String image;
   final String mobileImage;

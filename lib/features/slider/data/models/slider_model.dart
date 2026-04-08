@@ -1,36 +1,38 @@
-import 'package:application/core/utils/utils.dart';
-import 'package:application/features/slider/domain/entities/slider_entity.dart';
+import 'package:application/core/utils/add_base_url.dart';
+import 'package:application/features/animes/data/models/anime_model.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'slider_model.g.dart';
 
-@HiveType(typeId: 4)
+@HiveType(typeId: 10)
 @JsonSerializable()
-class SliderModel extends SliderEntity {
-  @override
+class SliderModel {
   @HiveField(0)
   @JsonKey(name: "_id")
-  get id => super.id;
-  @override
+  final String? id;
   @HiveField(1)
   @JsonKey(includeFromJson: true, fromJson: addBaseUrl)
-  get image => super.image;
-  @override
+  final String? image;
   @HiveField(2)
   @JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl)
-  get mobileImage => super.mobileImage;
-  @override
+  final String? mobileImage;
   @HiveField(3)
   @JsonKey(name: "media")
-  get anime => super.anime;
-  @override
+  final AnimeModel? anime;
   @HiveField(4)
   @JsonKey(name: "mediaType")
-  get type => super.type;
+  final dynamic type;
 
-  const SliderModel({required super.id, required super.anime, required super.image, required super.mobileImage, required super.type});
+  const SliderModel({
+    this.id,
+    this.anime,
+    this.image,
+    this.mobileImage,
+    this.type,
+  });
 
-  factory SliderModel.fromJson(Map<String, dynamic> json) => _$SliderModelFromJson(json);
+  factory SliderModel.fromJson(Map<String, dynamic> json) =>
+      _$SliderModelFromJson(json);
   Map<String, dynamic> toJson() => _$SliderModelToJson(this);
 }

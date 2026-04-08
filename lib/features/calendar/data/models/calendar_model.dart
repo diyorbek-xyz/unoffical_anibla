@@ -1,6 +1,5 @@
-import 'package:application/core/entites/pagination.dart';
 import 'package:application/features/calendar/data/models/timer_model.dart';
-import 'package:application/features/calendar/domain/entities/calendar_entity.dart';
+import 'package:application/features/common/data/models/pagination.dart';
 import 'package:hive_ce/hive_ce.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -10,15 +9,15 @@ part 'calendar_model.g.dart';
 @JsonSerializable()
 class CalendarModel {
   @HiveField(0)
-  final PaginationModel pagination;
+  final Pagination? pagination;
 
   @HiveField(1)
-  final List<TimerModel> timers;
+  final List<TimerModel>? timers;
 
   @HiveField(2)
-  final DateTime date;
+  final DateTime? date;
 
-  const CalendarModel({required this.pagination, required this.timers, required this.date});
+  const CalendarModel({this.pagination, this.timers, this.date});
 
   factory CalendarModel.fromJson(Map<String, dynamic> json, DateTime date) {
     Map<String, dynamic> myJson = json;
@@ -28,6 +27,4 @@ class CalendarModel {
   }
 
   Map<String, dynamic> toJson() => _$CalendarModelToJson(this);
-
-  CalendarEntity toEntity() => CalendarEntity(timers: timers.map((e) => e.toEntity()).toList(), pagination: pagination, date: date);
 }

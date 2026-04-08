@@ -1,5 +1,5 @@
 import 'package:application/core/resources/api_response.dart';
-import 'package:application/features/profile/data/models/account_model.dart';
+import 'package:application/features/profile/data/models/profile_model.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -10,5 +10,5 @@ abstract class ProfileApi {
   factory ProfileApi(Dio dio) = _ProfileApi;
 
   @GET('/v1/users/me')
-  Future<HttpResponse<ApiResponse<AccountModel>>> getProfile();
+  Future<HttpResponse<ApiResponse<ProfileModel>>> getProfile();
 }

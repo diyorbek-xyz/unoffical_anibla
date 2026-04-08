@@ -1,10 +1,10 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/utils/utils.dart';
+import 'package:application/features/animes/presentation/widgets/anime_card.dart';
 import 'package:application/features/calendar/domain/entities/calendar_entity.dart';
 import 'package:application/features/calendar/presentation/bloc/calendar_bloc.dart';
 import 'package:application/features/calendar/presentation/bloc/calendar_event.dart';
 import 'package:application/features/calendar/presentation/bloc/calendar_state.dart';
-import 'package:application/features/calendar/presentation/widget/timer.dart';
 import 'package:application/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,7 +41,10 @@ class Calendar extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Kunlik chiqadigan Animelar ro'yxati", style: TextStyle(fontSize: 30)),
+          Text(
+            "Kunlik chiqadigan Animelar ro'yxati",
+            style: TextStyle(fontSize: 30),
+          ),
           Text("1-haftalik", style: TextStyle(fontSize: 18)),
           SizedBox(height: 20),
           SingleChildScrollView(
@@ -57,33 +60,71 @@ class Calendar extends StatelessWidget {
   }
 
   Column dailyAnimes(CalendarEntity? e, BuildContext context) {
+    final outerRadius = Radius.circular(15);
+    final innerRadius = Radius.circular(5);
     return Column(
       spacing: 5,
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: .min,
       children: [
-        FilledButton(
-          onPressed: () {},
-          child: Text("${e?.date.formatDynamicWeeks().toUpperCase()}"),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+          decoration: BoxDecoration(
+            color: context.appColors.primary,
+            borderRadius: BorderRadius.only(
+              bottomLeft: innerRadius,
+              bottomRight: outerRadius,
+              topLeft: outerRadius,
+              topRight: outerRadius,
+            ),
+          ),
+          child: Text(
+            "${e?.date.formatDynamicWeeks().toUpperCase()}",
+            style: TextStyle(color: context.appColors.onPrimary),
+          ),
         ),
         Container(
           decoration: BoxDecoration(
-            border: Border.all(width: 1, color: context.appColors.primaryContainer),
-            borderRadius: BorderRadius.circular(15),
+            border: Border.all(
+              width: 1,
+              color: context.appColors.primaryContainer,
+            ),
+            borderRadius: BorderRadius.only(
+              topLeft: innerRadius,
+              bottomLeft: outerRadius,
+              bottomRight: outerRadius,
+              topRight: outerRadius,
+            ),
           ),
           padding: EdgeInsets.all(5),
           child: (e != null && e.timers.isNotEmpty)
               ? Row(
                   spacing: 10,
-                  children: e.timers.map((timer) => TimerWidget(timer: timer)).toList(),
+                  children: e.timers.map((timer) {
+                    final episode = timer.episode.episodeNumber;
+                    final hasEpisode = episode != 0;
+                    return Badge(
+                      label: Text(
+                        "${timer.time.formatTime()}${hasEpisode ? "\t/\t$episode-qism" : ""} ",
+                      ),
+                      alignment: AlignmentGeometry.topLeft,
+                      offset: Offset(6, 12),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      textStyle: TextStyle(fontSize: 16),
+                      child: AnimeCard(anime: timer.anime),
+                    );
+                  }).toList(),
                 )
               : SizedBox(
-                  width: 200,
+                  width: 180,
                   child: AspectRatio(
-                    aspectRatio: 9 / 14,
+                    aspectRatio: 9 / 15,
                     child: Center(
                       child: Text(
-                        "Bu kunda hech qanday anime rejalashtirilmagan",
+                        "Hosizrcha bu kunda hech qanday anime rejalashtirilmagan",
                         textAlign: TextAlign.center,
                       ),
                     ),

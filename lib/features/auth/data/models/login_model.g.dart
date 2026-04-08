@@ -6,11 +6,22 @@ part of 'login_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+LoginRequestModel _$LoginRequestModelFromJson(Map<String, dynamic> json) =>
+    LoginRequestModel((json['phone_number'] as num).toInt());
+
 Map<String, dynamic> _$LoginRequestModelToJson(LoginRequestModel instance) =>
     <String, dynamic>{'phone_number': instance.phoneNumber};
 
 LoginResponseModel _$LoginResponseModelFromJson(Map<String, dynamic> json) =>
     LoginResponseModel((json['login'] as num).toInt());
+
+Map<String, dynamic> _$LoginResponseModelToJson(LoginResponseModel instance) =>
+    <String, dynamic>{'login': instance.login};
+
+ConfirmModel _$ConfirmModelFromJson(Map<String, dynamic> json) => ConfirmModel(
+  code: (json['code'] as num).toInt(),
+  login: (json['login'] as num).toInt(),
+);
 
 Map<String, dynamic> _$ConfirmModelToJson(ConfirmModel instance) =>
     <String, dynamic>{'login': instance.login, 'code': instance.code};

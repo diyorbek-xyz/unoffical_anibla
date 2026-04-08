@@ -8,7 +8,7 @@ part of 'session_model.dart';
 
 class SessionModelAdapter extends TypeAdapter<SessionModel> {
   @override
-  final typeId = 10;
+  final typeId = 8;
 
   @override
   SessionModel read(BinaryReader reader) {
@@ -63,7 +63,7 @@ class SessionModelAdapter extends TypeAdapter<SessionModel> {
 
 class SessionsModelAdapter extends TypeAdapter<SessionsModel> {
   @override
-  final typeId = 11;
+  final typeId = 9;
 
   @override
   SessionsModel read(BinaryReader reader) {

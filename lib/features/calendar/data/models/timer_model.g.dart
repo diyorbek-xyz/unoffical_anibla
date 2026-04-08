@@ -8,7 +8,7 @@ part of 'timer_model.dart';
 
 class TimerModelAdapter extends TypeAdapter<TimerModel> {
   @override
-  final typeId = 2;
+  final typeId = 4;
 
   @override
   TimerModel read(BinaryReader reader) {
@@ -17,11 +17,11 @@ class TimerModelAdapter extends TypeAdapter<TimerModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return TimerModel(
-      anime: fields[0] as dynamic,
-      message: fields[2] as TranslatedModel,
-      id: fields[1] as String,
-      time: fields[3] as DateTime,
-      type: fields[4] as String,
+      anime: fields[0] as AnimeModel?,
+      id: fields[1] as String?,
+      time: fields[3] as DateTime?,
+      type: fields[4] as String?,
+      episode: fields[5] as EpisodeModel?,
     );
   }
 
@@ -33,12 +33,12 @@ class TimerModelAdapter extends TypeAdapter<TimerModel> {
       ..write(obj.anime)
       ..writeByte(1)
       ..write(obj.id)
-      ..writeByte(2)
-      ..write(obj.message)
       ..writeByte(3)
       ..write(obj.time)
       ..writeByte(4)
-      ..write(obj.type);
+      ..write(obj.type)
+      ..writeByte(5)
+      ..write(obj.episode);
   }
 
   @override
@@ -47,7 +47,9 @@ class TimerModelAdapter extends TypeAdapter<TimerModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is TimerModelAdapter && runtimeType == other.runtimeType && typeId == other.typeId;
+      other is TimerModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
 }
 
 // **************************************************************************
@@ -55,17 +57,22 @@ class TimerModelAdapter extends TypeAdapter<TimerModel> {
 // **************************************************************************
 
 TimerModel _$TimerModelFromJson(Map<String, dynamic> json) => TimerModel(
-  anime: json['media'],
-  message: TranslatedModel.fromJson2(json, 'message'),
-  id: json['_id'] as String,
-  time: DateTime.parse(json['time'] as String),
-  type: json['mediaType'] as String,
+  anime: json['media'] == null
+      ? null
+      : AnimeModel.fromJson(json['media'] as Map<String, dynamic>),
+  id: json['_id'] as String?,
+  time: json['time'] == null ? null : DateTime.parse(json['time'] as String),
+  type: json['mediaType'] as String?,
+  episode: json['episode_id'] == null
+      ? null
+      : EpisodeModel.fromJson(json['episode_id'] as Map<String, dynamic>),
 );
 
-Map<String, dynamic> _$TimerModelToJson(TimerModel instance) => <String, dynamic>{
-  'media': instance.anime,
-  '_id': instance.id,
-  'message': instance.message,
-  'time': instance.time.toIso8601String(),
-  'mediaType': instance.type,
-};
+Map<String, dynamic> _$TimerModelToJson(TimerModel instance) =>
+    <String, dynamic>{
+      'media': instance.anime,
+      '_id': instance.id,
+      'time': instance.time?.toIso8601String(),
+      'mediaType': instance.type,
+      'episode_id': instance.episode,
+    };

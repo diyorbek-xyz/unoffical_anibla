@@ -1,13 +1,20 @@
-import 'package:application/core/entites/translated.dart';
+import 'package:application/features/animes/domain/entities/anime_entity.dart';
+import 'package:application/features/animes/domain/entities/episode_entity.dart';
 import 'package:equatable/equatable.dart';
 
 class TimerEntity extends Equatable {
   final String id;
-  final Translated message;
-  final dynamic anime;
+  final AnimeEntity anime;
   final String type;
   final DateTime time;
-  const TimerEntity({required this.id, required this.anime, required this.message, required this.type, required this.time});
+  final EpisodeEntity episode;
+  const TimerEntity({
+    required this.id,
+    required this.anime,
+    required this.type,
+    required this.time,
+    required this.episode,
+  });
   @override
   List<Object?> get props => [];
 }

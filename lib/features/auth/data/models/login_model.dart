@@ -8,6 +8,7 @@ class LoginRequestModel {
   final int phoneNumber;
   const LoginRequestModel(this.phoneNumber);
   Map<String, dynamic> toJson() => _$LoginRequestModelToJson(this);
+  factory LoginRequestModel.fromJson(Map<String, dynamic> json) => _$LoginRequestModelFromJson(json);
 }
 
 @JsonSerializable()
@@ -15,6 +16,7 @@ class LoginResponseModel {
   final int login;
   const LoginResponseModel(this.login);
 
+  Map<String, dynamic> toJson() => _$LoginResponseModelToJson(this);
   factory LoginResponseModel.fromJson(Map<String, dynamic> json) => _$LoginResponseModelFromJson(json);
 }
 
@@ -25,6 +27,7 @@ class ConfirmModel {
   const ConfirmModel({required this.code, required this.login});
 
   Map<String, dynamic> toJson() => _$ConfirmModelToJson(this);
+  factory ConfirmModel.fromJson(Map<String, dynamic> json) => _$ConfirmModelFromJson(json);
 }
 
 @JsonSerializable()

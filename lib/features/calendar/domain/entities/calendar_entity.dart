@@ -1,5 +1,5 @@
-import 'package:application/core/entites/pagination.dart';
 import 'package:application/features/calendar/domain/entities/timer_entity.dart';
+import 'package:application/features/common/data/models/pagination.dart';
 import 'package:equatable/equatable.dart';
 
 class CalendarEntity extends Equatable {

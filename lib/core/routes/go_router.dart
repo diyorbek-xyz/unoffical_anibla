@@ -1,4 +1,6 @@
+import 'package:application/features/animes/presentation/pages/anime_page.dart';
 import 'package:application/features/auth/presentation/pages/login_page.dart';
+import 'package:application/features/explore/presentation/pages/explore_page.dart';
 import 'package:application/features/main/presentation/pages/home_page.dart';
 import 'package:application/features/main/presentation/pages/main_page.dart';
 import 'package:application/features/profile/presentation/pages/profile_page.dart';
@@ -17,10 +19,17 @@ final GoRouter routerConfig = GoRouter(
       branches: [
         StatefulShellBranch(
           navigatorKey: _shellNavigatorKey,
-          routes: [GoRoute(path: '/home', builder: (context, state) => const HomePage())],
+          routes: [
+            GoRoute(path: '/home', builder: (context, state) => const HomePage()),
+            GoRoute(
+              name: "anime",
+              path: '/anime/:slug',
+              builder: (context, state) => AnimePage(slug: state.pathParameters['slug'].toString()),
+            ),
+          ],
         ),
         StatefulShellBranch(
-          routes: [GoRoute(path: '/explore', builder: (context, state) => const Text("Explore"))],
+          routes: [GoRoute(path: '/explore', builder: (context, state) => const ExplorePage())],
         ),
         StatefulShellBranch(
           routes: [GoRoute(path: '/saved', builder: (context, state) => const Text("Saved"))],

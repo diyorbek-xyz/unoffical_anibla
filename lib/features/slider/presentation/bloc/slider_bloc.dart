@@ -1,6 +1,7 @@
 import 'package:application/features/slider/domain/repository/slider_repository.dart';
 import 'package:application/features/slider/presentation/bloc/slider_event.dart';
 import 'package:application/features/slider/presentation/bloc/slider_state.dart';
+import 'package:application/network/resources/failure.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SliderBloc extends Bloc<SliderEvent, SliderState> {
@@ -12,6 +13,11 @@ class SliderBloc extends Bloc<SliderEvent, SliderState> {
     emit(SliderLoading());
     final either = await repository.getSlider();
 
-    emit(either.fold((failure) => SliderError(failure.message), (slider) => SliderSuccess(slider)));
+    emit(
+      either.fold(
+        (failure) => SliderError(ExceptionMapper.mapFailureToMessage(failure)),
+        (slider) => SliderSuccess(slider),
+      ),
+    );
   }
 }

@@ -1,86 +1,88 @@
-// import 'package:hive_ce_flutter/hive_ce_flutter.dart';
-// import 'package:json_annotation/json_annotation.dart';
+import 'package:application/core/utils/add_base_url.dart';
+import 'package:application/features/explore/data/models/genre_model.dart';
+import 'package:hive_ce_flutter/adapters.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-// @JsonSerializable()
-// @HiveType(typeId: 0)
-// class AnimeModel {
-//   @JsonKey(name: '_id')
-//   @HiveField(0)
-//   final String? id;
+part 'anime_model.g.dart';
 
-//   @HiveField(1)
-//   final TranslatedModel? title;
+@HiveType(typeId: 2)
+@JsonSerializable(includeIfNull: true)
+class AnimeModel {
+  @HiveField(0)
+  final List? keywords;
+  @HiveField(1)
+  @JsonKey(name: "_id")
+  final String? id;
+  @HiveField(2)
+  final dynamic uz;
+  @HiveField(20)
+  final dynamic ru;
+  @HiveField(3)
+  final String? slug;
+  @HiveField(4)
+  final dynamic country;
+  @HiveField(5)
+  final dynamic studio;
+  @HiveField(6)
+  final dynamic director;
+  @HiveField(7)
+  final dynamic creators;
+  @HiveField(8)
+  final List<GenreModel>? genres;
+  @HiveField(9)
+  final dynamic categories;
+  @HiveField(10)
+  @JsonKey(name: "published_year")
+  final int? publishedYear;
+  @HiveField(11)
+  @JsonKey(fromJson: addBaseUrl, includeFromJson: true)
+  final String? thumbnail;
+  @HiveField(12)
+  @JsonKey(fromJson: addBaseUrl, includeFromJson: true)
+  final String? cover;
+  @HiveField(13)
+  @JsonKey(fromJson: addBaseUrlAsList, includeFromJson: true)
+  final List<String>? images;
+  @HiveField(14)
+  final String? trailer;
+  @HiveField(15)
+  final int? age;
+  @HiveField(16)
+  @JsonKey(name: "total_episodes")
+  final int? totalEpisodes;
+  @HiveField(17)
+  @JsonKey(name: "for_only_mdh")
+  final bool? forOnlyMDH;
+  @HiveField(18)
+  final DateTime? createdAt;
+  @HiveField(19)
+  final DateTime? updatedAt;
 
-//   @HiveField(2)
-//   final TranslatedModel? description;
+  const AnimeModel({
+    this.age,
+    this.categories,
+    this.country,
+    this.cover,
+    this.createdAt,
+    this.creators,
+    this.director,
+    this.forOnlyMDH,
+    this.genres,
+    this.images,
+    this.id,
+    this.keywords,
+    this.publishedYear,
+    this.slug,
+    this.studio,
+    this.thumbnail,
+    this.totalEpisodes,
+    this.trailer,
+    this.updatedAt,
+    this.ru,
+    this.uz,
+  });
 
-//   @JsonKey(name: 'images')
-//   @HiveField(3)
-//   final List<String>? frames;
-
-//   @HiveField(4)
-//   final String? thumbnail;
-
-//   @HiveField(5)
-//   final String? slug;
-
-//   @HiveField(6)
-//   final String? trailer;
-
-//   @HiveField(7)
-//   final int? age;
-
-//   @HiveField(8)
-//   final String? cover;
-
-//   @JsonKey(name: 'published_year')
-//   @HiveField(9)
-//   final int? year;
-
-//   @HiveField(10)
-//   final CountryModel? country;
-
-//   @HiveField(11)
-//   final AccountModel? studio;
-
-//   @HiveField(12)
-//   final AccountModel? director;
-
-//   @HiveField(13)
-//   final List<AccountModel>? creators;
-
-//   @HiveField(14)
-//   final List<GenreModel>? genres;
-
-//   @HiveField(15)
-//   final List<CategoryModel>? categories;
-
-//   @JsonKey(name: 'for_only_mdh')
-//   @HiveField(16)
-//   final bool? onlyForMDH;
-
-//   @JsonKey(name: 'total_episodes')
-//   @HiveField(17)
-//   final int? totalEpisodes;
-
-//   const AnimeModel({
-//     this.id,
-//     this.title,
-//     this.description,
-//     this.slug,
-//     this.frames,
-//     this.thumbnail,
-//     this.trailer,
-//     this.age,
-//     this.cover,
-//     this.year,
-//     this.categories,
-//     this.country,
-//     this.creators,
-//     this.director,
-//     this.genres,
-//     this.studio,
-//     this.onlyForMDH,
-//     this.totalEpisodes,
-//   });
-// }
+  factory AnimeModel.fromJson(Map<String, dynamic> json) =>
+      _$AnimeModelFromJson(json);
+  Map<String, dynamic> toJson() => _$AnimeModelToJson(this);
+}

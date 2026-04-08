@@ -1,1 +1,0 @@
-enum AnimeType { movie, serie }

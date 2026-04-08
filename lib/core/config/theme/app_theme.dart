@@ -6,7 +6,6 @@ class AppThemes {
   static final darkTheme = ThemeData(
     colorScheme: AppColors.darkColorScheme,
     useMaterial3: true,
-    elevatedButtonTheme: elevatedButtonTheme,
     fontFamily: GoogleFonts.googleSansFlex().fontFamily,
   );
   static final lightTheme = ThemeData(
@@ -31,20 +30,6 @@ class AppThemes {
     shadowColor: WidgetStatePropertyAll(Colors.transparent),
   );
 
-  static final elevatedButtonTheme = ElevatedButtonThemeData(
-    style: ButtonStyle(
-      padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 15,vertical: 5)),
-      maximumSize: WidgetStatePropertyAll(Size(160, 50)),
-      textStyle: WidgetStatePropertyAll(TextStyle(fontSize: 16)),
-      mouseCursor: WidgetStatePropertyAll(SystemMouseCursors.click),
-      shape: WidgetStateProperty.fromMap({
-        WidgetState.pressed: RoundedRectangleBorder(
-          borderRadius: BorderRadiusGeometry.circular(30),
-        ),
-        WidgetState.any: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(7)),
-      }),
-    ),
-  );
   static ButtonStyle getErrorButtonStyle(BuildContext context) => ButtonStyle(
     backgroundColor: WidgetStatePropertyAll(context.appColors.error),
     foregroundColor: WidgetStatePropertyAll(context.appColors.onError),
@@ -54,4 +39,8 @@ class AppThemes {
     backgroundColor: WidgetStatePropertyAll(context.appColors.primary),
     foregroundColor: WidgetStatePropertyAll(context.appColors.onPrimary),
   );
+}
+
+extension FontSize on BuildContext {
+  TextTheme get textTheme => Theme.of(this).textTheme;
 }

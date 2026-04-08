@@ -17,9 +17,9 @@ class CalendarModelAdapter extends TypeAdapter<CalendarModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return CalendarModel(
-      pagination: fields[0] as PaginationModel,
-      timers: (fields[1] as List).cast<TimerModel>(),
-      date: fields[2] as DateTime,
+      pagination: fields[0] as Pagination?,
+      timers: (fields[1] as List?)?.cast<TimerModel>(),
+      date: fields[2] as DateTime?,
     );
   }
 
@@ -52,18 +52,20 @@ class CalendarModelAdapter extends TypeAdapter<CalendarModel> {
 
 CalendarModel _$CalendarModelFromJson(Map<String, dynamic> json) =>
     CalendarModel(
-      pagination: PaginationModel.fromJson(
-        json['pagination'] as Map<String, dynamic>,
-      ),
-      timers: (json['timers'] as List<dynamic>)
-          .map((e) => TimerModel.fromJson(e as Map<String, dynamic>))
+      pagination: json['pagination'] == null
+          ? null
+          : Pagination.fromJson(json['pagination'] as Map<String, dynamic>),
+      timers: (json['timers'] as List<dynamic>?)
+          ?.map((e) => TimerModel.fromJson(e as Map<String, dynamic>))
           .toList(),
-      date: DateTime.parse(json['date'] as String),
+      date: json['date'] == null
+          ? null
+          : DateTime.parse(json['date'] as String),
     );
 
 Map<String, dynamic> _$CalendarModelToJson(CalendarModel instance) =>
     <String, dynamic>{
       'pagination': instance.pagination,
       'timers': instance.timers,
-      'date': instance.date.toIso8601String(),
+      'date': instance.date?.toIso8601String(),
     };

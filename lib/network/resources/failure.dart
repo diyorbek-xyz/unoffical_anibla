@@ -55,7 +55,9 @@ abstract class ExceptionMapper {
           return SessionLimitedFailure(
             ApiResponse.fromJson(
               exception.response?.data,
-              (json) => SessionsModel.fromJson(json as Map<String, dynamic>).toEntity(),
+              (json) => SessionsModel.fromJson(
+                json as Map<String, dynamic>,
+              ).toEntity(),
             ).data,
           );
         }

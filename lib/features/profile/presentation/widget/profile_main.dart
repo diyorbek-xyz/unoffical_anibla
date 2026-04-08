@@ -1,9 +1,10 @@
 import 'package:application/core/config/theme/app_colors.dart';
-import 'package:application/features/profile/domain/entities/account_entity.dart';
+import 'package:application/features/profile/domain/entities/profile_entity.dart';
 import 'package:application/features/profile/presentation/bloc/profile/profile_bloc.dart';
 import 'package:application/features/profile/presentation/bloc/profile/profile_event.dart';
 import 'package:application/features/profile/presentation/widget/menus/devices.dart';
 import 'package:application/features/profile/presentation/widget/menus/infos.dart';
+import 'package:application/features/profile/presentation/widget/menus/last_anime.dart';
 import 'package:application/features/profile/presentation/widget/modals/logout_modal.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ final List<TabModel> tabs = [
 ];
 
 class ProfileMain extends StatefulWidget {
-  final AccountEntity data;
+  final ProfileEntity data;
   const ProfileMain({super.key, required this.data});
 
   @override
@@ -68,7 +69,7 @@ class _ProfileMainState extends State<ProfileMain> {
             index: currentIndex,
             children: [
               ProfileInfosMenu(data: widget.data),
-              Text("songi"),
+              ProfileLastAnimeMenu(profile: widget.data),
               Text("saqlangan"),
               ProfileDevicesMenu(currentId: widget.data.tokenId, sessions: widget.data.sessions),
               Text("obunalar"),

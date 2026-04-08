@@ -1,5 +1,4 @@
 import 'package:application/features/auth/data/models/login_model.dart';
-import 'package:dio/dio.dart';
 
 sealed class AuthState {
   const AuthState();
@@ -28,8 +27,8 @@ final class LogOutFailed extends AuthState {
 }
 
 final class LoginFailed extends AuthState {
-  final DioException exception;
-  const LoginFailed(this.exception);
+  final String message;
+  const LoginFailed(this.message);
 }
 
 final class ConfirmSuccess extends AuthState {
@@ -38,6 +37,6 @@ final class ConfirmSuccess extends AuthState {
 }
 
 final class ConfirmFailed extends AuthState {
-  final DioException exception;
-  const ConfirmFailed(this.exception);
+  final String message;
+  const ConfirmFailed(this.message);
 }

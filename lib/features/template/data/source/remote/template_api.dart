@@ -11,4 +11,7 @@ abstract class TemplateApi {
 
   @GET('/v1/sliders')
   Future<HttpResponse<ApiResponse<TemplateModel>>> getTemplate();
+
+  @GET('/v1/history')
+  Future<HttpResponse<dynamic>> getTest();
 }

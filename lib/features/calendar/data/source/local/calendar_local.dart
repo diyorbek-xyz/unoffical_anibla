@@ -14,7 +14,7 @@ class CalendarLocalImpl implements CalendarLocal {
 
   @override
   Future<void> saveCalendar(CalendarModel calendar) async {
-    await box.put(calendar.date.formatCompact(), calendar);
+    await box.put(calendar.date?.formatCompact(), calendar);
   }
 
   @override
