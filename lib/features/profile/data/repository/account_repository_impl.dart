@@ -24,7 +24,8 @@ class ProfileRepositoryImpl implements ProfileRepository {
         final httpResponse = await _apiService.getProfile();
         model = httpResponse.data.data;
         await _localService.saveProfile(model);
-      } catch (e) {
+      } on DioException catch (e) {
+        if (e.response?.statusCode == HttpStatus.unauthorized) rethrow;
         final profile = await _localService.getProfile();
         if (profile != null) return Right(profile.toEntity());
         rethrow;
@@ -46,7 +47,11 @@ class ProfileRepositoryImpl implements ProfileRepository {
       if (httpResponse.data.success) {
         return Right(true);
       } else {
-        return Left(UnknownFailure(ExceptionMapper.mapResponseToDio(httpResponse.response)));
+        return Left(
+          UnknownFailure(
+            ExceptionMapper.mapResponseToDio(httpResponse.response),
+          ),
+        );
       }
     } on DioException catch (e) {
       return Left(ExceptionMapper.mapDioToFailure(e));

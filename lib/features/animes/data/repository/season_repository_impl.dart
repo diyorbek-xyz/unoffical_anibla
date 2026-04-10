@@ -1,5 +1,6 @@
-import 'package:application/features/animes/data/models/season_model.dart';
+import 'package:application/features/animes/data/mapper/season_mapper.dart';
 import 'package:application/features/animes/data/source/remote/season_api.dart';
+import 'package:application/features/animes/domain/entities/season_entity.dart';
 import 'package:application/features/animes/domain/repository/season_repository.dart';
 import 'package:application/network/resources/failure.dart';
 import 'package:dartz/dartz.dart';
@@ -10,10 +11,10 @@ class SeasonRepositoryImpl implements SeasonRepository {
   const SeasonRepositoryImpl(this.seasonApi);
 
   @override
-  Future<Either<Failure, List<SeasonModel>>> getAllSeasons(String animeSlug) async {
+  Future<Either<Failure, List<SeasonEntity>>> getAllSeasons(String animeSlug) async {
     try {
       final seasons = await seasonApi.getAllSeasons(animeSlug);
-      return Right(seasons.data.data);
+      return Right(seasons.data.data.map(SeasonMapper.modelToEntity).toList());
     } on DioException catch (e) {
       return Left(ExceptionMapper.mapDioToFailure(e));
     }

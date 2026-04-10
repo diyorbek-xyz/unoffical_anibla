@@ -16,3 +16,7 @@ String addBaseUrl(String? path) {
     return "${dotenv.env['NEW_BASE_URL']}/$path";
   }
 }
+
+bool hasBaseUrl(String? path) {
+  return path?.contains(dotenv.env['NEW_BASE_URL']!) ?? false;
+}

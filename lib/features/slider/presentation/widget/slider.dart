@@ -8,6 +8,7 @@ import 'package:application/injection_container.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class CarouselWidget extends StatelessWidget {
   const CarouselWidget({super.key});
@@ -74,6 +75,12 @@ class _CarouselState extends State<Carousel> {
             itemSnapping: true,
             enableSplash: true,
             controller: _controller,
+            onTap: (value) => context.pushNamed(
+              "anime",
+              pathParameters: {
+                "slug": widget.items.elementAt(value).anime.slug,
+              },
+            ),
             children: widget.items.map((e) {
               return Ink.image(
                 image: CachedNetworkImageProvider(e.image),

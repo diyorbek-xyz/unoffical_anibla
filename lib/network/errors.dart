@@ -1,15 +1,16 @@
-import 'package:dio/dio.dart';
-
 abstract class Errors {
-  static final tooManySessions = "too_many_sessions";
+  static final String tooManySessions = "too_many_sessions";
 }
 
-DioException screamFromResponse(Response response) {
-  return DioException(
-    requestOptions: response.requestOptions,
-    error: response.statusMessage,
-    message: response.toString(),
-    response: response,
-    type: DioExceptionType.badResponse,
-  );
+abstract class ErrorMessages {
+  static final String badRequest = "Notog'ri sorov";
+  static final String conflict = "Bunday ma'lumot avval mavjud";
+  static final String unauthorized = "Royxatdan o'tmagansiz";
+  static final String forbidden = "Malumot yo'qolgan";
+  static final String notFound = "Malumot topilmadi";
+  static final String methodNotAllowed = "Bu harakat bajarish uchun ruxsat yoq";
+  static final String loopDetected = "Serverda nosozlik";
+  static final String noContent = "Malumot yoq";
+  static final String requestTimeout = "Sorov yuborish vaqti o'tdi";
+  static final String unknown = "Nimadur xato ketti:";
 }

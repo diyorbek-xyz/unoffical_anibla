@@ -10,6 +10,13 @@ extension StringExt on String {
   }
 }
 
+String lorem([int? len]) {
+  final text =
+      "The quick, brown fox jumps over a lazy dog. DJs flock by when MTV ax quiz prog. Junk MTV quiz graced by fox whelps. Bawds jog, flick quartz, vex nymphs. Waltz, bad nymph, for quick jigs vex! Fox nymphs grab quick-jived waltz. Brick quiz whangs jumpy veldt fox. Bright vixens jump; dozy fowl quack. Quick wafting zephyrs vex bold Jim. Quick zephyrs blow, vexing daft Jim. Sex-charged fop blew my junk TV quiz. How quickly daft jumping zebras vex. Two driven jocks help fax my big quiz. Quick, Baz, get my woven flax jodhpurs! \"Now fax quiz Jack! \" my brave";
+  if (len != null) return text.substring(0, len);
+  return text;
+}
+
 extension DateFormatting on DateTime {
   String formatCompact({String divider = "-"}) =>
       DateFormat("d${divider}MM${divider}y", 'uz-UZ').format(this);

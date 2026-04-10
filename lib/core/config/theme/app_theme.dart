@@ -19,7 +19,7 @@ class AppThemes {
       TargetPlatform.android: CupertinoPageTransitionsBuilder(),
       TargetPlatform.fuchsia: CupertinoPageTransitionsBuilder(),
       TargetPlatform.windows: CupertinoPageTransitionsBuilder(),
-      TargetPlatform.linux: ZoomPageTransitionsBuilder(),
+      TargetPlatform.linux: PredictiveBackFullscreenPageTransitionsBuilder(),
       TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
       TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
     },
@@ -29,6 +29,7 @@ class AppThemes {
     elevation: WidgetStatePropertyAll(0),
     shadowColor: WidgetStatePropertyAll(Colors.transparent),
   );
+
 
   static ButtonStyle getErrorButtonStyle(BuildContext context) => ButtonStyle(
     backgroundColor: WidgetStatePropertyAll(context.appColors.error),

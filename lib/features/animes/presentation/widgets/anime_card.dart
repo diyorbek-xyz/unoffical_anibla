@@ -1,5 +1,5 @@
 import 'package:application/core/config/theme/app_colors.dart';
-import 'package:application/core/utils/add_base_url.dart';
+import 'package:application/core/utils/base_url.dart';
 import 'package:application/features/animes/domain/entities/anime_entity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';

@@ -8,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final ProfileRepository repository;
-  ProfileBloc(this.repository) : super(ProfileLoading()) {
+  ProfileBloc(this.repository) : super(ProfileInitial()) {
     on<GetProfile>(onGetProfile);
   }
   void onGetProfile(GetProfile event, Emitter<ProfileState> emit) async {

@@ -1,4 +1,4 @@
-import 'package:application/features/animes/data/models/season_model.dart';
+import 'package:application/features/animes/domain/entities/season_entity.dart';
 
 sealed class SeasonState {
   const SeasonState();
@@ -13,7 +13,7 @@ final class SeasonLoading extends SeasonState {
 }
 
 final class SeasonSuccess extends SeasonState {
-  final List<SeasonModel> seasons;
+  final List<SeasonEntity> seasons;
   const SeasonSuccess(this.seasons);
 }
 

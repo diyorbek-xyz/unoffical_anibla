@@ -1,25 +1,56 @@
+import 'dart:io';
+
 import 'package:application/core/utils/device_info.dart';
 import 'package:application/features/auth/data/source/local/auth_storage.dart';
+import 'package:application/injection_container.dart';
+import 'package:application/network/interceptors/error_interceptor.dart';
 import 'package:dio/dio.dart';
 
 class AuthInterceptor extends Interceptor {
   final AuthStorage storage;
   AuthInterceptor(this.storage);
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+  void onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     final token = await storage.getAccessToken();
     if (token != null) {
-      options.headers['Authorization'] = 'Bearer $token';
+      setHeaders(options, token);
     }
-    final device = await DeviceInfo.getDeviceInfo();
-    options.headers['x-device'] = device.name;
-    options.headers['x-platform-os'] = device.platformOS;
-    options.headers['x-platform'] = device.platform;
     handler.next(options);
   }
 
   @override
-  void onResponse(Response<dynamic> response, ResponseInterceptorHandler handler) {
+  void onError(DioException err, ErrorInterceptorHandler handler) async {
+    if (err.type == DioExceptionType.badResponse) {
+      if (err.response?.statusCode == HttpStatus.unauthorized) {
+        try {
+          final refreshToken = await storage.getRefreshToken();
+          if (refreshToken == null) return handler.next(err);
+          final dio = Dio(baseOptions);
+          dio.interceptors.add(ErrorInterceptor());
+          final options = await setHeaders(err.requestOptions, refreshToken);
+          final response = await dio.fetch(options);
+          return handler.resolve(response);
+        } on DioException catch (e) {
+          print(e.error.toString());
+          print(e.message.toString());
+          print(e.response.toString());
+          print(e.requestOptions.toString());
+          await storage.clearTokens();
+          return handler.next(err);
+        }
+      }
+    }
+    handler.next(err);
+  }
+
+  @override
+  void onResponse(
+    Response<dynamic> response,
+    ResponseInterceptorHandler handler,
+  ) {
     if (response.data['success'] != null && !response.data['success']) {
       switch (response.data['error']) {
         case "too_many_sessions":
@@ -40,5 +71,17 @@ class AuthInterceptor extends Interceptor {
     } else {
       handler.next(response);
     }
+  }
+
+  Future<RequestOptions> setHeaders(
+    RequestOptions options,
+    String token,
+  ) async {
+    final device = await DeviceInfo.getDeviceInfo();
+    options.headers['x-device'] = device.name;
+    options.headers['x-platform-os'] = device.platformOS;
+    options.headers['x-platform'] = device.platform;
+    options.headers['Authorization'] = 'Bearer $token';
+    return options;
   }
 }

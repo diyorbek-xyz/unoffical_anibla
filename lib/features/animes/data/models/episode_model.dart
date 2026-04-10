@@ -18,6 +18,10 @@ class EpisodeModel {
   @HiveField(4)
   @JsonKey(name: "episode_number")
   final int? episodeNumber;
+  @HiveField(5)
+  final String? type;
+  @HiveField(6)
+  final String? video;
 
   const EpisodeModel({
     this.episodeNumber,
@@ -25,6 +29,8 @@ class EpisodeModel {
     this.ru,
     this.slug,
     this.uz,
+    this.type,
+    this.video,
   });
 
   factory EpisodeModel.fromJson(Map<String, dynamic> json) =>

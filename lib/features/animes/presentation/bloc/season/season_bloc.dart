@@ -13,7 +13,8 @@ class SeasonBloc extends Bloc<SeasonEvent, SeasonState> {
     emit(SeasonLoading());
     final either = await seasonRepository.getAllSeasons(event.animeSlug);
     either.fold(
-      (failure) => emit(SeasonFailure(ExceptionMapper.mapFailureToMessage(failure))),
+      (failure) =>
+          emit(SeasonFailure(ExceptionMapper.mapFailureToMessage(failure))),
       (seasons) => emit(SeasonSuccess(seasons)),
     );
   }

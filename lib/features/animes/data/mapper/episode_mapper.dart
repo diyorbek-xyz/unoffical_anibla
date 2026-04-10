@@ -5,8 +5,10 @@ import 'package:application/features/common/mapper/translated_mapper.dart';
 class EpisodeMapper {
   static EpisodeEntity modelToEntity(EpisodeModel? model) => EpisodeEntity(
     episodeNumber: model?.episodeNumber ?? 0,
-    id: model?.id ?? "NN",
-    slug: model?.slug ?? "NN",
+    id: model?.id ?? "",
+    slug: model?.slug ?? "",
+    video: model?.video ?? "",
+    type: model?.type ?? EpisodeType.paid,
     title: TranslatedMapper.extendedToEntity(model, 'title'),
   );
 

@@ -82,29 +82,31 @@ abstract class ExceptionMapper {
   static String mapStatusToMessage(int status) {
     switch (status) {
       case HttpStatus.badRequest:
-        return "Notog'ri sorov";
+        return ErrorMessages.badRequest;
       case HttpStatus.conflict:
-        return "Bunday ma'lumot avval mavjud";
+        return ErrorMessages.conflict;
       case HttpStatus.unauthorized:
-        return "Royxatdan o'tmagansiz";
+        return ErrorMessages.unauthorized;
       case HttpStatus.forbidden:
-        return "Malumot yo'qolgan";
+        return ErrorMessages.forbidden;
       case HttpStatus.notFound:
-        return "Malumot topilmadi";
+        return ErrorMessages.notFound;
       case HttpStatus.methodNotAllowed:
-        return "Bu harakat bajarish uchun ruxsat yoq";
+        return ErrorMessages.methodNotAllowed;
       case HttpStatus.loopDetected:
-        return "Serverda nosozlik";
+        return ErrorMessages.loopDetected;
       case HttpStatus.noContent:
-        return "Malumot yoq";
+        return ErrorMessages.noContent;
       case HttpStatus.requestTimeout:
-        return "Sorov yuborish vaqti o'tdi";
+        return ErrorMessages.requestTimeout;
       default:
-        return "Nimadur xato ketti: $status";
+        return "${ErrorMessages.unknown} $status";
     }
   }
 
   static Failure mapMessageToFailure(String message) {
     return SimpleFailure(message);
   }
+
+  static const errors = Errors;
 }

@@ -6,7 +6,7 @@ import 'package:application/features/explore/data/mapper/genre_mapper.dart';
 class AnimeMapper {
   static AnimeEntity modelToEntity(AnimeModel? model) => AnimeEntity(
     age: model?.age ?? 0,
-    categories: model?.categories,
+    categories: model?.categories ?? [],
     country: model?.country,
     cover: model?.cover ?? "",
     createdAt: model?.createdAt ?? DateTime(2026),

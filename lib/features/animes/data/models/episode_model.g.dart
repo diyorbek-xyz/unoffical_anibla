@@ -22,13 +22,15 @@ class EpisodeModelAdapter extends TypeAdapter<EpisodeModel> {
       ru: fields[2] as dynamic,
       slug: fields[3] as String?,
       uz: fields[1] as dynamic,
+      type: fields[5] as String?,
+      video: fields[6] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, EpisodeModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -38,7 +40,11 @@ class EpisodeModelAdapter extends TypeAdapter<EpisodeModel> {
       ..writeByte(3)
       ..write(obj.slug)
       ..writeByte(4)
-      ..write(obj.episodeNumber);
+      ..write(obj.episodeNumber)
+      ..writeByte(5)
+      ..write(obj.type)
+      ..writeByte(6)
+      ..write(obj.video);
   }
 
   @override
@@ -62,6 +68,8 @@ EpisodeModel _$EpisodeModelFromJson(Map<String, dynamic> json) => EpisodeModel(
   ru: json['ru'],
   slug: json['slug'] as String?,
   uz: json['uz'],
+  type: json['type'] as String?,
+  video: json['video'] as String?,
 );
 
 Map<String, dynamic> _$EpisodeModelToJson(EpisodeModel instance) =>
@@ -71,4 +79,6 @@ Map<String, dynamic> _$EpisodeModelToJson(EpisodeModel instance) =>
       'ru': instance.ru,
       'slug': instance.slug,
       'episode_number': instance.episodeNumber,
+      'type': instance.type,
+      'video': instance.video,
     };

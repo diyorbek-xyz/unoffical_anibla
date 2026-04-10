@@ -5,9 +5,13 @@ sealed class ProfileState {
   const ProfileState();
 }
 
-final class ProfileInitial extends ProfileState {}
+final class ProfileInitial extends ProfileState {
+  const ProfileInitial();
+}
 
-final class ProfileLoading extends ProfileState {}
+final class ProfileLoading extends ProfileState {
+  const ProfileLoading();
+}
 
 final class ProfileUnauthorized extends ProfileState {
   const ProfileUnauthorized();

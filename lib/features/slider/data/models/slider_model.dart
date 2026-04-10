@@ -1,4 +1,4 @@
-import 'package:application/core/utils/add_base_url.dart';
+import 'package:application/core/utils/base_url.dart';
 import 'package:application/features/animes/data/models/anime_model.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:json_annotation/json_annotation.dart';

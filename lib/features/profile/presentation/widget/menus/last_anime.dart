@@ -1,5 +1,5 @@
 import 'package:application/core/config/theme/app_colors.dart';
-import 'package:application/core/utils/add_base_url.dart';
+import 'package:application/core/utils/base_url.dart';
 import 'package:application/features/animes/data/mapper/anime_mapper.dart';
 import 'package:application/features/animes/data/models/anime_model.dart';
 import 'package:application/features/profile/domain/entities/profile_entity.dart';

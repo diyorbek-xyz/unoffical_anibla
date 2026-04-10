@@ -1,4 +1,4 @@
-import 'package:application/core/utils/add_base_url.dart';
+import 'package:application/core/utils/base_url.dart';
 import 'package:application/features/profile/data/models/session_model.dart';
 import 'package:application/features/profile/domain/entities/profile_entity.dart';
 import 'package:hive_ce_flutter/adapters.dart';

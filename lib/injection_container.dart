@@ -1,11 +1,15 @@
 import 'package:application/core/constants/constants.dart';
 import 'package:application/features/animes/data/repository/anime_repository_impl.dart';
+import 'package:application/features/animes/data/repository/episode_repository_impl.dart';
 import 'package:application/features/animes/data/repository/season_repository_impl.dart';
 import 'package:application/features/animes/data/source/remote/anime_api.dart';
+import 'package:application/features/animes/data/source/remote/episode_api.dart';
 import 'package:application/features/animes/data/source/remote/season_api.dart';
 import 'package:application/features/animes/domain/repository/anime_repository.dart';
+import 'package:application/features/animes/domain/repository/episode_repository.dart';
 import 'package:application/features/animes/domain/repository/season_repository.dart';
 import 'package:application/features/animes/presentation/bloc/anime/anime_bloc.dart';
+import 'package:application/features/animes/presentation/bloc/episode/episode_bloc.dart';
 import 'package:application/features/animes/presentation/bloc/season/season_bloc.dart';
 import 'package:application/features/explore/data/repository/explore_repository_impl.dart';
 import 'package:application/features/explore/data/source/remote/genre_api.dart';
@@ -52,22 +56,21 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:media_kit/media_kit.dart';
 
 final sl = GetIt.instance;
-final dio = Dio(
-  BaseOptions(
-    baseUrl: "$amediatvBaseUrl/api",
-    headers: {
-      "User-Agent": "okhttp/4.12.0",
-      "Accept-Encoding": "gzip",
-      "accept": "application/json",
-      "Host": "amediatv.up-it.uz",
-      "Connection": "Keep-Alive",
-      "x-platform": "mobile",
-      "x-platform-os": "android",
-      "x-device": "Redmi 6A",
-      "x-app-version": "2.4.9",
-    },
-  ),
+final baseOptions = BaseOptions(
+  baseUrl: "$amediatvBaseUrl/api",
+  headers: {
+    "User-Agent": "okhttp/4.12.0",
+    "Accept-Encoding": "gzip",
+    "accept": "application/json",
+    "Host": "amediatv.up-it.uz",
+    "Connection": "Keep-Alive",
+    "x-platform": "mobile",
+    "x-platform-os": "android",
+    "x-device": "Redmi 6A",
+    "x-app-version": "2.4.9",
+  },
 );
+final dio = Dio(baseOptions);
 final secureStorage = FlutterSecureStorage();
 
 Future<void> initializeDependencies() async {
@@ -111,6 +114,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<ProfileApi>(ProfileApi(sl()));
   sl.registerSingleton<AnimeApi>(AnimeApi(sl()));
   sl.registerSingleton<SeasonApi>(SeasonApi(sl()));
+  sl.registerSingleton<EpisodeApi>(EpisodeApi(sl()));
   sl.registerSingleton<GenreApi>(GenreApi(sl()));
   sl.registerSingleton<TemplateApi>(TemplateApi(sl()));
 
@@ -123,6 +127,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<SliderRepository>(SliderRepositoryImpl(sl(), sl()));
   sl.registerSingleton<CalendarRepository>(CalendarRepositoryImpl(sl(), sl()));
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl(), sl()));
+  sl.registerSingleton<EpisodeRepository>(EpisodeRepositoryImpl(sl()));
   sl.registerSingleton<ProfileRepository>(
     ProfileRepositoryImpl(sl(), sl(), sl()),
   );
@@ -140,5 +145,6 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<AnimeBloc>(() => AnimeBloc(sl()));
   sl.registerFactory<SeasonBloc>(() => SeasonBloc(sl()));
   sl.registerFactory<GenreBloc>(() => GenreBloc(sl()));
+  sl.registerFactory<EpisodeBloc>(() => EpisodeBloc(sl()));
   sl.registerFactory<TemplateBloc>(() => TemplateBloc(sl()));
 }
