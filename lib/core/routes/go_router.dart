@@ -1,4 +1,6 @@
 import 'package:application/features/animes/presentation/pages/anime_page.dart';
+import 'package:application/features/animes/presentation/pages/anime_provider.dart';
+import 'package:application/features/animes/presentation/pages/watch_page.dart';
 import 'package:application/features/auth/presentation/pages/login_page.dart';
 import 'package:application/features/explore/presentation/pages/explore_page.dart';
 import 'package:application/features/main/presentation/pages/home_page.dart';
@@ -21,10 +23,27 @@ final GoRouter routerConfig = GoRouter(
           navigatorKey: _shellNavigatorKey,
           routes: [
             GoRoute(path: '/home', builder: (context, state) => const HomePage()),
-            GoRoute(
-              name: "anime",
-              path: '/anime/:slug',
-              builder: (context, state) => AnimePage(slug: state.pathParameters['slug'].toString()),
+            ShellRoute(
+              builder: (context, state, child) => AnimeProvider(child: child),
+              routes: [
+                GoRoute(
+                  name: "anime",
+                  path: '/anime/:type/:slug',
+                  builder: (context, state) => AnimePage(
+                    slug: state.pathParameters['slug'].toString(),
+                    type: state.pathParameters['type']?.toString() ?? "Series",
+                  ),
+                ),
+                GoRoute(
+                  name: "watch",
+                  path: '/watch/:type/:slug',
+                  builder: (context, state) => WatchPage(
+                    slug: state.pathParameters['slug'].toString(),
+                    type: state.pathParameters['type']?.toString() ?? "Series",
+                    episode: 1,
+                  ),
+                ),
+              ],
             ),
           ],
         ),

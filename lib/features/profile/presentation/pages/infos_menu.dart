@@ -23,7 +23,7 @@ class _ProfileInfosMenuState extends State<ProfileInfosMenu> {
       ),
       ListModel(
         label: "Email manzil",
-        value: widget.data.email ?? "Mavjud emas",
+        value: widget.data.email,
         icon: Icons.email_sharp,
       ),
       ListModel(

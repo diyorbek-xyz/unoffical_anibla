@@ -20,27 +20,72 @@ class _AnimeApi implements AnimeApi {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HttpResponse<ApiResponse<AnimeModel>>> getSerie(String slug) async {
+  Future<HttpResponse<ApiResponse<AnimeModel?>>> getSerie(
+    String type,
+    String slug,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<ApiResponse<AnimeModel>>>(
+    final _options = _setStreamType<HttpResponse<ApiResponse<AnimeModel?>>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v1/series/${slug}',
+            '/v1/${type}/${slug}',
             queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late ApiResponse<AnimeModel> _value;
+    late ApiResponse<AnimeModel?> _value;
     try {
-      _value = ApiResponse<AnimeModel>.fromJson(
+      _value = ApiResponse<AnimeModel?>.fromJson(
         _result.data!,
-        (json) => AnimeModel.fromJson(json as Map<String, dynamic>),
+        (json) => json == null
+            ? null
+            : AnimeModel.fromJson(json as Map<String, dynamic>),
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, response: _result);
+      rethrow;
+    }
+    final httpResponse = HttpResponse(_value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<ApiResponse<List<AnimeModel>>>> getHomeAnimes() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options =
+        _setStreamType<HttpResponse<ApiResponse<List<AnimeModel>>>>(
+          Options(method: 'GET', headers: _headers, extra: _extra)
+              .compose(
+                _dio.options,
+                '/v1/media/mobile',
+                queryParameters: queryParameters,
+                data: _data,
+              )
+              .copyWith(
+                baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl),
+              ),
+        );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ApiResponse<List<AnimeModel>> _value;
+    try {
+      _value = ApiResponse<List<AnimeModel>>.fromJson(
+        _result.data!,
+        (json) => json is List<dynamic>
+            ? json
+                  .map<AnimeModel>(
+                    (i) => AnimeModel.fromJson(i as Map<String, dynamic>),
+                  )
+                  .toList()
+            : List.empty(),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);

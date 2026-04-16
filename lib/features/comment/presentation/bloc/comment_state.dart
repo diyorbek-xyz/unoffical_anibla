@@ -1,3 +1,5 @@
+import 'package:application/features/comment/domain/entities/response_entity.dart';
+
 sealed class CommentState {
   const CommentState();
 }
@@ -11,8 +13,8 @@ final class CommentLoading extends CommentState {
 }
 
 final class CommentSuccess extends CommentState {
-  final dynamic data;
-  const CommentSuccess(this.data);
+  final CommentResponse response;
+  const CommentSuccess(this.response);
 }
 
 final class CommentError extends CommentState {

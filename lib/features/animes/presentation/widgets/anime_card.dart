@@ -68,7 +68,7 @@ class AnimeCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(15),
             onTap: () => context.pushNamed(
               "anime",
-              pathParameters: {"slug": anime.slug},
+              pathParameters: {"type": anime.type, "slug": anime.slug},
             ),
             splashColor: context.appColors.surfaceContainerHigh.withValues(
               alpha: 0.2,

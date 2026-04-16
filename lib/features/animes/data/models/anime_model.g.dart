@@ -17,12 +17,14 @@ class AnimeModelAdapter extends TypeAdapter<AnimeModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return AnimeModel(
+      duration: (fields[21] as num?)?.toInt(),
+      video: fields[22] as String?,
       age: (fields[15] as num?)?.toInt(),
       categories: fields[9] as dynamic,
       country: fields[4] as dynamic,
       cover: fields[12] as String?,
       createdAt: fields[18] as DateTime?,
-      creators: fields[7] as dynamic,
+      creators: (fields[7] as List?)?.cast<ItemModel>(),
       director: fields[6] as dynamic,
       forOnlyMDH: fields[17] as bool?,
       genres: (fields[8] as List?)?.cast<GenreModel>(),
@@ -38,13 +40,14 @@ class AnimeModelAdapter extends TypeAdapter<AnimeModel> {
       updatedAt: fields[19] as DateTime?,
       ru: fields[20] as dynamic,
       uz: fields[2] as dynamic,
+      type: fields[23] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, AnimeModel obj) {
     writer
-      ..writeByte(21)
+      ..writeByte(24)
       ..writeByte(0)
       ..write(obj.keywords)
       ..writeByte(1)
@@ -86,7 +89,13 @@ class AnimeModelAdapter extends TypeAdapter<AnimeModel> {
       ..writeByte(19)
       ..write(obj.updatedAt)
       ..writeByte(20)
-      ..write(obj.ru);
+      ..write(obj.ru)
+      ..writeByte(21)
+      ..write(obj.duration)
+      ..writeByte(22)
+      ..write(obj.video)
+      ..writeByte(23)
+      ..write(obj.type);
   }
 
   @override
@@ -105,6 +114,8 @@ class AnimeModelAdapter extends TypeAdapter<AnimeModel> {
 // **************************************************************************
 
 AnimeModel _$AnimeModelFromJson(Map<String, dynamic> json) => AnimeModel(
+  duration: (json['duration'] as num?)?.toInt(),
+  video: json['video'] as String?,
   age: (json['age'] as num?)?.toInt(),
   categories: json['categories'],
   country: json['country'],
@@ -112,7 +123,9 @@ AnimeModel _$AnimeModelFromJson(Map<String, dynamic> json) => AnimeModel(
   createdAt: json['createdAt'] == null
       ? null
       : DateTime.parse(json['createdAt'] as String),
-  creators: json['creators'],
+  creators: (json['creators'] as List<dynamic>?)
+      ?.map((e) => ItemModel.fromJson(e as Map<String, dynamic>))
+      .toList(),
   director: json['director'],
   forOnlyMDH: json['for_only_mdh'] as bool?,
   genres: (json['genres'] as List<dynamic>?)
@@ -132,6 +145,7 @@ AnimeModel _$AnimeModelFromJson(Map<String, dynamic> json) => AnimeModel(
       : DateTime.parse(json['updatedAt'] as String),
   ru: json['ru'],
   uz: json['uz'],
+  type: json['mediaType'] as String?,
 );
 
 Map<String, dynamic> _$AnimeModelToJson(AnimeModel instance) =>
@@ -157,4 +171,7 @@ Map<String, dynamic> _$AnimeModelToJson(AnimeModel instance) =>
       'for_only_mdh': instance.forOnlyMDH,
       'createdAt': instance.createdAt?.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
+      'duration': instance.duration,
+      'video': instance.video,
+      'mediaType': instance.type,
     };

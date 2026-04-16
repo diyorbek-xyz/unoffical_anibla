@@ -10,7 +10,9 @@ class ErrorInterceptor extends Interceptor {
     final uri = "\n - url: ${err.requestOptions.uri}";
     final headers = "\n - headers: ${err.requestOptions.headers}";
     final body = "\n - body: ${err.requestOptions.data}";
-    final exception = err.response != null ? ExceptionMapper.mapResponseToDio(err.response!) : err;
+    final exception = err.response != null
+        ? ExceptionMapper.mapResponseToDio(err.response!)
+        : err;
     if (status != null) {
       print(
         "${ExceptionMapper.mapStatusToMessage(status)} \n ERROR while fetchind data:$error $uri $response $headers $body",

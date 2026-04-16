@@ -11,21 +11,15 @@ class EpisodeBloc extends Bloc<EpisodeEvent, EpisodeState> {
   }
 
   void onGetEpisodes(GetEpisodes event, Emitter<EpisodeState> emit) async {
-    if (state is EpisodeSuccess || state is EpisodeLoading) {
+    if ((state is EpisodeSuccess || state is EpisodeLoading)) {
       return;
     }
     emit(EpisodeLoading());
-    final either = await _episodeRepository.getEpisodes(
-      event.animeSlug,
-      event.seasonSlug,
-    );
+    final either = await _episodeRepository.getEpisodes(event.animeSlug, event.seasonSlug);
     emit(
       either.fold(
-        (failure) =>
-            EpisodeFailure(ExceptionMapper.mapFailureToMessage(failure)),
-        (success) => EpisodeSuccess(
-          success.skipWhile((e) => e.episodeNumber < 1).toList(),
-        ),
+        (failure) => EpisodeFailure(ExceptionMapper.mapFailureToMessage(failure)),
+        (success) => EpisodeSuccess(success.skipWhile((e) => e.episodeNumber < 1).toList()),
       ),
     );
   }

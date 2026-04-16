@@ -9,6 +9,12 @@ part 'anime_api.g.dart';
 abstract class AnimeApi {
   factory AnimeApi(Dio dio) => _AnimeApi(dio);
 
-  @GET("/v1/series/{slug}")
-  Future<HttpResponse<ApiResponse<AnimeModel>>> getSerie(@Path("slug") String slug);
+  @GET("/v1/{type}/{slug}")
+  Future<HttpResponse<ApiResponse<AnimeModel?>>> getSerie(
+    @Path("type") String type,
+    @Path("slug") String slug,
+  );
+
+  @GET("/v1/media/mobile")
+  Future<HttpResponse<ApiResponse<List<AnimeModel>>>> getHomeAnimes();
 }

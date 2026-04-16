@@ -1,6 +1,5 @@
-import 'dart:io';
-
 import 'package:application/core/resources/api_response.dart';
+import 'package:application/features/profile/data/mapper/session_mapper.dart';
 import 'package:application/features/profile/data/models/session_model.dart';
 import 'package:application/features/profile/domain/entities/session_entity.dart';
 import 'package:application/network/errors.dart';
@@ -38,10 +37,13 @@ abstract class ExceptionMapper {
   static DioException mapResponseToDio(Response response) {
     return DioException(
       requestOptions: response.requestOptions,
-      error: response.statusCode,
+      error:
+          response.data?['message'] ??
+          response.statusMessage ??
+          response.statusCode,
       response: response,
       type: DioExceptionType.badResponse,
-      message: response.statusMessage,
+      message: response.data?['message'] ?? response.statusMessage,
     );
   }
 
@@ -51,18 +53,22 @@ abstract class ExceptionMapper {
       case DioExceptionType.connectionTimeout:
         return NetworkFailure();
       case DioExceptionType.badResponse:
-        if (exception.error.toString() == Errors.tooManySessions) {
-          return SessionLimitedFailure(
-            ApiResponse.fromJson(
-              exception.response?.data,
-              (json) => SessionsModel.fromJson(
-                json as Map<String, dynamic>,
-              ).toEntity(),
-            ).data,
-          );
+        switch (exception.response?.data?['message']?.toString()) {
+          case Errors.userNotFound:
+            return SimpleFailure("Foydalanuvchi topilmadi");
+          case Errors.tooManySessions:
+            return SessionLimitedFailure(
+              ApiResponse.fromJson(
+                exception.response?.data,
+                (json) => SessionMapper.modelsToEntities(
+                  SessionsModel.fromJson(json as Map<String, dynamic>),
+                ),
+              ).data,
+            );
+          default:
+            final statusCode = exception.response?.statusCode;
+            return ServerFailure(statusCode ?? 400);
         }
-        final statusCode = exception.response?.statusCode;
-        return ServerFailure(statusCode ?? 400);
       default:
         return UnknownFailure(exception);
     }
@@ -72,41 +78,17 @@ abstract class ExceptionMapper {
     if (failure is NetworkFailure) {
       return "Internetga ulanmagansiz";
     } else if (failure is ServerFailure) {
-      return mapStatusToMessage(failure.status);
+      return ErrorMessages.fromStatus(failure.status);
     } else if (failure is SimpleFailure) {
       return failure.message;
     }
     return "Nimadur xato ketti: ${(failure as UnknownFailure).exception.toString()}";
   }
 
-  static String mapStatusToMessage(int status) {
-    switch (status) {
-      case HttpStatus.badRequest:
-        return ErrorMessages.badRequest;
-      case HttpStatus.conflict:
-        return ErrorMessages.conflict;
-      case HttpStatus.unauthorized:
-        return ErrorMessages.unauthorized;
-      case HttpStatus.forbidden:
-        return ErrorMessages.forbidden;
-      case HttpStatus.notFound:
-        return ErrorMessages.notFound;
-      case HttpStatus.methodNotAllowed:
-        return ErrorMessages.methodNotAllowed;
-      case HttpStatus.loopDetected:
-        return ErrorMessages.loopDetected;
-      case HttpStatus.noContent:
-        return ErrorMessages.noContent;
-      case HttpStatus.requestTimeout:
-        return ErrorMessages.requestTimeout;
-      default:
-        return "${ErrorMessages.unknown} $status";
-    }
-  }
+  static String mapStatusToMessage(int status) =>
+      ErrorMessages.fromStatus(status);
 
-  static Failure mapMessageToFailure(String message) {
-    return SimpleFailure(message);
-  }
+  static Failure mapMessageToFailure(String message) => SimpleFailure(message);
 
   static const errors = Errors;
 }

@@ -1,6 +1,12 @@
+import 'package:application/features/common/domain/entities/item_entity.dart';
 import 'package:application/features/common/domain/entities/translated_entity.dart';
 import 'package:application/features/explore/domain/entities/genre_entity.dart';
 import 'package:equatable/equatable.dart';
+
+abstract class AnimeType {
+  static const movie = "Movies";
+  static const serie = "Series";
+}
 
 class AnimeEntity extends Equatable {
   final List? keywords;
@@ -11,7 +17,7 @@ class AnimeEntity extends Equatable {
   final dynamic country;
   final dynamic studio;
   final dynamic director;
-  final dynamic creators;
+  final List<ItemEntity> creators;
   final List<GenreEntity> genres;
   final dynamic categories;
   final int publishedYear;
@@ -24,6 +30,9 @@ class AnimeEntity extends Equatable {
   final bool forOnlyMDH;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final int duration;
+  final String video;
+  final String type;
 
   const AnimeEntity({
     required this.age,
@@ -47,6 +56,9 @@ class AnimeEntity extends Equatable {
     required this.updatedAt,
     required this.title,
     required this.description,
+    required this.duration,
+    required this.type,
+    required this.video,
   });
   @override
   List<Object?> get props => [
@@ -71,6 +83,9 @@ class AnimeEntity extends Equatable {
     trailer,
     updatedAt,
     description,
+    duration,
+    video,
+    type,
   ];
 }
 

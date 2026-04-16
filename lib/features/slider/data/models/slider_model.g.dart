@@ -58,9 +58,7 @@ class SliderModelAdapter extends TypeAdapter<SliderModel> {
 
 SliderModel _$SliderModelFromJson(Map<String, dynamic> json) => SliderModel(
   id: json['_id'] as String?,
-  anime: json['media'] == null
-      ? null
-      : AnimeModel.fromJson(json['media'] as Map<String, dynamic>),
+  anime: json['media'] == null ? null : AnimeModel.fromJson(json['media']),
   image: addBaseUrl(json['image'] as String?),
   mobileImage: addBaseUrl(json['mobile_image'] as String?),
   type: json['mediaType'],

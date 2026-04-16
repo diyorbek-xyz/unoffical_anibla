@@ -1,7 +1,6 @@
 import 'dart:io';
-
 import 'package:application/features/auth/data/source/remote/auth_api.dart';
-import 'package:application/features/profile/data/models/profile_model.dart';
+import 'package:application/features/profile/data/mapper/profile_mapper.dart';
 import 'package:application/features/profile/data/source/local/profile_local.dart';
 import 'package:application/features/profile/domain/entities/profile_entity.dart';
 import 'package:application/features/profile/data/source/remote/profile_api.dart';
@@ -19,18 +18,17 @@ class ProfileRepositoryImpl implements ProfileRepository {
   @override
   Future<Either<Failure, ProfileEntity>> getProfile() async {
     try {
-      late ProfileModel model;
       try {
         final httpResponse = await _apiService.getProfile();
-        model = httpResponse.data.data;
+        final model = httpResponse.data.data;
         await _localService.saveProfile(model);
+        return Right(ProfileMapper.modelToEntity(model));
       } on DioException catch (e) {
         if (e.response?.statusCode == HttpStatus.unauthorized) rethrow;
         final profile = await _localService.getProfile();
-        if (profile != null) return Right(profile.toEntity());
+        if (profile != null) return Right(ProfileMapper.modelToEntity(profile));
         rethrow;
       }
-      return Right(model.toEntity());
     } on DioException catch (e) {
       final statusCode = e.response?.statusCode;
       if (statusCode == HttpStatus.unauthorized) {

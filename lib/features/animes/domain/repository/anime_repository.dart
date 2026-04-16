@@ -3,5 +3,6 @@ import 'package:application/network/resources/failure.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class AnimeRepository {
-  Future<Either<Failure, AnimeEntity>> getSerie(String slug);
+  Future<Either<Failure, AnimeEntity>> getSerie(String type, String slug);
+  Future<Either<Failure, List<AnimeEntity>>> getHomeAnimes();
 }

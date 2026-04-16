@@ -20,32 +20,35 @@ class _CommentApi implements CommentApi {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HttpResponse<ApiResponse<dynamic>>> getAnimeComments(
+  Future<HttpResponse<ApiResponse<CommentResponseModel>>> getAnimeComments(
     String type,
     String id,
-    dynamic queries,
+    Map<String, dynamic> queries,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    queryParameters.addAll(queries.toJson());
+    queryParameters.addAll(queries);
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<ApiResponse<dynamic>>>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/v1/comments/${type}/${id}',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
+    final _options =
+        _setStreamType<HttpResponse<ApiResponse<CommentResponseModel>>>(
+          Options(method: 'GET', headers: _headers, extra: _extra)
+              .compose(
+                _dio.options,
+                '/v1/comments/${type}/${id}',
+                queryParameters: queryParameters,
+                data: _data,
+              )
+              .copyWith(
+                baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl),
+              ),
+        );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late ApiResponse<dynamic> _value;
+    late ApiResponse<CommentResponseModel> _value;
     try {
-      _value = ApiResponse<dynamic>.fromJson(
+      _value = ApiResponse<CommentResponseModel>.fromJson(
         _result.data!,
-        (json) => json as dynamic,
+        (json) => CommentResponseModel.fromJson(json as Map<String, dynamic>),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);

@@ -1,7 +1,5 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/utils/base_url.dart';
-import 'package:application/features/animes/data/mapper/anime_mapper.dart';
-import 'package:application/features/animes/data/models/anime_model.dart';
 import 'package:application/features/profile/domain/entities/profile_entity.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -18,17 +16,17 @@ class ProfileLastAnimeMenu extends StatefulWidget {
 class _ProfileLastAnimeMenuState extends State<ProfileLastAnimeMenu> {
   @override
   Widget build(BuildContext context) {
-    final anime = AnimeMapper.modelToEntity(
-      AnimeModel.fromJson(widget.profile.lastAnime.cast<String, dynamic>()),
-    );
+    final anime = widget.profile.lastAnime;
     return SizedBox(
       height: 400,
       child: Card(
         clipBehavior: Clip.antiAlias,
         color: context.appColors.primaryContainer.withValues(alpha: 0.4),
         child: InkWell(
-          onTap: () =>
-              context.pushNamed("anime", pathParameters: {"slug": anime.slug}),
+          onTap: () => context.pushNamed(
+            "anime",
+            pathParameters: {"slug": anime.slug, "type": anime.type},
+          ),
           focusColor: context.appColors.primaryContainer.withValues(alpha: 0.1),
           hoverColor: context.appColors.primaryContainer.withValues(alpha: 0.1),
           splashColor: context.appColors.primaryContainer.withValues(

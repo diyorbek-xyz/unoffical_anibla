@@ -31,7 +31,7 @@ class ProfileModelAdapter extends TypeAdapter<ProfileModel> {
       createdAt: fields[2] as DateTime?,
       createdByAdmin: fields[11] as bool?,
       emailLC: fields[16] as String?,
-      lastAnime: fields[21] as dynamic,
+      lastAnime: fields[21] as AnimeModel?,
       lastAnimeType: fields[17] as String?,
       nameLC: fields[18] as String?,
       paymentId: (fields[5] as num?)?.toInt(),
@@ -139,7 +139,9 @@ ProfileModel _$ProfileModelFromJson(Map<String, dynamic> json) => ProfileModel(
       : DateTime.parse(json['createdAt'] as String),
   createdByAdmin: json['created_by_admin'] as bool?,
   emailLC: json['email_lc'] as String?,
-  lastAnime: json['last_anime'],
+  lastAnime: json['last_anime'] == null
+      ? null
+      : AnimeModel.fromJson(json['last_anime']),
   lastAnimeType: json['last_anime_type'] as String?,
   nameLC: json['name_lc'] as String?,
   paymentId: (json['unique_id'] as num?)?.toInt(),

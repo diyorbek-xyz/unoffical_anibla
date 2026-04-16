@@ -55,6 +55,25 @@ extension DateFormatting on DateTime {
 
   List<DateTime> getWeekDays() =>
       List.generate(7, (index) => add(Duration(days: index)));
+  String formatRemaining() {
+    final diff = DateTime.now().difference(this);
+    if (diff.inDays >= 365) {
+      return "${diff.inDays / 365} yil oldin";
+    }
+    if (diff.inDays > 0) {
+      return "${diff.inDays} kun oldin";
+    }
+    if (diff.inHours > 0) {
+      return "${diff.inHours} soat oldin";
+    }
+    if (diff.inMinutes > 0) {
+      return "${diff.inMinutes} daqiqa oldin";
+    }
+    if (diff.inSeconds > 0) {
+      return "${diff.inSeconds} soniya oldin";
+    }
+    return "";
+  }
 }
 
 extension DurationFormatting on Duration {

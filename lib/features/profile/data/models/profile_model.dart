@@ -1,6 +1,6 @@
 import 'package:application/core/utils/base_url.dart';
+import 'package:application/features/animes/data/models/anime_model.dart';
 import 'package:application/features/profile/data/models/session_model.dart';
-import 'package:application/features/profile/domain/entities/profile_entity.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -44,7 +44,7 @@ class ProfileModel {
   @HiveField(13)
   final List? transactions;
   @HiveField(14)
-  @JsonKey(fromJson: addBaseUrl)
+  @JsonKey(fromJson: addBaseUrl, includeFromJson: true)
   final String? image;
   @HiveField(15)
   final DateTime? updatedAt;
@@ -65,7 +65,7 @@ class ProfileModel {
   final String? paymentIdStr;
   @HiveField(21)
   @JsonKey(name: "last_anime")
-  final dynamic lastAnime;
+  final AnimeModel? lastAnime;
   @HiveField(22)
   @JsonKey(name: "token_id")
   final String? tokenId;
@@ -109,64 +109,7 @@ class ProfileModel {
     this.updatedAt,
   });
 
-  factory ProfileModel.fromJson(Map<String, dynamic> json) => _$ProfileModelFromJson(json);
-  factory ProfileModel.fromEntity(ProfileEntity entity) => ProfileModel(
-    activated: entity.activated,
-    balance: entity.balance,
-    email: entity.email,
-    id: entity.id,
-    name: entity.name,
-    phoneNumber: entity.phoneNumber,
-    role: entity.role,
-    image: entity.image,
-    subscription: entity.subscription,
-    transactions: entity.transactions,
-    createdAt: entity.createdAt,
-    createdByAdmin: entity.createdByAdmin,
-    nameLC: entity.nameLC,
-    paymentId: entity.paymentId,
-    paymentIdStr: entity.paymentIdStr,
-    phoneStr: entity.phoneStr,
-    savedMovies: entity.savedMovies,
-    savedSeries: entity.savedSeries,
-    sessions: entity.sessions.map((e) => SessionModel.fromEntity(e)).toList(),
-    tokenId: entity.tokenId,
-    total: entity.total,
-    updatedAt: entity.updatedAt,
-    appleId: entity.appleId,
-    emailLC: entity.emailLC,
-    lastAnime: entity.lastAnime,
-    lastAnimeType: entity.lastAnimeType,
-    telegramToken: entity.telegramToken,
-  );
+  factory ProfileModel.fromJson(Map<String, dynamic> json) =>
+      _$ProfileModelFromJson(json);
   Map<String, dynamic> toJson() => _$ProfileModelToJson(this);
-  ProfileEntity toEntity() => ProfileEntity(
-    activated: activated ?? false,
-    balance: balance ?? 0,
-    email: email,
-    id: id ?? "?",
-    name: name ?? "nomalum",
-    phoneNumber: phoneNumber,
-    role: role ?? "USER",
-    image: image ?? "",
-    subscription: subscription,
-    transactions: transactions ?? [],
-    createdAt: createdAt ?? DateTime(2026),
-    createdByAdmin: createdByAdmin ?? false,
-    nameLC: nameLC ?? "nomalum",
-    paymentId: paymentId ?? 0,
-    paymentIdStr: paymentIdStr ?? "?",
-    phoneStr: phoneStr ?? "?",
-    savedMovies: savedMovies ?? [],
-    savedSeries: savedSeries ?? [],
-    sessions: sessions?.map((e) => e.toEntity()).toList() ?? [],
-    tokenId: tokenId ?? "?",
-    total: total ?? 0,
-    updatedAt: updatedAt ?? DateTime(2026),
-    appleId: appleId,
-    emailLC: emailLC ?? "?",
-    lastAnime: lastAnime,
-    lastAnimeType: lastAnimeType,
-    telegramToken: telegramToken,
-  );
 }

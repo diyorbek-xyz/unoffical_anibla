@@ -7,7 +7,7 @@ import 'package:application/features/animes/data/models/anime_model.dart';
 import 'package:application/features/animes/data/models/episode_model.dart';
 import 'package:application/features/calendar/data/models/calendar_model.dart';
 import 'package:application/features/calendar/data/models/timer_model.dart';
-import 'package:application/features/comment/data/models/comment_model.dart';
+import 'package:application/features/common/data/models/item_model.dart';
 import 'package:application/features/common/data/models/pagination.dart';
 import 'package:application/features/common/data/models/translated.dart';
 import 'package:application/features/explore/data/models/genre_model.dart';
@@ -20,9 +20,9 @@ extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
     registerAdapter(AnimeModelAdapter());
     registerAdapter(CalendarModelAdapter());
-    registerAdapter(CommentModelAdapter());
     registerAdapter(EpisodeModelAdapter());
     registerAdapter(GenreModelAdapter());
+    registerAdapter(ItemModelAdapter());
     registerAdapter(PaginationAdapter());
     registerAdapter(ProfileModelAdapter());
     registerAdapter(SessionModelAdapter());
@@ -38,9 +38,9 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
     registerAdapter(AnimeModelAdapter());
     registerAdapter(CalendarModelAdapter());
-    registerAdapter(CommentModelAdapter());
     registerAdapter(EpisodeModelAdapter());
     registerAdapter(GenreModelAdapter());
+    registerAdapter(ItemModelAdapter());
     registerAdapter(PaginationAdapter());
     registerAdapter(ProfileModelAdapter());
     registerAdapter(SessionModelAdapter());

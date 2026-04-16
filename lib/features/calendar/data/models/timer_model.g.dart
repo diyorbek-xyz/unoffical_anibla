@@ -57,9 +57,7 @@ class TimerModelAdapter extends TypeAdapter<TimerModel> {
 // **************************************************************************
 
 TimerModel _$TimerModelFromJson(Map<String, dynamic> json) => TimerModel(
-  anime: json['media'] == null
-      ? null
-      : AnimeModel.fromJson(json['media'] as Map<String, dynamic>),
+  anime: json['media'] == null ? null : AnimeModel.fromJson(json['media']),
   id: json['_id'] as String?,
   time: json['time'] == null ? null : DateTime.parse(json['time'] as String),
   type: json['mediaType'] as String?,

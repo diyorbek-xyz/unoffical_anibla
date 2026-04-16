@@ -1,16 +1,27 @@
+import 'dart:io';
+
 import 'package:application/core/constants/constants.dart';
 import 'package:application/features/animes/data/repository/anime_repository_impl.dart';
 import 'package:application/features/animes/data/repository/episode_repository_impl.dart';
 import 'package:application/features/animes/data/repository/season_repository_impl.dart';
+import 'package:application/features/animes/data/source/local/anime_local.dart';
 import 'package:application/features/animes/data/source/remote/anime_api.dart';
 import 'package:application/features/animes/data/source/remote/episode_api.dart';
 import 'package:application/features/animes/data/source/remote/season_api.dart';
+import 'package:application/features/animes/data/source/remote/video_api.dart';
 import 'package:application/features/animes/domain/repository/anime_repository.dart';
 import 'package:application/features/animes/domain/repository/episode_repository.dart';
 import 'package:application/features/animes/domain/repository/season_repository.dart';
 import 'package:application/features/animes/presentation/bloc/anime/anime_bloc.dart';
+import 'package:application/features/animes/presentation/bloc/download/download_bloc.dart';
 import 'package:application/features/animes/presentation/bloc/episode/episode_bloc.dart';
 import 'package:application/features/animes/presentation/bloc/season/season_bloc.dart';
+import 'package:application/features/animes/presentation/bloc/video/video_bloc.dart';
+import 'package:application/features/animes/presentation/bloc/watch/watch_bloc.dart';
+import 'package:application/features/comment/data/repository/comment_repository_impl.dart';
+import 'package:application/features/comment/data/source/remote/comment_api.dart';
+import 'package:application/features/comment/domain/repository/comment_repository.dart';
+import 'package:application/features/comment/presentation/bloc/comment_bloc.dart';
 import 'package:application/features/explore/data/repository/explore_repository_impl.dart';
 import 'package:application/features/explore/data/source/remote/genre_api.dart';
 import 'package:application/features/explore/domain/repository/explore_repository.dart';
@@ -46,6 +57,7 @@ import 'package:application/features/slider/data/source/remote/slider_api.dart';
 import 'package:application/features/slider/domain/repository/slider_repository.dart';
 import 'package:application/features/slider/presentation/bloc/slider_bloc.dart';
 import 'package:application/hive_registrar.g.dart';
+import 'package:awesome_video_downloader/awesome_video_downloader.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -62,7 +74,6 @@ final baseOptions = BaseOptions(
     "User-Agent": "okhttp/4.12.0",
     "Accept-Encoding": "gzip",
     "accept": "application/json",
-    "Host": "amediatv.up-it.uz",
     "Connection": "Keep-Alive",
     "x-platform": "mobile",
     "x-platform-os": "android",
@@ -75,9 +86,9 @@ final secureStorage = FlutterSecureStorage();
 
 Future<void> initializeDependencies() async {
   WidgetsFlutterBinding.ensureInitialized();
-  MediaKit.ensureInitialized();
 
   // Setup local Storage;
+  MediaKit.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapters();
 
@@ -86,9 +97,17 @@ Future<void> initializeDependencies() async {
   await initializeDateFormatting('uz');
 
   // Open boxes;
+  await Hive.deleteBoxFromDisk("cacheBox");
   final calendarBox = await Hive.openBox<CalendarModel>("calendarBox");
   final profileBox = await Hive.openBox<ProfileModel>("profileBox");
   final sliderBox = await Hive.openBox<SliderModel>("sliderBox");
+  final cacheBox = await Hive.openBox<SliderModel>("cacheBox");
+
+  final downloader = AwesomeVideoDownloader();
+  if (Platform.isAndroid || Platform.isIOS) {
+    await downloader.initialize();
+  }
+  sl.registerSingleton<AwesomeVideoDownloader>(downloader);
 
   // Register / Setup network logic;
   sl.registerSingleton<FlutterSecureStorage>(secureStorage);
@@ -99,6 +118,7 @@ Future<void> initializeDependencies() async {
   dio.interceptors.add(sl<AuthInterceptor>());
 
   // Register local storages;
+  sl.registerSingleton<Box>(cacheBox);
   sl.registerSingleton<Box<CalendarModel>>(calendarBox);
   sl.registerSingleton<Box<ProfileModel>>(profileBox);
   sl.registerSingleton<Box<SliderModel>>(sliderBox);
@@ -116,22 +136,24 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<SeasonApi>(SeasonApi(sl()));
   sl.registerSingleton<EpisodeApi>(EpisodeApi(sl()));
   sl.registerSingleton<GenreApi>(GenreApi(sl()));
+  sl.registerSingleton<CommentApi>(CommentApi(sl()));
+  sl.registerSingleton<VideoApi>(VideoApi(sl()));
   sl.registerSingleton<TemplateApi>(TemplateApi(sl()));
 
   // Register Local Storage Services;
   sl.registerSingleton<CalendarLocal>(CalendarLocalImpl(sl()));
   sl.registerSingleton<ProfileLocal>(ProfileLocalImpl(sl()));
   sl.registerSingleton<SliderLocal>(SliderLocalImpl(sl()));
+  sl.registerSingleton<AnimeLocal>(AnimeLocalImpl(sl()));
 
   // Register Repositories;
   sl.registerSingleton<SliderRepository>(SliderRepositoryImpl(sl(), sl()));
   sl.registerSingleton<CalendarRepository>(CalendarRepositoryImpl(sl(), sl()));
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl(), sl()));
-  sl.registerSingleton<EpisodeRepository>(EpisodeRepositoryImpl(sl()));
-  sl.registerSingleton<ProfileRepository>(
-    ProfileRepositoryImpl(sl(), sl(), sl()),
-  );
-  sl.registerSingleton<AnimeRepository>(AnimeRepositoryImpl(sl()));
+  sl.registerSingleton<EpisodeRepository>(EpisodeRepositoryImpl(sl(), sl()));
+  sl.registerSingleton<CommentRepository>(CommentRepositoryImpl(sl()));
+  sl.registerSingleton<ProfileRepository>(ProfileRepositoryImpl(sl(), sl(), sl()));
+  sl.registerSingleton<AnimeRepository>(AnimeRepositoryImpl(sl(), sl()));
   sl.registerSingleton<SeasonRepository>(SeasonRepositoryImpl(sl()));
   sl.registerSingleton<ExploreRepository>(ExploreRepositoryImpl(sl()));
   sl.registerSingleton<TemplateRepository>(TemplateRepositoryImpl(sl()));
@@ -146,5 +168,9 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<SeasonBloc>(() => SeasonBloc(sl()));
   sl.registerFactory<GenreBloc>(() => GenreBloc(sl()));
   sl.registerFactory<EpisodeBloc>(() => EpisodeBloc(sl()));
+  sl.registerFactory<CommentBloc>(() => CommentBloc(sl()));
   sl.registerFactory<TemplateBloc>(() => TemplateBloc(sl()));
+  sl.registerFactory<VideoBloc>(() => VideoBloc(sl()));
+  sl.registerFactory<WatchBloc>(() => WatchBloc());
+  sl.registerFactory<DownloadBloc>(() => DownloadBloc(sl()));
 }

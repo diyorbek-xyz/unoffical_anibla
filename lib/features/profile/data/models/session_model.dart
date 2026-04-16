@@ -9,38 +9,39 @@ part 'session_model.g.dart';
 class SessionModel {
   @HiveField(0)
   @JsonKey(name: "_id")
-  final String id;
+  final String? id;
   @HiveField(1)
   @JsonKey(name: "user_id")
-  final String userId;
+  final String? userId;
   @HiveField(2)
   @JsonKey(name: "token_id")
-  final String tokenId;
+  final String? tokenId;
   @HiveField(3)
-  final String device;
+  final String? device;
   @HiveField(4)
-  final String ip;
+  final String? ip;
   @HiveField(5)
   @JsonKey(name: "last_login")
-  final DateTime lastLogin;
+  final DateTime? lastLogin;
   @HiveField(6)
   @JsonKey(name: "last_login_ip")
-  final String lastIp;
+  final String? lastIp;
   @HiveField(7)
   @JsonKey(name: "platform_os")
-  final String platform;
+  final String? platform;
   const SessionModel({
-    required this.device,
-    required this.id,
-    required this.ip,
-    required this.lastIp,
-    required this.lastLogin,
-    required this.platform,
-    required this.tokenId,
-    required this.userId,
+    this.device,
+    this.id,
+    this.ip,
+    this.lastIp,
+    this.lastLogin,
+    this.platform,
+    this.tokenId,
+    this.userId,
   });
 
-  factory SessionModel.fromJson(Map<String, dynamic> json) => _$SessionModelFromJson(json);
+  factory SessionModel.fromJson(Map<String, dynamic> json) =>
+      _$SessionModelFromJson(json);
   factory SessionModel.fromEntity(SessionEntity entity) => SessionModel(
     device: entity.device,
     id: entity.id,
@@ -52,16 +53,6 @@ class SessionModel {
     userId: entity.userId,
   );
   Map<String, dynamic> toJson() => _$SessionModelToJson(this);
-  SessionEntity toEntity() => SessionEntity(
-    device: device,
-    id: id,
-    ip: ip,
-    lastIp: lastIp,
-    lastLogin: lastLogin,
-    platform: platform,
-    tokenId: tokenId,
-    userId: userId,
-  );
 }
 
 @JsonSerializable()
@@ -69,32 +60,16 @@ class SessionModel {
 class SessionsModel {
   @HiveField(0)
   @JsonKey(name: "token_id")
-  final String tokenId;
+  final String? tokenId;
   @HiveField(1)
-  final String name;
+  final String? name;
   @HiveField(2)
-  final int total;
+  final int? total;
   @HiveField(3)
-  final List<SessionModel> sessions;
-  const SessionsModel({
-    required this.tokenId,
-    required this.name,
-    required this.sessions,
-    required this.total,
-  });
+  final List<SessionModel>? sessions;
+  const SessionsModel({this.tokenId, this.name, this.sessions, this.total});
 
-  factory SessionsModel.fromJson(Map<String, dynamic> json) => _$SessionsModelFromJson(json);
-  factory SessionsModel.fromEntity(SessionsEntity entity) => SessionsModel(
-    tokenId: entity.tokenId,
-    name: entity.name,
-    sessions: entity.sessions.map((e) => SessionModel.fromEntity(e)).toList(),
-    total: entity.total,
-  );
+  factory SessionsModel.fromJson(Map<String, dynamic> json) =>
+      _$SessionsModelFromJson(json);
   Map<String, dynamic> toJson() => _$SessionsModelToJson(this);
-  SessionsEntity toEntity() => SessionsEntity(
-    tokenId: tokenId,
-    name: name,
-    sessions: sessions.map((e) => e.toEntity()).toList(),
-    total: total,
-  );
 }

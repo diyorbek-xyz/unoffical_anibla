@@ -2,9 +2,10 @@ import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/features/profile/domain/entities/profile_entity.dart';
 import 'package:application/features/profile/presentation/bloc/profile/profile_bloc.dart';
 import 'package:application/features/profile/presentation/bloc/profile/profile_event.dart';
-import 'package:application/features/profile/presentation/widget/menus/devices.dart';
-import 'package:application/features/profile/presentation/widget/menus/infos.dart';
-import 'package:application/features/profile/presentation/widget/menus/last_anime.dart';
+import 'package:application/features/profile/presentation/pages/devices_menu.dart';
+import 'package:application/features/profile/presentation/pages/infos_menu.dart';
+import 'package:application/features/profile/presentation/pages/last_anime_menu.dart';
+import 'package:application/features/profile/presentation/pages/saves_menu.dart';
 import 'package:application/features/profile/presentation/widget/modals/logout_modal.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +71,7 @@ class _ProfileMainState extends State<ProfileMain> {
             children: [
               ProfileInfosMenu(data: widget.data),
               ProfileLastAnimeMenu(profile: widget.data),
-              Text("saqlangan"),
+              SavesMenu(profile: widget.data,),
               ProfileDevicesMenu(currentId: widget.data.tokenId, sessions: widget.data.sessions),
               Text("obunalar"),
             ],

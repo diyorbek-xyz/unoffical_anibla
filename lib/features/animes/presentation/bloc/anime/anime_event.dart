@@ -4,5 +4,6 @@ sealed class AnimeEvent {
 
 final class GetSerie extends AnimeEvent {
   final String slug;
-  const GetSerie(this.slug);
+  final String type;
+  const GetSerie({required this.slug, required this.type});
 }

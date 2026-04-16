@@ -1,29 +1,30 @@
+import 'package:application/features/animes/domain/entities/anime_entity.dart';
 import 'package:application/features/profile/domain/entities/session_entity.dart';
 import 'package:equatable/equatable.dart';
 
 class ProfileEntity extends Equatable {
-  final String? appleId;
+  final String appleId;
   final String id;
   final DateTime createdAt;
   final String name;
-  final String? email;
+  final String email;
   final int paymentId;
-  final int? phoneNumber;
+  final int phoneNumber;
   final double balance;
   final dynamic subscription;
   final String role;
   final bool activated;
   final bool createdByAdmin;
-  final String? telegramToken;
+  final String telegramToken;
   final List transactions;
   final String image;
   final DateTime updatedAt;
-  final String? emailLC;
-  final String? lastAnimeType;
+  final String emailLC;
+  final String lastAnimeType;
   final String nameLC;
   final String phoneStr;
   final String paymentIdStr;
-  final dynamic lastAnime;
+  final AnimeEntity lastAnime;
   final String tokenId;
   final List<SessionEntity> sessions;
   final List<dynamic> savedSeries;
@@ -31,14 +32,14 @@ class ProfileEntity extends Equatable {
   final int total;
 
   const ProfileEntity({
-    this.email,
-    this.phoneNumber,
-    this.subscription,
-    this.appleId,
-    this.emailLC,
-    this.lastAnime,
-    this.lastAnimeType,
-    this.telegramToken,
+    required this.email,
+    required this.phoneNumber,
+    required this.subscription,
+    required this.appleId,
+    required this.emailLC,
+    required this.lastAnime,
+    required this.lastAnimeType,
+    required this.telegramToken,
     required this.activated,
     required this.balance,
     required this.id,

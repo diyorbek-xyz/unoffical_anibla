@@ -13,7 +13,7 @@ ApiResponse<T> _$ApiResponseFromJson<T>(
   message: json['message'] as String,
   success: json['success'] as bool,
   data: fromJsonT(json['data']),
-  error: json['error'] as String?,
+  error: json['error'],
 );
 
 Map<String, dynamic> _$ApiResponseToJson<T>(

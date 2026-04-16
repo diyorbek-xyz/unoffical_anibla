@@ -75,12 +75,13 @@ class _CarouselState extends State<Carousel> {
             itemSnapping: true,
             enableSplash: true,
             controller: _controller,
-            onTap: (value) => context.pushNamed(
-              "anime",
-              pathParameters: {
-                "slug": widget.items.elementAt(value).anime.slug,
-              },
-            ),
+            onTap: (value) {
+              final anime = widget.items.elementAt(value).anime;
+              context.pushNamed(
+                "anime",
+                pathParameters: {"type": anime.type, "slug": anime.slug},
+              );
+            },
             children: widget.items.map((e) {
               return Ink.image(
                 image: CachedNetworkImageProvider(e.image),

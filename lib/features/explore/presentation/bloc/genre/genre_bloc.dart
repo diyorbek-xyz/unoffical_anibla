@@ -13,7 +13,7 @@ class GenreBloc extends Bloc<GenreEvent, GenreState> {
     if (state is! GenresFullSuccess) emit(GenreLoading());
     final either = await repository.getGenres();
     either.fold(
-      (failure) => emit(GenreError(ExceptionMapper.mapFailureToMessage(failure))),
+      (failure) => emit(GenreFailed(ExceptionMapper.mapFailureToMessage(failure))),
       (data) => emit(GenresFullSuccess(data)),
     );
   }

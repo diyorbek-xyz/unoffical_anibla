@@ -11,7 +11,7 @@ final class GenresFullSuccess extends GenreState {
   GenresFullSuccess(this.data);
 }
 
-final class GenreError extends GenreState {
+final class GenreFailed extends GenreState {
   final String message;
-  GenreError(this.message);
+  GenreFailed(this.message);
 }

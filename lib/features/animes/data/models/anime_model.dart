@@ -1,4 +1,5 @@
 import 'package:application/core/utils/base_url.dart';
+import 'package:application/features/common/data/models/item_model.dart';
 import 'package:application/features/explore/data/models/genre_model.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -26,7 +27,7 @@ class AnimeModel {
   @HiveField(6)
   final dynamic director;
   @HiveField(7)
-  final dynamic creators;
+  final List<ItemModel>? creators;
   @HiveField(8)
   final List<GenreModel>? genres;
   @HiveField(9)
@@ -57,8 +58,17 @@ class AnimeModel {
   final DateTime? createdAt;
   @HiveField(19)
   final DateTime? updatedAt;
+  @HiveField(21)
+  final int? duration;
+  @HiveField(22)
+  final String? video;
+  @HiveField(23)
+  @JsonKey(name: "mediaType")
+  final String? type;
 
   const AnimeModel({
+    this.duration,
+    this.video,
     this.age,
     this.categories,
     this.country,
@@ -80,9 +90,12 @@ class AnimeModel {
     this.updatedAt,
     this.ru,
     this.uz,
+    this.type,
   });
 
-  factory AnimeModel.fromJson(Map<String, dynamic> json) =>
-      _$AnimeModelFromJson(json);
+  factory AnimeModel.fromJson(dynamic json) {
+    if (json is String) return AnimeModel(id: json);
+    return _$AnimeModelFromJson(json);
+  }
   Map<String, dynamic> toJson() => _$AnimeModelToJson(this);
 }

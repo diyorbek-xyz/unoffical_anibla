@@ -12,7 +12,7 @@ class AnimeBloc extends Bloc<AnimeEvent, AnimeState> {
 
   void onGetSerie(GetSerie event, Emitter<AnimeState> emit) async {
     emit(AnimeLoading());
-    final either = await animeRepository.getSerie(event.slug);
+    final either = await animeRepository.getSerie(event.type, event.slug);
     either.fold(
       (failure) {
         emit(AnimeFilure(ExceptionMapper.mapFailureToMessage(failure)));
