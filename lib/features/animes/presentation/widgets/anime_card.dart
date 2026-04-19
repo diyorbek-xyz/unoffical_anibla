@@ -41,6 +41,7 @@ class AnimeCard extends StatelessWidget {
       ),
     ],
   );
+  static double aspectRatio = 9 / 15;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +49,7 @@ class AnimeCard extends StatelessWidget {
     return SizedBox(
       width: isMobile ? 150 : 180,
       child: AspectRatio(
-        aspectRatio: 9 / 15,
+        aspectRatio: aspectRatio,
         child: GestureDetector(
           onSecondaryTapDown: (details) => handleClick(context, details.globalPosition),
           onLongPressStart: (details) => handleClick(context, details.globalPosition),
@@ -97,7 +98,7 @@ class AnimeCard extends StatelessWidget {
                   padding: EdgeInsetsGeometry.symmetric(horizontal: 5),
                   child: Text(
                     toBeginningOfSentenceCase(anime.title.uz),
-                    maxLines: 2,
+                    maxLines: isMobile ? 1 : 2,
                     textAlign: TextAlign.start,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 15),

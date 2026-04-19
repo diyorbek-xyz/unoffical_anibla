@@ -18,7 +18,8 @@ final class SearchFailed extends SearchState {
 }
 
 final class SearchFound extends SearchState {
+  final String search;
   final List<AnimeEntity> series;
   final List<AnimeEntity> movies;
-  const SearchFound({required this.series, required this.movies});
+  const SearchFound({required this.search, required this.series, required this.movies});
 }

@@ -11,8 +11,10 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     on<SearchAnime>(onSearchAnime);
   }
   void onSearchAnime(SearchAnime event, Emitter<SearchState> emit) async {
-    final series = await repository.searchAnime(AnimeType.serie.toLowerCase(), event.title);
-    final movies = await repository.searchAnime(AnimeType.movie.toLowerCase(), event.title);
+    emit(SearchLoading());
+    if (event.isEmpty) return emit(SearchInitial());
+    final series = await repository.searchAnime(AnimeType.serie.toLowerCase(), event.query);
+    final movies = await repository.searchAnime(AnimeType.movie.toLowerCase(), event.query);
     List<AnimeEntity> serieAnimes = [];
     List<AnimeEntity> movieAnimes = [];
     series.fold((failure) => emit(SearchFailed(ExceptionMapper.mapFailureToMessage(failure))), (r) {
@@ -23,7 +25,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       movieAnimes.addAll,
     );
     if (state is! SearchFailed) {
-      emit(SearchFound(series: serieAnimes, movies: movieAnimes));
+      emit(SearchFound(search: event.search!, series: serieAnimes, movies: movieAnimes));
     }
   }
 }

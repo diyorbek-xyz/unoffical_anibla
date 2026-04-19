@@ -3,8 +3,11 @@ import 'package:application/features/common/presentation/widgets/error.dart';
 import 'package:application/features/explore/presentation/bloc/genre/genre_bloc.dart';
 import 'package:application/features/explore/presentation/bloc/genre/genre_event.dart';
 import 'package:application/features/explore/presentation/bloc/genre/genre_state.dart';
+import 'package:application/features/explore/presentation/bloc/history/history_bloc.dart';
+import 'package:application/features/explore/presentation/bloc/history/history_event.dart';
 import 'package:application/features/explore/presentation/bloc/search/search_bloc.dart';
 import 'package:application/features/explore/presentation/bloc/search/search_event.dart';
+import 'package:application/features/explore/presentation/pages/genres_page.dart';
 import 'package:application/features/explore/presentation/pages/search_page.dart';
 import 'package:application/injection_container.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +21,7 @@ class ExplorePage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => sl<GenreBloc>()..add(GetGenres())),
+        BlocProvider(create: (context) => sl<HistoryBloc>()..add(GetHistory())),
         BlocProvider(create: (context) => sl<SearchBloc>()),
       ],
       child: Builder(builder: main),
@@ -35,10 +39,11 @@ class ExplorePage extends StatelessWidget {
               collapsedHeight: kToolbarHeight + 20,
               pinned: true,
               flexibleSpace: Container(
-                padding: EdgeInsetsGeometry.only(top: 20),
+                padding: EdgeInsetsGeometry.all(20),
                 alignment: AlignmentGeometry.topCenter,
                 child: SearchBar(
-                  onSubmitted: (value) => context.read<SearchBloc>().add(SearchAnime(value)),
+                  onSubmitted: (value) =>
+                      context.read<SearchBloc>().add(SearchAnime.fromSearch(value)),
                   constraints: BoxConstraints(maxWidth: 700, minHeight: kToolbarHeight),
                   leading: Padding(padding: EdgeInsetsGeometry.all(10), child: Icon(Icons.search)),
                 ),
@@ -48,7 +53,7 @@ class ExplorePage extends StatelessWidget {
                 dividerHeight: 0,
                 isScrollable: true,
                 tabs: [
-                  Tab(text: "Tarix"),
+                  Tab(text: "Qidiruv"),
                   Tab(text: "Kategoriyalar"),
                   Tab(text: "Janrlar"),
                 ],
@@ -56,7 +61,7 @@ class ExplorePage extends StatelessWidget {
             ),
           ),
         ],
-        body: TabBarView(children: [SearchPage(), Text("hello"), genresBuilder(context)]),
+        body: TabBarView(children: [SearchPage(), Text("hello"), GenresPage()]),
       ),
     );
   }

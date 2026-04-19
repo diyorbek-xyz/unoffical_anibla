@@ -1,9 +1,9 @@
 import 'package:application/core/constants/constants.dart';
+import 'package:application/features/animes/data/models/anime_model.dart';
 import 'package:application/features/animes/data/models/download_model.dart';
 import 'package:application/features/animes/data/repository/anime_repository_impl.dart';
 import 'package:application/features/animes/data/repository/episode_repository_impl.dart';
 import 'package:application/features/animes/data/repository/season_repository_impl.dart';
-import 'package:application/features/animes/data/source/local/anime_local.dart';
 import 'package:application/features/animes/data/source/local/downloads_local.dart';
 import 'package:application/features/animes/data/source/remote/anime_api.dart';
 import 'package:application/features/animes/data/source/remote/episode_api.dart';
@@ -23,10 +23,12 @@ import 'package:application/features/comment/data/source/remote/comment_api.dart
 import 'package:application/features/comment/domain/repository/comment_repository.dart';
 import 'package:application/features/comment/presentation/bloc/comment_bloc.dart';
 import 'package:application/features/explore/data/repository/explore_repository_impl.dart';
+import 'package:application/features/explore/data/source/local/history_local.dart';
 import 'package:application/features/explore/data/source/remote/filter_api.dart';
 import 'package:application/features/explore/data/source/remote/genre_api.dart';
 import 'package:application/features/explore/domain/repository/explore_repository.dart';
 import 'package:application/features/explore/presentation/bloc/genre/genre_bloc.dart';
+import 'package:application/features/explore/presentation/bloc/history/history_bloc.dart';
 import 'package:application/features/explore/presentation/bloc/search/search_bloc.dart';
 import 'package:application/features/profile/data/models/profile_model.dart';
 import 'package:application/features/profile/data/source/local/profile_local.dart';
@@ -103,8 +105,8 @@ Future<void> initializeDependencies() async {
   final calendarBox = await Hive.openBox<CalendarModel>("calendarBox");
   final profileBox = await Hive.openBox<ProfileModel>("profileBox");
   final sliderBox = await Hive.openBox<SliderModel>("sliderBox");
-  final cacheBox = await Hive.openBox<SliderModel>("cacheBox");
   final downloadsBox = await Hive.openBox<DownloadModel>("downloadsBox");
+  final historyBox = await Hive.openBox<AnimeModel>("historyBox");
 
   // Register / Setup network logic;
   sl.registerSingleton<FlutterSecureStorage>(secureStorage);
@@ -115,8 +117,8 @@ Future<void> initializeDependencies() async {
   dio.interceptors.add(sl<AuthInterceptor>());
 
   // Register local storages;
-  sl.registerSingleton<Box>(cacheBox);
   sl.registerSingleton<Box<CalendarModel>>(calendarBox);
+  sl.registerSingleton<Box<AnimeModel>>(historyBox, instanceName: "history");
   sl.registerSingleton<Box<ProfileModel>>(profileBox);
   sl.registerSingleton<Box<SliderModel>>(sliderBox);
   sl.registerSingleton<Box<DownloadModel>>(downloadsBox);
@@ -144,7 +146,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<CalendarLocal>(CalendarLocalImpl(sl()));
   sl.registerSingleton<ProfileLocal>(ProfileLocalImpl(sl()));
   sl.registerSingleton<SliderLocal>(SliderLocalImpl(sl()));
-  sl.registerSingleton<AnimeLocal>(AnimeLocalImpl(sl()));
+  sl.registerSingleton<HistoryLocal>(HistoryLocalImpl(sl(instanceName: 'history')));
   sl.registerSingleton<DownloadsLocal>(DownloadsLocalImpl(sl()));
 
   // Register Repositories;
@@ -156,7 +158,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<ProfileRepository>(ProfileRepositoryImpl(sl(), sl(), sl()));
   sl.registerSingleton<AnimeRepository>(AnimeRepositoryImpl(sl(), sl()));
   sl.registerSingleton<SeasonRepository>(SeasonRepositoryImpl(sl()));
-  sl.registerSingleton<ExploreRepository>(ExploreRepositoryImpl(sl(), sl()));
+  sl.registerSingleton<ExploreRepository>(ExploreRepositoryImpl(sl(), sl(), sl()));
   sl.registerSingleton<TemplateRepository>(TemplateRepositoryImpl(sl()));
 
   // Register State managers;
@@ -175,4 +177,5 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<WatchBloc>(() => WatchBloc());
   sl.registerFactory<DownloadBloc>(() => DownloadBloc(sl()));
   sl.registerFactory<SearchBloc>(() => SearchBloc(sl()));
+  sl.registerFactory<HistoryBloc>(() => HistoryBloc(sl()));
 }

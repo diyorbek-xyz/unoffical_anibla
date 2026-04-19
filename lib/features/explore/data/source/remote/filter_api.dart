@@ -9,9 +9,12 @@ part 'filter_api.g.dart';
 abstract class FilterApi {
   factory FilterApi(Dio dio) = _FilterApi;
 
-  @GET('/v1/{type}/mobile?search={title}')
+  @GET('/v1/{type}/mobile?search={search}&category={category}&genres={genre}')
   Future<HttpResponse<ApiResponse<List<AnimeModel>>>> searchAnime(
-    @Path("type") String type,
-    @Path("title") String title,
-  );
+    @Path("type") String type, {
+    @Path("search") String? search,
+    @Path("category") String? category,
+    @Path("genre") String? genre,
+  });
+  
 }
