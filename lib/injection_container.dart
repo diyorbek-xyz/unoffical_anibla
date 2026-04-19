@@ -1,10 +1,10 @@
-import 'dart:io';
-
 import 'package:application/core/constants/constants.dart';
+import 'package:application/features/animes/data/models/download_model.dart';
 import 'package:application/features/animes/data/repository/anime_repository_impl.dart';
 import 'package:application/features/animes/data/repository/episode_repository_impl.dart';
 import 'package:application/features/animes/data/repository/season_repository_impl.dart';
 import 'package:application/features/animes/data/source/local/anime_local.dart';
+import 'package:application/features/animes/data/source/local/downloads_local.dart';
 import 'package:application/features/animes/data/source/remote/anime_api.dart';
 import 'package:application/features/animes/data/source/remote/episode_api.dart';
 import 'package:application/features/animes/data/source/remote/season_api.dart';
@@ -23,9 +23,11 @@ import 'package:application/features/comment/data/source/remote/comment_api.dart
 import 'package:application/features/comment/domain/repository/comment_repository.dart';
 import 'package:application/features/comment/presentation/bloc/comment_bloc.dart';
 import 'package:application/features/explore/data/repository/explore_repository_impl.dart';
+import 'package:application/features/explore/data/source/remote/filter_api.dart';
 import 'package:application/features/explore/data/source/remote/genre_api.dart';
 import 'package:application/features/explore/domain/repository/explore_repository.dart';
 import 'package:application/features/explore/presentation/bloc/genre/genre_bloc.dart';
+import 'package:application/features/explore/presentation/bloc/search/search_bloc.dart';
 import 'package:application/features/profile/data/models/profile_model.dart';
 import 'package:application/features/profile/data/source/local/profile_local.dart';
 import 'package:application/features/profile/presentation/bloc/session/session_bloc.dart';
@@ -35,6 +37,7 @@ import 'package:application/features/template/data/repository/template_repositor
 import 'package:application/features/template/data/source/remote/template_api.dart';
 import 'package:application/features/template/domain/repository/template_repository.dart';
 import 'package:application/features/template/presentation/bloc/template_bloc.dart';
+import 'package:application/network/download/download_video.dart';
 import 'package:application/network/interceptors/auth_interceptor.dart';
 import 'package:application/network/interceptors/error_interceptor.dart';
 import 'package:application/features/auth/data/repository/auth_repository_impl.dart';
@@ -57,7 +60,6 @@ import 'package:application/features/slider/data/source/remote/slider_api.dart';
 import 'package:application/features/slider/domain/repository/slider_repository.dart';
 import 'package:application/features/slider/presentation/bloc/slider_bloc.dart';
 import 'package:application/hive_registrar.g.dart';
-import 'package:awesome_video_downloader/awesome_video_downloader.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -102,12 +104,7 @@ Future<void> initializeDependencies() async {
   final profileBox = await Hive.openBox<ProfileModel>("profileBox");
   final sliderBox = await Hive.openBox<SliderModel>("sliderBox");
   final cacheBox = await Hive.openBox<SliderModel>("cacheBox");
-
-  final downloader = AwesomeVideoDownloader();
-  if (Platform.isAndroid || Platform.isIOS) {
-    await downloader.initialize();
-  }
-  sl.registerSingleton<AwesomeVideoDownloader>(downloader);
+  final downloadsBox = await Hive.openBox<DownloadModel>("downloadsBox");
 
   // Register / Setup network logic;
   sl.registerSingleton<FlutterSecureStorage>(secureStorage);
@@ -122,10 +119,12 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<Box<CalendarModel>>(calendarBox);
   sl.registerSingleton<Box<ProfileModel>>(profileBox);
   sl.registerSingleton<Box<SliderModel>>(sliderBox);
+  sl.registerSingleton<Box<DownloadModel>>(downloadsBox);
 
   // Register miscs;
   sl.registerSingleton<Dio>(dio);
   sl.registerSingleton<DotEnv>(dotenv);
+  sl.registerSingleton<VideoDownloader>(VideoDownloader());
 
   // Register remote Api Services;
   sl.registerSingleton<SliderApi>(SliderApi(sl()));
@@ -138,6 +137,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<GenreApi>(GenreApi(sl()));
   sl.registerSingleton<CommentApi>(CommentApi(sl()));
   sl.registerSingleton<VideoApi>(VideoApi(sl()));
+  sl.registerSingleton<FilterApi>(FilterApi(sl()));
   sl.registerSingleton<TemplateApi>(TemplateApi(sl()));
 
   // Register Local Storage Services;
@@ -145,17 +145,18 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<ProfileLocal>(ProfileLocalImpl(sl()));
   sl.registerSingleton<SliderLocal>(SliderLocalImpl(sl()));
   sl.registerSingleton<AnimeLocal>(AnimeLocalImpl(sl()));
+  sl.registerSingleton<DownloadsLocal>(DownloadsLocalImpl(sl()));
 
   // Register Repositories;
   sl.registerSingleton<SliderRepository>(SliderRepositoryImpl(sl(), sl()));
   sl.registerSingleton<CalendarRepository>(CalendarRepositoryImpl(sl(), sl()));
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl(), sl()));
-  sl.registerSingleton<EpisodeRepository>(EpisodeRepositoryImpl(sl(), sl()));
+  sl.registerSingleton<EpisodeRepository>(EpisodeRepositoryImpl(sl(), sl(), sl(), sl()));
   sl.registerSingleton<CommentRepository>(CommentRepositoryImpl(sl()));
   sl.registerSingleton<ProfileRepository>(ProfileRepositoryImpl(sl(), sl(), sl()));
   sl.registerSingleton<AnimeRepository>(AnimeRepositoryImpl(sl(), sl()));
   sl.registerSingleton<SeasonRepository>(SeasonRepositoryImpl(sl()));
-  sl.registerSingleton<ExploreRepository>(ExploreRepositoryImpl(sl()));
+  sl.registerSingleton<ExploreRepository>(ExploreRepositoryImpl(sl(), sl()));
   sl.registerSingleton<TemplateRepository>(TemplateRepositoryImpl(sl()));
 
   // Register State managers;
@@ -173,4 +174,5 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<VideoBloc>(() => VideoBloc(sl()));
   sl.registerFactory<WatchBloc>(() => WatchBloc());
   sl.registerFactory<DownloadBloc>(() => DownloadBloc(sl()));
+  sl.registerFactory<SearchBloc>(() => SearchBloc(sl()));
 }

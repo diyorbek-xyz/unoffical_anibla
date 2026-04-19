@@ -133,6 +133,16 @@ class _EpisodeItemState extends State<EpisodeItem> {
       create: (context) => sl<DownloadBloc>(),
       child: BlocBuilder<DownloadBloc, DownloadState>(
         builder: (context, state) {
+          final icon = state is Downloading
+              ? CircularProgressIndicator(
+                  value: state.state.progress,
+                  constraints: BoxConstraints(minWidth: 15, minHeight: 15),
+                )
+              : Icon(
+                  state is DownloadDone || widget.episode.isDownloaded
+                      ? Icons.check
+                      : Icons.download,
+                );
           return ListTile(
             selected: watchState is WatchDone
                 ? widget.episode.episodeNumber == watchState.currentEpisode.episodeNumber
@@ -153,11 +163,12 @@ class _EpisodeItemState extends State<EpisodeItem> {
                   tooltip: "Saqlash",
                   icon: Icon(Icons.bookmark_outline),
                 ),
-                IconButton(
-                  onPressed: () => showDownloadModal(context, widget.episode),
-                  tooltip: "Yuklab olish",
-                  icon: Icon(Icons.download),
-                ),
+                // if (widget.episode.video.isNotEmpty)
+                //   IconButton(
+                //     onPressed: () => showDownloadModal(context, widget.episode),
+                //     tooltip: "Yuklab olish",
+                //     icon: icon,
+                //   ),
               ],
             ),
             title: Text("${widget.episode.episodeNumber}-qism"),

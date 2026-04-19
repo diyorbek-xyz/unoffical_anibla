@@ -8,6 +8,8 @@ void main() async {
   runApp(const MainApp());
 }
 
+final MOBILE_WIDTH = 600;
+
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
   @override

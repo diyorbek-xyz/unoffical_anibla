@@ -27,6 +27,7 @@ class _CommentsMenuState extends State<CommentsMenu> {
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: 1000),
         child: CustomScrollView(
+          scrollBehavior: ScrollBehavior().copyWith(scrollbars: false),
           key: const PageStorageKey("comments"),
           slivers: [
             SliverOverlapInjector(handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context)),

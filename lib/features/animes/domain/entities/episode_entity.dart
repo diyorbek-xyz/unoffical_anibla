@@ -13,6 +13,7 @@ class EpisodeEntity extends Equatable {
   final int episodeNumber;
   final String type;
   final String video;
+  final bool isDownloaded;
 
   const EpisodeEntity({
     required this.episodeNumber,
@@ -21,6 +22,7 @@ class EpisodeEntity extends Equatable {
     required this.title,
     required this.type,
     required this.video,
+    required this.isDownloaded,
   });
 
   @override

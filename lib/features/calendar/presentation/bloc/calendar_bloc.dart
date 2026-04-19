@@ -17,8 +17,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     final either = await repository.getCalendar(event.date);
     emit(
       either.fold(
-        (failure) =>
-            CalendarError(ExceptionMapper.mapFailureToMessage(failure)),
+        (failure) => CalendarError(ExceptionMapper.mapFailureToMessage(failure)),
         (calendar) => CalendarSuccess(calendar),
       ),
     );
@@ -32,12 +31,18 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     for (DateTime day in days) {
       final either = await repository.getCalendar(day);
       calendars.add(
-        either.fold((failure) {
-          if (failure is NetworkFailure) {
-            emit(CalendarError(ExceptionMapper.mapFailureToMessage(failure)));
-          }
-          return;
-        }, (calendar) => calendar),
+        either.fold(
+          (failure) {
+            if (failure is NetworkFailure) {
+              emit(CalendarError(ExceptionMapper.mapFailureToMessage(failure)));
+            }
+            return;
+          },
+          (calendar) {
+            calendar.timers.sort((a, b) => a.time.compareTo(b.time));
+            return calendar;
+          },
+        ),
       );
     }
     if (!calendars.every((calendar) => calendar == null)) {

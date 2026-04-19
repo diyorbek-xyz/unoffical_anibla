@@ -1,3 +1,4 @@
+import 'package:application/features/animes/domain/entities/download_entity.dart';
 import 'package:flutter_hls_parser/flutter_hls_parser.dart';
 
 sealed class DownloadEvent {
@@ -10,9 +11,9 @@ final class GetInfoDownload extends DownloadEvent {
 }
 
 final class StartDownload extends DownloadEvent {
-  final HlsMasterPlaylist master;
+  final DownloadEntity download;
   final Variant variant;
-  const StartDownload(this.master, this.variant);
+  const StartDownload(this.download, this.variant);
 }
 
 final class PauseDownload extends DownloadEvent {

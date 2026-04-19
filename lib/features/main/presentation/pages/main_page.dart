@@ -1,5 +1,6 @@
 import 'package:application/features/main/presentation/widgets/bottom_bar.dart';
 import 'package:application/features/main/presentation/widgets/sidebar.dart';
+import 'package:application/main.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -10,7 +11,7 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final isMobile = width < 700;
+    final isMobile = width < MOBILE_WIDTH;
     return Scaffold(
       body: !isMobile
           ? Row(

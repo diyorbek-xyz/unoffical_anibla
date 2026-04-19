@@ -36,8 +36,8 @@ dependencies:
     dartz: ^0.10.1
     device_info_plus: 
     youtube_player_iframe:
-    awesome_video_downloader: ^0.1.0+1
     flutter_hls_parser: ^2.0.1
+    url_launcher: ^6.3.2
 
 dev_dependencies:
     flutter_test:

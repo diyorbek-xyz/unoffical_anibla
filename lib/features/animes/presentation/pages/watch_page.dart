@@ -1,4 +1,3 @@
-import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/features/animes/domain/entities/episode_entity.dart';
 import 'package:application/features/animes/presentation/bloc/anime/anime_bloc.dart';
@@ -8,6 +7,7 @@ import 'package:application/features/animes/presentation/bloc/video/video_event.
 import 'package:application/features/animes/presentation/bloc/watch/watch_bloc.dart';
 import 'package:application/features/animes/presentation/bloc/watch/watch_state.dart';
 import 'package:application/features/animes/presentation/widgets/episodes_list.dart';
+import 'package:application/features/animes/presentation/widgets/video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -38,34 +38,37 @@ class _WatchPageState extends State<WatchPage> {
               final isEpisodeSelected = watchState is WatchDone;
               final episode = isEpisodeSelected ? watchState : null;
               return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 500,
-                      child: Row(
-                        children: [
-                          Expanded(child: videoPlayer(context)),
-                          SizedBox(width: 450, child: EpisodesList()),
-                        ],
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 500,
+                        child: Row(
+                          children: [
+                            Expanded(child: videoPlayer(context)),
+                            SizedBox(width: 450, child: EpisodesList()),
+                          ],
+                        ),
                       ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(bottom: 50, top: 20),
-                      constraints: BoxConstraints(maxWidth: 1000),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        mainAxisSize: .max,
-                        spacing: 10,
-                        children: [
-                          Text(
-                            "${state.anime.title.uz}${isEpisodeSelected ? " ${episode!.currentEpisode.episodeNumber}-qism: ${episode.currentEpisode.title.uz}" : ""}",
-                            style: context.textTheme.headlineMedium,
-                          ),
-                          Text(state.anime.description.uz, style: context.textTheme.bodyMedium),
-                        ],
+                      Container(
+                        padding: EdgeInsets.only(bottom: 50, top: 20),
+                        constraints: BoxConstraints(maxWidth: 1100),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisSize: .max,
+                          spacing: 10,
+                          children: [
+                            Text(
+                              "${state.anime.title.uz}${isEpisodeSelected ? " ${episode!.currentEpisode.episodeNumber}-qism: ${episode.currentEpisode.title.uz}" : ""}",
+                              style: context.textTheme.headlineMedium,
+                            ),
+                            Text(state.anime.description.uz, style: context.textTheme.bodyMedium),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             default:
@@ -81,7 +84,8 @@ class _WatchPageState extends State<WatchPage> {
       listener: (context, state) {
         if (state is WatchDone) {
           final bloc = context.read<VideoBloc>();
-          if (state.currentEpisode.type == EpisodeType.free) {
+          if (state.currentEpisode.type == EpisodeType.free ||
+              state.currentEpisode.video.isNotEmpty) {
             bloc.add(GetVideo(state.currentEpisode.video));
           } else {
             bloc.add(SetVideoIsPaid());
@@ -95,13 +99,13 @@ class _WatchPageState extends State<WatchPage> {
           case WatchFailure():
             return Center(child: Text(state.message));
           case WatchDone():
+            print(state.currentEpisode.isDownloaded);
             return ClipRRect(
               clipBehavior: Clip.antiAlias,
               borderRadius: BorderRadiusGeometry.circular(15),
-              child: Container(
-                color: context.appColors.error,
-                alignment: AlignmentGeometry.center,
-                child: Text(state.currentEpisode.title.uz),
+              child: VideoPlayer(
+                title: (context.read<AnimeBloc>().state as AnimeSuccess).anime.title.uz,
+                path: state.currentEpisode.video,
               ),
             );
           default:

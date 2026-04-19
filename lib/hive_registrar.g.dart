@@ -4,6 +4,7 @@
 
 import 'package:hive_ce/hive_ce.dart';
 import 'package:application/features/animes/data/models/anime_model.dart';
+import 'package:application/features/animes/data/models/download_model.dart';
 import 'package:application/features/animes/data/models/episode_model.dart';
 import 'package:application/features/calendar/data/models/calendar_model.dart';
 import 'package:application/features/calendar/data/models/timer_model.dart';
@@ -20,6 +21,7 @@ extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
     registerAdapter(AnimeModelAdapter());
     registerAdapter(CalendarModelAdapter());
+    registerAdapter(DownloadModelAdapter());
     registerAdapter(EpisodeModelAdapter());
     registerAdapter(GenreModelAdapter());
     registerAdapter(ItemModelAdapter());
@@ -38,6 +40,7 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
     registerAdapter(AnimeModelAdapter());
     registerAdapter(CalendarModelAdapter());
+    registerAdapter(DownloadModelAdapter());
     registerAdapter(EpisodeModelAdapter());
     registerAdapter(GenreModelAdapter());
     registerAdapter(ItemModelAdapter());

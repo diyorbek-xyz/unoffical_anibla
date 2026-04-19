@@ -13,9 +13,10 @@ class CreatorsMenu extends StatelessWidget {
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: 1000),
         child: CustomScrollView(
+          key: const PageStorageKey("creators"),
+          scrollBehavior: ScrollBehavior().copyWith(scrollbars: false),
           slivers: [
             SliverOverlapInjector(handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context)),
-
             SliverList.separated(
               separatorBuilder: (context, index) => SizedBox(height: 10),
               itemBuilder: (context, index) {

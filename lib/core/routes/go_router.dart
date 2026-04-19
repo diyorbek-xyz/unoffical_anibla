@@ -21,31 +21,7 @@ final GoRouter routerConfig = GoRouter(
       branches: [
         StatefulShellBranch(
           navigatorKey: _shellNavigatorKey,
-          routes: [
-            GoRoute(path: '/home', builder: (context, state) => const HomePage()),
-            ShellRoute(
-              builder: (context, state, child) => AnimeProvider(child: child),
-              routes: [
-                GoRoute(
-                  name: "anime",
-                  path: '/anime/:type/:slug',
-                  builder: (context, state) => AnimePage(
-                    slug: state.pathParameters['slug'].toString(),
-                    type: state.pathParameters['type']?.toString() ?? "Series",
-                  ),
-                ),
-                GoRoute(
-                  name: "watch",
-                  path: '/watch/:type/:slug',
-                  builder: (context, state) => WatchPage(
-                    slug: state.pathParameters['slug'].toString(),
-                    type: state.pathParameters['type']?.toString() ?? "Series",
-                    episode: 1,
-                  ),
-                ),
-              ],
-            ),
-          ],
+          routes: [GoRoute(path: '/home', builder: (context, state) => const HomePage())],
         ),
         StatefulShellBranch(
           routes: [GoRoute(path: '/explore', builder: (context, state) => const ExplorePage())],
@@ -55,6 +31,28 @@ final GoRouter routerConfig = GoRouter(
         ),
         StatefulShellBranch(
           routes: [GoRoute(path: '/profile', builder: (context, state) => const ProfilePage())],
+        ),
+      ],
+    ),
+    ShellRoute(
+      builder: (context, state, child) => AnimeProvider(child: child),
+      routes: [
+        GoRoute(
+          name: "anime",
+          path: '/anime/:type/:slug',
+          builder: (context, state) => AnimePage(
+            slug: state.pathParameters['slug'].toString(),
+            type: state.pathParameters['type']?.toString() ?? "Series",
+          ),
+        ),
+        GoRoute(
+          name: "watch",
+          path: '/watch/:type/:slug',
+          builder: (context, state) => WatchPage(
+            slug: state.pathParameters['slug'].toString(),
+            type: state.pathParameters['type']?.toString() ?? "Series",
+            episode: 1,
+          ),
         ),
       ],
     ),

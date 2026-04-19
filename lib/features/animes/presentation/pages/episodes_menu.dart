@@ -18,6 +18,7 @@ class AnimeEpisodesMenu extends StatelessWidget {
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: 1000),
         child: CustomScrollView(
+          scrollBehavior: ScrollBehavior().copyWith(scrollbars: false),
           key: const PageStorageKey("episodes"),
           slivers: [
             SliverOverlapInjector(handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context)),

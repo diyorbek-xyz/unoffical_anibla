@@ -23,6 +23,9 @@ class _VideoPlayerState extends State<VideoPlayer> {
 
   @override
   void initState() {
+    if (widget.path.endsWith(".m3u8")) {
+      player.open(Media(widget.path));
+    }
     super.initState();
   }
 
@@ -40,6 +43,10 @@ class _VideoPlayerState extends State<VideoPlayer> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.path);
+    if (widget.path.endsWith(".m3u8")) {
+      return Video(controller: controller);
+    }
     return BlocConsumer<VideoBloc, video.VideoState>(
       listenWhen: (previous, current) => (previous != current) && current is video.VideoSuccess,
       listener: (context, state) {

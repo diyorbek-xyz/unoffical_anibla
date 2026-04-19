@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/features/common/presentation/widgets/error.dart';
 import 'package:application/features/slider/domain/entities/slider_entity.dart';
@@ -5,6 +7,7 @@ import 'package:application/features/slider/presentation/bloc/slider_bloc.dart';
 import 'package:application/features/slider/presentation/bloc/slider_event.dart';
 import 'package:application/features/slider/presentation/bloc/slider_state.dart';
 import 'package:application/injection_container.dart';
+import 'package:application/main.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,6 +18,8 @@ class CarouselWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
+
     return BlocProvider(
       create: (context) => sl<SliderBloc>()..add(GetFullSlider()),
       child: BlocBuilder<SliderBloc, SliderState>(
@@ -35,7 +40,10 @@ class CarouselWidget extends StatelessWidget {
             );
           }
           if (state is SliderSuccess) {
-            return Carousel(items: state.data);
+            return SizedBox(
+              height: isMobile ? 370 : 600,
+              child: Carousel(items: state.data),
+            );
           }
           return Text('data');
         },
@@ -53,88 +61,155 @@ class Carousel extends StatefulWidget {
 }
 
 class _CarouselState extends State<Carousel> {
-  final _controller = CarouselController();
+  final pageController = PageController(initialPage: 0);
+  int currentPage = 0;
+  double progress = 0;
+  Duration duration = Duration(seconds: 10);
+  Timer? timer;
+  void autoPlay() {
+    timer = Timer.periodic(duration, (timer) {
+      setState(() {
+        if (currentPage == widget.items.length - 1) {
+          currentPage = 0;
+        } else {
+          currentPage++;
+        }
+      });
+    });
+  }
+
+  void setPage(int page) {
+    timer?.cancel();
+    setState(() => currentPage = page);
+    autoPlay();
+  }
+
+  void nextPage() {
+    setPage((currentPage + 1) % (widget.items.length - 1));
+  }
+
+  void previousPage() {
+    if (currentPage == 0) {
+      setPage(widget.items.length - 1);
+    } else {
+      setPage(currentPage - 1);
+    }
+  }
 
   @override
   void initState() {
+    autoPlay();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final carouselWidth = constraints.maxWidth;
-        final weights = carouselWidth > 500 ? [1, 5, 1] : [1];
-        final height = carouselWidth > 500 ? 600.0 : 400.0;
-        return SizedBox(
-          height: height,
-          child: CarouselView.weighted(
-            elevation: 1,
-            flexWeights: weights,
-            itemSnapping: true,
-            enableSplash: true,
-            controller: _controller,
-            onTap: (value) {
-              final anime = widget.items.elementAt(value).anime;
-              context.pushNamed(
-                "anime",
-                pathParameters: {"type": anime.type, "slug": anime.slug},
-              );
-            },
-            children: widget.items.map((e) {
-              return Ink.image(
-                image: CachedNetworkImageProvider(e.image),
-                fit: BoxFit.cover,
-                child: Ink(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [context.appColors.surface, Colors.transparent],
-                      begin: AlignmentGeometry.bottomCenter,
-                      end: AlignmentGeometry.center,
-                    ),
-                  ),
-                  child: LayoutBuilder(
-                    builder: (context, constrains) {
-                      final itemWidth = constrains.maxWidth;
-                      final opacity = (carouselWidth / 2) > (itemWidth)
-                          ? 0.0
-                          : 1.0;
-                      final hidden = ((carouselWidth - 100) / 2) > itemWidth
-                          ? false
-                          : true;
-                      return AnimatedOpacity(
-                        opacity: opacity,
-                        duration: Duration(milliseconds: 200),
-                        child: hidden
-                            ? Column(
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    e.anime.title.uz,
-                                    style: TextStyle(fontSize: 30),
-                                  ),
-                                  Text(
-                                    e.anime.description.uz,
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(fontSize: 18),
-                                  ),
-                                ],
-                              )
-                            : Container(),
-                      );
-                    },
-                  ),
-                ),
-              );
-            }).toList(),
+    final entries = widget.items.asMap().entries;
+    final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        ...entries.map(
+          (e) => AnimatedOpacity(
+            opacity: e.key == currentPage ? 1 : 0,
+            duration: const Duration(milliseconds: 500),
+            child: IgnorePointer(
+              ignoring: e.key != currentPage,
+              child: carouselItem(e.value, context),
+            ),
           ),
-        );
-      },
+        ),
+        if (!isMobile)
+          Row(
+            mainAxisAlignment: .spaceBetween,
+            crossAxisAlignment: .stretch,
+            children: [
+              InkWell(
+                mouseCursor: SystemMouseCursors.click,
+                onTap: previousPage,
+                child: SizedBox(width: 100, child: Icon(Icons.keyboard_arrow_left)),
+              ),
+              InkWell(
+                mouseCursor: SystemMouseCursors.click,
+                onTap: nextPage,
+                child: SizedBox(width: 100, child: Icon(Icons.keyboard_arrow_right)),
+              ),
+            ],
+          ),
+        Row(
+          crossAxisAlignment: .end,
+          mainAxisAlignment: .center,
+          spacing: 10,
+          children: entries.map((e) {
+            final isCurrent = e.key == currentPage;
+            final double radius = 12;
+            return InkWell(
+              onTap: () => setPage(e.key),
+              mouseCursor: SystemMouseCursors.click,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  color: isCurrent ? context.appColors.primaryContainer : context.appColors.primary,
+                ),
+                width: isCurrent ? 100 : radius,
+                height: radius,
+                clipBehavior: Clip.antiAlias,
+                alignment: AlignmentGeometry.centerStart,
+                child: AnimatedContainer(
+                  curve: Curves.easeOut,
+                  duration: isCurrent ? duration : Duration(seconds: 0),
+                  width: isCurrent ? 100 : 0,
+                  height: double.infinity,
+                  child: Container(color: context.appColors.primary),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
+  Widget carouselItem(SliderEntity e, BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
+
+    return GestureDetector(
+      onTap: () =>
+          context.pushNamed("anime", pathParameters: {"type": e.anime.type, "slug": e.anime.slug}),
+      child: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(image: CachedNetworkImageProvider(e.image), fit: BoxFit.cover),
+        ),
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: isMobile ? 10 : 70,
+            vertical: isMobile ? 40 : 90,
+          ),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [context.appColors.surface, Colors.transparent],
+              begin: AlignmentGeometry.bottomCenter,
+              end: AlignmentGeometry.center,
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.end,
+            spacing: 5,
+            children: [
+              Text("${e.anime.title.uz} [${e.anime.age}+]", style: TextStyle(fontSize: 30)),
+              if (!isMobile)
+                Text(
+                  e.anime.description.uz,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 18),
+                ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:application/core/config/theme/app_colors.dart';
+import 'package:application/features/animes/domain/entities/download_entity.dart';
 import 'package:application/features/animes/domain/entities/episode_entity.dart';
 import 'package:application/features/animes/presentation/bloc/download/download_bloc.dart';
 import 'package:application/features/animes/presentation/bloc/download/download_event.dart';
@@ -37,6 +38,24 @@ void showDownloadModal(BuildContext context, EpisodeEntity episode) {
           content: Builder(
             builder: (context) {
               switch (state) {
+                case DownloadDone():
+                  return Center(child: Text(state.path));
+                case Downloading():
+                  return Column(
+                    crossAxisAlignment: .start,
+                    spacing: 5,
+                    children: [
+                      Text(state.state.status),
+                      Row(
+                        crossAxisAlignment: .center,
+                        spacing: 5,
+                        children: [
+                          Expanded(child: LinearProgressIndicator(value: state.state.progress)),
+                          IconButton(onPressed: () {}, icon: Icon(Icons.close)),
+                        ],
+                      ),
+                    ],
+                  );
                 case DownloadGettingInfo():
                   return Center(child: CircularProgressIndicator());
                 case DownloadFailed():
@@ -51,7 +70,12 @@ void showDownloadModal(BuildContext context, EpisodeEntity episode) {
                         final variant = state.master.variants.elementAt(index);
                         final format = variant.format;
                         return ListTile(
-                          onTap: () => bloc.add(StartDownload(state.master, variant)),
+                          onTap: () => bloc.add(
+                            StartDownload(
+                              DownloadEntity(episodeId: episode.id, file: episode.video, skip: ""),
+                              variant,
+                            ),
+                          ),
                           title: Text("${format.height}p"),
                         );
                       },

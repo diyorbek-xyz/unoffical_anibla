@@ -29,18 +29,15 @@ final class SessionLimitedFailure extends Failure {
 }
 
 final class UnknownFailure extends Failure {
-  final DioException exception;
-  UnknownFailure(this.exception) : super(exception.message!);
+  final dynamic exception;
+  UnknownFailure(this.exception) : super(exception.message);
 }
 
 abstract class ExceptionMapper {
   static DioException mapResponseToDio(Response response) {
     return DioException(
       requestOptions: response.requestOptions,
-      error:
-          response.data?['message'] ??
-          response.statusMessage ??
-          response.statusCode,
+      error: response.data?['message'] ?? response.statusMessage ?? response.statusCode,
       response: response,
       type: DioExceptionType.badResponse,
       message: response.data?['message'] ?? response.statusMessage,
@@ -53,6 +50,9 @@ abstract class ExceptionMapper {
       case DioExceptionType.connectionTimeout:
         return NetworkFailure();
       case DioExceptionType.badResponse:
+        if (exception.response?.data is! Map<String, dynamic>) {
+          return SimpleFailure(exception.response?.data);
+        }
         switch (exception.response?.data?['message']?.toString()) {
           case Errors.userNotFound:
             return SimpleFailure("Foydalanuvchi topilmadi");
@@ -70,7 +70,7 @@ abstract class ExceptionMapper {
             return ServerFailure(statusCode ?? 400);
         }
       default:
-        return UnknownFailure(exception);
+        return UnknownFailure(exception.toString());
     }
   }
 
@@ -85,8 +85,7 @@ abstract class ExceptionMapper {
     return "Nimadur xato ketti: ${(failure as UnknownFailure).exception.toString()}";
   }
 
-  static String mapStatusToMessage(int status) =>
-      ErrorMessages.fromStatus(status);
+  static String mapStatusToMessage(int status) => ErrorMessages.fromStatus(status);
 
   static Failure mapMessageToFailure(String message) => SimpleFailure(message);
 
