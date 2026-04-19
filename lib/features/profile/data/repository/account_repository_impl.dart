@@ -45,11 +45,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
       if (httpResponse.data.success) {
         return Right(true);
       } else {
-        return Left(
-          UnknownFailure(
-            ExceptionMapper.mapResponseToDio(httpResponse.response),
-          ),
-        );
+        return Left(UnknownFailure(ExceptionMapper.mapResponseToDio(httpResponse.response)));
       }
     } on DioException catch (e) {
       return Left(ExceptionMapper.mapDioToFailure(e));

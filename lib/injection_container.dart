@@ -83,6 +83,8 @@ final baseOptions = BaseOptions(
     "x-platform-os": "android",
     "x-device": "Redmi 6A",
     "x-app-version": "2.4.9",
+    "Authorization":
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjZmYjliNzcwYzY1MjcxMGJlNTUxZjRmIiwidG9rZW5faWQiOiI0MDk5ZTcxMC02YmMwLTRlMzEtOTAzMy0wNTRiODNkYzZjMTMiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc2NTk4MDE3LCJleHAiOjE3Nzc4MDc2MTd9.vQiX0kUngU_72fc5DRqGUcA6G5WxV4TZG3UAip_68Vs",
   },
 );
 final dio = Dio(baseOptions);

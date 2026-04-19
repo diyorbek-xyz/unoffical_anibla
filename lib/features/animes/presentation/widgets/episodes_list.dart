@@ -9,7 +9,6 @@ import 'package:application/features/animes/presentation/bloc/episode/episode_st
 import 'package:application/features/animes/presentation/bloc/watch/watch_bloc.dart';
 import 'package:application/features/animes/presentation/bloc/watch/watch_event.dart';
 import 'package:application/features/animes/presentation/bloc/watch/watch_state.dart';
-import 'package:application/features/animes/presentation/widgets/download_modal.dart';
 import 'package:application/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -133,16 +132,16 @@ class _EpisodeItemState extends State<EpisodeItem> {
       create: (context) => sl<DownloadBloc>(),
       child: BlocBuilder<DownloadBloc, DownloadState>(
         builder: (context, state) {
-          final icon = state is Downloading
-              ? CircularProgressIndicator(
-                  value: state.state.progress,
-                  constraints: BoxConstraints(minWidth: 15, minHeight: 15),
-                )
-              : Icon(
-                  state is DownloadDone || widget.episode.isDownloaded
-                      ? Icons.check
-                      : Icons.download,
-                );
+          // final icon = state is Downloading
+          //     ? CircularProgressIndicator(
+          //         value: state.state.progress,
+          //         constraints: BoxConstraints(minWidth: 15, minHeight: 15),
+          //       )
+          //     : Icon(
+          //         state is DownloadDone || widget.episode.isDownloaded
+          //             ? Icons.check
+          //             : Icons.download,
+          //       );
           return ListTile(
             selected: watchState is WatchDone
                 ? widget.episode.episodeNumber == watchState.currentEpisode.episodeNumber
