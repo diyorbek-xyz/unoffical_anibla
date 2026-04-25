@@ -1,3 +1,4 @@
+import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/features/animes/domain/entities/anime_entity.dart';
 import 'package:application/features/animes/presentation/widgets/anime_card.dart';
@@ -15,8 +16,11 @@ class SearchPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () async => context.read<HistoryBloc>().add(GetHistory()),
-      displacement: 100,
+      onRefresh: () async {
+        context.read<HistoryBloc>().add(GetHistory());
+        await Future.delayed(Duration(seconds: 2));
+      },
+      displacement: 130,
       child: CustomScrollView(
         scrollBehavior: ScrollBehavior().copyWith(scrollbars: false),
         key: const PageStorageKey("results"),
@@ -44,7 +48,7 @@ class SearchPage extends StatelessWidget {
                       ),
                     );
                   default:
-                    return SliverToBoxAdapter(child: hidtoryBuilder());
+                    return hidtoryBuilder();
                 }
               },
             ),
@@ -59,17 +63,22 @@ class SearchPage extends StatelessWidget {
       builder: (context, state) {
         switch (state) {
           case HistoryLoading():
-            return Center(child: CircularProgressIndicator());
+            return SliverFillRemaining(child: Center(child: CircularProgressIndicator()));
           case HistorySuccess():
-            return gridView(context, "Tarix", state.anime);
+            return SliverToBoxAdapter(child: gridView(context, "Tarix", state.anime));
           default:
-            return Center(child: Text("Animelarni qidiring"));
+            return SliverFillRemaining(child: Center(child: Text("Animelarni qidiring")));
         }
       },
     );
   }
 
-  Widget gridView(BuildContext context, String title, List<AnimeEntity> animes) {
+  Widget gridView(
+    BuildContext context,
+    String title,
+    List<AnimeEntity> animes, [
+    bool? isFromHistory,
+  ]) {
     return Column(
       crossAxisAlignment: animes.isNotEmpty ? .start : .center,
       spacing: 7,
@@ -86,7 +95,24 @@ class SearchPage extends StatelessWidget {
             childAspectRatio: AnimeCard.aspectRatio,
           ),
           itemBuilder: (context, index) {
-            return AnimeCard(anime: animes.elementAt(index));
+            return Stack(
+              alignment: AlignmentGeometry.topLeft,
+              children: [
+                AnimeCard(anime: animes.elementAt(index)),
+                Positioned(
+                  top: 4,
+                  left: 4,
+                  child: IconButton(
+                    mouseCursor: SystemMouseCursors.click,
+                    color: context.appColors.errorContainer,
+                    onPressed: () => context.read<HistoryBloc>().add(
+                      DeleteFromHistory(animes.elementAt(index).id),
+                    ),
+                    icon: Icon(Icons.delete),
+                  ),
+                ),
+              ],
+            );
           },
         ),
       ],

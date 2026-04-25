@@ -8,6 +8,8 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
   final ExploreRepository repository;
   HistoryBloc(this.repository) : super(HistoryInitial()) {
     on<GetHistory>(onGetHistory);
+    on<DeleteFromHistory>(onDeleteFromHistory);
+    on<ClearHistory>(onClearHistory);
   }
   void onGetHistory(GetHistory event, Emitter<HistoryState> emit) async {
     emit(HistoryLoading());
@@ -18,5 +20,21 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
         (r) => HistorySuccess(r),
       ),
     );
+  }
+
+  void onDeleteFromHistory(DeleteFromHistory event, Emitter<HistoryState> emit) async {
+    await repository.deleteFromHistory(event.id);
+    final history = await repository.getHistoy();
+    emit(
+      history.fold(
+        (f) => HistoryFailed(ExceptionMapper.mapFailureToMessage(f)),
+        (r) => HistorySuccess(r),
+      ),
+    );
+  }
+
+  void onClearHistory(ClearHistory event, Emitter<HistoryState> emit) async {
+    await repository.clearHistoty();
+    emit(HistoryInitial());
   }
 }

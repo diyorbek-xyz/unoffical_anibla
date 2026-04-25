@@ -8,4 +8,6 @@ abstract class ExploreRepository {
   Future<Either<Failure, List<GenreEntity>>> getGenres();
   Future<Either<Failure, List<AnimeEntity>>> searchAnime(String type, SearchQuery query);
   Future<Either<Failure, List<AnimeEntity>>> getHistoy();
+  Future<void> deleteFromHistory(String id);
+  Future<void> clearHistoty();
 }

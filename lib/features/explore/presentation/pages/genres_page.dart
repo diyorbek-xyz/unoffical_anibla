@@ -8,7 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class GenresPage extends StatelessWidget {
-  const GenresPage({super.key});
+  final SearchController controller;
+  final Function(String value, BuildContext context) submit;
+  const GenresPage({super.key, required this.controller, required this.submit});
 
   @override
   Widget build(BuildContext context) {
@@ -61,8 +63,12 @@ class GenresPage extends StatelessWidget {
   }
 
   InkWell genreItem(BuildContext context, GenreEntity e) {
+    void searchGenre() {
+      submit(controller.text += " g:${e.id}", context);
+    }
+
     return InkWell(
-      onTap: () {},
+      onTap: searchGenre,
       focusColor: context.appColors.primaryContainer.withAlpha(20),
       hoverColor: context.appColors.primaryContainer.withAlpha(20),
       splashColor: context.appColors.primaryContainer.withAlpha(20),

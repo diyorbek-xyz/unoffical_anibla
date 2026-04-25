@@ -1,8 +1,5 @@
-import 'package:application/core/config/theme/app_colors.dart';
-import 'package:application/features/common/presentation/widgets/error.dart';
 import 'package:application/features/explore/presentation/bloc/genre/genre_bloc.dart';
 import 'package:application/features/explore/presentation/bloc/genre/genre_event.dart';
-import 'package:application/features/explore/presentation/bloc/genre/genre_state.dart';
 import 'package:application/features/explore/presentation/bloc/history/history_bloc.dart';
 import 'package:application/features/explore/presentation/bloc/history/history_event.dart';
 import 'package:application/features/explore/presentation/bloc/search/search_bloc.dart';
@@ -13,9 +10,15 @@ import 'package:application/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ExplorePage extends StatelessWidget {
+class ExplorePage extends StatefulWidget {
   const ExplorePage({super.key});
 
+  @override
+  State<ExplorePage> createState() => _ExplorePageState();
+}
+
+class _ExplorePageState extends State<ExplorePage> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -24,108 +27,81 @@ class ExplorePage extends StatelessWidget {
         BlocProvider(create: (context) => sl<HistoryBloc>()..add(GetHistory())),
         BlocProvider(create: (context) => sl<SearchBloc>()),
       ],
-      child: Builder(builder: main),
+      child: main(),
     );
   }
 
-  DefaultTabController main(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: NestedScrollView(
-        headerSliverBuilder: (context, _) => [
-          SliverOverlapAbsorber(
-            handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-            sliver: SliverAppBar(
-              collapsedHeight: kToolbarHeight + 20,
-              pinned: true,
-              flexibleSpace: Container(
-                padding: EdgeInsetsGeometry.all(20),
-                alignment: AlignmentGeometry.topCenter,
-                child: SearchBar(
-                  onSubmitted: (value) =>
-                      context.read<SearchBloc>().add(SearchAnime.fromSearch(value)),
-                  constraints: BoxConstraints(maxWidth: 700, minHeight: kToolbarHeight),
-                  leading: Padding(padding: EdgeInsetsGeometry.all(10), child: Icon(Icons.search)),
-                ),
-              ),
-              bottom: TabBar(
-                tabAlignment: TabAlignment.center,
-                dividerHeight: 0,
-                isScrollable: true,
-                tabs: [
-                  Tab(text: "Qidiruv"),
-                  Tab(text: "Kategoriyalar"),
-                  Tab(text: "Janrlar"),
+  final searchController = SearchController();
+  void submitSearch(String value, BuildContext context) {
+    context.read<SearchBloc>().add(SearchAnime.fromSearch(value));
+    if (_tabController.index != 0) {
+      _tabController.animateTo(0);
+    }
+  }
+
+  void clearSearch(BuildContext context) {
+    searchController.clear();
+    context.read<SearchBloc>().add(SearchAnime());
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  Widget main() {
+    return NestedScrollView(
+      headerSliverBuilder: (context, _) => [
+        SliverOverlapAbsorber(
+          handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+          sliver: SliverAppBar(
+            collapsedHeight: kToolbarHeight + 20,
+            pinned: true,
+            flexibleSpace: Container(
+              padding: EdgeInsetsGeometry.all(20),
+              alignment: AlignmentGeometry.topCenter,
+              child: SearchBar(
+                controller: searchController,
+                onChanged: (value) {
+                  if (value.isEmpty) clearSearch(context);
+                },
+                onSubmitted: (value) => submitSearch(value, context),
+                constraints: BoxConstraints(maxWidth: 700, minHeight: kToolbarHeight),
+                leading: Padding(padding: EdgeInsetsGeometry.all(10), child: Icon(Icons.search)),
+                trailing: [
+                  IconButton(onPressed: () => clearSearch(context), icon: Icon(Icons.clear)),
                 ],
               ),
             ),
-          ),
-        ],
-        body: TabBarView(children: [SearchPage(), Text("hello"), GenresPage()]),
-      ),
-    );
-  }
-
-  Widget genresBuilder(BuildContext context) {
-    return BlocBuilder<GenreBloc, GenreState>(
-      builder: (context, state) {
-        if (state is GenreLoading) {
-          return Center(child: CircularProgressIndicator());
-        }
-        if (state is GenreFailed) {
-          return ErrorBuilder(
-            message: state.message,
-            refresh: () => context.read<GenreBloc>().add(GetGenres()),
-          );
-        }
-        if (state is GenresFullSuccess) {
-          return Padding(
-            padding: EdgeInsetsGeometry.all(5),
-            child: Material(
-              clipBehavior: Clip.antiAlias,
-              borderRadius: BorderRadius.circular(12),
-              child: RefreshIndicator.adaptive(
-                onRefresh: () async => context.read<GenreBloc>().add(GetGenres()),
-                child: GridView.extent(
-                  physics: NeverScrollableScrollPhysics(),
-                  maxCrossAxisExtent: 250,
-                  childAspectRatio: 3 / 1,
-                  shrinkWrap: true,
-                  mainAxisSpacing: 2,
-                  crossAxisSpacing: 2,
-                  children: state.data
-                      .map(
-                        (e) => InkWell(
-                          onTap: () {},
-                          focusColor: context.appColors.primaryContainer.withAlpha(20),
-                          hoverColor: context.appColors.primaryContainer.withAlpha(20),
-                          splashColor: context.appColors.primaryContainer.withAlpha(20),
-                          highlightColor: context.appColors.primaryContainer.withAlpha(20),
-                          mouseCursor: SystemMouseCursors.click,
-                          child: Ink(
-                            decoration: BoxDecoration(
-                              color: context.appColors.primary,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            padding: EdgeInsets.all(10),
-                            child: Align(
-                              alignment: AlignmentGeometry.center,
-                              child: Text(
-                                e.title.uz,
-                                style: TextStyle(color: context.appColors.onPrimary, fontSize: 20),
-                              ),
-                            ),
-                          ),
-                        ),
-                      )
-                      .toList(),
-                ),
-              ),
+            bottom: TabBar(
+              tabAlignment: TabAlignment.center,
+              controller: _tabController,
+              dividerHeight: 0,
+              isScrollable: true,
+              tabs: [
+                Tab(text: "Qidiruv"),
+                Tab(text: "Kategoriyalar"),
+                Tab(text: "Janrlar"),
+              ],
             ),
-          );
-        }
-        return Text("data");
-      },
+          ),
+        ),
+      ],
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          SearchPage(),
+          Text("hello"),
+          GenresPage(controller: searchController, submit: submitSearch),
+        ],
+      ),
     );
   }
 }

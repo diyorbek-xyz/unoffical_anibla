@@ -72,7 +72,7 @@ class _ProfileMainState extends State<ProfileMain> {
               ProfileInfosMenu(data: widget.data),
               ProfileLastAnimeMenu(profile: widget.data),
               SavesMenu(profile: widget.data,),
-              ProfileDevicesMenu(currentId: widget.data.tokenId, sessions: widget.data.sessions),
+              ProfileDevicesMenu(),
               Text("obunalar"),
             ],
           ),

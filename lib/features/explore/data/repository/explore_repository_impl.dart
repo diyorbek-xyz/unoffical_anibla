@@ -54,4 +54,14 @@ class ExploreRepositoryImpl implements ExploreRepository {
     }
     return Left(SimpleFailure("Animelar mavjud emas"));
   }
+
+  @override
+  Future<void> clearHistoty() async {
+    await _historyLocal.clearHistory();
+  }
+
+  @override
+  Future<void> deleteFromHistory(String id) async {
+    await _historyLocal.deleteFromHistory(id);
+  }
 }

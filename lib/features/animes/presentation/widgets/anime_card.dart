@@ -48,66 +48,85 @@ class AnimeCard extends StatelessWidget {
     final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
     return SizedBox(
       width: isMobile ? 150 : 180,
-      child: AspectRatio(
-        aspectRatio: aspectRatio,
-        child: GestureDetector(
-          onSecondaryTapDown: (details) => handleClick(context, details.globalPosition),
-          onLongPressStart: (details) => handleClick(context, details.globalPosition),
-          child: InkWell(
-            mouseCursor: SystemMouseCursors.click,
-            borderRadius: BorderRadius.circular(15),
-            onTap: () => context.pushNamed(
-              "anime",
-              pathParameters: {"type": anime.type, "slug": anime.slug},
-            ),
-            splashColor: context.appColors.surfaceContainerHigh.withValues(alpha: 0.2),
-            hoverColor: context.appColors.surfaceContainerHigh.withValues(alpha: 0.2),
-            highlightColor: Colors.transparent,
-            focusColor: context.appColors.surfaceContainerHigh.withValues(alpha: 0.2),
-            radius: 350,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 5,
-              children: [
-                AspectRatio(
-                  aspectRatio: 9 / 12,
-                  child: Ink(
-                    decoration: !anime.thumbnail.endsWith(".avif")
-                        ? BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                color: context.appColors.surfaceContainerLowest,
-                                blurRadius: 4,
-                                offset: Offset(0, 2),
+      child: Stack(
+        children: [
+          AspectRatio(
+            aspectRatio: aspectRatio,
+            child: GestureDetector(
+              onSecondaryTapDown: (details) => handleClick(context, details.globalPosition),
+              onLongPressStart: (details) => handleClick(context, details.globalPosition),
+              child: InkWell(
+                mouseCursor: SystemMouseCursors.click,
+                borderRadius: BorderRadius.circular(15),
+                onTap: () => context.pushNamed(
+                  "anime",
+                  pathParameters: {"type": anime.type, "slug": anime.slug},
+                ),
+                splashColor: context.appColors.surfaceContainerHigh.withValues(alpha: 0.2),
+                hoverColor: context.appColors.surfaceContainerHigh.withValues(alpha: 0.2),
+                highlightColor: Colors.transparent,
+                focusColor: context.appColors.surfaceContainerHigh.withValues(alpha: 0.2),
+                radius: 350,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 5,
+                  children: [
+                    AspectRatio(
+                      aspectRatio: 9 / 12,
+                      child: Ink(
+                        decoration: !anime.thumbnail.endsWith(".avif")
+                            ? BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: context.appColors.surfaceContainerLowest,
+                                    blurRadius: 4,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                                image: DecorationImage(
+                                  image: CachedNetworkImageProvider(addBaseUrl(anime.thumbnail)),
+                                  fit: BoxFit.cover,
+                                  alignment: AlignmentGeometry.center,
+                                ),
+                                borderRadius: BorderRadius.circular(14),
+                              )
+                            : BoxDecoration(
+                                color: context.appColors.error,
+                                borderRadius: BorderRadius.circular(14),
                               ),
-                            ],
-                            image: DecorationImage(
-                              image: CachedNetworkImageProvider(addBaseUrl(anime.thumbnail)),
-                              fit: BoxFit.cover,
-                              alignment: AlignmentGeometry.center,
-                            ),
-                            borderRadius: BorderRadius.circular(14),
-                          )
-                        : BoxDecoration(
-                            color: context.appColors.error,
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                  ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsetsGeometry.symmetric(horizontal: 5),
+                      child: Text(
+                        toBeginningOfSentenceCase(anime.title.uz),
+                        maxLines: isMobile ? 1 : 2,
+                        textAlign: TextAlign.start,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ),
+                  ],
                 ),
-                Padding(
-                  padding: EdgeInsetsGeometry.symmetric(horizontal: 5),
-                  child: Text(
-                    toBeginningOfSentenceCase(anime.title.uz),
-                    maxLines: isMobile ? 1 : 2,
-                    textAlign: TextAlign.start,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 15),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
+          Positioned(
+            right: 7,
+            top: 5,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+              decoration: BoxDecoration(
+                color: context.appColors.primaryContainer.withAlpha(200),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Text(
+                "${anime.publishedYear}-yil",
+                style: TextStyle(color: context.appColors.primary),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
