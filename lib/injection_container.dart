@@ -1,3 +1,5 @@
+import 'package:path_provider/path_provider.dart';
+import 'package:window_manager/window_manager.dart';
 import 'package:application/core/constants/constants.dart';
 import 'package:application/features/animes/data/models/anime_model.dart';
 import 'package:application/features/animes/data/models/download_model.dart';
@@ -95,8 +97,24 @@ Future<void> initializeDependencies() async {
 
   // Setup local Storage;
   MediaKit.ensureInitialized();
-  await Hive.initFlutter();
+  final cacheDir = await getApplicationCacheDirectory();
+  await Hive.initFlutter("${cacheDir.path}/boxes/");
   Hive.registerAdapters();
+
+  // Setup window manager
+  await windowManager.ensureInitialized();
+  WindowOptions windowOptions = WindowOptions(
+    size: Size(800, 600),
+    center: true,
+    backgroundColor: Colors.transparent,
+    skipTaskbar: false,
+    titleBarStyle: TitleBarStyle.hidden,
+  );
+
+  windowManager.waitUntilReadyToShow(windowOptions, () async {
+    await windowManager.show();
+    await windowManager.focus();
+  });
 
   // Setup miscs;
   await dotenv.load(fileName: '.env');
