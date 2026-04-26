@@ -1,4 +1,4 @@
-import 'package:application/features/animes/presentation/widgets/video_player.dart';
+import 'package:application/features/player/presentation/widgets/video_player.dart';
 import 'package:flutter/material.dart';
 
 class PlayerPage extends StatelessWidget {

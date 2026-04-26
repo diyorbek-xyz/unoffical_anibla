@@ -38,6 +38,8 @@ dependencies:
     youtube_player_iframe:
     flutter_hls_parser: ^2.0.1
     url_launcher: ^6.3.2
+    window_manager: 
+    audio_video_progress_bar:
 
 dev_dependencies:
     flutter_test:

@@ -21,4 +21,8 @@ class EpisodeMapper {
     uz: {"title": entity?.title.uz},
     ru: {"title": entity?.title.ru},
   );
+  static Map<String, dynamic> entityToMediaInfo(EpisodeEntity entity) => {
+    "title": entity.title.uz,
+    "episode": entity.episodeNumber,
+  };
 }

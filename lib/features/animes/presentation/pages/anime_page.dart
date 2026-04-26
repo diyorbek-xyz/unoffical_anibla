@@ -14,8 +14,6 @@ import 'package:application/features/animes/presentation/bloc/episode/episode_st
 import 'package:application/features/animes/presentation/bloc/season/season_bloc.dart';
 import 'package:application/features/animes/presentation/bloc/season/season_event.dart';
 import 'package:application/features/animes/presentation/bloc/season/season_state.dart';
-import 'package:application/features/animes/presentation/bloc/watch/watch_bloc.dart';
-import 'package:application/features/animes/presentation/bloc/watch/watch_event.dart';
 import 'package:application/features/animes/presentation/pages/comments_menu.dart';
 import 'package:application/features/animes/presentation/pages/creators_menu.dart';
 import 'package:application/features/animes/presentation/pages/episodes_menu.dart';
@@ -24,6 +22,7 @@ import 'package:application/features/comment/data/models/props.dart';
 import 'package:application/features/comment/presentation/bloc/comment_bloc.dart';
 import 'package:application/features/comment/presentation/bloc/comment_event.dart';
 import 'package:application/features/common/presentation/widgets/error.dart';
+import 'package:application/features/player/presentation/cubit/player_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -40,10 +39,19 @@ class AnimePage extends StatefulWidget {
 }
 
 class _AnimePageState extends State<AnimePage> {
+  late PlayerController controller;
+
   @override
   void initState() {
     context.read<AnimeBloc>().add(GetSerie(slug: widget.slug, type: widget.type));
+    controller = context.read<PlayerController>();
     super.initState();
+  }
+
+  @override
+  void deactivate() {
+    controller.pause();
+    super.deactivate();
   }
 
   @override
@@ -71,11 +79,9 @@ class _AnimePageState extends State<AnimePage> {
           },
         ),
         BlocListener<EpisodeBloc, EpisodeState>(
-          listenWhen: (previous, current) =>
-              widget.type == AnimeType.serie && current is EpisodeSuccess,
+          listenWhen: (previous, current) => current is EpisodeSuccess,
           listener: (context, state) {
-            final episodes = (state as EpisodeSuccess).episodes;
-            context.read<WatchBloc>().add(SetEpisode(episodes.first));
+            if (state is EpisodeSuccess) controller.init(state.episodes);
           },
         ),
       ],

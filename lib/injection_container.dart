@@ -1,3 +1,4 @@
+import 'package:application/features/player/presentation/cubit/player_controller.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:application/core/constants/constants.dart';
@@ -19,7 +20,6 @@ import 'package:application/features/animes/presentation/bloc/download/download_
 import 'package:application/features/animes/presentation/bloc/episode/episode_bloc.dart';
 import 'package:application/features/animes/presentation/bloc/season/season_bloc.dart';
 import 'package:application/features/animes/presentation/bloc/video/video_bloc.dart';
-import 'package:application/features/animes/presentation/bloc/watch/watch_bloc.dart';
 import 'package:application/features/comment/data/repository/comment_repository_impl.dart';
 import 'package:application/features/comment/data/source/remote/comment_api.dart';
 import 'package:application/features/comment/domain/repository/comment_repository.dart';
@@ -194,8 +194,9 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<CommentBloc>(() => CommentBloc(sl()));
   sl.registerFactory<TemplateBloc>(() => TemplateBloc(sl()));
   sl.registerFactory<VideoBloc>(() => VideoBloc(sl()));
-  sl.registerFactory<WatchBloc>(() => WatchBloc());
   sl.registerFactory<DownloadBloc>(() => DownloadBloc(sl()));
   sl.registerFactory<SearchBloc>(() => SearchBloc(sl()));
   sl.registerFactory<HistoryBloc>(() => HistoryBloc(sl()));
+
+  sl.registerFactory<PlayerController>(() => PlayerController());
 }

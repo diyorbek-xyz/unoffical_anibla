@@ -1,73 +1,81 @@
+import 'package:application/features/animes/data/mapper/episode_mapper.dart';
+import 'package:application/features/animes/data/models/episode_model.dart';
+import 'package:application/features/animes/domain/entities/episode_entity.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
-sealed class PlayerStates {
-  const PlayerStates();
-}
-
-final class PlayerInitial extends PlayerStates {
-  const PlayerInitial();
-}
-
-final class PlayerReady extends PlayerStates {
+final class PlayerStates {
   final bool isPaused;
+  final bool hasError;
+  final String? error;
   final bool isMuted;
   final bool isFullscreen;
   final Duration time;
   final double volume;
   final Duration duration;
-  final dynamic episode;
-  final dynamic resolution;
-  final List resolutions;
   final bool buffering;
   final Duration buffer;
-  final Playlist playlist;
-  final Media currentMedia;
   final Tracks tracks;
   final VideoTrack videoTrack;
+  final EpisodeEntity episode;
+  final List<EpisodeEntity> episodes;
+  final List<int> skip;
+  final bool hasIntro;
+  final bool isFirst;
+  final bool isLast;
 
-  const PlayerReady({
+  const PlayerStates({
     required this.buffer,
-    required this.episode,
     required this.isFullscreen,
     required this.isMuted,
     required this.isPaused,
-    required this.resolution,
-    required this.resolutions,
     required this.time,
     required this.volume,
     required this.duration,
     required this.buffering,
-    required this.playlist,
-    required this.currentMedia,
     required this.tracks,
     required this.videoTrack,
+    required this.episode,
+    required this.episodes,
+    required this.skip,
+    required this.hasIntro,
+    required this.isFirst,
+    required this.isLast,
+    required this.hasError,
+    this.error,
   });
 
-  PlayerReady copyWith({
+  PlayerStates copyWith({
     bool? isPaused,
     bool? isMuted,
     bool? isFullscreen,
     Duration? time,
     double? volume,
-    dynamic episode,
-    dynamic resolution,
-    List? episodes,
-    List? resolutions,
+    EpisodeEntity? episode,
     VideoController? controller,
     Duration? duration,
     Duration? buffer,
     bool? buffering,
-    Playlist? playlist,
-    Media? currentMedia,
     Tracks? tracks,
     VideoTrack? videoTrack,
+    List<EpisodeEntity>? episodes,
+    List<int>? skip,
+    bool? hasIntro,
+    bool? isFirst,
+    bool? isLast,
+    bool? hasError,
+    String? error,
   }) {
-    return PlayerReady(
+    return PlayerStates(
+      hasError: hasError ?? this.hasError,
+      error: error ?? this.error,
+      isFirst: isFirst ?? this.isFirst,
+      isLast: isLast ?? this.isLast,
+      hasIntro: hasIntro ?? this.hasIntro,
+      skip: skip ?? this.skip,
+      episodes: episodes ?? this.episodes,
       videoTrack: videoTrack ?? this.videoTrack,
       tracks: tracks ?? this.tracks,
-      currentMedia: currentMedia ?? this.currentMedia,
-      playlist: playlist ?? this.playlist,
       buffer: buffer ?? this.buffer,
       buffering: buffering ?? this.buffering,
       duration: duration ?? this.duration,
@@ -75,15 +83,52 @@ final class PlayerReady extends PlayerStates {
       isFullscreen: isFullscreen ?? this.isFullscreen,
       isMuted: isMuted ?? this.isMuted,
       isPaused: isPaused ?? this.isPaused,
-      resolution: resolution ?? this.resolution,
-      resolutions: resolutions ?? this.resolutions,
       time: time ?? this.time,
       volume: volume ?? this.volume,
     );
   }
-}
 
-final class PlayerError extends PlayerStates {
-  final String message;
-  const PlayerError(this.message);
+  int diffirence(PlayerStates state) {
+    int score = 0;
+    if (state.error != error) score++;
+    if (state.hasError != hasError) score++;
+    if (state.isFirst != isFirst) score++;
+    if (state.isLast != isLast) score++;
+    if (state.hasIntro != hasIntro) score++;
+    if (state.skip != skip) score++;
+    if (state.episodes != episodes) score++;
+    if (state.videoTrack != videoTrack) score++;
+    if (state.tracks != tracks) score++;
+    if (state.buffering != buffering) score++;
+    if (state.duration != duration) score++;
+    if (state.episode != episode) score++;
+    if (state.isFullscreen != isFullscreen) score++;
+    if (state.isMuted != isMuted) score++;
+    if (state.isPaused != isPaused) score++;
+    if (state.volume != volume) score++;
+    return score;
+  }
+
+  factory PlayerStates.empty() {
+    return PlayerStates(
+      hasError: true,
+      error: "empty",
+      skip: [],
+      isFirst: false,
+      isLast: false,
+      hasIntro: false,
+      videoTrack: VideoTrack("", "", ""),
+      tracks: Tracks(),
+      buffer: Duration(),
+      buffering: true,
+      duration: Duration(),
+      episode: EpisodeMapper.modelToEntity(EpisodeModel()),
+      episodes: [],
+      isFullscreen: false,
+      isMuted: false,
+      isPaused: false,
+      time: Duration(),
+      volume: 100.0,
+    );
+  }
 }

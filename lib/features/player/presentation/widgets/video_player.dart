@@ -1,10 +1,15 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:application/core/config/theme/app_colors.dart';
+import 'package:application/features/animes/presentation/widgets/episodes_list.dart';
 import 'package:application/features/player/presentation/cubit/player_controller.dart';
 import 'package:application/features/player/presentation/cubit/player_states.dart';
+import 'package:application/main.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:media_kit_video/media_kit_video.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 
 class VideoPlayer extends StatefulWidget {
   const VideoPlayer({super.key});
@@ -14,16 +19,73 @@ class VideoPlayer extends StatefulWidget {
 }
 
 class _VideoPlayerState extends State<VideoPlayer> {
-  final isMobilePlatform = true;
-  void openSettings(BuildContext context, PlayerReady state, PlayerController controller) {
+  final isMobilePlatform = Platform.isAndroid || Platform.isIOS;
+  late PlayerController controller;
+
+  int forwardSkipSteps = 0;
+  int backwardSkipSteps = 0;
+
+  Timer? _debounce;
+  bool isControlsVisible = true;
+
+  Timer? _autoHideTimer;
+
+  void toggleControls() => showControls(!isControlsVisible);
+
+  void showControls([bool? value]) {
+    setState(() => isControlsVisible = value ?? true);
+    _autoHideTimer?.cancel();
+    _autoHideTimer = Timer(const Duration(seconds: 3), () {
+      final state = controller.state;
+      if (state.isPaused || state.buffering) return;
+      if (!mounted) return;
+      setState(() => isControlsVisible = false);
+    });
+  }
+
+  @override
+  void deactivate() {
+    controller.pause();
+    super.deactivate();
+  }
+
+  @override
+  void initState() {
+    controller = context.read<PlayerController>();
+    super.initState();
+  }
+
+  void skip(int step) async {
+    setState(() {
+      if (step < 0) {
+        backwardSkipSteps += step;
+      } else {
+        forwardSkipSteps += step;
+      }
+    });
+    await controller.skip(Duration(seconds: step));
+
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(
+      const Duration(seconds: 2),
+      () => setState(() {
+        backwardSkipSteps = 0;
+        forwardSkipSteps = 0;
+      }),
+    );
+  }
+
+  void openSettings() {
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (dialogcontext) {
+        final controller = context.read<PlayerController>();
+        final state = controller.state;
         return DefaultTabController(
           length: 2,
           child: Dialog(
             shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(20)),
-            constraints: BoxConstraints(maxWidth: 500, maxHeight: 500),
+            constraints: const BoxConstraints(maxWidth: 500, maxHeight: 500),
             child: Column(
               children: [
                 const TabBar(
@@ -44,7 +106,10 @@ class _VideoPlayerState extends State<VideoPlayer> {
                           final isId = title == track.id;
                           return ListTile(
                             leading: Icon(isCurrent ? Icons.check : Icons.hd),
-                            onTap: () => controller.setResolution(track),
+                            onTap: () {
+                              Navigator.pop(dialogcontext);
+                              controller.setResolution(track);
+                            },
                             title: Text(!isId ? "${title}p" : title),
                           );
                         },
@@ -58,7 +123,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
                   padding: EdgeInsets.all(5),
                   alignment: AlignmentGeometry.centerEnd,
                   child: TextButton(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => Navigator.pop(dialogcontext),
                     child: Text("Bekor qilish"),
                   ),
                 ),
@@ -70,283 +135,453 @@ class _VideoPlayerState extends State<VideoPlayer> {
     );
   }
 
+  void openEpisodeList() {
+    final controller = context.read<PlayerController>();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return BlocProvider.value(
+          value: controller,
+          child: Dialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(20)),
+            clipBehavior: Clip.antiAlias,
+            constraints: const BoxConstraints(maxWidth: 500, maxHeight: 500),
+            child: Stack(
+              alignment: .bottomRight,
+              children: [
+                EpisodesList(onItemPressed: () => Navigator.pop(context)),
+                Positioned(
+                  bottom: 10,
+                  right: 10,
+                  child: FilledButton.icon(
+                    onPressed: () => Navigator.pop(context),
+                    icon: Icon(Icons.keyboard_arrow_left),
+                    label: Text("Ortga"),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Map<ShortcutActivator, VoidCallback> get keyBindings => <ShortcutActivator, VoidCallback>{
+    const SingleActivator(LogicalKeyboardKey.keyF): () =>
+        controller.toggleFullscreen(context, widget),
+    const SingleActivator(LogicalKeyboardKey.space, includeRepeats: false): () {
+      showControls();
+      controller.togglePlay();
+    },
+    const SingleActivator(LogicalKeyboardKey.arrowLeft): () => skip(-5),
+    const SingleActivator(LogicalKeyboardKey.arrowRight): () => skip(5),
+    const SingleActivator(LogicalKeyboardKey.arrowUp): controller.upVolume,
+    const SingleActivator(LogicalKeyboardKey.arrowDown): controller.downVolume,
+    const SingleActivator(LogicalKeyboardKey.enter): () {
+      if (controller.state.hasIntro) controller.skipIntro();
+    },
+  };
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext root) {
     return Theme(
       data: ThemeData(
+        useMaterial3: true,
         iconButtonTheme: IconButtonThemeData(
-          style: ButtonStyle(iconColor: WidgetStatePropertyAll(Colors.white)),
+          style: ButtonStyle(
+            mouseCursor: WidgetStatePropertyAll(SystemMouseCursors.click),
+            iconColor: WidgetStatePropertyAll(Colors.white),
+            backgroundColor: WidgetStatePropertyAll(
+              context.appColors.primaryContainer.withAlpha(150),
+            ),
+            foregroundColor: WidgetStatePropertyAll(context.appColors.primary),
+          ),
         ),
       ),
-      child: BlocBuilder<PlayerController, PlayerStates>(
-        builder: (context, state) {
-          switch (state) {
-            case PlayerError():
-              return Container(
-                color: Colors.black,
-                alignment: AlignmentGeometry.center,
-                child: Text(state.message, style: TextStyle(color: Colors.white)),
+      child: CallbackShortcuts(
+        bindings: keyBindings,
+        child: BlocBuilder<PlayerController, PlayerStates>(
+          buildWhen: (previous, current) => previous.diffirence(current) > 0,
+          builder: (_, state) => LayoutBuilder(
+            builder: (_, constraints) {
+              final isMobile = isMobilePlatform || constraints.maxWidth < MOBILE_WIDTH;
+              final main = Focus(
+                autofocus: true,
+                child: Stack(
+                  fit: StackFit.expand,
+                  alignment: AlignmentGeometry.center,
+                  children: [videoElement(isMobile), controls(isMobile)],
+                ),
               );
-            case PlayerReady():
-              return LayoutBuilder(
-                builder: (context, constraints) {
-                  final isMobile = isMobilePlatform || constraints.maxWidth < 500;
-                  final controller = context.read<PlayerController>();
-                  final state = controller.state as PlayerReady;
-
-                  return Stack(
-                    fit: StackFit.expand,
-                    alignment: AlignmentGeometry.center,
-                    children: [
-                      Video(controller: controller.controller, controls: NoVideoControls),
-                      skippers(controller),
-
-                      Positioned(
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        child: Row(
-                          mainAxisAlignment: .spaceBetween,
-                          children: [
-                            topControlsContainer(
-                              Text(
-                                state.currentMedia.extras?['title'] ?? '',
-                                style: TextStyle(fontSize: 20, color: Colors.white),
-                              ),
-                            ),
-                            if (isMobile)
-                              topControlsContainer(
-                                Row(
-                                  crossAxisAlignment: .center,
-                                  children: [
-                                    IconButton(
-                                      onPressed: () => openSettings(context, state, controller),
-                                      iconSize: 30,
-                                      padding: EdgeInsets.all(10),
-                                      color: Colors.white,
-                                      icon: Icon(Icons.settings),
-                                    ),
-                                    IconButton(
-                                      onPressed: () => controller.toggleFullscreen(context, widget),
-                                      iconSize: 30,
-                                      padding: EdgeInsets.all(10),
-                                      color: Colors.white,
-                                      icon: Icon(
-                                        state.isFullscreen
-                                            ? Icons.fullscreen_exit
-                                            : Icons.fullscreen,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        child: playerControls(context, isMobile, controller, state),
-                      ),
-                      Row(
-                        crossAxisAlignment: .center,
-                        mainAxisAlignment: .center,
-                        spacing: 20,
-                        children: [
-                          IconButton(
-                            onPressed: controller.previousMedia,
-                            padding: EdgeInsets.all(10),
-                            iconSize: 40,
-                            icon: Icon(Icons.fast_rewind),
-                          ),
-                          IconButton(
-                            onPressed: controller.togglePlay,
-                            padding: EdgeInsets.all(10),
-                            iconSize: 50,
-                            isSelected: state.isPaused,
-                            selectedIcon: Icon(Icons.play_arrow),
-                            icon: Icon(Icons.pause),
-                          ),
-                          IconButton(
-                            onPressed: controller.nextMedia,
-                            padding: EdgeInsets.all(10),
-                            iconSize: 40,
-                            icon: Icon(Icons.fast_forward),
-                          ),
-                        ],
-                      ),
-                      if (state.buffering) Center(child: CircularProgressIndicator.adaptive()),
-                    ],
-                  );
-                },
+              if (isMobile) {
+                return GestureDetector(
+                  excludeFromSemantics: true,
+                  behavior: HitTestBehavior.opaque,
+                  onTap: toggleControls,
+                  child: main,
+                );
+              }
+              return MouseRegion(
+                cursor: isControlsVisible ? MouseCursor.defer : SystemMouseCursors.none,
+                onExit: (event) => setState(() => isControlsVisible = false),
+                onHover: (event) => showControls(),
+                onEnter: (event) => showControls(),
+                child: Listener(
+                  onPointerMove: (event) => showControls(),
+                  onPointerDown: (event) => showControls(),
+                  onPointerUp: (event) => showControls(),
+                  child: main,
+                ),
               );
-            default:
-              return Text("");
-          }
-        },
-      ),
-    );
-  }
-
-  Widget topControlsContainer(Widget child) {
-    return Container(
-      margin: EdgeInsets.all(10),
-      child: Material(
-        color: Colors.black38,
-        borderRadius: BorderRadius.circular(10),
-        child: Container(
-          height: 60,
-          alignment: AlignmentGeometry.center,
-          padding: EdgeInsetsGeometry.symmetric(horizontal: 30),
-          child: child,
-        ),
-      ),
-    );
-  }
-
-  int forwardSkipSteps = 0;
-  int backwardSkipSteps = 0;
-
-  Timer? _debounce;
-
-  Row skippers(PlayerController controller) {
-    return Row(
-      mainAxisAlignment: .spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Expanded(child: skipper(controller, -5)),
-        Expanded(child: skipper(controller, 5)),
-      ],
-    );
-  }
-
-  InkWell skipper(PlayerController controller, int step) {
-    void skip() async {
-      setState(() {
-        if (step < 0) {
-          backwardSkipSteps += step;
-        } else {
-          forwardSkipSteps += step;
-        }
-      });
-      await controller.skip(Duration(seconds: step));
-
-      if (_debounce?.isActive ?? false) _debounce!.cancel();
-      _debounce = Timer(
-        const Duration(seconds: 2),
-        () => setState(() {
-          backwardSkipSteps = 0;
-          forwardSkipSteps = 0;
-        }),
-      );
-    }
-
-    final skipping = (step < 0 && backwardSkipSteps != 0) || (step > 0 && forwardSkipSteps != 0);
-    return InkWell(
-      onDoubleTap: skip,
-      child: AnimatedOpacity(
-        duration: Duration(milliseconds: skipping ? 200 : 0),
-        opacity: skipping ? 1 : 0,
-        child: Align(
-          alignment: AlignmentGeometry.center,
-          child: Text(
-            step < 0 ? "$backwardSkipSteps" : "$forwardSkipSteps",
-            style: TextStyle(color: Colors.white, fontSize: 50),
+            },
           ),
         ),
       ),
     );
   }
 
-  Widget playerControls(
-    BuildContext context,
-    bool isMobile,
-    PlayerController controller,
-    PlayerReady state,
-  ) => Container(
-    color: Colors.black45,
-    padding: EdgeInsets.symmetric(horizontal: isMobile ? 10 : 20, vertical: 10),
-    child: Column(
-      mainAxisSize: .min,
-      spacing: 10,
-      children: [
-        timeBar(state, isMobile, controller),
-        if (!isMobilePlatform) desktopControls(controller, state, isMobile, context),
-      ],
-    ),
+  Widget videoElement(bool isMobile) => GestureDetector(
+    onTap: () {
+      if (!isMobile) controller.togglePlay();
+    },
+    child: Video(controller: controller.controller, controls: NoVideoControls),
   );
 
-  Widget timeBar(PlayerReady state, bool isMobile, PlayerController controller) {
-    return ProgressBar(
-      thumbCanPaintOutsideBar: false,
-      thumbColor: Color(0xFFFF0000),
-      bufferedBarColor: Colors.white38,
-      barCapShape: BarCapShape.square,
-      progressBarColor: Color(0xFFFF0000),
-      thumbGlowColor: Color(0x60FF0000),
-      baseBarColor: Colors.white38,
-      timeLabelTextStyle: TextStyle(color: Colors.white),
-      thumbRadius: 7,
-      thumbGlowRadius: 13,
-      barHeight: 5,
-      progress: state.time,
-      buffered: state.buffer,
-      total: state.duration,
-      timeLabelLocation: isMobile ? TimeLabelLocation.above : TimeLabelLocation.sides,
-      timeLabelPadding: 10,
-      onSeek: (value) => controller.seek(value),
+  Stack controls(bool isMobile) {
+    return Stack(
+      alignment: AlignmentGeometry.center,
+      fit: StackFit.expand,
+      children: [
+        if (controller.state.buffering)
+          Center(
+            child: SizedBox(
+              height: 100,
+              width: 100,
+              child: CircularProgressIndicator.adaptive(
+                valueColor: AlwaysStoppedAnimation(context.appColors.primary),
+              ),
+            ),
+          ),
+        skippers(isMobile),
+        AnimatedOpacity(
+          opacity: isControlsVisible ? 1 : 0,
+          duration: Duration(milliseconds: 100),
+          child: Stack(
+            alignment: AlignmentGeometry.center,
+            fit: .expand,
+            children: [
+              if (isMobile) topControls(isMobile),
+              playerControls(isMobile),
+              if (!controller.state.buffering) overlayControls(isMobile),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
-  Widget desktopControls(
-    PlayerController controller,
-    PlayerReady state,
-    bool isMobile,
-    BuildContext context,
-  ) {
+  Widget skippers(bool isMobile) {
+    Widget skipper(int step, bool isMobile) {
+      final skipping = (step < 0 && backwardSkipSteps != 0) || (step > 0 && forwardSkipSteps != 0);
+      final child = AnimatedOpacity(
+        duration: Duration(milliseconds: skipping ? 200 : 0),
+        opacity: skipping ? 1 : 0,
+        child: Align(
+          alignment: AlignmentGeometry.center,
+          child: Text(
+            step < 0 ? "$backwardSkipSteps" : "+$forwardSkipSteps",
+            style: TextStyle(color: Colors.white, fontSize: 50),
+          ),
+        ),
+      );
+      if (!isMobile) return child;
+      return GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onDoubleTap: () => skip(step),
+        onTap: toggleControls,
+        child: child,
+      );
+    }
+
     return Row(
       mainAxisAlignment: .spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Row(
-          children: [
-            IconButton(
-              onPressed: controller.togglePlay,
-              icon: Icon(state.isPaused ? Icons.play_arrow : Icons.pause),
-            ),
-            IconButton(
-              onPressed: controller.toggleMute,
-              icon: Icon(state.isMuted ? Icons.volume_off : Icons.volume_up),
-            ),
-            SizedBox(
-              width: 100,
-              child: SliderTheme(
-                data: SliderTheme.of(context).copyWith(
-                  trackHeight: 3.0,
-                  thumbShape: RoundSliderThumbShape(enabledThumbRadius: 7.0),
-                  overlayShape: RoundSliderOverlayShape(overlayRadius: 10.0),
+        Expanded(child: skipper(-5, isMobile)),
+        Expanded(child: skipper(5, isMobile)),
+      ],
+    );
+  }
+
+  Widget topControls(bool isMobile) {
+    return BlocSelector<PlayerController, PlayerStates, bool>(
+      selector: (state) => state.isFullscreen,
+      builder: (context, isFullscreen) {
+        return Positioned(
+          top: 0,
+          right: 0,
+          child: Container(
+            margin: EdgeInsets.all(10),
+            height: 50,
+            alignment: AlignmentGeometry.center,
+            padding: EdgeInsetsGeometry.symmetric(horizontal: 10, vertical: 5),
+            child: Row(
+              crossAxisAlignment: .center,
+              mainAxisAlignment: .spaceBetween,
+              spacing: 7,
+              children: [
+                IconButton(
+                  onPressed: openEpisodeList,
+                  iconSize: 25,
+                  padding: EdgeInsets.all(0),
+                  icon: Icon(Icons.list),
                 ),
-                child: Slider(
-                  thumbColor: Colors.white,
-                  activeColor: Colors.white,
-                  inactiveColor: Colors.white54,
-                  value: state.volume,
-                  max: 100,
-                  onChanged: (value) => controller.setVolume(value),
+                IconButton(
+                  onPressed: openSettings,
+                  iconSize: 25,
+                  padding: EdgeInsets.all(0),
+                  icon: Icon(Icons.settings),
+                ),
+                IconButton(
+                  onPressed: () => controller.toggleFullscreen(context, widget),
+                  iconSize: 25,
+                  padding: EdgeInsets.all(0),
+                  icon: Icon(isFullscreen ? Icons.fullscreen_exit : Icons.fullscreen),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget overlayControls(bool isMobile) {
+    return Row(
+      crossAxisAlignment: .center,
+      mainAxisAlignment: .center,
+      spacing: 20,
+      children: [
+        if (isMobile)
+          Opacity(
+            opacity: controller.state.isFirst ? 0 : 1,
+            child: IconButton(
+              onPressed: controller.previousEpisode,
+              padding: EdgeInsets.all(10),
+              iconSize: 40,
+              icon: Icon(Icons.skip_previous),
+            ),
+          ),
+        if (isMobile || controller.state.isPaused)
+          IconButton(
+            onPressed: controller.togglePlay,
+            padding: EdgeInsets.all(10),
+            iconSize: 50,
+            isSelected: controller.state.isPaused,
+            selectedIcon: Icon(Icons.play_arrow),
+            icon: Icon(Icons.pause),
+          ),
+        if (isMobile)
+          Opacity(
+            opacity: controller.state.isLast ? 0 : 1,
+            child: IconButton(
+              onPressed: controller.nextEpisode,
+              padding: EdgeInsets.all(10),
+              iconSize: 40,
+              icon: Icon(Icons.skip_next),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget playerControls(bool isMobile) {
+    final state = controller.state;
+    return Positioned(
+      bottom: 0,
+      left: 0,
+      right: 0,
+      child: Column(
+        children: [
+          if (state.hasIntro)
+            Align(
+              alignment: AlignmentGeometry.centerEnd,
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 30, right: 30),
+                child: InkWell(
+                  onTap: controller.skipIntro,
+                  child: Ink(
+                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6),
+                      color: context.appColors.primary,
+                    ),
+                    child: Text(
+                      "Introni o'tkazish",
+                      style: TextStyle(color: context.appColors.onPrimary),
+                    ),
+                  ),
                 ),
               ),
             ),
-          ],
-        ),
-        Row(
-          children: [
-            IconButton(
-              onPressed: () => controller.toggleFullscreen(context, widget),
-              icon: Icon(state.isFullscreen ? Icons.fullscreen_exit : Icons.fullscreen),
+          Container(
+            color: context.appColors.onPrimary.withAlpha(80),
+            padding: EdgeInsets.symmetric(horizontal: isMobile ? 10 : 20, vertical: 10),
+            child: Column(
+              mainAxisSize: .min,
+              spacing: 10,
+              children: [
+                if (isMobile)
+                  Align(
+                    alignment: AlignmentGeometry.centerStart,
+                    child: Text(
+                      "${state.episode.episodeNumber}-qism: ${state.episode.title.uz}",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        color: context.appColors.onPrimaryContainer,
+                      ),
+                    ),
+                  ),
+                BlocBuilder<PlayerController, PlayerStates>(
+                  builder: (_, state) {
+                    return MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: ProgressBar(
+                        progress: state.time,
+                        progressBarColor: context.appColors.primary,
+                        buffered: state.buffer,
+                        bufferedBarColor: context.appColors.primaryFixed.withAlpha(100),
+                        total: state.duration,
+                        barHeight: 5,
+                        baseBarColor: context.appColors.onPrimary.withAlpha(100),
+                        barCapShape: BarCapShape.round,
+                        thumbRadius: 7,
+                        thumbColor: context.appColors.primaryFixed,
+                        thumbGlowRadius: 13,
+                        thumbGlowColor: context.appColors.primaryFixedDim.withAlpha(100),
+                        thumbCanPaintOutsideBar: false,
+                        timeLabelPadding: 10,
+                        timeLabelTextStyle: TextStyle(
+                          color: context.appColors.primary,
+                          fontWeight: FontWeight.bold,
+                          fontSize: isMobile ? 12 : 16,
+                        ),
+                        timeLabelLocation: isMobile
+                            ? TimeLabelLocation.below
+                            : TimeLabelLocation.sides,
+                        onSeek: (value) => controller.seek(value),
+                      ),
+                    );
+                  },
+                ),
+                if (!isMobile)
+                  Row(
+                    mainAxisAlignment: .spaceBetween,
+                    children: [
+                      Row(
+                        spacing: 7,
+                        children: [
+                          IconButton(
+                            constraints: BoxConstraints.tightFor(width: 50, height: 50),
+                            iconSize: 35,
+                            onPressed: controller.togglePlay,
+                            isSelected: state.isPaused,
+                            selectedIcon: Icon(Icons.play_arrow),
+                            icon: Icon(Icons.pause),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              color: context.appColors.primaryContainer.withAlpha(150),
+                            ),
+                            child: Row(
+                              children: [
+                                if (!state.isFirst)
+                                  IconButton(
+                                    style: ButtonStyle(
+                                      backgroundColor: WidgetStatePropertyAll(Colors.transparent),
+                                    ),
+                                    onPressed: controller.previousEpisode,
+                                    icon: Icon(Icons.skip_previous),
+                                  ),
+                                if (!state.isLast)
+                                  IconButton(
+                                    style: ButtonStyle(
+                                      backgroundColor: WidgetStatePropertyAll(Colors.transparent),
+                                    ),
+                                    onPressed: controller.nextEpisode,
+                                    icon: Icon(Icons.skip_next),
+                                  ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              color: context.appColors.primaryContainer.withAlpha(150),
+                            ),
+                            child: Row(
+                              children: [
+                                IconButton(
+                                  onPressed: controller.toggleMute,
+                                  style: ButtonStyle(
+                                    backgroundColor: WidgetStatePropertyAll(Colors.transparent),
+                                  ),
+                                  icon: Icon(
+                                    state.isMuted
+                                        ? Icons.volume_mute
+                                        : state.volume <= 50
+                                        ? Icons.volume_down
+                                        : Icons.volume_up,
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.only(right: 10),
+                                  width: 100,
+                                  child: SliderTheme(
+                                    data: SliderTheme.of(context).copyWith(
+                                      trackHeight: 3.0,
+                                      thumbShape: RoundSliderThumbShape(enabledThumbRadius: 7.0),
+                                      overlayShape: RoundSliderOverlayShape(overlayRadius: 10.0),
+                                    ),
+                                    child: Slider(
+                                      thumbColor: context.appColors.primaryFixed,
+                                      activeColor: context.appColors.primary,
+                                      inactiveColor: context.appColors.onPrimary.withAlpha(100),
+                                      divisions: 10,
+                                      value: state.volume,
+                                      max: 100,
+                                      onChanged: (value) => controller.setVolume(value),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        spacing: 7,
+                        children: [
+                          IconButton(onPressed: openEpisodeList, icon: Icon(Icons.list)),
+                          IconButton(onPressed: openSettings, icon: Icon(Icons.settings)),
+                          IconButton(
+                            onPressed: () => controller.toggleFullscreen(context, widget),
+                            icon: Icon(
+                              state.isFullscreen ? Icons.fullscreen_exit : Icons.fullscreen,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+              ],
             ),
-          ],
-        ),
-      ],
+          ),
+        ],
+      ),
     );
   }
 }
