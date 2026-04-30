@@ -11,9 +11,11 @@ class Responsive extends InheritedWidget {
   factory Responsive.of(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<Responsive>()!;
   }
-  bool get isMobile => constraints.maxWidth < (mobileWidth ?? MOBILE_WIDTH);
+  bool get isMobileWidth => constraints.maxWidth < (mobileWidth ?? MOBILE_WIDTH);
   bool get isMobilePlatform => Platform.isAndroid || Platform.isIOS;
   bool get isDesktopPlatform => Platform.isLinux || Platform.isMacOS || Platform.isWindows;
+  bool get isMobile => isMobileWidth || isMobilePlatform;
+  bool get isDesktop => !isMobileWidth || isDesktopPlatform;
 
   @override
   bool updateShouldNotify(covariant Responsive oldWidget) {

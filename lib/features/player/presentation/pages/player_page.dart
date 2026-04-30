@@ -1,4 +1,5 @@
 import 'package:application/features/player/presentation/cubit/player_controller.dart';
+import 'package:application/features/player/presentation/cubit/player_states.dart';
 import 'package:application/features/player/presentation/widgets/video_controls.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,7 +12,16 @@ class PlayerPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = context.read<PlayerController>();
     return Scaffold(
-      body: Video(controller: controller.controller, controls: (state) => VideoControls()),
+      body: BlocSelector<PlayerController, PlayerStates, BoxFit>(
+        selector: (state) => state.fit,
+        builder: (context, fit) {
+          return Video(
+            controller: controller.controller,
+            fit: fit,
+            controls: (state) => VideoControls(),
+          );
+        },
+      ),
     );
   }
 }
