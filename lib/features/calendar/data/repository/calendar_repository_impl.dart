@@ -1,4 +1,4 @@
-import 'package:application/core/utils/utils.dart';
+import 'package:application/core/utils/extensions.dart';
 import 'package:application/features/calendar/data/mapper/calendar_mapper.dart';
 import 'package:application/features/calendar/data/models/calendar_model.dart';
 import 'package:application/features/calendar/data/source/local/calendar_local.dart';

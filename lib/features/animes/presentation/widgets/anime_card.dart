@@ -9,7 +9,9 @@ import 'package:intl/intl.dart';
 
 class AnimeCard extends StatelessWidget {
   final AnimeEntity anime;
-  const AnimeCard({super.key, required this.anime});
+  final bool? expand;
+  const AnimeCard({super.key, required this.anime, this.expand});
+
   void _showCustomMenu(
     BuildContext context,
     Offset position, {
@@ -42,12 +44,13 @@ class AnimeCard extends StatelessWidget {
     ],
   );
   static double aspectRatio = 9 / 15;
+  static double width = 150;
 
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
     return SizedBox(
-      width: isMobile ? 150 : 180,
+      width: (expand != null && expand!) ? double.infinity : (isMobile ? 150 : 180),
       child: Stack(
         children: [
           AspectRatio(

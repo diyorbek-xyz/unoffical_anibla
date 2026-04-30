@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:application/features/player/data/model/timeline_model.dart';
+import 'package:application/features/player/data/source/local/timeline.dart';
 import 'package:application/features/player/presentation/cubit/player_controller.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:window_manager/window_manager.dart';
@@ -101,20 +105,22 @@ Future<void> initializeDependencies() async {
   await Hive.initFlutter("${cacheDir.path}/boxes/");
   Hive.registerAdapters();
 
-  // Setup window manager
-  await windowManager.ensureInitialized();
-  WindowOptions windowOptions = WindowOptions(
-    size: Size(800, 600),
-    center: true,
-    backgroundColor: Colors.transparent,
-    skipTaskbar: false,
-    titleBarStyle: TitleBarStyle.hidden,
-  );
+  if (Platform.isLinux || Platform.isMacOS || Platform.isWindows) {
+    // Setup window manager
+    await windowManager.ensureInitialized();
+    WindowOptions windowOptions = WindowOptions(
+      size: Size(800, 600),
+      center: true,
+      backgroundColor: Colors.transparent,
+      skipTaskbar: false,
+      titleBarStyle: TitleBarStyle.hidden,
+    );
 
-  windowManager.waitUntilReadyToShow(windowOptions, () async {
-    await windowManager.show();
-    await windowManager.focus();
-  });
+    windowManager.waitUntilReadyToShow(windowOptions, () async {
+      await windowManager.show();
+      await windowManager.focus();
+    });
+  }
 
   // Setup miscs;
   await dotenv.load(fileName: '.env');
@@ -127,6 +133,7 @@ Future<void> initializeDependencies() async {
   final sliderBox = await Hive.openBox<SliderModel>("sliderBox");
   final downloadsBox = await Hive.openBox<DownloadModel>("downloadsBox");
   final historyBox = await Hive.openBox<AnimeModel>("historyBox");
+  final timelineBox = await Hive.openBox<TimelineModel>("timelineBox");
 
   // Register / Setup network logic;
   sl.registerSingleton<FlutterSecureStorage>(secureStorage);
@@ -142,6 +149,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<Box<ProfileModel>>(profileBox);
   sl.registerSingleton<Box<SliderModel>>(sliderBox);
   sl.registerSingleton<Box<DownloadModel>>(downloadsBox);
+  sl.registerSingleton<Box<TimelineModel>>(timelineBox);
 
   // Register miscs;
   sl.registerSingleton<Dio>(dio);
@@ -168,6 +176,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<SliderLocal>(SliderLocalImpl(sl()));
   sl.registerSingleton<HistoryLocal>(HistoryLocalImpl(sl(instanceName: 'history')));
   sl.registerSingleton<DownloadsLocal>(DownloadsLocalImpl(sl()));
+  sl.registerSingleton<Timeline>(TimelineImpl(sl()));
 
   // Register Repositories;
   sl.registerSingleton<SliderRepository>(SliderRepositoryImpl(sl(), sl()));
@@ -190,7 +199,7 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<AnimeBloc>(() => AnimeBloc(sl()));
   sl.registerFactory<SeasonBloc>(() => SeasonBloc(sl()));
   sl.registerFactory<GenreBloc>(() => GenreBloc(sl()));
-  sl.registerFactory<EpisodeBloc>(() => EpisodeBloc(sl()));
+  sl.registerFactory<EpisodeBloc>(() => EpisodeBloc(sl(), sl()));
   sl.registerFactory<CommentBloc>(() => CommentBloc(sl()));
   sl.registerFactory<TemplateBloc>(() => TemplateBloc(sl()));
   sl.registerFactory<VideoBloc>(() => VideoBloc(sl()));
@@ -198,5 +207,5 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<SearchBloc>(() => SearchBloc(sl()));
   sl.registerFactory<HistoryBloc>(() => HistoryBloc(sl()));
 
-  sl.registerFactory<PlayerController>(() => PlayerController());
+  sl.registerFactory<PlayerController>(() => PlayerController(sl(), sl()));
 }

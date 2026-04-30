@@ -1,6 +1,7 @@
 import 'package:application/features/animes/data/mapper/episode_mapper.dart';
 import 'package:application/features/animes/data/models/episode_model.dart';
 import 'package:application/features/animes/domain/entities/episode_entity.dart';
+import 'package:flutter/material.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 
@@ -10,11 +11,9 @@ final class PlayerStates {
   final String? error;
   final bool isMuted;
   final bool isFullscreen;
-  final Duration time;
   final double volume;
   final Duration duration;
   final bool buffering;
-  final Duration buffer;
   final Tracks tracks;
   final VideoTrack videoTrack;
   final EpisodeEntity episode;
@@ -23,13 +22,19 @@ final class PlayerStates {
   final bool hasIntro;
   final bool isFirst;
   final bool isLast;
+  final BoxFit fit;
+  final Stream<Duration> progressStream;
+  final Stream<Duration> bufferStream;
+  final Duration seekProgress;
 
   const PlayerStates({
-    required this.buffer,
+    required this.seekProgress,
+    required this.fit,
+    required this.progressStream,
+    required this.bufferStream,
     required this.isFullscreen,
     required this.isMuted,
     required this.isPaused,
-    required this.time,
     required this.volume,
     required this.duration,
     required this.buffering,
@@ -49,12 +54,10 @@ final class PlayerStates {
     bool? isPaused,
     bool? isMuted,
     bool? isFullscreen,
-    Duration? time,
     double? volume,
     EpisodeEntity? episode,
     VideoController? controller,
     Duration? duration,
-    Duration? buffer,
     bool? buffering,
     Tracks? tracks,
     VideoTrack? videoTrack,
@@ -65,8 +68,16 @@ final class PlayerStates {
     bool? isLast,
     bool? hasError,
     String? error,
+    BoxFit? fit,
+    Stream<Duration>? progressStream,
+    Stream<Duration>? bufferStream,
+    Duration? seekProgress,
   }) {
     return PlayerStates(
+      seekProgress: seekProgress ?? this.seekProgress,
+      progressStream: progressStream ?? this.progressStream,
+      bufferStream: bufferStream ?? this.bufferStream,
+      fit: fit ?? this.fit,
       hasError: hasError ?? this.hasError,
       error: error ?? this.error,
       isFirst: isFirst ?? this.isFirst,
@@ -76,14 +87,12 @@ final class PlayerStates {
       episodes: episodes ?? this.episodes,
       videoTrack: videoTrack ?? this.videoTrack,
       tracks: tracks ?? this.tracks,
-      buffer: buffer ?? this.buffer,
       buffering: buffering ?? this.buffering,
       duration: duration ?? this.duration,
       episode: episode ?? this.episode,
       isFullscreen: isFullscreen ?? this.isFullscreen,
       isMuted: isMuted ?? this.isMuted,
       isPaused: isPaused ?? this.isPaused,
-      time: time ?? this.time,
       volume: volume ?? this.volume,
     );
   }
@@ -111,6 +120,10 @@ final class PlayerStates {
 
   factory PlayerStates.empty() {
     return PlayerStates(
+      seekProgress: Duration.zero,
+      progressStream: Stream.empty(),
+      bufferStream: Stream.empty(),
+      fit: BoxFit.contain,
       hasError: true,
       error: "empty",
       skip: [],
@@ -119,7 +132,6 @@ final class PlayerStates {
       hasIntro: false,
       videoTrack: VideoTrack("", "", ""),
       tracks: Tracks(),
-      buffer: Duration(),
       buffering: true,
       duration: Duration(),
       episode: EpisodeMapper.modelToEntity(EpisodeModel()),
@@ -127,7 +139,6 @@ final class PlayerStates {
       isFullscreen: false,
       isMuted: false,
       isPaused: false,
-      time: Duration(),
       volume: 100.0,
     );
   }

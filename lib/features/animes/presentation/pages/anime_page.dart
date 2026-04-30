@@ -166,7 +166,10 @@ class _AnimePageState extends State<AnimePage> {
 
   SliverAppBar appBar(BuildContext context, AnimeEntity anime, bool innerBoxIsScrolled) {
     return SliverAppBar.medium(
-      leading: IconButton(onPressed: () => context.pop(), icon: Icon(Icons.keyboard_arrow_left)),
+      leading: Skeleton.ignore(
+        ignore: true,
+        child: IconButton(onPressed: () => context.pop(), icon: Icon(Icons.keyboard_arrow_left)),
+      ),
       automaticallyImplyLeading: true,
       scrolledUnderElevation: 0.0,
       toolbarHeight: kToolbarHeight,

@@ -40,6 +40,7 @@ dependencies:
     url_launcher: ^6.3.2
     window_manager: 
     audio_video_progress_bar:
+    rxdart:
 
 dev_dependencies:
     flutter_test:

@@ -12,6 +12,7 @@ import 'package:application/features/common/data/models/item_model.dart';
 import 'package:application/features/common/data/models/pagination.dart';
 import 'package:application/features/common/data/models/translated.dart';
 import 'package:application/features/explore/data/models/genre_model.dart';
+import 'package:application/features/player/data/model/timeline_model.dart';
 import 'package:application/features/profile/data/models/profile_model.dart';
 import 'package:application/features/profile/data/models/session_model.dart';
 import 'package:application/features/slider/data/models/slider_model.dart';
@@ -31,6 +32,7 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(SessionsModelAdapter());
     registerAdapter(SliderModelAdapter());
     registerAdapter(TemplateModelAdapter());
+    registerAdapter(TimelineModelAdapter());
     registerAdapter(TimerModelAdapter());
     registerAdapter(TranslatedModelAdapter());
   }
@@ -50,6 +52,7 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
     registerAdapter(SessionsModelAdapter());
     registerAdapter(SliderModelAdapter());
     registerAdapter(TemplateModelAdapter());
+    registerAdapter(TimelineModelAdapter());
     registerAdapter(TimerModelAdapter());
     registerAdapter(TranslatedModelAdapter());
   }

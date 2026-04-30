@@ -1,4 +1,4 @@
-import 'package:application/core/utils/utils.dart';
+import 'package:application/core/utils/extensions.dart';
 import 'package:application/features/calendar/domain/entities/calendar_entity.dart';
 import 'package:application/features/calendar/domain/repository/calendar_repository.dart';
 import 'package:application/features/calendar/presentation/bloc/calendar_event.dart';

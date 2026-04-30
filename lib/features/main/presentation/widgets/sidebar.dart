@@ -8,6 +8,8 @@ class Sidebar extends StatefulWidget {
   final StatefulNavigationShell shell;
   const Sidebar({super.key, required this.shell});
 
+  double get width => 200;
+
   @override
   State<Sidebar> createState() => _SidebarState();
 }
@@ -20,11 +22,10 @@ class _SidebarState extends State<Sidebar> {
 
   @override
   Widget build(BuildContext context) {
-    final double width = 200;
     return NavigationRail(
       trailingAtBottom: true,
       trailing: Container(
-        width: width,
+        width: widget.width,
         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
         child: Column(
           crossAxisAlignment: .start,
@@ -62,7 +63,7 @@ class _SidebarState extends State<Sidebar> {
         ),
       ),
       leadingAtTop: true,
-      minExtendedWidth: width,
+      minExtendedWidth: widget.width,
       extended: expanded,
       selectedIndex: widget.shell.currentIndex,
       labelType: expanded ? NavigationRailLabelType.none : NavigationRailLabelType.all,
@@ -79,7 +80,12 @@ class _SidebarState extends State<Sidebar> {
     );
   }
 
-  Column footerLink({required String label, required String linkName, required String link,required IconData icon}) {
+  Column footerLink({
+    required String label,
+    required String linkName,
+    required String link,
+    required IconData icon,
+  }) {
     return Column(
       crossAxisAlignment: .start,
       spacing: 3,

@@ -1,4 +1,5 @@
 import 'package:application/core/config/theme/app_colors.dart';
+import 'package:application/features/common/presentation/widgets/responsive.dart';
 import 'package:flutter/material.dart';
 
 enum ListPosition {
@@ -82,36 +83,46 @@ class ListsWidget extends StatelessWidget {
       separatorBuilder: (context, index) => SizedBox(height: spacing),
       itemBuilder: (context, index) {
         final list = items[index];
+        final responsive = Responsive.of(context);
+        if (responsive.isMobile) {
+          return ListTile(
+            textColor: context.appColors.primaryFixed,
+            iconColor: context.appColors.primaryFixed,
+            contentPadding: EdgeInsets.symmetric(vertical: 3, horizontal: 18),
+            leading: Padding(padding: EdgeInsetsGeometry.only(right: 5), child: Icon(list.icon)),
+            title: Text(list.label),
+            onTap: () {},
+            subtitle: Text(list.value, style: TextStyle(color: context.appColors.primaryFixedDim)),
+            trailing: (list.actions != null && list.actions!.isNotEmpty)
+                ? Row(mainAxisSize: MainAxisSize.min, children: list.actions!)
+                : null,
+          );
+        }
         return ListWidget(item: list, borderRadius: borderRadius.fromIndex(index, items.length));
       },
     );
   }
 }
 
-class ListWidget extends StatefulWidget {
+class ListWidget extends StatelessWidget {
   final ListModel item;
   final BorderRadiusGeometry borderRadius;
   const ListWidget({super.key, required this.item, required this.borderRadius});
 
-  @override
-  State<ListWidget> createState() => _ListWidgetState();
-}
-
-class _ListWidgetState extends State<ListWidget> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
       tileColor: context.appColors.primaryContainer,
       textColor: context.appColors.primaryFixed,
       iconColor: context.appColors.primaryFixed,
-      shape: RoundedRectangleBorder(borderRadius: widget.borderRadius),
+      shape: RoundedRectangleBorder(borderRadius: borderRadius),
       contentPadding: EdgeInsets.symmetric(vertical: 3, horizontal: 18),
-      leading: Padding(padding: EdgeInsetsGeometry.only(right: 5), child: Icon(widget.item.icon)),
-      title: Text(widget.item.label),
+      leading: Padding(padding: EdgeInsetsGeometry.only(right: 5), child: Icon(item.icon)),
+      title: Text(item.label),
       onTap: () {},
-      subtitle: Text(widget.item.value, style: TextStyle(color: context.appColors.primaryFixedDim)),
-      trailing: (widget.item.actions != null && widget.item.actions!.isNotEmpty)
-          ? Row(mainAxisSize: MainAxisSize.min, children: widget.item.actions!)
+      subtitle: Text(item.value, style: TextStyle(color: context.appColors.primaryFixedDim)),
+      trailing: (item.actions != null && item.actions!.isNotEmpty)
+          ? Row(mainAxisSize: MainAxisSize.min, children: item.actions!)
           : null,
     );
   }

@@ -7,9 +7,9 @@ abstract class ProfileLocal {
   Future<void> removeProfile();
 }
 
-class ProfileLocalImpl extends ProfileLocal {
+class ProfileLocalImpl implements ProfileLocal {
   final Box<ProfileModel> profileBox;
-  ProfileLocalImpl(this.profileBox);
+  const ProfileLocalImpl(this.profileBox);
 
   @override
   Future<ProfileModel?> getProfile() async {

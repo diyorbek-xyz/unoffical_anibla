@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/features/animes/data/mapper/episode_mapper.dart';
 import 'package:application/features/animes/domain/entities/episode_entity.dart';
 import 'package:application/features/player/presentation/cubit/player_controller.dart';
@@ -101,40 +101,69 @@ class _EpisodesListState extends State<EpisodesList> {
               ),
               Expanded(
                 child: Material(
-                  clipBehavior: Clip.antiAlias,
+                  clipBehavior: Clip.hardEdge,
                   child: ListView(
+                    physics: BouncingScrollPhysics(),
+                    addRepaintBoundaries: true,
                     children: changeList(data).map((episode) {
                       final isCurrent = isLoading
                           ? false
                           : state.episode.episodeNumber == episode.episodeNumber;
                       return RepaintBoundary(
-                        child: ListTile(
-                          selected: isCurrent,
-                          onTap: () {
-                            if (widget.onItemPressed != null) widget.onItemPressed!();
-                            controller.openEpisode(episode);
-                          },
-                          leading: Tooltip(
-                            message: episode.type == EpisodeType.free ? "Bepul" : "Obuna kerak",
-                            child: Icon(
-                              episode.type == EpisodeType.free
-                                  ? Icons.money_off
-                                  : Icons.attach_money,
-                            ),
-                          ),
-                          isThreeLine: true,
-                          trailing: Row(
-                            mainAxisSize: .min,
-                            children: [
-                              IconButton(
-                                onPressed: () {},
-                                tooltip: "Saqlash",
-                                icon: Icon(Icons.bookmark_outline),
+                        child: Stack(
+                          fit: StackFit.passthrough,
+                          children: [
+                            if (episode.timeline != null)
+                              Positioned(
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                top: 0,
+                                child: LayoutBuilder(
+                                  builder: (_, consts) {
+                                    return Align(
+                                      alignment: .centerStart,
+                                      child: Container(
+                                        width:
+                                            consts.maxWidth *
+                                            (episode.timeline!.progress.inSeconds /
+                                                episode.timeline!.duration.inSeconds),
+                                        color: context.appColors.primary.withAlpha(20),
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
-                            ],
-                          ),
-                          title: Text("${episode.episodeNumber}-qism"),
-                          subtitle: Text(toBeginningOfSentenceCase(episode.title.uz)),
+                            ListTile(
+                              selected: isCurrent,
+                              tileColor: Colors.transparent,
+                              onTap: () {
+                                if (widget.onItemPressed != null) widget.onItemPressed!();
+                                controller.openEpisode(episode);
+                              },
+                              leading: Tooltip(
+                                message: episode.type == EpisodeType.free ? "Bepul" : "Obuna kerak",
+                                child: Icon(
+                                  episode.type == EpisodeType.free
+                                      ? Icons.money_off
+                                      : Icons.attach_money,
+                                ),
+                              ),
+                              isThreeLine: true,
+                              trailing: Row(
+                                mainAxisSize: .min,
+                                children: [
+                                  IconButton(
+                                    onPressed: () {},
+                                    tooltip: "Saqlash",
+                                    icon: Icon(Icons.bookmark_outline),
+                                  ),
+                                ],
+                              ),
+                              title: Text("${episode.episodeNumber}-qism"),
+                              subtitle: Text(toBeginningOfSentenceCase(episode.title.uz)),
+                            ),
+                          ],
                         ),
                       );
                     }).toList(),

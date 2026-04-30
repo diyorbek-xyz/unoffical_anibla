@@ -1,7 +1,7 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/core/constants/icons.dart';
-import 'package:application/core/utils/utils.dart';
+import 'package:application/core/utils/extensions.dart';
 import 'package:application/features/comment/data/mapper/comment_mapper.dart';
 import 'package:application/features/comment/data/models/comment_model.dart';
 import 'package:application/features/comment/domain/entities/comment_entity.dart';

@@ -1,4 +1,4 @@
-import 'package:application/core/utils/utils.dart';
+import 'package:application/core/utils/extensions.dart';
 import 'package:application/features/common/presentation/widgets/list.dart';
 import 'package:application/features/profile/domain/entities/profile_entity.dart';
 import 'package:flutter/material.dart';

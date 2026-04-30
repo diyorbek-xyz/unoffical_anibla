@@ -2,9 +2,12 @@ import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/features/animes/presentation/bloc/anime/anime_bloc.dart';
 import 'package:application/features/animes/presentation/bloc/anime/anime_state.dart';
 import 'package:application/features/animes/presentation/widgets/episodes_list.dart';
-import 'package:application/features/player/presentation/widgets/video_player.dart';
+import 'package:application/features/player/presentation/cubit/player_controller.dart';
+import 'package:application/features/player/presentation/cubit/player_states.dart';
+import 'package:application/features/player/presentation/widgets/video_controls.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 
 class WatchPage extends StatefulWidget {
   final String slug;
@@ -17,6 +20,14 @@ class WatchPage extends StatefulWidget {
 }
 
 class _WatchPageState extends State<WatchPage> {
+  late PlayerController controller;
+
+  @override
+  void initState() {
+    controller = context.read<PlayerController>();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,10 +48,10 @@ class _WatchPageState extends State<WatchPage> {
                       padding: EdgeInsets.symmetric(horizontal: isMobile ? 0 : 16),
                       height: isMobile ? 400 : 500,
                       child: isMobile
-                          ? VideoPlayer()
+                          ? player
                           : Row(
                               children: [
-                                Expanded(flex: 10, child: VideoPlayer()),
+                                Expanded(flex: 10, child: player),
                                 Expanded(flex: 5, child: EpisodesList()),
                               ],
                             ),
@@ -71,4 +82,13 @@ class _WatchPageState extends State<WatchPage> {
       ),
     );
   }
+
+  Widget get player => BlocSelector<PlayerController, PlayerStates, BoxFit>(
+    selector: (state) => state.fit,
+    builder: (context, fit) {
+      return RepaintBoundary(
+        child: Video(controller: controller.controller, fit: fit, controls: (_) => VideoControls()),
+      );
+    },
+  );
 }

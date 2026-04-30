@@ -1,6 +1,6 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
-import 'package:application/core/utils/utils.dart';
+import 'package:application/core/utils/extensions.dart';
 import 'package:application/features/animes/presentation/widgets/anime_card.dart';
 import 'package:application/features/calendar/domain/entities/calendar_entity.dart';
 import 'package:application/features/calendar/presentation/bloc/calendar_bloc.dart';

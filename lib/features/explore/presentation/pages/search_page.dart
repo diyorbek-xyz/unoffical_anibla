@@ -7,6 +7,7 @@ import 'package:application/features/explore/presentation/bloc/history/history_e
 import 'package:application/features/explore/presentation/bloc/history/history_state.dart';
 import 'package:application/features/explore/presentation/bloc/search/search_bloc.dart';
 import 'package:application/features/explore/presentation/bloc/search/search_state.dart';
+import 'package:application/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,7 +28,7 @@ class SearchPage extends StatelessWidget {
         slivers: [
           SliverOverlapInjector(handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context)),
           SliverPadding(
-            padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
+            padding: EdgeInsetsGeometry.symmetric(horizontal: 10, vertical: 10),
             sliver: BlocBuilder<SearchBloc, SearchState>(
               builder: (context, state) {
                 switch (state) {
@@ -65,7 +66,7 @@ class SearchPage extends StatelessWidget {
           case HistoryLoading():
             return SliverFillRemaining(child: Center(child: CircularProgressIndicator()));
           case HistorySuccess():
-            return SliverToBoxAdapter(child: gridView(context, "Tarix", state.anime));
+            return SliverToBoxAdapter(child: gridView(context, "Tarix", state.anime, true));
           default:
             return SliverFillRemaining(child: Center(child: Text("Animelarni qidiring")));
         }
@@ -79,11 +80,17 @@ class SearchPage extends StatelessWidget {
     List<AnimeEntity> animes, [
     bool? isFromHistory,
   ]) {
+    final width = MediaQuery.of(context).size.width;
     return Column(
       crossAxisAlignment: animes.isNotEmpty ? .start : .center,
       spacing: 7,
       children: [
-        Text(title, style: context.textTheme.headlineLarge),
+        Text(
+          title,
+          style: width < MOBILE_WIDTH
+              ? context.textTheme.headlineSmall
+              : context.textTheme.headlineLarge,
+        ),
         GridView.builder(
           shrinkWrap: true,
           itemCount: animes.length,
@@ -95,24 +102,27 @@ class SearchPage extends StatelessWidget {
             childAspectRatio: AnimeCard.aspectRatio,
           ),
           itemBuilder: (context, index) {
-            return Stack(
-              alignment: AlignmentGeometry.topLeft,
-              children: [
-                AnimeCard(anime: animes.elementAt(index)),
-                Positioned(
-                  top: 4,
-                  left: 4,
-                  child: IconButton(
-                    mouseCursor: SystemMouseCursors.click,
-                    color: context.appColors.errorContainer,
-                    onPressed: () => context.read<HistoryBloc>().add(
-                      DeleteFromHistory(animes.elementAt(index).id),
+            if (isFromHistory != null && isFromHistory) {
+              return Stack(
+                alignment: AlignmentGeometry.topLeft,
+                children: [
+                  AnimeCard(expand: true, anime: animes.elementAt(index)),
+                  Positioned(
+                    top: 4,
+                    left: 4,
+                    child: IconButton(
+                      mouseCursor: SystemMouseCursors.click,
+                      color: context.appColors.errorContainer,
+                      onPressed: () => context.read<HistoryBloc>().add(
+                        DeleteFromHistory(animes.elementAt(index).id),
+                      ),
+                      icon: Icon(Icons.delete),
                     ),
-                    icon: Icon(Icons.delete),
                   ),
-                ),
-              ],
-            );
+                ],
+              );
+            }
+            return AnimeCard(expand: true, anime: animes.elementAt(index));
           },
         ),
       ],

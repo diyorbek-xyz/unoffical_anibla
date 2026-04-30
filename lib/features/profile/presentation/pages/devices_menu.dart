@@ -1,5 +1,5 @@
 import 'package:application/core/config/theme/app_colors.dart';
-import 'package:application/core/utils/utils.dart';
+import 'package:application/core/utils/extensions.dart';
 import 'package:application/features/common/presentation/widgets/list.dart';
 import 'package:application/features/profile/data/models/device_model.dart';
 import 'package:application/features/profile/presentation/bloc/profile/profile_bloc.dart';
