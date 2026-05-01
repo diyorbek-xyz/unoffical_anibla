@@ -19,7 +19,7 @@ class SearchPage extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: () async {
         context.read<HistoryBloc>().add(GetHistory());
-        await Future.delayed(Duration(seconds: 2));
+        await Future.delayed(Duration(seconds: 1));
       },
       displacement: 130,
       child: CustomScrollView(

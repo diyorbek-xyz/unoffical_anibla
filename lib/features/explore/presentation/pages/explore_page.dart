@@ -27,7 +27,7 @@ class _ExplorePageState extends State<ExplorePage> with SingleTickerProviderStat
         BlocProvider(create: (context) => sl<HistoryBloc>()..add(GetHistory())),
         BlocProvider(create: (context) => sl<SearchBloc>()),
       ],
-      child: main(),
+      child: SafeArea(top: true, child: main()),
     );
   }
 

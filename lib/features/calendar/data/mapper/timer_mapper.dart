@@ -9,7 +9,7 @@ class TimerMapper {
     id: model?.id ?? "",
     anime: AnimeMapper.modelToEntity(model?.anime, model?.type),
     type: model?.type ?? AnimeType.serie,
-    time: model?.time ?? DateTime(2026),
+    time: (model?.time ?? DateTime(2026)).add(Duration(hours: 5)),
     episode: EpisodeMapper.modelToEntity(model?.episode),
   );
 }

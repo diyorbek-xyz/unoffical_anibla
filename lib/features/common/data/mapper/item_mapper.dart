@@ -8,4 +8,6 @@ class ItemMapper {
     role: model.role ?? "",
     status: model.status ?? false,
   );
+  static ItemModel entityToModel(ItemEntity entity) =>
+      ItemModel(image: entity.image, name: entity.name, role: entity.role, status: entity.status);
 }

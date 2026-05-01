@@ -28,7 +28,10 @@ class Calendar extends StatelessWidget {
             return Text(state.message);
           }
           if (state is CalendarLoading) {
-            return CircularProgressIndicator.adaptive();
+            return SizedBox(
+              height: 400,
+              child: Center(child: CircularProgressIndicator.adaptive()),
+            );
           }
           return Text("loaded");
         },
@@ -46,9 +49,18 @@ class Calendar extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            "Kunlik chiqadigan Animelar ro'yxati",
-            style: isMobile ? context.textTheme.headlineSmall : context.textTheme.headlineLarge,
+          Row(
+            spacing: 10,
+            children: [
+              IconButton(
+                onPressed: () => context.read<CalendarBloc>().add(GetCalendarWeekly()),
+                icon: Icon(Icons.refresh),
+              ),
+              Text(
+                "Kunlik chiqadigan Animelar ro'yxati",
+                style: isMobile ? context.textTheme.headlineSmall : context.textTheme.headlineLarge,
+              ),
+            ],
           ),
           SizedBox(height: 18),
           SingleChildScrollView(

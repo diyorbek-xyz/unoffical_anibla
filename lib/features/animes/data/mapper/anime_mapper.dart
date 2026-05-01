@@ -6,7 +6,6 @@ import 'package:application/features/explore/data/mapper/genre_mapper.dart';
 
 class AnimeMapper {
   static AnimeEntity modelToEntity(AnimeModel? model, [String? type]) => AnimeEntity(
-    
     age: model?.age ?? 0,
     categories: model?.categories ?? [],
     country: model?.country,
@@ -31,5 +30,32 @@ class AnimeMapper {
     updatedAt: model?.updatedAt ?? DateTime(2026),
     title: TranslatedMapper.extendedToEntity(model, 'title'),
     description: TranslatedMapper.extendedToEntity(model, 'description'),
+  );
+
+  static AnimeModel entityToModel(AnimeEntity? entity) => AnimeModel(
+    age: entity?.age,
+    categories: entity?.categories,
+    country: entity?.country,
+    cover: entity?.cover,
+    createdAt: entity?.createdAt,
+    creators: entity?.creators.map(ItemMapper.entityToModel).toList(),
+    director: entity?.director,
+    forOnlyMDH: entity?.forOnlyMDH,
+    genres: entity?.genres.map(GenreMapper.entityToModel).toList(),
+    images: entity?.images,
+    id: entity?.id,
+    keywords: entity?.keywords,
+    publishedYear: entity?.publishedYear,
+    slug: entity?.slug,
+    studio: entity?.studio,
+    thumbnail: entity?.thumbnail,
+    totalEpisodes: entity?.totalEpisodes,
+    trailer: entity?.trailer,
+    updatedAt: entity?.updatedAt,
+    ru: {"name": entity?.title.ru, "description": entity?.description.ru},
+    uz: {"name": entity?.title.uz, "description": entity?.description.uz},
+    duration: entity?.duration,
+    type: entity?.type,
+    video: entity?.video,
   );
 }
