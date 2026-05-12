@@ -43,9 +43,9 @@ class Calendar extends StatelessWidget {
     final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
 
     return Padding(
-      padding: EdgeInsetsGeometry.symmetric(
-        vertical: 10,
-      ).add(EdgeInsetsGeometry.only(right: 10, left: isMobile ? 10 : 0, top: 10)),
+      padding: EdgeInsetsGeometry.symmetric(vertical: 10).add(
+        EdgeInsetsGeometry.only(right: 10, left: isMobile ? 10 : 0, top: 10),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -53,12 +53,17 @@ class Calendar extends StatelessWidget {
             spacing: 10,
             children: [
               IconButton(
-                onPressed: () => context.read<CalendarBloc>().add(GetCalendarWeekly()),
+                onPressed: () =>
+                    context.read<CalendarBloc>().add(GetCalendarWeekly()),
                 icon: Icon(Icons.refresh),
               ),
-              Text(
-                "Kunlik chiqadigan Animelar ro'yxati",
-                style: isMobile ? context.textTheme.headlineSmall : context.textTheme.headlineLarge,
+              Expanded(
+                child: Text(
+                  "Kunlik chiqadigan Animelar ro'yxati",
+                  style: isMobile
+                      ? context.textTheme.headlineSmall
+                      : context.textTheme.headlineLarge,
+                ),
               ),
             ],
           ),
@@ -147,7 +152,7 @@ class Calendar extends StatelessWidget {
                   offset: Offset(6, 12),
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   textStyle: TextStyle(fontSize: 16),
-                  child: AnimeCard(anime: timer.anime),
+                  child: AnimeCard(anime: timer.anime, expand: false),
                 );
               }).toList(),
             )
@@ -157,7 +162,7 @@ class Calendar extends StatelessWidget {
                 aspectRatio: 9 / 15,
                 child: Center(
                   child: Text(
-                    "Hosizrcha bu kunda hech qanday anime rejalashtirilmagan",
+                    "Hosircha bu kunda hech qanday anime rejalashtirilmagan",
                     textAlign: TextAlign.center,
                   ),
                 ),

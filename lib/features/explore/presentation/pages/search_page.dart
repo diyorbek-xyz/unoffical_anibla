@@ -26,25 +26,33 @@ class SearchPage extends StatelessWidget {
         scrollBehavior: ScrollBehavior().copyWith(scrollbars: false),
         key: const PageStorageKey("results"),
         slivers: [
-          SliverOverlapInjector(handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context)),
+          SliverOverlapInjector(
+            handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+          ),
           SliverPadding(
             padding: EdgeInsetsGeometry.symmetric(horizontal: 10, vertical: 10),
             sliver: BlocBuilder<SearchBloc, SearchState>(
               builder: (context, state) {
                 switch (state) {
                   case SearchLoading():
-                    return SliverFillRemaining(child: Center(child: CircularProgressIndicator()));
+                    return SliverFillRemaining(
+                      child: Center(child: CircularProgressIndicator()),
+                    );
                   case SearchFound():
                     if (state.movies.isEmpty && state.series.isEmpty) {
-                      return SliverFillRemaining(child: Center(child: Text("Anime topilmadi")));
+                      return SliverFillRemaining(
+                        child: Center(child: Text("Anime topilmadi")),
+                      );
                     }
                     return SliverToBoxAdapter(
                       child: Column(
                         crossAxisAlignment: .start,
                         spacing: 10,
                         children: [
-                          if (state.series.isNotEmpty) gridView(context, "Seriyalar", state.series),
-                          if (state.movies.isNotEmpty) gridView(context, "Filmlar", state.movies),
+                          if (state.series.isNotEmpty)
+                            gridView(context, "Seriyalar", state.series),
+                          if (state.movies.isNotEmpty)
+                            gridView(context, "Filmlar", state.movies),
                         ],
                       ),
                     );
@@ -64,11 +72,17 @@ class SearchPage extends StatelessWidget {
       builder: (context, state) {
         switch (state) {
           case HistoryLoading():
-            return SliverFillRemaining(child: Center(child: CircularProgressIndicator()));
+            return SliverFillRemaining(
+              child: Center(child: CircularProgressIndicator()),
+            );
           case HistorySuccess():
-            return SliverToBoxAdapter(child: gridView(context, "Tarix", state.anime, true));
+            return SliverToBoxAdapter(
+              child: gridView(context, "Tarix", state.anime, true),
+            );
           default:
-            return SliverFillRemaining(child: Center(child: Text("Animelarni qidiring")));
+            return SliverFillRemaining(
+              child: Center(child: Text("Animelarni qidiring")),
+            );
         }
       },
     );
@@ -99,14 +113,18 @@ class SearchPage extends StatelessWidget {
             maxCrossAxisExtent: 200,
             mainAxisSpacing: 6,
             crossAxisSpacing: 6,
-            childAspectRatio: AnimeCard.aspectRatio,
+            childAspectRatio: 9 / 15,
           ),
           itemBuilder: (context, index) {
             if (isFromHistory != null && isFromHistory) {
               return Stack(
                 alignment: AlignmentGeometry.topLeft,
                 children: [
-                  AnimeCard(expand: true, anime: animes.elementAt(index)),
+                  AnimeCard(
+                    expand: true,
+                    aspectRatio: 9 / 15,
+                    anime: animes.elementAt(index),
+                  ),
                   Positioned(
                     top: 4,
                     left: 4,

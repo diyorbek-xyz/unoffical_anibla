@@ -13,25 +13,29 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   void onGetProfile(GetProfile event, Emitter<ProfileState> emit) async {
     emit(ProfileLoading());
     final either = await repository.getProfile();
-    emit(
-      either.fold(
-        (failure) {
-          if (failure is SessionLimitedFailure) {
-            return ProfileLimitSession(failure.sessions);
-          } else if (failure is ServerFailure) {
-            if (failure.status == HttpStatus.unauthorized) {
-              return ProfileUnauthorized();
+    await Future.delayed(Duration(seconds: 1), () {
+      emit(
+        either.fold(
+          (failure) {
+            if (failure is SessionLimitedFailure) {
+              return ProfileLimitSession(failure.sessions);
+            } else if (failure is ServerFailure) {
+              if (failure.status == HttpStatus.unauthorized) {
+                return ProfileUnauthorized();
+              } else {
+                return ProfileError(
+                  ExceptionMapper.mapStatusToMessage(failure.status),
+                );
+              }
             } else {
-              return ProfileError(ExceptionMapper.mapStatusToMessage(failure.status));
+              return ProfileError(ExceptionMapper.mapFailureToMessage(failure));
             }
-          } else {
-            return ProfileError(ExceptionMapper.mapFailureToMessage(failure));
-          }
-        },
-        (user) {
-          return ProfileSuccess(user);
-        },
-      ),
-    );
+          },
+          (user) {
+            return ProfileSuccess(user);
+          },
+        ),
+      );
+    });
   }
 }

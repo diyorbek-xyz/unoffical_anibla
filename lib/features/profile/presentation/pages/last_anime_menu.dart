@@ -13,6 +13,10 @@ class ProfileLastAnimeMenu extends StatefulWidget {
 class _ProfileLastAnimeMenuState extends State<ProfileLastAnimeMenu> {
   @override
   Widget build(BuildContext context) {
-    return AnimeCard(anime: widget.profile.lastAnime);
+    return AnimeCard(
+      anime: widget.profile.lastAnime,
+      expand: true,
+      aspectRatio: 15 / 9,
+    );
   }
 }

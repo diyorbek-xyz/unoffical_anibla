@@ -3,6 +3,7 @@ import 'package:application/core/routes/go_router.dart';
 import 'package:application/injection_container.dart';
 import 'package:flutter/material.dart';
 
+
 void main() async {
   await initializeDependencies();
   runApp(const MainApp());

@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/features/common/presentation/widgets/error.dart';
 import 'package:application/features/slider/domain/entities/slider_entity.dart';
@@ -120,21 +119,30 @@ class _CarouselState extends State<Carousel> {
           ),
         ),
         if (!isMobile)
-          Row(
-            mainAxisAlignment: .spaceBetween,
-            crossAxisAlignment: .stretch,
-            children: [
-              InkWell(
-                mouseCursor: SystemMouseCursors.click,
-                onTap: previousPage,
-                child: SizedBox(width: 100, child: Icon(Icons.keyboard_arrow_left)),
-              ),
-              InkWell(
-                mouseCursor: SystemMouseCursors.click,
-                onTap: nextPage,
-                child: SizedBox(width: 100, child: Icon(Icons.keyboard_arrow_right)),
-              ),
-            ],
+          Material(
+            type: MaterialType.transparency,
+            child: Row(
+              mainAxisAlignment: .spaceBetween,
+              crossAxisAlignment: .stretch,
+              children: [
+                InkWell(
+                  mouseCursor: SystemMouseCursors.click,
+                  onTap: previousPage,
+                  child: SizedBox(
+                    width: 100,
+                    child: Icon(Icons.keyboard_arrow_left),
+                  ),
+                ),
+                InkWell(
+                  mouseCursor: SystemMouseCursors.click,
+                  onTap: nextPage,
+                  child: SizedBox(
+                    width: 100,
+                    child: Icon(Icons.keyboard_arrow_right),
+                  ),
+                ),
+              ],
+            ),
           ),
         Row(
           crossAxisAlignment: .end,
@@ -149,7 +157,9 @@ class _CarouselState extends State<Carousel> {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(100),
-                  color: isCurrent ? context.appColors.primaryContainer : context.appColors.primary,
+                  color: isCurrent
+                      ? context.appColors.primaryContainer
+                      : context.appColors.primary,
                 ),
                 width: isCurrent ? 100 : radius,
                 height: radius,
@@ -174,11 +184,16 @@ class _CarouselState extends State<Carousel> {
     final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
 
     return GestureDetector(
-      onTap: () =>
-          context.pushNamed("anime", pathParameters: {"type": e.anime.type, "slug": e.anime.slug}),
+      onTap: () => context.pushNamed(
+        "anime",
+        pathParameters: {"type": e.anime.type, "slug": e.anime.slug},
+      ),
       child: Container(
         decoration: BoxDecoration(
-          image: DecorationImage(image: CachedNetworkImageProvider(e.image), fit: BoxFit.cover),
+          image: DecorationImage(
+            image: CachedNetworkImageProvider(e.image),
+            fit: BoxFit.cover,
+          ),
         ),
         child: Container(
           padding: EdgeInsets.symmetric(
@@ -198,7 +213,10 @@ class _CarouselState extends State<Carousel> {
             mainAxisAlignment: MainAxisAlignment.end,
             spacing: 5,
             children: [
-              Text("${e.anime.title.uz} [${e.anime.age}+]", style: TextStyle(fontSize: 30)),
+              Text(
+                "${e.anime.title.uz} [${e.anime.age}+]",
+                style: TextStyle(fontSize: 30),
+              ),
               if (!isMobile)
                 Text(
                   e.anime.description.uz,

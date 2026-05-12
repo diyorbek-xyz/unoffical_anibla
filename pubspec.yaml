@@ -41,6 +41,9 @@ dependencies:
     window_manager: 
     audio_video_progress_bar:
     rxdart:
+    native_splash_screen: 
+
+
 
 dev_dependencies:
     flutter_test:
@@ -50,6 +53,7 @@ dev_dependencies:
     json_serializable: ^6.12.0
     hive_ce_generator: ^1.11.1
     build_runner: ^2.11.1
+    native_splash_screen_cli: 
 
 
 flutter:

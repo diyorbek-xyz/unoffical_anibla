@@ -12,6 +12,8 @@ import 'package:application/features/common/data/models/item_model.dart';
 import 'package:application/features/common/data/models/pagination.dart';
 import 'package:application/features/common/data/models/translated.dart';
 import 'package:application/features/explore/data/models/genre_model.dart';
+import 'package:application/features/player/data/model/download_models.dart';
+import 'package:application/features/player/data/model/parser_models.dart';
 import 'package:application/features/player/data/model/timeline_model.dart';
 import 'package:application/features/profile/data/models/profile_model.dart';
 import 'package:application/features/profile/data/models/session_model.dart';
@@ -22,10 +24,16 @@ extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
     registerAdapter(AnimeModelAdapter());
     registerAdapter(CalendarModelAdapter());
+    registerAdapter(ChunkAdapter());
     registerAdapter(DownloadModelAdapter());
+    registerAdapter(DownloadStateAdapter());
+    registerAdapter(DownloadTaskAdapter());
     registerAdapter(EpisodeModelAdapter());
+    registerAdapter(ExtraInfosAdapter());
     registerAdapter(GenreModelAdapter());
     registerAdapter(ItemModelAdapter());
+    registerAdapter(MasterPlaylistAdapter());
+    registerAdapter(MediaPlaylistAdapter());
     registerAdapter(PaginationAdapter());
     registerAdapter(ProfileModelAdapter());
     registerAdapter(SessionModelAdapter());
@@ -35,6 +43,7 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(TimelineModelAdapter());
     registerAdapter(TimerModelAdapter());
     registerAdapter(TranslatedModelAdapter());
+    registerAdapter(VariantAdapter());
   }
 }
 
@@ -42,10 +51,16 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
     registerAdapter(AnimeModelAdapter());
     registerAdapter(CalendarModelAdapter());
+    registerAdapter(ChunkAdapter());
     registerAdapter(DownloadModelAdapter());
+    registerAdapter(DownloadStateAdapter());
+    registerAdapter(DownloadTaskAdapter());
     registerAdapter(EpisodeModelAdapter());
+    registerAdapter(ExtraInfosAdapter());
     registerAdapter(GenreModelAdapter());
     registerAdapter(ItemModelAdapter());
+    registerAdapter(MasterPlaylistAdapter());
+    registerAdapter(MediaPlaylistAdapter());
     registerAdapter(PaginationAdapter());
     registerAdapter(ProfileModelAdapter());
     registerAdapter(SessionModelAdapter());
@@ -55,5 +70,6 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
     registerAdapter(TimelineModelAdapter());
     registerAdapter(TimerModelAdapter());
     registerAdapter(TranslatedModelAdapter());
+    registerAdapter(VariantAdapter());
   }
 }

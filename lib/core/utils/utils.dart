@@ -1,11 +1,35 @@
 import 'dart:io';
-
+import 'package:native_splash_screen/native_splash_screen.dart'
+    as splash_screen;
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:window_manager/window_manager.dart';
 
 class Utils {
-  static bool isMobilePlatform = Platform.isIOS || Platform.isIOS;
-  static bool isDesktopPlatform = Platform.isLinux || Platform.isMacOS || Platform.isWindows;
+  static bool isMobilePlatform = Platform.isIOS || Platform.isAndroid;
+  static bool isDesktopPlatform =
+      Platform.isLinux || Platform.isMacOS || Platform.isWindows;
+
+  static Future<void> initFullscreen() async {
+    if (isMobilePlatform) return;
+    await windowManager.ensureInitialized();
+    WindowOptions windowOptions = WindowOptions(
+      size: Size(800, 600),
+      title: "Anibla.uz Birinchi uz fandab!",
+      center: true,
+      backgroundColor: Colors.transparent,
+      skipTaskbar: false,
+      titleBarStyle: Platform.isLinux
+          ? TitleBarStyle.hidden
+          : TitleBarStyle.normal,
+    );
+
+    windowManager.waitUntilReadyToShow(windowOptions, () async {
+      await windowManager.maximize();
+      await windowManager.show();
+      await windowManager.focus();
+    });
+  }
 
   static Future<void> enterFullScreen() async {
     if (isDesktopPlatform) {
@@ -29,5 +53,10 @@ class Utils {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+  }
+
+  static Future<void> closeSplashScreen() async {
+    if (isMobilePlatform) return;
+    await splash_screen.close(animation: splash_screen.CloseAnimation.fade);
   }
 }

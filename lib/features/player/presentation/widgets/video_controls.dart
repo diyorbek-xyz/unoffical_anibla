@@ -1,3 +1,4 @@
+import 'package:application/features/animes/presentation/bloc/episode/episode_bloc.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:async';
 import 'dart:io';
@@ -10,16 +11,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 import 'package:rxdart/rxdart.dart';
 
-class VideoControls extends StatefulWidget {
-  const VideoControls({super.key});
+class VideoPlayer extends StatefulWidget {
+  const VideoPlayer({super.key});
 
   @override
-  State<VideoControls> createState() => _VideoControlsState();
+  State<VideoPlayer> createState() => _VideoPlayerState();
 }
 
-class _VideoControlsState extends State<VideoControls> {
+class _VideoPlayerState extends State<VideoPlayer> {
   final isMobilePlatform = Platform.isAndroid || Platform.isIOS;
   late PlayerController controller;
 
@@ -29,6 +31,7 @@ class _VideoControlsState extends State<VideoControls> {
     autoHideControls();
     super.initState();
   }
+
   @override
   void deactivate() {
     controller.pause();
@@ -86,9 +89,30 @@ class _VideoControlsState extends State<VideoControls> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      type: MaterialType.transparency,
-      child: LayoutBuilder(
+    return SafeArea(
+      child: BlocSelector<PlayerController, PlayerStates, BoxFit>(
+        selector: (state) => state.fit,
+        builder: (context, state) {
+          return Video(
+            fit: state,
+            controller: controller.controller,
+            controls: (state) => controlsBuilder,
+          );
+        },
+      ),
+    );
+  }
+
+  Material get controlsBuilder => Material(
+    type: MaterialType.transparency,
+    child: Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        actions: [topControls],
+      ),
+      extendBodyBehindAppBar: true,
+      backgroundColor: Colors.transparent,
+      body: LayoutBuilder(
         builder: (_, constraints) {
           final main = Responsive(constraints: constraints, child: controls);
           if (main.isMobile) {
@@ -100,7 +124,9 @@ class _VideoControlsState extends State<VideoControls> {
             );
           }
           return MouseRegion(
-            cursor: isControlsVisible ? MouseCursor.defer : SystemMouseCursors.none,
+            cursor: isControlsVisible
+                ? MouseCursor.defer
+                : SystemMouseCursors.none,
             onExit: (event) => hideControls(),
             onHover: (event) => autoHideControls(),
             onEnter: (event) => autoHideControls(),
@@ -113,8 +139,8 @@ class _VideoControlsState extends State<VideoControls> {
           );
         },
       ),
-    );
-  }
+    ),
+  );
 
   Widget get controls => Builder(
     builder: (BuildContext context) {
@@ -129,7 +155,9 @@ class _VideoControlsState extends State<VideoControls> {
               backgroundColor: WidgetStatePropertyAll(
                 context.appColors.primaryContainer.withAlpha(150),
               ),
-              foregroundColor: WidgetStatePropertyAll(context.appColors.primary),
+              foregroundColor: WidgetStatePropertyAll(
+                context.appColors.primary,
+              ),
             ),
           ),
         ),
@@ -139,40 +167,43 @@ class _VideoControlsState extends State<VideoControls> {
             buildWhen: (previous, current) => previous.diffirence(current) > 0,
             builder: (_, state) => GestureDetector(
               onTap: () => controller.togglePlay(),
-              behavior: responsive.isMobile ? HitTestBehavior.translucent : HitTestBehavior.opaque,
+              behavior: responsive.isMobile
+                  ? HitTestBehavior.translucent
+                  : HitTestBehavior.opaque,
               child: Focus(
                 autofocus: true,
-                child: Stack(
-                  alignment: AlignmentGeometry.center,
-                  fit: StackFit.expand,
-                  children: [
-                    if (controller.state.buffering)
-                      Center(
-                        child: CircularProgressIndicator.adaptive(
-                          strokeWidth: 7,
-                          constraints: BoxConstraints.tightFor(width: 100, height: 100),
-                          strokeCap: StrokeCap.round,
-                          valueColor: AlwaysStoppedAnimation(context.appColors.primary),
+                child: BlocBuilder<PlayerController, PlayerStates>(
+                  buildWhen: (previous, current) =>
+                      (previous.hasError != current.hasError) &&
+                      (previous.error != current.error),
+                  builder: (_, state) {
+                    return Stack(
+                      alignment: AlignmentGeometry.center,
+                      fit: StackFit.expand,
+                      children: [
+                        if (state.hasError && state.error != "empty")
+                          Container(
+                            color: context.appColors.surface,
+                            alignment: .center,
+                            child: Text(state.error!),
+                          ),
+                        bufferingIndicator,
+                        skippers,
+                        AnimatedOpacity(
+                          opacity: isControlsVisible ? 1 : 0,
+                          duration: Duration(milliseconds: 200),
+                          child: IgnorePointer(
+                            ignoring: !isControlsVisible,
+                            child: Stack(
+                              alignment: AlignmentGeometry.center,
+                              fit: .expand,
+                              children: [bottomControls, overlayControls],
+                            ),
+                          ),
                         ),
-                      ),
-                    skippers,
-                    AnimatedOpacity(
-                      opacity: isControlsVisible ? 1 : 0,
-                      duration: Duration(milliseconds: 200),
-                      child: IgnorePointer(
-                        ignoring: !isControlsVisible,
-                        child: Stack(
-                          alignment: AlignmentGeometry.center,
-                          fit: .expand,
-                          children: [
-                            if (responsive.isMobile) topControls,
-                            bottomControls,
-                            overlayControls,
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+                      ],
+                    );
+                  },
                 ),
               ),
             ),
@@ -182,9 +213,27 @@ class _VideoControlsState extends State<VideoControls> {
     },
   );
 
+  Widget get bufferingIndicator =>
+      BlocSelector<PlayerController, PlayerStates, bool>(
+        selector: (state) => state.buffering,
+        builder: (context, isBuffering) {
+          if (!isBuffering) return SizedBox.shrink();
+          return Center(
+            child: CircularProgressIndicator.adaptive(
+              strokeWidth: 7,
+              constraints: BoxConstraints.tightFor(width: 100, height: 100),
+              strokeCap: StrokeCap.round,
+              valueColor: AlwaysStoppedAnimation(context.appColors.primary),
+            ),
+          );
+        },
+      );
+
   Widget get skippers {
     Widget skipper(int step, bool isMobile) {
-      final skipping = (step < 0 && backwardSkipSteps != 0) || (step > 0 && forwardSkipSteps != 0);
+      final skipping =
+          (step < 0 && backwardSkipSteps != 0) ||
+          (step > 0 && forwardSkipSteps != 0);
       final child = AnimatedOpacity(
         duration: Duration(milliseconds: skipping ? 200 : 0),
         opacity: skipping ? 1 : 0,
@@ -258,7 +307,11 @@ class _VideoControlsState extends State<VideoControls> {
                 onPressed: () => controller.toggleFullscreen(context),
                 iconSize: 25,
                 padding: EdgeInsets.zero,
-                icon: Icon(isFullscreen ? Icons.fullscreen_exit_sharp : Icons.fullscreen_sharp),
+                icon: Icon(
+                  isFullscreen
+                      ? Icons.fullscreen_exit_sharp
+                      : Icons.fullscreen_sharp,
+                ),
               ),
             ],
           ),
@@ -331,7 +384,10 @@ class _VideoControlsState extends State<VideoControls> {
                   child: InkWell(
                     onTap: controller.skipIntro,
                     child: Ink(
-                      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 30,
+                        vertical: 10,
+                      ),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(6),
                         color: context.appColors.primary,
@@ -377,20 +433,34 @@ class _VideoControlsState extends State<VideoControls> {
                         (a, b) => (a, b),
                       ),
                       builder: (_, progress) {
-                        final (time, buffer) = progress.data ?? (state.seekProgress, Duration.zero);
+                        final (time, buffer) =
+                            progress.data ??
+                            (state.seekProgress, Duration.zero);
+                        if (state.hasError && state.error == "empty") {
+                          return LinearProgressIndicator(
+                            backgroundColor: context.appColors.onPrimary,
+                            valueColor: AlwaysStoppedAnimation(
+                              context.appColors.primary,
+                            ),
+                          );
+                        }
                         return ProgressBar(
                           progress: time,
                           progressBarColor: context.appColors.primary,
                           buffered: buffer,
-                          bufferedBarColor: context.appColors.primaryFixed.withAlpha(100),
+                          bufferedBarColor: context.appColors.primaryFixed
+                              .withAlpha(100),
                           total: state.duration,
                           barHeight: 5,
-                          baseBarColor: context.appColors.onPrimary.withAlpha(100),
+                          baseBarColor: context.appColors.onPrimary.withAlpha(
+                            100,
+                          ),
                           barCapShape: BarCapShape.round,
                           thumbRadius: 7,
                           thumbColor: context.appColors.primaryFixed,
                           thumbGlowRadius: 13,
-                          thumbGlowColor: context.appColors.primaryFixedDim.withAlpha(100),
+                          thumbGlowColor: context.appColors.primaryFixedDim
+                              .withAlpha(100),
                           thumbCanPaintOutsideBar: false,
                           timeLabelPadding: 10,
                           timeLabelTextStyle: TextStyle(
@@ -412,7 +482,10 @@ class _VideoControlsState extends State<VideoControls> {
                           spacing: 7,
                           children: [
                             IconButton(
-                              constraints: BoxConstraints.tightFor(width: 50, height: 50),
+                              constraints: BoxConstraints.tightFor(
+                                width: 50,
+                                height: 50,
+                              ),
                               iconSize: 35,
                               onPressed: controller.togglePlay,
                               isSelected: state.isPaused,
@@ -422,14 +495,17 @@ class _VideoControlsState extends State<VideoControls> {
                             Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(100),
-                                color: context.appColors.primaryContainer.withAlpha(150),
+                                color: context.appColors.primaryContainer
+                                    .withAlpha(150),
                               ),
                               child: Row(
                                 children: [
                                   if (!state.isFirst)
                                     IconButton(
                                       style: ButtonStyle(
-                                        backgroundColor: WidgetStatePropertyAll(Colors.transparent),
+                                        backgroundColor: WidgetStatePropertyAll(
+                                          Colors.transparent,
+                                        ),
                                       ),
                                       onPressed: controller.previousEpisode,
                                       icon: Icon(Icons.skip_previous),
@@ -437,7 +513,9 @@ class _VideoControlsState extends State<VideoControls> {
                                   if (!state.isLast)
                                     IconButton(
                                       style: ButtonStyle(
-                                        backgroundColor: WidgetStatePropertyAll(Colors.transparent),
+                                        backgroundColor: WidgetStatePropertyAll(
+                                          Colors.transparent,
+                                        ),
                                       ),
                                       onPressed: controller.nextEpisode,
                                       icon: Icon(Icons.skip_next),
@@ -448,14 +526,17 @@ class _VideoControlsState extends State<VideoControls> {
                             Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(100),
-                                color: context.appColors.primaryContainer.withAlpha(150),
+                                color: context.appColors.primaryContainer
+                                    .withAlpha(150),
                               ),
                               child: Row(
                                 children: [
                                   IconButton(
                                     onPressed: controller.toggleMute,
                                     style: ButtonStyle(
-                                      backgroundColor: WidgetStatePropertyAll(Colors.transparent),
+                                      backgroundColor: WidgetStatePropertyAll(
+                                        Colors.transparent,
+                                      ),
                                     ),
                                     icon: Icon(
                                       state.isMuted
@@ -471,17 +552,26 @@ class _VideoControlsState extends State<VideoControls> {
                                     child: SliderTheme(
                                       data: SliderTheme.of(context).copyWith(
                                         trackHeight: 3.0,
-                                        thumbShape: RoundSliderThumbShape(enabledThumbRadius: 7.0),
-                                        overlayShape: RoundSliderOverlayShape(overlayRadius: 10.0),
+                                        thumbShape: RoundSliderThumbShape(
+                                          enabledThumbRadius: 7.0,
+                                        ),
+                                        overlayShape: RoundSliderOverlayShape(
+                                          overlayRadius: 10.0,
+                                        ),
                                       ),
                                       child: Slider(
-                                        thumbColor: context.appColors.primaryFixed,
+                                        thumbColor:
+                                            context.appColors.primaryFixed,
                                         activeColor: context.appColors.primary,
-                                        inactiveColor: context.appColors.onPrimary.withAlpha(100),
+                                        inactiveColor: context
+                                            .appColors
+                                            .onPrimary
+                                            .withAlpha(100),
                                         divisions: 10,
                                         value: state.volume,
                                         max: 100,
-                                        onChanged: (value) => controller.setVolume(value),
+                                        onChanged: (value) =>
+                                            controller.setVolume(value),
                                       ),
                                     ),
                                   ),
@@ -493,14 +583,21 @@ class _VideoControlsState extends State<VideoControls> {
                         Row(
                           spacing: 7,
                           children: [
-                            IconButton(onPressed: openEpisodeList, icon: Icon(Icons.list_sharp)),
+                            IconButton(
+                              onPressed: openEpisodeList,
+                              icon: Icon(Icons.list_sharp),
+                            ),
                             IconButton(
                               onPressed: controller.toggleFit,
                               icon: Icon(Icons.fit_screen_sharp),
                             ),
-                            IconButton(onPressed: openSettings, icon: Icon(Icons.settings_sharp)),
                             IconButton(
-                              onPressed: () => controller.toggleFullscreen(context),
+                              onPressed: openSettings,
+                              icon: Icon(Icons.settings_sharp),
+                            ),
+                            IconButton(
+                              onPressed: () =>
+                                  controller.toggleFullscreen(context),
                               icon: Icon(
                                 state.isFullscreen
                                     ? Icons.fullscreen_exit_sharp
@@ -521,7 +618,8 @@ class _VideoControlsState extends State<VideoControls> {
   );
 
   Map<ShortcutActivator, VoidCallback> get keyBindings => {
-    const SingleActivator(LogicalKeyboardKey.keyF): () => controller.toggleFullscreen(context),
+    const SingleActivator(LogicalKeyboardKey.keyF): () =>
+        controller.toggleFullscreen(context),
     const SingleActivator(LogicalKeyboardKey.space, includeRepeats: false): () {
       autoHideControls();
       controller.togglePlay();
@@ -535,23 +633,30 @@ class _VideoControlsState extends State<VideoControls> {
     },
   };
 
-  Widget episodesList(BuildContext context) {
-    return BlocProvider.value(
-      value: controller,
+  Widget episodesList(BuildContext dialog) {
+    final episodeProvider = context.read<EpisodeBloc>();
+    final playerProvider = context.read<PlayerController>();
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: episodeProvider),
+        BlocProvider.value(value: playerProvider),
+      ],
       child: Dialog(
         insetPadding: EdgeInsets.symmetric(horizontal: 20),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(20)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadiusGeometry.circular(20),
+        ),
         clipBehavior: Clip.antiAlias,
         constraints: const BoxConstraints(maxWidth: 500, maxHeight: 500),
         child: Stack(
           alignment: .bottomRight,
           children: [
-            EpisodesList(onItemPressed: () => Navigator.pop(context)),
+            EpisodesList(onItemPressed: () => Navigator.pop(dialog)),
             Positioned(
               bottom: 10,
               right: 10,
               child: FilledButton.icon(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => Navigator.pop(dialog),
                 icon: Icon(Icons.keyboard_arrow_left),
                 label: Text("Ortga"),
               ),
@@ -565,13 +670,17 @@ class _VideoControlsState extends State<VideoControls> {
   Widget settingsDialog(BuildContext dialogcontext) {
     final state = controller.state;
     final tracks = state.tracks.video
-        .where((element) => element.toString().contains("auto") || element.h != null)
+        .where(
+          (element) => element.toString().contains("auto") || element.h != null,
+        )
         .toList();
     return DefaultTabController(
       length: 2,
       child: Dialog(
         insetPadding: EdgeInsets.symmetric(horizontal: 30, vertical: 100),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(20)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadiusGeometry.circular(20),
+        ),
         constraints: const BoxConstraints(maxWidth: 400, maxHeight: 400),
         child: Column(
           children: [
@@ -589,7 +698,10 @@ class _VideoControlsState extends State<VideoControls> {
                     itemBuilder: (context, index) {
                       final track = tracks.elementAt(index);
                       final isCurrent = track.id == state.videoTrack.id;
-                      final title = track.h?.toString() ?? track.w?.toString() ?? track.id;
+                      final title =
+                          track.h?.toString() ??
+                          track.w?.toString() ??
+                          track.id;
                       final isId = title == track.id;
                       return ListTile(
                         leading: Icon(isCurrent ? Icons.check : Icons.hd),
@@ -605,7 +717,8 @@ class _VideoControlsState extends State<VideoControls> {
                     itemCount: state.tracks.audio.length,
                     itemBuilder: (context, index) {
                       final track = state.tracks.audio.elementAt(index);
-                      final title = "${track.id} ${track.samplerate} ${track.channels}";
+                      final title =
+                          "${track.id} ${track.samplerate} ${track.channels}";
                       final isId = title == track.id;
                       return ListTile(
                         leading: Icon(Icons.hd),

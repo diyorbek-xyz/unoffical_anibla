@@ -15,10 +15,16 @@ class _ProfileInfosMenuState extends State<ProfileInfosMenu> {
   @override
   Widget build(BuildContext context) {
     final items = [
-      ListModel(label: "Ismi", value: widget.data.name, icon: Icons.person_pin_sharp),
+      ListModel(
+        label: "Ismi",
+        value: widget.data.name,
+        icon: Icons.person_pin_sharp,
+      ),
       ListModel(
         label: "Telefon raqam",
-        value: widget.data.phoneNumber.toString(),
+        value: widget.data.phoneNumber == 0
+            ? "Mavjud emas"
+            : widget.data.phoneNumber.toString(),
         icon: Icons.phone_sharp,
       ),
       ListModel(

@@ -22,7 +22,9 @@ class PlayerController extends Cubit<PlayerStates> {
 
   bool _isSeeking = false;
 
-  final player = Player(configuration: PlayerConfiguration(osc: false, async: false));
+  final player = Player(
+    configuration: PlayerConfiguration(osc: false, async: false),
+  );
   late final controller = VideoController(player);
 
   Future<void> init(List<EpisodeEntity> episodes) async {
@@ -57,12 +59,22 @@ class PlayerController extends Cubit<PlayerStates> {
       ),
     );
 
-    player.stream.track.listen((event) => emit(state.copyWith(videoTrack: event.video)));
+    player.stream.track.listen(
+      (event) => emit(state.copyWith(videoTrack: event.video)),
+    );
     player.stream.tracks.listen((event) => emit(state.copyWith(tracks: event)));
-    player.stream.duration.listen((event) => emit(state.copyWith(duration: event)));
-    player.stream.buffering.listen((event) => emit(state.copyWith(buffering: event)));
-    player.stream.playing.listen((event) => emit(state.copyWith(isPaused: !event)));
-    player.stream.volume.listen((event) => emit(state.copyWith(isMuted: event == 0)));
+    player.stream.duration.listen(
+      (event) => emit(state.copyWith(duration: event)),
+    );
+    player.stream.buffering.listen(
+      (event) => emit(state.copyWith(buffering: event)),
+    );
+    player.stream.playing.listen(
+      (event) => emit(state.copyWith(isPaused: !event)),
+    );
+    player.stream.volume.listen(
+      (event) => emit(state.copyWith(isMuted: event == 0)),
+    );
     player.stream.playlist.listen((event) async {
       await setOldTimeline();
     });
@@ -70,7 +82,8 @@ class PlayerController extends Cubit<PlayerStates> {
       if (_isSeeking) return;
       final hasSkip = state.skip.isNotEmpty;
       final hasIntro = hasSkip
-          ? (event.inSeconds < state.skip.last && event.inSeconds > state.skip.first)
+          ? (event.inSeconds < state.skip.last &&
+                event.inSeconds > state.skip.first)
           : false;
       if (hasIntro != state.hasIntro) {
         emit(state.copyWith(hasIntro: hasIntro));
@@ -89,7 +102,9 @@ class PlayerController extends Cubit<PlayerStates> {
   Future<void> setOldTimeline() async {
     final time = timeline.getTimeline(state.episode.id);
     if (time != null) {
-      await player.stream.duration.firstWhere((element) => element.inSeconds > 0);
+      await player.stream.duration.firstWhere(
+        (element) => element.inSeconds > 0,
+      );
       await seek(time.progress);
     }
   }
@@ -111,14 +126,23 @@ class PlayerController extends Cubit<PlayerStates> {
 
   Future<List<int>?> openEpisode(EpisodeEntity episode) async {
     PlayerStates current = state.copyWith(episode: episode);
-    if (state.episode.id == episode.id || episode.video.isEmpty) return null;
-    if (state.episode.id.isNotEmpty) {
-      await saveTimeline();
+    if (episode.video.isEmpty) {
+      emit(
+        current.copyWith(
+          hasError: true,
+          error: "Bu qismni ko'rish uchun obuna sotib oling",
+        ),
+      );
+      return null;
     }
-    emit(current);
+    if (state.episode.id == episode.id || episode.video.isEmpty) return null;
+    if (state.episode.id.isNotEmpty) await saveTimeline();
+
     final response = await videoApi.getVideo(getStreamId(episode.video));
     final video = VideoMapper.modelToEntity(response.data);
-    final skip = (video.skip as String?)?.split("-").map((e) => e.parseInt()).toList() ?? [];
+    final skip =
+        (video.skip as String?)?.split("-").map((e) => e.parseInt()).toList() ??
+        [];
     if (video.file.isEmpty) return null;
     final index = state.episodes.indexWhere(
       (element) => episode.episodeNumber == element.episodeNumber,
@@ -160,7 +184,8 @@ class PlayerController extends Cubit<PlayerStates> {
         context,
         PageRouteBuilder(
           transitionDuration: Duration(milliseconds: 300),
-          pageBuilder: (_, _, _) => BlocProvider.value(value: controller, child: PlayerPage()),
+          pageBuilder: (_, _, _) =>
+              BlocProvider.value(value: controller, child: PlayerPage()),
           transitionsBuilder: (_, animation, _, child) {
             return FadeTransition(opacity: animation, child: child);
           },
