@@ -24,6 +24,9 @@ class HlsDownloadService {
   }
 
   Future<String> download(String id, String masterPath) async {
+    final state = states[id];
+    if (state != null && state.status != .completed) await cancel(id);
+
     final master = await DownloadHlsPlaylist.downloadMasterPlaylist(masterPath, id);
     final media = await DownloadHlsPlaylist.downloadMediaPlaylist(master.variants.last);
     final task = DownloadTask(id: id, masterPlaylist: master, mediaPlaylist: media, queue: media.chunks);
@@ -50,10 +53,8 @@ class HlsDownloadService {
       final state = states[task.id];
       if (state == null || state.status == .cancelled) return;
       while (state.status == .paused) {
-        print("paused");
         await Future.delayed(Duration(milliseconds: 200));
       }
-      print(state.status);
       final segment = task.queue.removeLast();
       _emit(task.id, downloaded: state.downloaded + 1, status: .downloading);
       await DownloadHlsPlaylist.downloadChunk(segment);
@@ -98,7 +99,7 @@ class HlsDownloadService {
     _emit(id, status: .downloading);
   }
 
-  void cancel(String id) async {
+  Future<void> cancel(String id) async {
     final task = storage.getDownload(id);
     if (task == null) return;
     final folder = task.masterPlaylist.localUrl;

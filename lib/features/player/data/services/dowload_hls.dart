@@ -9,14 +9,12 @@ class DownloadHlsPlaylist {
   static final dio = Dio();
   static Future<MasterPlaylist> downloadMasterPlaylist(String masterPath, String folderName) async {
     final localDirectory = await getApplicationCacheDirectory();
-    final localFolder = localDirectory.uri.resolve("downloads/$folderName").toString();
-    print(localFolder);
+    final localFolder = Uri.parse(localDirectory.uri.toFilePath()).resolve("downloads/$folderName/").toString();
     final masterDataResponse = await dio.get(masterPath);
     final masterData = masterDataResponse.data;
     final master = ParseHlsPlaylist.parseMaster(data: masterData, downloadUrl: masterPath, localFolder: localFolder);
 
     await createFolder(master.localUrl);
-    print(master.localUrl);
     final masterFile = File(master.localUrl);
     await masterFile.writeAsString(master.toHLS());
     return master;
