@@ -24,13 +24,15 @@ class EpisodeModelAdapter extends TypeAdapter<EpisodeModel> {
       uz: fields[1] as dynamic,
       type: fields[5] as String?,
       video: fields[6] as String?,
+      season: fields[8] as SeasonModel?,
+      anime: fields[7] as AnimeModel?,
     );
   }
 
   @override
   void write(BinaryWriter writer, EpisodeModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -44,7 +46,11 @@ class EpisodeModelAdapter extends TypeAdapter<EpisodeModel> {
       ..writeByte(5)
       ..write(obj.type)
       ..writeByte(6)
-      ..write(obj.video);
+      ..write(obj.video)
+      ..writeByte(7)
+      ..write(obj.anime)
+      ..writeByte(8)
+      ..write(obj.season);
   }
 
   @override
@@ -70,6 +76,12 @@ EpisodeModel _$EpisodeModelFromJson(Map<String, dynamic> json) => EpisodeModel(
   uz: json['uz'],
   type: json['type'] as String?,
   video: json['video'] as String?,
+  season: json['season_id'] == null
+      ? null
+      : SeasonModel.fromJson(json['season_id'] as Map<String, dynamic>),
+  anime: json['series_id'] == null
+      ? null
+      : AnimeModel.fromJson(json['series_id']),
 );
 
 Map<String, dynamic> _$EpisodeModelToJson(EpisodeModel instance) =>
@@ -81,4 +93,6 @@ Map<String, dynamic> _$EpisodeModelToJson(EpisodeModel instance) =>
       'episode_number': instance.episodeNumber,
       'type': instance.type,
       'video': instance.video,
+      'series_id': instance.anime,
+      'season_id': instance.season,
     };

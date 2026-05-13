@@ -167,7 +167,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<SliderRepository>(SliderRepositoryImpl(sl(), sl()));
   sl.registerSingleton<CalendarRepository>(CalendarRepositoryImpl(sl(), sl()));
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl(), sl()));
-  sl.registerSingleton<EpisodeRepository>(EpisodeRepositoryImpl(sl(), sl()));
+  sl.registerSingleton<EpisodeRepository>(EpisodeRepositoryImpl(sl(), sl(), sl()));
   sl.registerSingleton<CommentRepository>(CommentRepositoryImpl(sl()));
   sl.registerSingleton<ProfileRepository>(ProfileRepositoryImpl(sl(), sl(), sl()));
   sl.registerSingleton<AnimeRepository>(AnimeRepositoryImpl(sl(), sl()));

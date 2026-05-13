@@ -3,16 +3,9 @@ import 'package:application/features/animes/domain/entities/season_entity.dart';
 import 'package:application/features/common/mapper/translated_mapper.dart';
 
 class SeasonMapper {
-  static SeasonEntity modelToEntity(SeasonModel model) => SeasonEntity(
-    id: model.id ?? "",
-    slug: model.slug ?? "",
-    title: TranslatedMapper.extendedToEntity(model, "title"),
-  );
+  static SeasonEntity modelToEntity(SeasonModel? model) =>
+      SeasonEntity(id: model?.id ?? "", slug: model?.slug ?? "", title: TranslatedMapper.extendedToEntity(model, "title"));
 
-  static SeasonModel entityToModel(SeasonEntity entity) => SeasonModel(
-    id: entity.id,
-    slug: entity.slug,
-    ru: {"title": entity.title.ru},
-    uz: {"title": entity.title.uz},
-  );
+  static SeasonModel entityToModel(SeasonEntity? entity) =>
+      SeasonModel(id: entity?.id, slug: entity?.slug, ru: {"title": entity?.title.ru}, uz: {"title": entity?.title.uz});
 }

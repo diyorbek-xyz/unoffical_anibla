@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:application/features/player/data/model/download_models.dart';
 import 'package:application/features/player/data/model/parser_models.dart';
 import 'package:application/features/player/data/services/parse_hls.dart';
 import 'package:dio/dio.dart';
@@ -34,6 +36,25 @@ class DownloadHlsPlaylist {
 
   static Future<Response> downloadChunk(Chunk chunk) async {
     return await dio.download(chunk.downloadUrl, chunk.localUrl);
+  }
+
+  static Future<DownloadInfos> saveCompleted(DownloaderProps props) async {
+    final directory = Directory(props.filePath);
+    final stat = await directory.stat();
+    final localUri = Uri.parse(props.filePath);
+    final fileUri = localUri.resolve("completed.json");
+    final infos = DownloadInfos(
+      episodeNumber: props.episodeNumber,
+      filePath: fileUri.toFilePath(),
+      animeId: props.animeId,
+      seasonId: props.seasonId,
+      episodeId: props.episodeId,
+      downloadedAt: stat.changed,
+      size: stat.size,
+    );
+    final file = File.fromUri(fileUri);
+    await file.writeAsString(jsonEncode(infos.toJson()));
+    return infos;
   }
 
   static Future<void> createFolder(String url) async {

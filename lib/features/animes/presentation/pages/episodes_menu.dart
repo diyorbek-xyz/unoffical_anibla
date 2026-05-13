@@ -6,6 +6,7 @@ import 'package:application/features/animes/domain/entities/anime_entity.dart';
 import 'package:application/features/animes/domain/entities/episode_entity.dart';
 import 'package:application/features/animes/presentation/bloc/episode/episode_bloc.dart';
 import 'package:application/features/animes/presentation/bloc/episode/episode_state.dart';
+import 'package:application/features/player/data/model/download_models.dart';
 import 'package:application/features/player/data/services/download_service.dart';
 import 'package:application/injection_container.dart';
 import 'package:flutter/material.dart';
@@ -35,8 +36,9 @@ class _AnimeEpisodesMenuState extends State<AnimeEpisodesMenu> {
             StreamBuilder(
               stream: downloader.stream,
               builder: (context, snapshot) {
-                final task = downloader.tasks[episode.id];
+                final task = downloader.getTask(episode.id);
                 final state = downloader.states[episode.id];
+                final isDownloaded = task?.isCompleted ?? state?.status == .completed;
                 final speedKb = state?.speed ?? 0;
                 final totalMb = ((task?.extraInfo.totalSize ?? 0) / (1024 * 1024));
                 final progress = ((state?.progress ?? ((state?.status == .completed) ? 1 : 0)) * ((task?.extraInfo.totalSize ?? 0) / (1024 * 1024)));
@@ -46,20 +48,32 @@ class _AnimeEpisodesMenuState extends State<AnimeEpisodesMenu> {
                 return Row(
                   spacing: 5,
                   children: [
-                    if (state?.status != .completed)
-                      IconButton(onPressed: () => downloader.toggle(episode.id), icon: Icon(isPaused ? Icons.play_arrow : Icons.pause)),
+                    if (isDownloaded)
+                      IconButton(
+                        onPressed: () => !isDownloaded ? downloader.toggle(episode.id) : null,
+                        icon: Icon(
+                          isDownloaded
+                              ? Icons.download_done
+                              : isPaused
+                              ? Icons.download
+                              : Icons.pause,
+                        ),
+                      ),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: .stretch,
                         children: [
-                          LinearProgressIndicator(value: state?.progress ?? 0),
+                          LinearProgressIndicator(value: isDownloaded ? 1 : state?.progress ?? 0),
                           Text.rich(
                             style: context.textTheme.labelSmall,
                             TextSpan(
                               children: [
-                                TextSpan(text: "${progress.toStringAsFixed(1)}/${totalMb.toStringAsFixed(1)} Mb\t "),
-                                TextSpan(text: "${speedKb.toStringAsFixed(2)} Kb/s\t"),
-                                TextSpan(text: "$estimated qoldi"),
+                                TextSpan(
+                                  text: isDownloaded
+                                      ? "${totalMb.toStringAsFixed(1)} Mb"
+                                      : "${progress.toStringAsFixed(1)}/${totalMb.toStringAsFixed(1)} Mb\t ",
+                                ),
+                                if (!isDownloaded) ...[TextSpan(text: "${speedKb.toStringAsFixed(2)} Kb/s\t"), TextSpan(text: "$estimated qoldi")],
                               ],
                             ),
                           ),
@@ -71,7 +85,7 @@ class _AnimeEpisodesMenuState extends State<AnimeEpisodesMenu> {
                 );
               },
             ),
-            FilledButton.icon(onPressed: () => downloader.downloadFromStream(episode.video, episode.id), label: Text("Download")),
+            FilledButton.icon(onPressed: () => downloader.downloadFromStream(DownloaderProps.fromEpisode(episode)), label: Text("Download")),
           ],
         ),
       ),

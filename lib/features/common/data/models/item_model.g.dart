@@ -17,6 +17,7 @@ class ItemModelAdapter extends TypeAdapter<ItemModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return ItemModel(
+      id: fields[4] as String?,
       image: fields[1] as String?,
       name: fields[0] as String?,
       role: fields[2] as String?,
@@ -27,7 +28,7 @@ class ItemModelAdapter extends TypeAdapter<ItemModel> {
   @override
   void write(BinaryWriter writer, ItemModel obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -35,7 +36,9 @@ class ItemModelAdapter extends TypeAdapter<ItemModel> {
       ..writeByte(2)
       ..write(obj.role)
       ..writeByte(3)
-      ..write(obj.status);
+      ..write(obj.status)
+      ..writeByte(4)
+      ..write(obj.id);
   }
 
   @override
@@ -54,6 +57,7 @@ class ItemModelAdapter extends TypeAdapter<ItemModel> {
 // **************************************************************************
 
 ItemModel _$ItemModelFromJson(Map<String, dynamic> json) => ItemModel(
+  id: json['id'] as String?,
   image: addBaseUrl(json['image'] as String?),
   name: json['name'] as String?,
   role: json['role'] as String?,
@@ -61,6 +65,7 @@ ItemModel _$ItemModelFromJson(Map<String, dynamic> json) => ItemModel(
 );
 
 Map<String, dynamic> _$ItemModelToJson(ItemModel instance) => <String, dynamic>{
+  'id': instance.id,
   'name': instance.name,
   'image': instance.image,
   'role': instance.role,

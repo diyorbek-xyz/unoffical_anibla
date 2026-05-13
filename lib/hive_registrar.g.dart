@@ -25,9 +25,11 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(AnimeModelAdapter());
     registerAdapter(CalendarModelAdapter());
     registerAdapter(ChunkAdapter());
+    registerAdapter(DownloadInfosAdapter());
     registerAdapter(DownloadModelAdapter());
     registerAdapter(DownloadStateAdapter());
     registerAdapter(DownloadTaskAdapter());
+    registerAdapter(DownloaderPropsAdapter());
     registerAdapter(EpisodeModelAdapter());
     registerAdapter(ExtraInfosAdapter());
     registerAdapter(GenreModelAdapter());
@@ -52,9 +54,11 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
     registerAdapter(AnimeModelAdapter());
     registerAdapter(CalendarModelAdapter());
     registerAdapter(ChunkAdapter());
+    registerAdapter(DownloadInfosAdapter());
     registerAdapter(DownloadModelAdapter());
     registerAdapter(DownloadStateAdapter());
     registerAdapter(DownloadTaskAdapter());
+    registerAdapter(DownloaderPropsAdapter());
     registerAdapter(EpisodeModelAdapter());
     registerAdapter(ExtraInfosAdapter());
     registerAdapter(GenreModelAdapter());

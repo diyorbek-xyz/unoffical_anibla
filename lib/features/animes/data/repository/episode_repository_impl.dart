@@ -6,6 +6,7 @@ import 'package:application/features/animes/data/source/remote/video_api.dart';
 import 'package:application/features/animes/domain/entities/episode_entity.dart';
 import 'package:application/features/animes/domain/entities/video_entity.dart';
 import 'package:application/features/animes/domain/repository/episode_repository.dart';
+import 'package:application/features/player/data/source/local/downloads.dart';
 import 'package:application/network/resources/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -13,7 +14,8 @@ import 'package:dio/dio.dart';
 class EpisodeRepositoryImpl implements EpisodeRepository {
   final EpisodeApi episodeApi;
   final VideoApi videoApi;
-  const EpisodeRepositoryImpl(this.episodeApi, this.videoApi);
+  final DownloadsLocal downloadsLocal;
+  const EpisodeRepositoryImpl(this.episodeApi, this.videoApi, this.downloadsLocal);
 
   @override
   Future<Either<Failure, List<EpisodeEntity>>> getEpisodes(String animeSlug, String seasonSlug) async {
@@ -33,5 +35,10 @@ class EpisodeRepositoryImpl implements EpisodeRepository {
     } on DioException catch (e) {
       return Left(SimpleFailure(e.toString()));
     }
+  }
+
+  @override
+  Future<Either<Failure, List<EpisodeEntity>>> getDownloadedEpisodes() {
+    throw UnimplementedError();
   }
 }

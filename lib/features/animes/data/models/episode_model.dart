@@ -1,3 +1,5 @@
+import 'package:application/features/animes/data/models/anime_model.dart';
+import 'package:application/features/animes/data/models/season_model.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -22,19 +24,16 @@ class EpisodeModel {
   final String? type;
   @HiveField(6)
   final String? video;
+  @HiveField(7)
+  @JsonKey(name: "series_id")
+  final AnimeModel? anime;
+  @HiveField(8)
+  @JsonKey(name: "season_id")
+  final SeasonModel? season;
 
-  const EpisodeModel({
-    this.episodeNumber,
-    this.id,
-    this.ru,
-    this.slug,
-    this.uz,
-    this.type,
-    this.video,
-  });
+  const EpisodeModel({this.episodeNumber, this.id, this.ru, this.slug, this.uz, this.type, this.video, this.season, this.anime});
 
-  factory EpisodeModel.fromJson(Map<String, dynamic> json) =>
-      _$EpisodeModelFromJson(json);
+  factory EpisodeModel.fromJson(Map<String, dynamic> json) => _$EpisodeModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$EpisodeModelToJson(this);
 }

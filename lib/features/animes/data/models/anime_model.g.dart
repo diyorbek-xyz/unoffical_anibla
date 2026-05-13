@@ -124,13 +124,11 @@ AnimeModel _$AnimeModelFromJson(Map<String, dynamic> json) => AnimeModel(
       ? null
       : DateTime.parse(json['createdAt'] as String),
   creators: (json['creators'] as List<dynamic>?)
-      ?.map((e) => ItemModel.fromJson(e as Map<String, dynamic>))
+      ?.map(ItemModel.fromJson)
       .toList(),
   director: json['director'],
   forOnlyMDH: json['for_only_mdh'] as bool?,
-  genres: (json['genres'] as List<dynamic>?)
-      ?.map((e) => GenreModel.fromJson(e as Map<String, dynamic>))
-      .toList(),
+  genres: (json['genres'] as List<dynamic>?)?.map(GenreModel.fromJson).toList(),
   images: addBaseUrlAsList(json['images'] as List?),
   id: json['_id'] as String?,
   keywords: json['keywords'] as List<dynamic>?,

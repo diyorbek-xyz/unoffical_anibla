@@ -7,4 +7,6 @@ abstract class EpisodeRepository {
   Future<Either<Failure, List<EpisodeEntity>>> getEpisodes(String animeSlug, String seasonSlug);
 
   Future<Either<Failure, VideoEntity>> getVideo(String path);
+
+  Future<Either<Failure, List<EpisodeEntity>>> getDownloadedEpisodes();
 }

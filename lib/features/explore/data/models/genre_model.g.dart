@@ -70,15 +70,12 @@ Map<String, dynamic> _$GenreModelToJson(GenreModel instance) =>
       'status': instance.status,
     };
 
-GenreResponse _$GenreResponseFromJson(Map<String, dynamic> json) =>
-    GenreResponse(
-      genres: (json['genres'] as List<dynamic>)
-          .map((e) => GenreModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      pagination: Pagination.fromJson(
-        json['pagination'] as Map<String, dynamic>,
-      ),
-    );
+GenreResponse _$GenreResponseFromJson(
+  Map<String, dynamic> json,
+) => GenreResponse(
+  genres: (json['genres'] as List<dynamic>).map(GenreModel.fromJson).toList(),
+  pagination: Pagination.fromJson(json['pagination'] as Map<String, dynamic>),
+);
 
 Map<String, dynamic> _$GenreResponseToJson(GenreResponse instance) =>
     <String, dynamic>{

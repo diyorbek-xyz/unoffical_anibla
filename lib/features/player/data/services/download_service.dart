@@ -16,20 +16,25 @@ class HlsDownloadService {
   Map<String, DownloadState> states = {};
   DownloadTask? getTask(String id) => storage.getDownload(id);
 
-  Future<String?> downloadFromStream(String streamPath, String id) async {
-    final response = await dio.get(streamPath, queryParameters: {"format": "api"});
+  Future<String?> downloadFromStream(DownloaderProps props) async {
+    final response = await dio.get(props.filePath, queryParameters: {"format": "api"});
     final video = VideoModel.fromJson(response.data);
-    if (video.file != null) return download(id, video.file!);
+    if (video.file != null) return download(props.copyWith(filePath: video.file));
     return null;
   }
 
-  Future<String> download(String id, String masterPath) async {
+  Future<String> download(DownloaderProps props) async {
+    final id = props.episodeId;
     final state = states[id];
     if (state != null && state.status != .completed) await cancel(id);
 
-    final master = await DownloadHlsPlaylist.downloadMasterPlaylist(masterPath, id);
+    final master = await DownloadHlsPlaylist.downloadMasterPlaylist(
+      props.filePath,
+      "${props.animeId}/${props.seasonId}/${props.episodeNumber}-qism:${props.episodeId}",
+    );
+
     final media = await DownloadHlsPlaylist.downloadMediaPlaylist(master.variants.last);
-    final task = DownloadTask(id: id, masterPlaylist: master, mediaPlaylist: media, queue: media.chunks);
+    final task = DownloadTask(props: props, masterPlaylist: master, mediaPlaylist: media, queue: media.chunks, isCompleted: false);
     states[id] = DownloadState(id: id, downloaded: 0, total: media.chunks.length, speed: 0, status: .downloading);
 
     await storage.saveDownload(id, task);
@@ -46,6 +51,9 @@ class HlsDownloadService {
     _speedWorker(task, stopwatch);
     await Future.wait(List.generate(4, (index) => _worker(task, stopwatch)));
     _emit(task.id, status: .completed);
+
+    final info = await DownloadHlsPlaylist.saveCompleted(task.props.copyWith(filePath: task.masterPlaylist.localUrl));
+    await storage.saveDownload(task.id, task.copyWith(isCompleted: true, infos: info));
   }
 
   Future<void> _worker(DownloadTask task, Stopwatch stopwatch) async {

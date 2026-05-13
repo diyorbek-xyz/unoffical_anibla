@@ -7,6 +7,8 @@ part 'item_model.g.dart';
 @HiveType(typeId: 141)
 @JsonSerializable()
 class ItemModel {
+  @HiveField(4)
+  final String? id;
   @HiveField(0)
   final String? name;
   @JsonKey(fromJson: addBaseUrl, includeFromJson: true)
@@ -16,8 +18,11 @@ class ItemModel {
   final String? role;
   @HiveField(3)
   final bool? status;
-  const ItemModel({this.image, this.name, this.role, this.status});
+  const ItemModel({this.id, this.image, this.name, this.role, this.status});
 
-  factory ItemModel.fromJson(Map<String, dynamic> json) => _$ItemModelFromJson(json);
+  factory ItemModel.fromJson(dynamic json) {
+    if (json is String) return ItemModel(id: json);
+    return _$ItemModelFromJson(json);
+  }
   Map<String, dynamic> toJson() => _$ItemModelToJson(this);
 }
