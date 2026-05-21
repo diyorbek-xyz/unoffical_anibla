@@ -14,34 +14,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   void onLogin(LoginEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
     final either = await repository.getConfirm(event.body);
-    emit(
-      either.fold(
-        (failure) => LoginFailed(ExceptionMapper.mapFailureToMessage(failure)),
-        (success) => LoginSuccess(success),
-      ),
-    );
+    emit(either.fold((failure) => LoginFailed(ExceptionMapper.mapFailureToMessage(failure)), (success) => LoginSuccess(success)));
   }
 
   void onConfirm(ConfirmEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
     final either = await repository.confirmCode(event.body);
-    emit(
-      either.fold(
-        (failure) =>
-            ConfirmFailed(ExceptionMapper.mapFailureToMessage(failure)),
-        (success) => ConfirmSuccess(success),
-      ),
-    );
+    emit(either.fold((failure) => ConfirmFailed(ExceptionMapper.mapFailureToMessage(failure)), (success) => ConfirmSuccess(success)));
   }
 
   void onLogOut(LogOutEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
     final either = await repository.logOut(event.tokenId, event.isCurrent);
-    emit(
-      either.fold(
-        (failure) => LogOutFailed(ExceptionMapper.mapFailureToMessage(failure)),
-        (success) => LogedOut(),
-      ),
-    );
+    emit(either.fold((failure) => LogOutFailed(ExceptionMapper.mapFailureToMessage(failure)), (success) => LogedOut()));
   }
 }

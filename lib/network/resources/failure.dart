@@ -53,7 +53,7 @@ abstract class ExceptionMapper {
         if (exception.response?.data is! Map<String, dynamic>) {
           return SimpleFailure(exception.response?.data);
         }
-        switch (exception.response?.data?['message']?.toString()) {
+        switch (exception.response?.data?['error']?.toString()) {
           case Errors.userNotFound:
             return SimpleFailure("Foydalanuvchi topilmadi");
           case Errors.tooManySessions:
