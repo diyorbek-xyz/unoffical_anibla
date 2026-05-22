@@ -5,26 +5,18 @@ class WatchPage extends StatefulWidget {
   final String slug;
   final String type;
   final int episode;
-  const WatchPage({
-    super.key,
-    required this.slug,
-    required this.type,
-    required this.episode,
-  });
+  const WatchPage({super.key, required this.slug, required this.type, required this.episode});
 
   @override
   State<WatchPage> createState() => _WatchPageState();
 }
 
 class _WatchPageState extends State<WatchPage> {
-  
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return VideoPlayer();
+    return Scaffold(
+      appBar: AppBar(),
+      body: VideoPlayer()
+    );
   }
 }

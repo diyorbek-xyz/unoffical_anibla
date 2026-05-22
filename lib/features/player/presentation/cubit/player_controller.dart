@@ -4,7 +4,6 @@ import 'package:application/core/utils/extensions.dart';
 import 'package:application/core/utils/utils.dart';
 import 'package:application/features/animes/data/mapper/video_mapper.dart';
 import 'package:application/features/animes/data/source/remote/video_api.dart';
-import 'package:application/features/animes/domain/entities/episode_entity.dart';
 import 'package:application/features/player/data/model/timeline_model.dart';
 import 'package:application/features/player/data/source/local/timeline.dart';
 import 'package:application/features/player/presentation/cubit/player_states.dart';
@@ -14,71 +13,71 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:media_kit_video/media_kit_video_controls/src/controls/extensions/duration.dart';
+import 'package:rxdart/rxdart.dart';
 
 class PlayerController extends Cubit<PlayerStates> {
   final Timeline timeline;
   final VideoApi videoApi;
   PlayerController(this.timeline, this.videoApi) : super(PlayerStates.empty());
 
-  bool _isSeeking = false;
-
   final player = Player(configuration: PlayerConfiguration(osc: false, async: false));
   late final controller = VideoController(player);
 
-  Future<void> init(List<EpisodeEntity> episodes) async {
-    final isLast = episodes.length == 1;
+  Future<void> init(PlayerProps props) async {
+    final streamId = getStreamId(props.stream);
     await player.setPlaylistMode(PlaylistMode.none);
-    final skip = await openEpisode(episodes.first);
-    await setOldTimeline();
+    final List<int>? skip = props.stream.isNotEmpty ? await openStream(props) : [];
+    await setOldTimeline(streamId);
     await Utils.exitFullScreen();
 
     emit(
       PlayerStates(
-        seekProgress: Duration.zero,
-        fit: BoxFit.contain,
-        error: "init",
-        hasError: false,
+        title: props.title,
+        error: props.stream.isEmpty ? "paid" : "init",
         skip: skip ?? [],
-        isFirst: true,
-        isLast: isLast,
+        hasError: props.stream.isEmpty,
         hasIntro: false,
+        isBuffering: true,
+        isFullscreen: false,
+        fit: BoxFit.contain,
+        streamId: streamId,
+        isMuted: player.state.volume == 0,
         videoTrack: player.state.track.video,
         tracks: player.state.tracks,
-        buffering: true,
-        duration: player.state.duration,
-        episode: episodes.first,
-        episodes: episodes,
-        isFullscreen: false,
-        isMuted: player.state.volume == 0,
+        type: props.type,
+        position: props.position,
         isPaused: !player.state.playing,
         volume: player.state.volume,
-        bufferStream: player.stream.buffer,
-        progressStream: player.stream.position,
+        duration: player.state.duration,
+        buffer: player.state.buffer,
+        progress: player.state.position,
       ),
     );
 
     player.stream.track.listen((event) => emit(state.copyWith(videoTrack: event.video)));
     player.stream.tracks.listen((event) => emit(state.copyWith(tracks: event)));
-    player.stream.duration.listen((event) => emit(state.copyWith(duration: event)));
-    player.stream.buffering.listen((event) => emit(state.copyWith(buffering: event)));
+    player.stream.duration.distinct().listen((event) => emit(state.copyWith(duration: event)));
+    player.stream.buffering.distinct().listen((event) => emit(state.copyWith(isBuffering: event)));
     player.stream.playing.listen((event) => emit(state.copyWith(isPaused: !event)));
     player.stream.volume.listen((event) => emit(state.copyWith(isMuted: event == 0)));
-    player.stream.playlist.listen((event) async {
-      await setOldTimeline();
-    });
-    player.stream.position.listen((event) async {
-      if (_isSeeking) return;
-      final hasSkip = state.skip.isNotEmpty;
-      final hasIntro = hasSkip ? (event.inSeconds < state.skip.last && event.inSeconds > state.skip.first) : false;
-      if (hasIntro != state.hasIntro) {
-        emit(state.copyWith(hasIntro: hasIntro));
-      }
-    });
+    player.stream.playlist.listen((event) async => await setOldTimeline());
     player.stream.error.listen((event) => emit(state.copyWith(hasError: true, error: event.replaceRange(event.indexOf("https"), null, "Video"))));
+    Rx.combineLatest2(
+      player.stream.position,
+      player.stream.buffer,
+      (a, b) => (a, b),
+    ).sampleTime(Durations.extralong4).distinct().listen(_positionStream);
   }
 
-  Future<void> setOldTimeline() async {
-    final time = timeline.getTimeline(state.episode.id);
+  void _positionStream((Duration, Duration) progress) {
+    final (time, buffer) = progress;
+    final hasSkip = state.skip.isNotEmpty;
+    final hasIntro = hasSkip ? (time.inSeconds < state.skip.last && time.inSeconds > state.skip.first) : false;
+    emit(state.copyWith(progress: time, buffer: buffer, hasIntro: hasIntro));
+  }
+
+  Future<void> setOldTimeline([String? streamId]) async {
+    final time = timeline.getTimeline(streamId ?? state.streamId);
     if (time != null) {
       await player.stream.duration.firstWhere((element) => element.inSeconds > 0);
       await seek(time.progress);
@@ -87,7 +86,7 @@ class PlayerController extends Cubit<PlayerStates> {
 
   Future<void> saveTimeline([Duration? time]) async {
     await timeline.saveTimeline(
-      state.episode.id,
+      state.streamId,
       TimelineModel(progress: (time ?? player.state.position) - Duration(seconds: 3), duration: state.duration),
     );
   }
@@ -97,39 +96,20 @@ class PlayerController extends Cubit<PlayerStates> {
     await player.seek(Duration(seconds: state.skip.last));
   }
 
-  Future<List<int>?> openEpisode(EpisodeEntity episode) async {
-    PlayerStates current = state.copyWith(episode: episode);
-    if (episode.video.isEmpty) {
-      emit(current.copyWith(hasError: true, error: "Bu qismni ko'rish uchun obuna sotib oling"));
-      return null;
-    }
-    if (state.episode.id == episode.id || episode.video.isEmpty) return null;
-    if (state.episode.id.isNotEmpty) await saveTimeline();
+  Future<List<int>?> openStream(PlayerProps props) async {
+    final streamId = getStreamId(props.stream);
+    final oldStreamId = state.streamId.isNotEmpty ? getStreamId(state.streamId) : '';
+    if (streamId == oldStreamId || streamId.isEmpty) return null;
+    if (state.streamId.isNotEmpty) await saveTimeline();
 
-    final response = await videoApi.getVideo(getStreamId(episode.video));
+    final response = await videoApi.getVideo(streamId);
     final video = VideoMapper.modelToEntity(response.data);
     final skip = (video.skip as String?)?.split("-").map((e) => e.parseInt()).toList() ?? [];
-    if (video.file.isEmpty) return null;
-    final index = state.episodes.indexWhere((element) => episode.episodeNumber == element.episodeNumber);
-    final isLast = index == state.episodes.length - 1;
-    final isFirst = index == 0;
 
-    emit(current.copyWith(skip: skip, isFirst: isFirst, isLast: isLast));
+    emit(state.copyWith(skip: skip, title: props.title, position: props.position, type: props.type));
 
     await player.open(Media(video.file), play: false);
     return skip;
-  }
-
-  Future<void> previousEpisode() async {
-    if (state.episode.episodeNumber == 1) return;
-    final prev = state.episodes.singleWhere((element) => element.episodeNumber == state.episode.episodeNumber - 1);
-    await openEpisode(prev);
-  }
-
-  Future<void> nextEpisode() async {
-    if (state.episode.episodeNumber == state.episodes.length) return;
-    final prev = state.episodes.firstWhere((element) => element.episodeNumber == state.episode.episodeNumber + 1);
-    await openEpisode(prev);
   }
 
   Future<void> toggleFullscreen(BuildContext context) async {
@@ -161,10 +141,8 @@ class PlayerController extends Cubit<PlayerStates> {
   }
 
   Future<void> seek(Duration time) async {
-    emit(state.copyWith(seekProgress: time));
-    _isSeeking = true;
+    emit(state.copyWith(progress: time));
     await player.seek(time);
-    _isSeeking = false;
     await saveTimeline(time);
   }
 

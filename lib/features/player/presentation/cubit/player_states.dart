@@ -1,145 +1,68 @@
-import 'package:application/features/animes/data/mapper/episode_mapper.dart';
-import 'package:application/features/animes/data/models/episode_model.dart';
-import 'package:application/features/animes/domain/entities/episode_entity.dart';
+import 'package:application/features/animes/domain/entities/anime_entity.dart';
 import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:media_kit/media_kit.dart';
-import 'package:media_kit_video/media_kit_video.dart';
 
-final class PlayerStates {
-  final bool isPaused;
-  final bool hasError;
-  final String? error;
-  final bool isMuted;
-  final bool isFullscreen;
-  final double volume;
-  final Duration duration;
-  final bool buffering;
-  final Tracks tracks;
-  final VideoTrack videoTrack;
-  final EpisodeEntity episode;
-  final List<EpisodeEntity> episodes;
-  final List<int> skip;
-  final bool hasIntro;
-  final bool isFirst;
-  final bool isLast;
-  final BoxFit fit;
-  final Stream<Duration> progressStream;
-  final Stream<Duration> bufferStream;
-  final Duration seekProgress;
+part 'player_states.freezed.dart';
 
-  const PlayerStates({
-    required this.seekProgress,
-    required this.fit,
-    required this.progressStream,
-    required this.bufferStream,
-    required this.isFullscreen,
-    required this.isMuted,
-    required this.isPaused,
-    required this.volume,
-    required this.duration,
-    required this.buffering,
-    required this.tracks,
-    required this.videoTrack,
-    required this.episode,
-    required this.episodes,
-    required this.skip,
-    required this.hasIntro,
-    required this.isFirst,
-    required this.isLast,
-    required this.hasError,
-    this.error,
-  });
+@freezed
+sealed class PlayerStates with _$PlayerStates {
+  factory PlayerStates({
+    required Duration progress,
+    required Duration buffer,
+    required Duration duration,
+    required Tracks tracks,
+    required VideoTrack videoTrack,
+    required List<int> skip,
+    required double volume,
+    required bool isBuffering,
+    required bool isFullscreen,
+    required bool isMuted,
+    required bool isPaused,
+    required bool hasIntro,
+    required bool hasError,
+    required BoxFit fit,
 
-  PlayerStates copyWith({
-    bool? isPaused,
-    bool? isMuted,
-    bool? isFullscreen,
-    double? volume,
-    EpisodeEntity? episode,
-    VideoController? controller,
-    Duration? duration,
-    bool? buffering,
-    Tracks? tracks,
-    VideoTrack? videoTrack,
-    List<EpisodeEntity>? episodes,
-    List<int>? skip,
-    bool? hasIntro,
-    bool? isFirst,
-    bool? isLast,
-    bool? hasError,
+    required String title,
+    required String streamId,
+    required String type,
+    required PlaylistPosition position,
     String? error,
-    BoxFit? fit,
-    Stream<Duration>? progressStream,
-    Stream<Duration>? bufferStream,
-    Duration? seekProgress,
-  }) {
-    return PlayerStates(
-      seekProgress: seekProgress ?? this.seekProgress,
-      progressStream: progressStream ?? this.progressStream,
-      bufferStream: bufferStream ?? this.bufferStream,
-      fit: fit ?? this.fit,
-      hasError: hasError ?? this.hasError,
-      error: error ?? this.error,
-      isFirst: isFirst ?? this.isFirst,
-      isLast: isLast ?? this.isLast,
-      hasIntro: hasIntro ?? this.hasIntro,
-      skip: skip ?? this.skip,
-      episodes: episodes ?? this.episodes,
-      videoTrack: videoTrack ?? this.videoTrack,
-      tracks: tracks ?? this.tracks,
-      buffering: buffering ?? this.buffering,
-      duration: duration ?? this.duration,
-      episode: episode ?? this.episode,
-      isFullscreen: isFullscreen ?? this.isFullscreen,
-      isMuted: isMuted ?? this.isMuted,
-      isPaused: isPaused ?? this.isPaused,
-      volume: volume ?? this.volume,
-    );
-  }
-
-  int diffirence(PlayerStates state) {
-    int score = 0;
-    if (state.error != error) score++;
-    if (state.hasError != hasError) score++;
-    if (state.isFirst != isFirst) score++;
-    if (state.isLast != isLast) score++;
-    if (state.hasIntro != hasIntro) score++;
-    if (state.skip != skip) score++;
-    if (state.episodes != episodes) score++;
-    if (state.videoTrack != videoTrack) score++;
-    if (state.tracks != tracks) score++;
-    if (state.buffering != buffering) score++;
-    if (state.duration != duration) score++;
-    if (state.episode != episode) score++;
-    if (state.isFullscreen != isFullscreen) score++;
-    if (state.isMuted != isMuted) score++;
-    if (state.isPaused != isPaused) score++;
-    if (state.volume != volume) score++;
-    return score;
-  }
+  }) = _PlayerStates;
 
   factory PlayerStates.empty() {
     return PlayerStates(
-      seekProgress: Duration.zero,
-      progressStream: Stream.empty(),
-      bufferStream: Stream.empty(),
+      title: "",
+      streamId: "",
+      type: AnimeType.serie,
+      position: PlaylistPosition.none,
+      buffer: Duration.zero,
+      progress: Duration.zero,
       fit: BoxFit.contain,
       hasError: true,
       error: "empty",
       skip: [],
-      isFirst: false,
-      isLast: false,
       hasIntro: false,
       videoTrack: VideoTrack("", "", ""),
       tracks: Tracks(),
-      buffering: true,
+      isBuffering: true,
       duration: Duration(),
-      episode: EpisodeMapper.modelToEntity(EpisodeModel()),
-      episodes: [],
       isFullscreen: false,
       isMuted: false,
       isPaused: false,
       volume: 100.0,
     );
   }
+}
+
+enum VideoPlayerState { loading, success, error }
+
+enum PlaylistPosition { first, middle, last, none }
+
+class PlayerProps {
+  final String stream;
+  final String type;
+  final String title;
+  final PlaylistPosition position;
+  const PlayerProps({required this.position, required this.type, required this.title, required this.stream});
 }

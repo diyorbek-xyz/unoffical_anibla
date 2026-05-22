@@ -10,7 +10,6 @@ import 'package:application/features/animes/presentation/bloc/anime/anime_event.
 import 'package:application/features/animes/presentation/bloc/anime/anime_state.dart';
 import 'package:application/features/animes/presentation/bloc/episode/episode_bloc.dart';
 import 'package:application/features/animes/presentation/bloc/episode/episode_event.dart';
-import 'package:application/features/animes/presentation/bloc/episode/episode_state.dart';
 import 'package:application/features/animes/presentation/bloc/season/season_bloc.dart';
 import 'package:application/features/animes/presentation/bloc/season/season_event.dart';
 import 'package:application/features/animes/presentation/bloc/season/season_state.dart';
@@ -85,12 +84,6 @@ class _AnimePageState extends State<AnimePage> {
             context.read<EpisodeBloc>().add(
               GetEpisodes(animeSlug, season.first.slug),
             );
-          },
-        ),
-        BlocListener<EpisodeBloc, EpisodeState>(
-          listenWhen: (previous, current) => current is EpisodeSuccess,
-          listener: (context, state) {
-            if (state is EpisodeSuccess) controller.init(state.episodes);
           },
         ),
       ],
