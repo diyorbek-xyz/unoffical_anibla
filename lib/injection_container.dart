@@ -43,7 +43,6 @@ import 'package:application/features/template/data/repository/template_repositor
 import 'package:application/features/template/data/source/remote/template_api.dart';
 import 'package:application/features/template/domain/repository/template_repository.dart';
 import 'package:application/features/template/presentation/bloc/template_bloc.dart';
-import 'package:application/network/download/download_video.dart';
 import 'package:application/network/interceptors/auth_interceptor.dart';
 import 'package:application/network/interceptors/error_interceptor.dart';
 import 'package:application/features/auth/data/repository/auth_repository_impl.dart';
@@ -138,7 +137,6 @@ Future<void> initializeDependencies() async {
   // Register miscs;
   sl.registerSingleton<Dio>(dio);
   sl.registerSingleton<DotEnv>(dotenv);
-  sl.registerSingleton<VideoDownloader>(VideoDownloader());
 
   // Register remote Api Services;
   sl.registerSingleton<SliderApi>(SliderApi(sl()));
