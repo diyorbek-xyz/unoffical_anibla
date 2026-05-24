@@ -24,6 +24,7 @@ bool hasBaseUrl(String? path) {
 }
 
 String getStreamId(String path) {
+  if (path.isEmpty) return "";
   final url = Uri.parse(path);
   return url.pathSegments.last;
 }

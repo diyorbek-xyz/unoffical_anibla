@@ -1,9 +1,7 @@
-import 'package:application/features/animes/domain/entities/anime_entity.dart';
 import 'package:application/features/animes/presentation/bloc/episode/episode_bloc.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:application/core/config/theme/app_colors.dart';
-import 'package:application/features/animes/presentation/bloc/episode/episode_state.dart';
 import 'package:application/features/animes/presentation/widgets/episodes_list.dart';
 import 'package:application/features/common/presentation/widgets/responsive.dart';
 import 'package:application/features/player/presentation/cubit/player_controller.dart';
@@ -34,14 +32,8 @@ class _VideoPlayerState extends State<VideoPlayer> {
 
   @override
   void deactivate() {
-    controller.pause();
+    if (!controller.isClosed) controller.pause();
     super.deactivate();
-  }
-
-  @override
-  void dispose() {
-    controller.close();
-    super.dispose();
   }
 
   int forwardSkipSteps = 0;
@@ -73,6 +65,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
   }
 
   void skip(int step) async {
+    if (!mounted) return;
     setState(() {
       if (step < 0) {
         backwardSkipSteps += step;
@@ -98,27 +91,13 @@ class _VideoPlayerState extends State<VideoPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<EpisodeBloc, EpisodeState>(
-      listener: (context, state) {
-        print("object");
-        if (state is EpisodeSuccess) {
-          controller.init(
-            PlayerProps(position: .first, type: AnimeType.serie, title: state.episodes.first.title.uz, stream: state.episodes.first.video),
-          );
-        }
-      },
-      listenWhen: (previous, current) => true,
+    return BlocSelector<PlayerController, PlayerStates, (bool, String?, BoxFit)>(
+      selector: (state) => (state.hasError, state.error, state.fit),
       builder: (context, state) {
-        if (state is! EpisodeSuccess) return Center(child: Text("Nimadur xato"));
-        return BlocSelector<PlayerController, PlayerStates, (bool, String?, BoxFit)>(
-          selector: (state) => (state.hasError, state.error, state.fit),
-          builder: (context, state) {
-            final (hasError, error, fit) = state;
-            if (error == "empty") return Center(child: Text("Nimadur"));
-            if (hasError && error == "paid") return Center(child: Text("Bu animeni ko'rish uchun obuna sotib oling"));
-            return Video(fit: fit, controller: controller.controller, controls: (state) => controlsBuilder);
-          },
-        );
+        final (hasError, error, fit) = state;
+        if (hasError && error == "empty") return Center(child: Text("Nimadur xato ketti"));
+        if (hasError && error == "paid") return Center(child: Text("Bu animeni ko'rish uchun obuna sotib oling"));
+        return Video(fit: fit, controller: controller.controller, controls: (state) => controlsBuilder);
       },
     );
   }

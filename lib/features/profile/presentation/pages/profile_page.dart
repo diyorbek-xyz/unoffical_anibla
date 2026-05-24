@@ -6,6 +6,7 @@ import 'package:application/features/profile/presentation/bloc/profile/profile_b
 import 'package:application/features/profile/presentation/bloc/profile/profile_event.dart';
 import 'package:application/features/profile/presentation/bloc/profile/profile_state.dart';
 import 'package:application/features/profile/presentation/bloc/session/session_bloc.dart';
+import 'package:application/features/profile/presentation/pages/privacy_settings.dart';
 import 'package:application/features/profile/presentation/widget/sessions.dart';
 import 'package:application/injection_container.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,6 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:application/features/common/presentation/widgets/responsive.dart';
 import 'package:application/features/profile/presentation/pages/devices_menu.dart';
 import 'package:application/features/profile/presentation/pages/infos_menu.dart';
-import 'package:application/features/profile/presentation/pages/last_anime_menu.dart';
 import 'package:application/features/profile/presentation/pages/saves_menu.dart';
 import 'package:application/features/profile/presentation/widget/modals/logout_modal.dart';
 import 'package:application/main.dart';
@@ -39,14 +39,14 @@ final List<TabModel> tabs = [
     label: "Profil ma'lumotlari",
   ),
   TabModel(
-    activeIcon: Icons.history,
-    icon: Icons.history,
-    label: "So'ngi anime",
+    activeIcon: Icons.notifications,
+    icon: Icons.notifications_outlined,
+    label: "Bildirishnomalar",
   ),
   TabModel(
-    activeIcon: Icons.bookmark,
-    icon: Icons.bookmark_outline,
-    label: "Saqlangan animelar",
+    activeIcon: Icons.verified,
+    icon: Icons.verified_outlined,
+    label: "Obunalar",
   ),
   TabModel(
     activeIcon: Icons.devices,
@@ -54,9 +54,9 @@ final List<TabModel> tabs = [
     label: "Qurilmalar",
   ),
   TabModel(
-    activeIcon: Icons.verified,
-    icon: Icons.verified_outlined,
-    label: "Obunalar",
+    activeIcon: Icons.privacy_tip,
+    icon: Icons.privacy_tip_outlined,
+    label: "Xavfsizlik sozlamalari",
   ),
 ];
 
@@ -179,10 +179,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
                     final views = [
                       ProfileInfosMenu(data: data),
-                      ProfileLastAnimeMenu(profile: data),
                       SavesMenu(profile: data),
-                      ProfileDevicesMenu(),
                       Text("obunalar"),
+                      ProfileDevicesMenu(),
+                      PrivacySettings(),
                     ];
                     final mobile = TabBarView(
                       physics: BouncingScrollPhysics(),

@@ -1,4 +1,5 @@
 import 'package:application/features/animes/domain/entities/anime_entity.dart';
+import 'package:application/features/profile/domain/entities/privacy_entity.dart';
 import 'package:application/features/profile/domain/entities/session_entity.dart';
 import 'package:equatable/equatable.dart';
 
@@ -30,9 +31,11 @@ class ProfileEntity extends Equatable {
   final List<dynamic> savedSeries;
   final List<dynamic> savedMovies;
   final int total;
+  final PrivacyEntity privacySettings;
 
   const ProfileEntity({
     required this.email,
+    required this.privacySettings,
     required this.phoneNumber,
     required this.subscription,
     required this.appleId,

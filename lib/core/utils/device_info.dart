@@ -28,7 +28,7 @@ class DeviceInfo {
         LinuxDeviceInfo linuxDeviceInfo = await deviceInfo.linuxInfo;
         device = DeviceInfo(
           name: linuxDeviceInfo.prettyName,
-          platformOS: "linux",
+          platformOS: linuxDeviceInfo.id,
           platform: "desktop",
         );
       } else if (Platform.isMacOS) {

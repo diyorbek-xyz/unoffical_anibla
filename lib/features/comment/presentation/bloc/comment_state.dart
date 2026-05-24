@@ -1,23 +1,12 @@
+import 'package:application/features/comment/data/models/props.dart';
 import 'package:application/features/comment/domain/entities/response_entity.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-sealed class CommentState {
-  const CommentState();
+part 'comment_state.freezed.dart';
+
+@freezed
+sealed class CommentState with _$CommentState {
+  factory CommentState({required CommentsState state, GetCommentsProps? props, String? error, CommentResponse? response}) = _CommentState;
 }
 
-final class CommentInitial extends CommentState {
-  const CommentInitial();
-}
-
-final class CommentLoading extends CommentState {
-  const CommentLoading();
-}
-
-final class CommentSuccess extends CommentState {
-  final CommentResponse response;
-  const CommentSuccess(this.response);
-}
-
-final class CommentError extends CommentState {
-  final String message;
-  const CommentError(this.message);
-}
+enum CommentsState { initial, ready, loading, error, success, endReached }

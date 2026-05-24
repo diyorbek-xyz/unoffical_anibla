@@ -4,7 +4,12 @@ sealed class CommentEvent {
   const CommentEvent();
 }
 
-final class GetComments extends CommentEvent {
+final class InitComments extends CommentEvent {
   final GetCommentsProps props;
-  const GetComments(this.props);
+  const InitComments(this.props);
+}
+
+
+final class GetComments extends CommentEvent {
+  const GetComments();
 }

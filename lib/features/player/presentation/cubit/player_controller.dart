@@ -20,39 +20,12 @@ class PlayerController extends Cubit<PlayerStates> {
   final VideoApi videoApi;
   PlayerController(this.timeline, this.videoApi) : super(PlayerStates.empty());
 
-  final player = Player(configuration: PlayerConfiguration(osc: false, async: false));
+  final player = Player(configuration: PlayerConfiguration());
   late final controller = VideoController(player);
 
   Future<void> init(PlayerProps props) async {
-    final streamId = getStreamId(props.stream);
-    await player.setPlaylistMode(PlaylistMode.none);
-    final List<int>? skip = props.stream.isNotEmpty ? await openStream(props) : [];
-    await setOldTimeline(streamId);
-    await Utils.exitFullScreen();
-
-    emit(
-      PlayerStates(
-        title: props.title,
-        error: props.stream.isEmpty ? "paid" : "init",
-        skip: skip ?? [],
-        hasError: props.stream.isEmpty,
-        hasIntro: false,
-        isBuffering: true,
-        isFullscreen: false,
-        fit: BoxFit.contain,
-        streamId: streamId,
-        isMuted: player.state.volume == 0,
-        videoTrack: player.state.track.video,
-        tracks: player.state.tracks,
-        type: props.type,
-        position: props.position,
-        isPaused: !player.state.playing,
-        volume: player.state.volume,
-        duration: player.state.duration,
-        buffer: player.state.buffer,
-        progress: player.state.position,
-      ),
-    );
+    if (isClosed) return;
+    await openStream(props);
 
     player.stream.track.listen((event) => emit(state.copyWith(videoTrack: event.video)));
     player.stream.tracks.listen((event) => emit(state.copyWith(tracks: event)));
@@ -60,7 +33,7 @@ class PlayerController extends Cubit<PlayerStates> {
     player.stream.buffering.distinct().listen((event) => emit(state.copyWith(isBuffering: event)));
     player.stream.playing.listen((event) => emit(state.copyWith(isPaused: !event)));
     player.stream.volume.listen((event) => emit(state.copyWith(isMuted: event == 0)));
-    player.stream.playlist.listen((event) async => await setOldTimeline());
+    player.stream.playlist.listen((event) => setOldTimeline());
     player.stream.error.listen((event) => emit(state.copyWith(hasError: true, error: event.replaceRange(event.indexOf("https"), null, "Video"))));
     Rx.combineLatest2(
       player.stream.position,
@@ -96,20 +69,30 @@ class PlayerController extends Cubit<PlayerStates> {
     await player.seek(Duration(seconds: state.skip.last));
   }
 
-  Future<List<int>?> openStream(PlayerProps props) async {
+  Future<void> openStream(PlayerProps props) async {
+    if (props.stream.isEmpty) return emit(state.copyWith(error: "paid", hasError: true));
     final streamId = getStreamId(props.stream);
-    final oldStreamId = state.streamId.isNotEmpty ? getStreamId(state.streamId) : '';
-    if (streamId == oldStreamId || streamId.isEmpty) return null;
+    final oldStreamId = getStreamId(state.streamId);
+    if (streamId == oldStreamId && oldStreamId.isNotEmpty) return;
     if (state.streamId.isNotEmpty) await saveTimeline();
 
     final response = await videoApi.getVideo(streamId);
     final video = VideoMapper.modelToEntity(response.data);
     final skip = (video.skip as String?)?.split("-").map((e) => e.parseInt()).toList() ?? [];
-
-    emit(state.copyWith(skip: skip, title: props.title, position: props.position, type: props.type));
-
+    emit(
+      state.copyWith(
+        title: props.title,
+        skip: skip,
+        hasError: props.stream.isEmpty,
+        error: "init",
+        isBuffering: true,
+        streamId: streamId,
+        type: props.type,
+        position: props.position,
+        isPaused: true,
+      ),
+    );
     await player.open(Media(video.file), play: false);
-    return skip;
   }
 
   Future<void> toggleFullscreen(BuildContext context) async {
@@ -219,10 +202,11 @@ class PlayerController extends Cubit<PlayerStates> {
 
   @override
   Future<void> close() async {
+    if (isClosed) return;
     await saveTimeline();
     await player.dispose();
     await Utils.exitFullScreen();
     emit(PlayerStates.empty());
-    return super.close();
+    super.close();
   }
 }

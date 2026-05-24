@@ -6,12 +6,15 @@ import 'package:application/features/comment/data/mapper/comment_mapper.dart';
 import 'package:application/features/comment/data/models/comment_model.dart';
 import 'package:application/features/comment/domain/entities/comment_entity.dart';
 import 'package:application/features/comment/presentation/bloc/comment_bloc.dart';
+import 'package:application/features/comment/presentation/bloc/comment_event.dart';
 import 'package:application/features/comment/presentation/bloc/comment_state.dart';
+import 'package:application/features/profile/data/models/profile_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:very_good_infinite_list/very_good_infinite_list.dart';
 
 class CommentsMenu extends StatefulWidget {
   const CommentsMenu({super.key});
@@ -33,36 +36,26 @@ class _CommentsMenuState extends State<CommentsMenu> {
             SliverOverlapInjector(handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context)),
             BlocBuilder<CommentBloc, CommentState>(
               builder: (context, state) {
-                switch (state) {
-                  case CommentSuccess():
-                  case CommentLoading():
-                    final fake = List.generate(
-                      10,
-                      (i) => CommentMapper.modelToEntity(CommentModel(message: "Loading...")),
-                    );
-                    final isLoading = state is! CommentSuccess;
-                    final comments = !isLoading ? state.response.comments : fake;
-                    return Skeletonizer.sliver(enabled: isLoading, child: commentsList(comments));
-                  case CommentError():
-                    return SliverFillRemaining(child: Text(state.message));
-                  default:
-                    return SliverFillRemaining(child: Text("Comments"));
-                }
+                final fakeData = CommentMapper.modelToEntity(
+                  CommentModel(
+                    user: ProfileModel(name: "User Loading..."),
+                    message: "Message loading...",
+                  ),
+                );
+                final fake = List.generate(5, (i) => fakeData);
+                final comments = state.response?.comments ?? [];
+                return SliverInfiniteList(
+                  onFetchData: () => context.read<CommentBloc>().add(GetComments()),
+                  isLoading: state.state == .loading,
+                  itemCount: comments.length,
+                  loadingBuilder: (context) => Skeletonizer(enabled: true, child: Column(children: fake.map(commentTile).toList())),
+                  itemBuilder: (context, index) => commentTile(comments.elementAt(index)),
+                );
               },
             ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget commentsList(List<CommentEntity> comments) {
-    return SliverList.builder(
-      itemBuilder: (context, index) {
-        final comment = comments.elementAt(index);
-        return commentTile(comment);
-      },
-      itemCount: comments.length,
     );
   }
 
@@ -77,18 +70,11 @@ class _CommentsMenuState extends State<CommentsMenu> {
         spacing: 10,
         children: [
           Text(comment.user.name, style: TextStyle(color: context.appColors.primary)),
-          Text(
-            comment.createdAt.formatRemaining(),
-            style: TextStyle(color: context.appColors.onSurface.withAlpha(100)),
-          ),
+          Text(comment.createdAt.formatRemaining(), style: TextStyle(color: context.appColors.onSurface.withAlpha(100))),
         ],
       ),
       isThreeLine: true,
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 5,
-        children: [Text(comment.message), commentActions(comment)],
-      ),
+      subtitle: Column(crossAxisAlignment: CrossAxisAlignment.start, spacing: 5, children: [SelectableText(comment.message), commentActions(comment)]),
     );
   }
 
@@ -106,10 +92,7 @@ class _CommentsMenuState extends State<CommentsMenu> {
               spacing: 5,
               children: [
                 Icon(MyIcons.like, size: 18),
-                Text(
-                  NumberFormat.compact(locale: "uz").format(comment.likesCount),
-                  style: context.textTheme.labelLarge,
-                ),
+                Text(NumberFormat.compact(locale: "uz").format(comment.likesCount), style: context.textTheme.labelLarge),
               ],
             ),
           ),
@@ -117,10 +100,7 @@ class _CommentsMenuState extends State<CommentsMenu> {
         InkWell(
           onTap: () {},
           mouseCursor: SystemMouseCursors.click,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2),
-            child: Icon(Icons.reply, size: 18),
-          ),
+          child: Padding(padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2), child: Icon(Icons.reply, size: 18)),
         ),
         if (comment.repliesCount != 0)
           InkWell(
@@ -133,10 +113,7 @@ class _CommentsMenuState extends State<CommentsMenu> {
                 crossAxisAlignment: .center,
                 mainAxisSize: .min,
                 children: [
-                  Text(
-                    "${comment.repliesCount}ta javoblarni ochish",
-                    style: TextStyle(color: context.appColors.primary),
-                  ),
+                  Text("${comment.repliesCount}ta javoblarni ochish", style: TextStyle(color: context.appColors.primary)),
                   Icon(Icons.keyboard_arrow_down, color: context.appColors.primary, size: 18),
                 ],
               ),

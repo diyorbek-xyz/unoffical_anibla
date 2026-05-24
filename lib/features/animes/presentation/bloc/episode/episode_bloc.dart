@@ -1,3 +1,4 @@
+import 'package:application/core/utils/base_url.dart';
 import 'package:application/features/animes/domain/repository/episode_repository.dart';
 import 'package:application/features/animes/presentation/bloc/episode/episode_event.dart';
 import 'package:application/features/animes/presentation/bloc/episode/episode_state.dart';
@@ -13,20 +14,13 @@ class EpisodeBloc extends Bloc<EpisodeEvent, EpisodeState> {
   }
 
   void onGetEpisodes(GetEpisodes event, Emitter<EpisodeState> emit) async {
-    if ((state is EpisodeSuccess || state is EpisodeLoading)) {
-      return;
-    }
+    if ((state is EpisodeSuccess || state is EpisodeLoading)) return;
     emit(EpisodeLoading());
     final either = await _episodeRepository.getEpisodes(event.animeSlug, event.seasonSlug);
     emit(
       either.fold(
         (failure) => EpisodeFailure(ExceptionMapper.mapFailureToMessage(failure)),
-        (success) => EpisodeSuccess(
-          success
-              .skipWhile((e) => e.episodeNumber < 1)
-              .map((e) => e.copyWith(timeline: _timelineLocal.getTimeline(e.id)))
-              .toList(),
-        ),
+        (success) => EpisodeSuccess(success.map((e) => e.copyWith(timeline: _timelineLocal.getTimeline(getStreamId(e.video)))).toList()),
       ),
     );
   }

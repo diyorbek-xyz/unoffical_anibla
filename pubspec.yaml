@@ -43,6 +43,7 @@ dependencies:
     rxdart:
     native_splash_screen: 
     freezed_annotation:
+    very_good_infinite_list: ^0.9.0
 
 
 

@@ -1,3 +1,4 @@
+import 'package:application/core/constants/icons.dart';
 import 'package:flutter/material.dart';
 
 enum DevicePlatform { mobile, desktop }
@@ -6,6 +7,8 @@ enum Device {
   unknown,
   ios,
   linux,
+  arch,
+  mint,
   windows,
   macos,
   android;
@@ -22,6 +25,10 @@ enum Device {
         return Device.macos;
       case 'linux':
         return Device.linux;
+      case 'arch':
+        return Device.arch;
+      case 'mint':
+        return Device.mint;
       default:
         return Device.unknown;
     }
@@ -29,15 +36,19 @@ enum Device {
   static IconData getDeviceIcon(Device device) {
     switch (device) {
       case Device.ios:
-        return Icons.apple;
+        return MyIcons.apple;
       case Device.android:
-        return Icons.android;
+        return MyIcons.android;
       case Device.linux:
-        return Icons.computer;
+        return MyIcons.linux;
+      case Device.arch:
+        return MyIcons.arch;
+      case Device.mint:
+        return MyIcons.mint;
       case Device.macos:
-        return Icons.computer;
+        return MyIcons.apple;
       case Device.windows:
-        return Icons.window;
+        return MyIcons.windows11;
       case Device.unknown:
         return Icons.devices;
     }

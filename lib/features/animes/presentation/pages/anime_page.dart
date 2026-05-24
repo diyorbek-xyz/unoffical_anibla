@@ -42,17 +42,15 @@ class _AnimePageState extends State<AnimePage> {
 
   @override
   void initState() {
-    context.read<AnimeBloc>().add(
-      GetSerie(slug: widget.slug, type: widget.type),
-    );
+    context.read<AnimeBloc>().add(GetSerie(slug: widget.slug, type: widget.type));
     controller = context.read<PlayerController>();
     super.initState();
   }
 
   @override
-  void deactivate() {
-    controller.pause();
-    super.deactivate();
+  void dispose() {
+    controller.close();
+    super.dispose();
   }
 
   @override
@@ -60,30 +58,23 @@ class _AnimePageState extends State<AnimePage> {
     return MultiBlocListener(
       listeners: [
         BlocListener<AnimeBloc, AnimeState>(
-          listenWhen: (previous, current) => current is AnimeSuccess,
           listener: (context, state) {
-            final anime = (state as AnimeSuccess).anime;
-            final props = GetCommentsProps(
-              id: anime.id,
-              limit: 10,
-              page: 1,
-              type: widget.type,
-            );
-            context.read<CommentBloc>().add(GetComments(props));
-            if (widget.type != AnimeType.serie) return;
-            context.read<SeasonBloc>().add(GetAllSeasons(state.anime.slug));
+            if (state is! AnimeSuccess) return;
+            final anime = state.anime;
+            context.read<CommentBloc>().add(InitComments(GetCommentsProps(id: anime.id, limit: 10, page: 1, type: widget.type)));
+            if (widget.type == AnimeType.serie) {
+              context.read<SeasonBloc>().add(GetAllSeasons(anime.slug));
+            }
           },
         ),
         BlocListener<SeasonBloc, SeasonState>(
-          listenWhen: (previous, current) =>
-              widget.type == AnimeType.serie && current is SeasonSuccess,
           listener: (context, state) {
-            final season = (state as SeasonSuccess).seasons;
-            final animeState = context.read<AnimeBloc>().state as AnimeSuccess;
-            final animeSlug = animeState.anime.slug;
-            context.read<EpisodeBloc>().add(
-              GetEpisodes(animeSlug, season.first.slug),
-            );
+            if (widget.type != AnimeType.serie) return;
+            if (state is! SeasonSuccess) return;
+            if (state.seasons.isEmpty) return;
+            final animeState = context.read<AnimeBloc>().state;
+            if (animeState is! AnimeSuccess) return;
+            context.read<EpisodeBloc>().add(GetEpisodes(animeState.anime.slug, state.seasons.first.slug));
           },
         ),
       ],
@@ -106,10 +97,7 @@ class _AnimePageState extends State<AnimePage> {
           }
           return Scaffold(
             floatingActionButton: FloatingActionButton.extended(
-              onPressed: () => context.pushNamed(
-                "watch",
-                pathParameters: {"type": widget.type, "slug": widget.slug},
-              ),
+              onPressed: () => context.pushNamed("watch", pathParameters: {"type": widget.type, "slug": widget.slug}),
               label: Text("Hello"),
               icon: Icon(Icons.play_arrow),
             ),
@@ -124,10 +112,7 @@ class _AnimePageState extends State<AnimePage> {
                     headerSliverBuilder: (context, innerBoxIsScrolled) {
                       return [
                         SliverOverlapAbsorber(
-                          handle:
-                              NestedScrollView.sliverOverlapAbsorberHandleFor(
-                                context,
-                              ),
+                          handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                           sliver: appBar(context, anime, innerBoxIsScrolled),
                         ),
                       ];
@@ -137,8 +122,7 @@ class _AnimePageState extends State<AnimePage> {
                         AnimeInfosMenu(),
                         CommentsMenu(),
                         CreatorsMenu(anime: anime),
-                        if (widget.type == AnimeType.serie)
-                          AnimeEpisodesMenu(anime: anime),
+                        if (widget.type == AnimeType.serie) AnimeEpisodesMenu(anime: anime),
                       ],
                     ),
                   ),
@@ -150,16 +134,12 @@ class _AnimePageState extends State<AnimePage> {
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                       child: Container(
-                        decoration: BoxDecoration(
-                          color: context.appColors.surface.withAlpha(100),
-                        ),
+                        decoration: BoxDecoration(color: context.appColors.surface.withAlpha(100)),
                         width: 400,
                         height: 400,
                         child: ErrorBuilder(
                           message: state.message,
-                          refresh: () => context.read<AnimeBloc>().add(
-                            GetSerie(slug: widget.slug, type: widget.type),
-                          ),
+                          refresh: () => context.read<AnimeBloc>().add(GetSerie(slug: widget.slug, type: widget.type)),
                         ),
                       ),
                     ),
@@ -172,18 +152,11 @@ class _AnimePageState extends State<AnimePage> {
     );
   }
 
-  SliverAppBar appBar(
-    BuildContext context,
-    AnimeEntity anime,
-    bool innerBoxIsScrolled,
-  ) {
+  SliverAppBar appBar(BuildContext context, AnimeEntity anime, bool innerBoxIsScrolled) {
     return SliverAppBar.medium(
       leading: Skeleton.ignore(
         ignore: true,
-        child: IconButton(
-          onPressed: () => context.pop(),
-          icon: Icon(Icons.keyboard_arrow_left),
-        ),
+        child: IconButton(onPressed: () => context.pop(), icon: Icon(Icons.keyboard_arrow_left)),
       ),
       automaticallyImplyLeading: true,
       scrolledUnderElevation: 0.0,
@@ -191,10 +164,7 @@ class _AnimePageState extends State<AnimePage> {
       stretch: true,
       centerTitle: false,
       expandedHeight: 350 + kTextTabBarHeight + kToolbarHeight,
-      collapsedHeight:
-          kTextTabBarHeight +
-          kToolbarHeight +
-          MediaQuery.paddingOf(context).top,
+      collapsedHeight: kTextTabBarHeight + kToolbarHeight + MediaQuery.paddingOf(context).top,
       title: Text(anime.title.uz),
       bottom: TabBar(
         tabAlignment: TabAlignment.center,
@@ -205,15 +175,11 @@ class _AnimePageState extends State<AnimePage> {
           Tab(text: "Ma'lumotlar"),
           Tab(text: "Izohlar"),
           Tab(text: "Ovoz beruvchilar"),
-          if (widget.type == AnimeType.serie)
-            Tab(text: "Episodlar ${anime.totalEpisodes}ta"),
+          if (widget.type == AnimeType.serie) Tab(text: "Episodlar ${anime.totalEpisodes}ta"),
         ],
       ),
       forceElevated: innerBoxIsScrolled,
-      flexibleSpace: FlexibleSpaceBar(
-        collapseMode: CollapseMode.pin,
-        background: animeInfo(context, anime),
-      ),
+      flexibleSpace: FlexibleSpaceBar(collapseMode: CollapseMode.pin, background: animeInfo(context, anime)),
     );
   }
 
@@ -239,11 +205,7 @@ class _AnimePageState extends State<AnimePage> {
               colors: [Colors.transparent, context.appColors.surface],
             ),
           ),
-          padding: EdgeInsetsGeometry.only(
-            top: kToolbarHeight,
-            left: 10,
-            right: 10,
-          ),
+          padding: EdgeInsetsGeometry.only(top: kToolbarHeight, left: 10, right: 10),
           alignment: AlignmentGeometry.topCenter,
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: 1000),
@@ -252,10 +214,7 @@ class _AnimePageState extends State<AnimePage> {
               mainAxisSize: .min,
               spacing: 20,
               children: [
-                Text(
-                  "${anime.title.uz} [${anime.age}+]",
-                  style: context.textTheme.headlineMedium,
-                ),
+                Text("${anime.title.uz} [${anime.age}+]", style: context.textTheme.headlineMedium),
                 SizedBox(
                   height: 250,
                   child: Row(
@@ -264,27 +223,14 @@ class _AnimePageState extends State<AnimePage> {
                     children: [
                       Flexible(
                         child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
                           clipBehavior: Clip.antiAlias,
-                          constraints: BoxConstraints(
-                            maxWidth: 300,
-                            minWidth: 100,
-                          ),
+                          constraints: BoxConstraints(maxWidth: 300, minWidth: 100),
                           child: AspectRatio(
                             aspectRatio: 0.65,
                             child: hasBaseUrl(anime.thumbnail)
-                                ? CachedNetworkImage(
-                                    imageUrl: anime.thumbnail,
-                                    fit: BoxFit.cover,
-                                  )
-                                : Skeleton.leaf(
-                                    enabled: true,
-                                    child: Container(
-                                      color: context.appColors.error,
-                                    ),
-                                  ),
+                                ? CachedNetworkImage(imageUrl: anime.thumbnail, fit: BoxFit.cover)
+                                : Skeleton.leaf(enabled: true, child: Container(color: context.appColors.error)),
                           ),
                         ),
                       ),
@@ -297,28 +243,12 @@ class _AnimePageState extends State<AnimePage> {
                               spacing: 5,
                               crossAxisAlignment: .start,
                               children: [
-                                infoItem(
-                                  context: context,
-                                  label: "Chiqarilgan yili:",
-                                  value: "${anime.publishedYear}-yil",
-                                ),
-                                infoItem(
-                                  context: context,
-                                  label: "Mamlakat:",
-                                  value: anime.country?['name']?['uz'] ?? "NN",
-                                ),
-                                infoItem(
-                                  context: context,
-                                  label: "Studia:",
-                                  value: anime.studio?['name'] ?? "NN",
-                                ),
+                                infoItem(context: context, label: "Chiqarilgan yili:", value: "${anime.publishedYear}-yil"),
+                                infoItem(context: context, label: "Mamlakat:", value: anime.country?['name']?['uz'] ?? "NN"),
+                                infoItem(context: context, label: "Studia:", value: anime.studio?['name'] ?? "NN"),
                               ],
                             ),
-                            FilledButton.icon(
-                              onPressed: () {},
-                              icon: Icon(Icons.bookmark_outline),
-                              label: Text("Saqlash"),
-                            ),
+                            FilledButton.icon(onPressed: () {}, icon: Icon(Icons.bookmark_outline), label: Text("Saqlash")),
                           ],
                         ),
                       ),
@@ -333,19 +263,11 @@ class _AnimePageState extends State<AnimePage> {
     );
   }
 
-  Widget infoItem({
-    required BuildContext context,
-    required String label,
-    String? value,
-    Widget? child,
-  }) {
+  Widget infoItem({required BuildContext context, required String label, String? value, Widget? child}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: TextStyle(fontSize: context.textTheme.titleSmall?.fontSize),
-        ),
+        Text(label, style: TextStyle(fontSize: context.textTheme.titleSmall?.fontSize)),
         (value != null) ? itemValue(context, value) : child!,
       ],
     );
@@ -354,11 +276,7 @@ class _AnimePageState extends State<AnimePage> {
   Widget itemValue(BuildContext context, String text) {
     return Text(
       text,
-      style: TextStyle(
-        fontSize: context.textTheme.titleLarge?.fontSize,
-        fontWeight: FontWeight.bold,
-        color: context.appColors.primary,
-      ),
+      style: TextStyle(fontSize: context.textTheme.titleLarge?.fontSize, fontWeight: FontWeight.bold, color: context.appColors.primary),
     );
   }
 }

@@ -20,12 +20,9 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     series.fold((failure) => emit(SearchFailed(ExceptionMapper.mapFailureToMessage(failure))), (r) {
       serieAnimes.addAll(r);
     });
-    movies.fold(
-      (failure) => emit(SearchFailed(ExceptionMapper.mapFailureToMessage(failure))),
-      movieAnimes.addAll,
-    );
+    movies.fold((failure) => emit(SearchFailed(ExceptionMapper.mapFailureToMessage(failure))), movieAnimes.addAll);
     if (state is! SearchFailed) {
-      emit(SearchFound(search: event.search!, series: serieAnimes, movies: movieAnimes));
+      emit(SearchFound(search: event.search ?? "", series: serieAnimes, movies: movieAnimes));
     }
   }
 }

@@ -104,18 +104,10 @@ class _AnimeEpisodesMenuState extends State<AnimeEpisodesMenu> {
             SliverOverlapInjector(handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context)),
             BlocBuilder<EpisodeBloc, EpisodeState>(
               builder: (context, state) {
-                switch (state) {
-                  case EpisodeLoading():
-                  case EpisodeSuccess():
-                    final isLoading = state is! EpisodeSuccess;
-                    final fake = List.generate(10, (index) => EpisodeMapper.modelToEntity(null));
-                    final episodes = isLoading ? fake : state.episodes;
-                    return Skeletonizer.sliver(enabled: isLoading, child: list(episodes, context));
-                  case EpisodeFailure():
-                    return SliverFillRemaining(child: Center(child: Text(state.message)));
-                  default:
-                    return SliverFillRemaining(child: Text("Nimadur xato ketti"));
-                }
+                final isLoading = state is! EpisodeSuccess;
+                final fake = List.generate(10, (index) => EpisodeMapper.modelToEntity(null));
+                final episodes = isLoading ? fake : state.episodes;
+                return Skeletonizer.sliver(enabled: isLoading, child: list(episodes, context));
               },
             ),
           ],

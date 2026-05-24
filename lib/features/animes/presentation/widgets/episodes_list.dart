@@ -115,7 +115,7 @@ class _EpisodesListState extends State<EpisodesList> {
                         child: Stack(
                           fit: StackFit.passthrough,
                           children: [
-                            if (episode.timeline != null && (episode.timeline!.progress.inSeconds < 0 || episode.timeline!.duration.inSeconds < 0))
+                            if (episode.timeline != null && (episode.timeline!.progress.inSeconds > 0 || episode.timeline!.duration.inSeconds > 0))
                               Positioned(
                                 bottom: 0,
                                 left: 0,
