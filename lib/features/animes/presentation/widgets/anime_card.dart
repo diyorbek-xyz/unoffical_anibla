@@ -24,7 +24,7 @@ class AnimeCard extends StatelessWidget {
     required List<PopupMenuEntry<String>> items,
   }) {
     final RelativeRect positionRect = RelativeRect.fromLTRB(
-      position.dx - 200,
+      position.dx - 170,
       position.dy,
       MediaQuery.of(context).size.width - position.dx + 0,
       MediaQuery.of(context).size.height - position.dy,

@@ -61,7 +61,7 @@ class _AnimePageState extends State<AnimePage> {
           listener: (context, state) {
             if (state is! AnimeSuccess) return;
             final anime = state.anime;
-            context.read<CommentBloc>().add(InitComments(GetCommentsProps(id: anime.id, limit: 10, page: 1, type: widget.type)));
+            context.read<CommentBloc>().add(InitComments(GetCommentsProps(id: anime.id, limit: 20, page: 1, type: widget.type)));
             if (widget.type == AnimeType.serie) {
               context.read<SeasonBloc>().add(GetAllSeasons(anime.slug));
             }
@@ -196,7 +196,7 @@ class _AnimePageState extends State<AnimePage> {
             )
           : BoxDecoration(),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(

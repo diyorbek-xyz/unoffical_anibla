@@ -17,24 +17,13 @@ enum ListPosition {
 class ListBorderRadius {
   final Radius outerRadius;
   final Radius innerRadius;
-  const ListBorderRadius({
-    this.outerRadius = const Radius.circular(15),
-    this.innerRadius = const Radius.circular(5),
-  });
+  const ListBorderRadius({this.outerRadius = const Radius.circular(15), this.innerRadius = const Radius.circular(5)});
 
-  BorderRadiusGeometry get first => BorderRadiusGeometry.only(
-    topLeft: outerRadius,
-    topRight: outerRadius,
-    bottomLeft: innerRadius,
-    bottomRight: innerRadius,
-  );
+  BorderRadiusGeometry get first =>
+      BorderRadiusGeometry.only(topLeft: outerRadius, topRight: outerRadius, bottomLeft: innerRadius, bottomRight: innerRadius);
   BorderRadiusGeometry get middle => BorderRadiusGeometry.all(innerRadius);
-  BorderRadiusGeometry get last => BorderRadiusGeometry.only(
-    topLeft: innerRadius,
-    topRight: innerRadius,
-    bottomLeft: outerRadius,
-    bottomRight: outerRadius,
-  );
+  BorderRadiusGeometry get last =>
+      BorderRadiusGeometry.only(topLeft: innerRadius, topRight: innerRadius, bottomLeft: outerRadius, bottomRight: outerRadius);
   BorderRadiusGeometry get single => BorderRadiusGeometry.all(outerRadius);
   BorderRadiusGeometry fromPosition(ListPosition position) {
     switch (position) {
@@ -67,21 +56,17 @@ class ListsWidget extends StatelessWidget {
   final List<ListModel> items;
   final double spacing;
   final ListBorderRadius borderRadius;
-  const ListsWidget({
-    super.key,
-    this.spacing = 2,
-    this.borderRadius = const ListBorderRadius(),
-    required this.items,
-  });
+  const ListsWidget({super.key, this.spacing = 2, this.borderRadius = const ListBorderRadius(), required this.items});
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      shrinkWrap: true,
-      itemCount: items.length,
-      physics: NeverScrollableScrollPhysics(),
-      separatorBuilder: (context, index) => SizedBox(height: spacing),
-      itemBuilder: (context, index) {
+    return Column(
+      spacing: 1.5,
+      crossAxisAlignment: .start,
+      mainAxisAlignment: .start,
+      mainAxisSize: .min,
+      children: items.asMap().entries.map((e) {
+        final index = e.key;
         final list = items[index];
         final responsive = Responsive.of(context);
         if (responsive.isMobile) {
@@ -93,37 +78,22 @@ class ListsWidget extends StatelessWidget {
             title: Text(list.label),
             onTap: () {},
             subtitle: Text(list.value, style: TextStyle(color: context.appColors.primaryFixedDim)),
-            trailing: (list.actions != null && list.actions!.isNotEmpty)
-                ? Row(mainAxisSize: MainAxisSize.min, children: list.actions!)
-                : null,
+            trailing: (list.actions != null && list.actions!.isNotEmpty) ? Row(mainAxisSize: MainAxisSize.min, children: list.actions!) : null,
           );
         }
-        return ListWidget(item: list, borderRadius: borderRadius.fromIndex(index, items.length));
-      },
-    );
-  }
-}
-
-class ListWidget extends StatelessWidget {
-  final ListModel item;
-  final BorderRadiusGeometry borderRadius;
-  const ListWidget({super.key, required this.item, required this.borderRadius});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      tileColor: context.appColors.primaryContainer,
-      textColor: context.appColors.primaryFixed,
-      iconColor: context.appColors.primaryFixed,
-      shape: RoundedRectangleBorder(borderRadius: borderRadius),
-      contentPadding: EdgeInsets.symmetric(vertical: 3, horizontal: 18),
-      leading: Padding(padding: EdgeInsetsGeometry.only(right: 5), child: Icon(item.icon)),
-      title: Text(item.label),
-      onTap: () {},
-      subtitle: Text(item.value, style: TextStyle(color: context.appColors.primaryFixedDim)),
-      trailing: (item.actions != null && item.actions!.isNotEmpty)
-          ? Row(mainAxisSize: MainAxisSize.min, children: item.actions!)
-          : null,
+        return ListTile(
+          tileColor: context.appColors.primaryContainer,
+          textColor: context.appColors.primaryFixed,
+          iconColor: context.appColors.primaryFixed,
+          shape: RoundedRectangleBorder(borderRadius: borderRadius.fromIndex(index, items.length)),
+          contentPadding: EdgeInsets.symmetric(vertical: 3, horizontal: 18),
+          leading: Padding(padding: EdgeInsetsGeometry.only(right: 5), child: Icon(list.icon)),
+          title: Text(list.label),
+          onTap: () {},
+          subtitle: Text(list.value, style: TextStyle(color: context.appColors.primaryFixedDim)),
+          trailing: (list.actions != null && list.actions!.isNotEmpty) ? Row(mainAxisSize: MainAxisSize.min, children: list.actions!) : null,
+        );
+      }).toList(),
     );
   }
 }

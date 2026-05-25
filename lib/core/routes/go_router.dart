@@ -21,16 +21,16 @@ final GoRouter routerConfig = GoRouter(
       branches: [
         StatefulShellBranch(
           navigatorKey: _shellNavigatorKey,
-          routes: [GoRoute(path: '/home', builder: (context, state) => const HomePage())],
+          routes: [GoRoute(path: '/home', name: "home", builder: (context, state) => const HomePage())],
         ),
         StatefulShellBranch(
-          routes: [GoRoute(path: '/explore', builder: (context, state) => const ExplorePage())],
+          routes: [GoRoute(path: '/explore', name: "explore", builder: (context, state) => const ExplorePage())],
         ),
         StatefulShellBranch(
           routes: [GoRoute(path: '/saved', builder: (context, state) => const Text("Saved"))],
         ),
         StatefulShellBranch(
-          routes: [GoRoute(path: '/profile', builder: (context, state) => const ProfilePage())],
+          routes: [GoRoute(path: '/profile', name: 'profile', builder: (context, state) => const ProfilePage())],
         ),
       ],
     ),
@@ -40,19 +40,14 @@ final GoRouter routerConfig = GoRouter(
         GoRoute(
           name: "anime",
           path: '/anime/:type/:slug',
-          builder: (context, state) => AnimePage(
-            slug: state.pathParameters['slug'].toString(),
-            type: state.pathParameters['type']?.toString() ?? "Series",
-          ),
+          builder: (context, state) =>
+              AnimePage(slug: state.pathParameters['slug'].toString(), type: state.pathParameters['type']?.toString() ?? "Series"),
         ),
         GoRoute(
           name: "watch",
           path: '/watch/:type/:slug',
-          builder: (context, state) => WatchPage(
-            slug: state.pathParameters['slug'].toString(),
-            type: state.pathParameters['type']?.toString() ?? "Series",
-            episode: 1,
-          ),
+          builder: (context, state) =>
+              WatchPage(slug: state.pathParameters['slug'].toString(), type: state.pathParameters['type']?.toString() ?? "Series", episode: 1),
         ),
       ],
     ),

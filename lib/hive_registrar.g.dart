@@ -15,6 +15,7 @@ import 'package:application/features/explore/data/models/genre_model.dart';
 import 'package:application/features/player/data/model/download_models.dart';
 import 'package:application/features/player/data/model/parser_models.dart';
 import 'package:application/features/player/data/model/timeline_model.dart';
+import 'package:application/features/profile/data/models/avatar_model.dart';
 import 'package:application/features/profile/data/models/privacy_model.dart';
 import 'package:application/features/profile/data/models/profile_model.dart';
 import 'package:application/features/profile/data/models/session_model.dart';
@@ -24,6 +25,7 @@ import 'package:application/features/template/data/models/template_model.dart';
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
     registerAdapter(AnimeModelAdapter());
+    registerAdapter(AvatarModelAdapter());
     registerAdapter(CalendarModelAdapter());
     registerAdapter(ChunkAdapter());
     registerAdapter(DownloadInfosAdapter());
@@ -54,6 +56,7 @@ extension HiveRegistrar on HiveInterface {
 extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
     registerAdapter(AnimeModelAdapter());
+    registerAdapter(AvatarModelAdapter());
     registerAdapter(CalendarModelAdapter());
     registerAdapter(ChunkAdapter());
     registerAdapter(DownloadInfosAdapter());

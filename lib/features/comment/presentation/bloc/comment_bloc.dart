@@ -16,15 +16,14 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
   }
 
   void onGetComments(GetComments event, Emitter<CommentState> emit) async {
-    print("fetching");
-    if (state.state == .initial) return;
+    if (state.state == .initial || state.state == .endReached) return;
+    if (state.props?.page == state.response?.pagination.next) return emit(state.copyWith(state: .endReached));
     final newState = state.copyWith(state: .loading);
     emit(newState);
     final oldData = state.response;
     final isFirstFetch = oldData == null;
     final props = state.props!.copyWith(page: isFirstFetch ? 1 : oldData.pagination.next);
     final either = await repository.getAnimeComments(props);
-    print("fetched");
     emit(
       either.fold(
         (failure) => newState.copyWith(state: .error, error: ExceptionMapper.mapFailureToMessage(failure)),

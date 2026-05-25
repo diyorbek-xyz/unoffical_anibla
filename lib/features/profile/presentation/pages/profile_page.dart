@@ -1,4 +1,5 @@
 import 'package:application/core/config/theme/app_colors.dart';
+import 'package:application/core/constants/spacings.dart';
 import 'package:application/features/common/presentation/widgets/error.dart';
 import 'package:application/features/profile/data/mapper/profile_mapper.dart';
 import 'package:application/features/profile/data/models/profile_model.dart';
@@ -7,6 +8,7 @@ import 'package:application/features/profile/presentation/bloc/profile/profile_e
 import 'package:application/features/profile/presentation/bloc/profile/profile_state.dart';
 import 'package:application/features/profile/presentation/bloc/session/session_bloc.dart';
 import 'package:application/features/profile/presentation/pages/privacy_settings.dart';
+import 'package:application/features/profile/presentation/widget/avatar_selector.dart';
 import 'package:application/features/profile/presentation/widget/sessions.dart';
 import 'package:application/injection_container.dart';
 import 'package:flutter/material.dart';
@@ -19,45 +21,20 @@ import 'package:application/features/profile/presentation/pages/infos_menu.dart'
 import 'package:application/features/profile/presentation/pages/saves_menu.dart';
 import 'package:application/features/profile/presentation/widget/modals/logout_modal.dart';
 import 'package:application/main.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class TabModel {
   final IconData icon;
   final IconData activeIcon;
   final String label;
-  const TabModel({
-    required this.activeIcon,
-    required this.icon,
-    required this.label,
-  });
+  const TabModel({required this.activeIcon, required this.icon, required this.label});
 }
 
 final List<TabModel> tabs = [
-  TabModel(
-    activeIcon: Icons.info,
-    icon: Icons.info_outline,
-    label: "Profil ma'lumotlari",
-  ),
-  TabModel(
-    activeIcon: Icons.notifications,
-    icon: Icons.notifications_outlined,
-    label: "Bildirishnomalar",
-  ),
-  TabModel(
-    activeIcon: Icons.verified,
-    icon: Icons.verified_outlined,
-    label: "Obunalar",
-  ),
-  TabModel(
-    activeIcon: Icons.devices,
-    icon: Icons.devices_outlined,
-    label: "Qurilmalar",
-  ),
-  TabModel(
-    activeIcon: Icons.privacy_tip,
-    icon: Icons.privacy_tip_outlined,
-    label: "Xavfsizlik sozlamalari",
-  ),
+  TabModel(activeIcon: Icons.info, icon: Icons.info_outline, label: "Profil ma'lumotlari"),
+  TabModel(activeIcon: Icons.notifications, icon: Icons.notifications_outlined, label: "Bildirishnomalar"),
+  TabModel(activeIcon: Icons.verified, icon: Icons.verified_outlined, label: "Obunalar"),
+  TabModel(activeIcon: Icons.devices, icon: Icons.devices_outlined, label: "Qurilmalar"),
+  TabModel(activeIcon: Icons.privacy_tip, icon: Icons.privacy_tip_outlined, label: "Xavfsizlik sozlamalari"),
 ];
 
 class ProfilePage extends StatefulWidget {
@@ -70,9 +47,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   int currentIndex = 0;
   void setCurrentIndex(int index) {
-    setState(() {
-      currentIndex = index;
-    });
+    setState(() => currentIndex = index);
   }
 
   @override
@@ -88,10 +63,7 @@ class _ProfilePageState extends State<ProfilePage> {
             return unauthorizedBuilder(context);
           }
           if (state is ProfileError) {
-            return ErrorBuilder(
-              message: state.message,
-              refresh: () => context.read<ProfileBloc>().add(GetProfile()),
-            );
+            return ErrorBuilder(message: state.message, refresh: () => context.read<ProfileBloc>().add(GetProfile()));
           }
           if (state is ProfileLimitSession) {
             return SessionsFailureWidget(sessions: state.sessions);
@@ -100,12 +72,7 @@ class _ProfilePageState extends State<ProfilePage> {
             final loading = state is ProfileLoading;
             return Skeletonizer(
               justifyMultiLineText: true,
-              enableSwitchAnimation: true,
-              effect: PulseEffect(
-                duration: Duration(seconds: 1),
-                from: context.appColors.primary,
-                to: context.appColors.onPrimary,
-              ),
+              effect: PulseEffect(duration: Duration(seconds: 1), from: context.appColors.primary, to: context.appColors.onPrimary),
               enabled: loading,
               child: mainView,
             );
@@ -127,99 +94,53 @@ class _ProfilePageState extends State<ProfilePage> {
           builder: (context, constraints) => Responsive(
             constraints: constraints,
             mobileWidth: MOBILE_WIDTH + 100,
-            child: RefreshIndicator.adaptive(
-              onRefresh: () async =>
-                  context.read<ProfileBloc>().add(GetProfile()),
-              child: NestedScrollView(
-                headerSliverBuilder: (context, innerBoxIsScrolled) {
-                  final responsive = Responsive.of(context);
-                  final bottom = responsive.isMobile
-                      ? TabBar(
-                          isScrollable: true,
-                          tabAlignment: TabAlignment.center,
-                          indicatorSize: TabBarIndicatorSize.tab,
-                          tabs: tabs
-                              .map((e) => Tab(icon: Icon(e.icon)))
-                              .toList(),
-                        )
-                      : null;
-                  return [
-                    SliverOverlapAbsorber(
-                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                        context,
-                      ),
-                      sliver: SliverAppBar.medium(
-                        automaticallyImplyLeading: true,
-                        scrolledUnderElevation: 0.0,
-                        toolbarHeight: kToolbarHeight,
-                        stretch: true,
-                        centerTitle: false,
-                        expandedHeight:
-                            (responsive.isMobile ? 170 : 100) +
-                            kTextTabBarHeight +
-                            kToolbarHeight,
-                        collapsedHeight:
-                            kTextTabBarHeight +
-                            kToolbarHeight +
-                            MediaQuery.paddingOf(context).top,
-                        title: Text(data.name),
-                        forceElevated: innerBoxIsScrolled,
-                        flexibleSpace: FlexibleSpaceBar(
-                          collapseMode: CollapseMode.pin,
-                          background: basicInfo,
-                        ),
-                        bottom: bottom,
-                      ),
-                    ),
-                  ];
-                },
-                body: Builder(
+            child: RefreshIndicator(
+              onRefresh: () async => context.read<ProfileBloc>().add(GetProfile()),
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(decelerationRate: ScrollDecelerationRate.fast, parent: AlwaysScrollableScrollPhysics()),
+                child: Builder(
                   builder: (context) {
                     final responsive = Responsive.of(context);
-
-                    final views = [
-                      ProfileInfosMenu(data: data),
-                      SavesMenu(profile: data),
-                      Text("obunalar"),
-                      ProfileDevicesMenu(),
-                      PrivacySettings(),
-                    ];
-                    final mobile = TabBarView(
-                      physics: BouncingScrollPhysics(),
-                      children: views,
-                    );
-                    final desktop = Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      spacing: 50,
-                      children: [
-                        Expanded(flex: 1, child: customTabs),
-                        Expanded(
-                          flex: 2,
-                          child: IndexedStack(
-                            sizing: StackFit.loose,
-                            index: currentIndex,
-                            children: views,
+                    final views = [ProfileInfosMenu(data: data), SavesMenu(profile: data), Text("obunalar"), ProfileDevicesMenu(), PrivacySettings()];
+                    final mobile = SizedBox(
+                      height: 900,
+                      child: Column(
+                        mainAxisAlignment: .end,
+                        spacing: 0,
+                        children: [
+                          Padding(
+                            padding: EdgeInsetsGeometry.only(top: appbarHeight, bottom: 20),
+                            child: basicInfo,
                           ),
-                        ),
-                      ],
-                    );
-                    return CustomScrollView(
-                      scrollBehavior: ScrollBehavior().copyWith(
-                        scrollbars: false,
+                          TabBar(
+                            isScrollable: true,
+                            tabAlignment: TabAlignment.center,
+                            indicatorSize: TabBarIndicatorSize.tab,
+                            tabs: tabs.map((e) => Tab(icon: Icon(e.icon))).toList(),
+                          ),
+                          Expanded(
+                            child: TabBarView(physics: BouncingScrollPhysics(), children: views),
+                          ),
+                        ],
                       ),
-                      key: const PageStorageKey("main"),
-                      slivers: [
-                        SliverOverlapInjector(
-                          handle:
-                              NestedScrollView.sliverOverlapAbsorberHandleFor(
-                                context,
-                              ),
-                        ),
-                        responsive.isMobile
-                            ? SliverFillRemaining(child: mobile)
-                            : SliverToBoxAdapter(child: desktop),
-                      ],
                     );
+                    final desktop = Padding(
+                      padding: EdgeInsetsGeometry.all(containerPadding),
+                      child: Column(
+                        children: [
+                          Padding(padding: EdgeInsetsGeometry.only(bottom: 20), child: basicInfo),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            spacing: 20,
+                            children: [
+                              Expanded(flex: 1, child: customTabs),
+                              Expanded(flex: 2, child: views[currentIndex]),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                    return responsive.isMobile ? mobile : desktop;
                   },
                 ),
               ),
@@ -230,51 +151,34 @@ class _ProfilePageState extends State<ProfilePage> {
     },
   );
 
-  Widget get customTabs => ListView.separated(
-    shrinkWrap: true,
-    physics: NeverScrollableScrollPhysics(),
-    scrollDirection: Axis.vertical,
-    itemCount: tabs.length,
-    separatorBuilder: (context, index) => SizedBox(height: 2),
-    itemBuilder: (context, index) {
-      TabModel tab = tabs[index];
+  Widget get customTabs => Column(
+    spacing: 5,
+    children: tabs.asMap().entries.map((e) {
+      final tab = e.value;
+      final index = e.key;
       final selected = index == currentIndex;
       return ListTile(
         title: Text(tab.label),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadiusGeometry.circular(100),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(100)),
         onTap: () => setCurrentIndex(index),
         tileColor: Colors.transparent,
         selected: selected,
-        selectedTileColor: context.appColors.primaryFixed.withValues(
-          alpha: 0.1,
-        ),
+        selectedTileColor: context.appColors.primaryFixed.withValues(alpha: 0.1),
         contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 11),
         leading: Ink(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(100),
-            color: selected
-                ? context.appColors.primary
-                : context.appColors.onPrimary,
+            color: selected ? context.appColors.primary : context.appColors.onPrimary,
           ),
           padding: EdgeInsets.all(10),
-          child: Icon(
-            tab.icon,
-            color: selected
-                ? context.appColors.onPrimary
-                : context.appColors.primary,
-          ),
+          child: Icon(tab.icon, color: selected ? context.appColors.onPrimary : context.appColors.primary),
         ),
       );
-    },
+    }).toList(),
   );
 
   Widget get basicInfo => Padding(
-    padding: const EdgeInsets.symmetric(
-      horizontal: 10,
-      vertical: 20,
-    ).add(EdgeInsetsGeometry.only(top: 40)),
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20).add(EdgeInsetsGeometry.only(top: 40)),
     child: BlocBuilder<ProfileBloc, ProfileState>(
       builder: (context, state) {
         final isLoading = state is! ProfileSuccess;
@@ -286,28 +190,12 @@ class _ProfilePageState extends State<ProfilePage> {
             crossAxisAlignment: .center,
             mainAxisAlignment: .start,
             children: [
-              CircleAvatar(
-                radius: 54,
-                backgroundColor: context.appColors.primary,
-                backgroundImage: isLoading
-                    ? null
-                    : CachedNetworkImageProvider(data.image),
-                child: Text(
-                  isLoading ? "N" : data.name[0],
-                  style: TextStyle(fontSize: 42),
-                ),
-              ),
+              AvatarSelector(url: data.image, isLoading: isLoading),
               RichText(
                 text: TextSpan(
                   children: [
                     TextSpan(text: data.name, style: TextStyle(fontSize: 24)),
-                    if (data.subscription != null)
-                      WidgetSpan(
-                        child: Icon(
-                          Icons.verified,
-                          color: context.appColors.onSurface,
-                        ),
-                      ),
+                    if (data.subscription != null) WidgetSpan(child: Icon(Icons.verified, color: context.appColors.onSurface)),
                   ],
                 ),
               ),
@@ -324,17 +212,7 @@ class _ProfilePageState extends State<ProfilePage> {
           crossAxisAlignment: .center,
           spacing: 10,
           children: [
-            CircleAvatar(
-              radius: 54,
-              backgroundColor: context.appColors.primary,
-              backgroundImage: isLoading
-                  ? null
-                  : CachedNetworkImageProvider(data.image),
-              child: Text(
-                isLoading ? "N" : data.name[0],
-                style: TextStyle(fontSize: 42),
-              ),
-            ),
+            AvatarSelector(url: data.image, isLoading: isLoading),
             Column(
               mainAxisAlignment: .center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -344,13 +222,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   text: TextSpan(
                     children: [
                       TextSpan(text: data.name, style: TextStyle(fontSize: 24)),
-                      if (data.subscription != null)
-                        WidgetSpan(
-                          child: Icon(
-                            Icons.verified,
-                            color: context.appColors.onSurface,
-                          ),
-                        ),
+                      if (data.subscription != null) WidgetSpan(child: Icon(Icons.verified, color: context.appColors.onSurface)),
                     ],
                   ),
                 ),
@@ -364,11 +236,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             Expanded(child: Container()),
             IconButton(
-              onPressed: () => showLogoutModal(
-                context,
-                tokenId: data.tokenId,
-                isCurrent: true,
-              ),
+              onPressed: () => showLogoutModal(context, tokenId: data.tokenId, isCurrent: true),
               icon: Icon(Icons.exit_to_app),
             ),
             SizedBox(width: 30),
@@ -387,10 +255,7 @@ class _ProfilePageState extends State<ProfilePage> {
         spacing: 10,
         children: [
           Text("Royxatdan otish", style: TextStyle(fontSize: 28)),
-          ElevatedButton(
-            onPressed: () => context.pushNamed("login"),
-            child: Text("Kirish"),
-          ),
+          ElevatedButton(onPressed: () => context.pushNamed("login"), child: Text("Kirish")),
         ],
       ),
     );

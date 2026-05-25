@@ -1,5 +1,6 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
+import 'package:application/core/constants/spacings.dart';
 import 'package:application/core/utils/extensions.dart';
 import 'package:application/features/animes/presentation/widgets/anime_card.dart';
 import 'package:application/features/calendar/domain/entities/calendar_entity.dart';
@@ -28,10 +29,7 @@ class Calendar extends StatelessWidget {
             return Text(state.message);
           }
           if (state is CalendarLoading) {
-            return SizedBox(
-              height: 400,
-              child: Center(child: CircularProgressIndicator.adaptive()),
-            );
+            return SizedBox(height: 400, child: Center(child: CircularProgressIndicator.adaptive()));
           }
           return Text("loaded");
         },
@@ -39,41 +37,35 @@ class Calendar extends StatelessWidget {
     );
   }
 
-  Padding main(CalendarWeeklySuccess state, BuildContext context) {
+  Widget main(CalendarWeeklySuccess state, BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
 
     return Padding(
-      padding: EdgeInsetsGeometry.symmetric(vertical: 10).add(
-        EdgeInsetsGeometry.only(right: 10, left: isMobile ? 10 : 0, top: 10),
-      ),
+      padding: EdgeInsets.symmetric(vertical: containerPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            spacing: 10,
-            children: [
-              IconButton(
-                onPressed: () =>
-                    context.read<CalendarBloc>().add(GetCalendarWeekly()),
-                icon: Icon(Icons.refresh),
-              ),
-              Expanded(
-                child: Text(
-                  "Kunlik chiqadigan Animelar ro'yxati",
-                  style: isMobile
-                      ? context.textTheme.headlineSmall
-                      : context.textTheme.headlineLarge,
+          Padding(
+            padding: EdgeInsetsGeometry.symmetric(horizontal: containerPadding),
+            child: Row(
+              spacing: 10,
+              children: [
+                IconButton(onPressed: () => context.read<CalendarBloc>().add(GetCalendarWeekly()), icon: Icon(Icons.refresh)),
+                Expanded(
+                  child: Text(
+                    "Kunlik chiqadigan Animelar ro'yxati",
+                    style: isMobile ? context.textTheme.headlineSmall : context.textTheme.headlineLarge,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          SizedBox(height: 18),
+          SizedBox(height: 23),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            child: Flex(
-              direction: Axis.horizontal,
-              spacing: 20,
-              children: state.data.map((e) => dailyAnimes(e, context)).toList(),
+            child: Padding(
+              padding: EdgeInsetsGeometry.symmetric(horizontal: containerPadding),
+              child: Flex(direction: Axis.horizontal, spacing: 20, children: state.data.map((e) => dailyAnimes(e, context)).toList()),
             ),
           ),
         ],
@@ -87,29 +79,16 @@ class Calendar extends StatelessWidget {
     return Column(
       spacing: 5,
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        weekTitle(context, innerRadius, outerRadius, e),
-        timers(context, innerRadius, outerRadius, e),
-      ],
+      children: [weekTitle(context, innerRadius, outerRadius, e), timers(context, innerRadius, outerRadius, e)],
     );
   }
 
-  Container weekTitle(
-    BuildContext context,
-    Radius innerRadius,
-    Radius outerRadius,
-    CalendarEntity? e,
-  ) {
+  Container weekTitle(BuildContext context, Radius innerRadius, Radius outerRadius, CalendarEntity? e) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
       decoration: BoxDecoration(
         color: context.appColors.primary,
-        borderRadius: BorderRadius.only(
-          bottomLeft: innerRadius,
-          bottomRight: outerRadius,
-          topLeft: outerRadius,
-          topRight: outerRadius,
-        ),
+        borderRadius: BorderRadius.only(bottomLeft: innerRadius, bottomRight: outerRadius, topLeft: outerRadius, topRight: outerRadius),
       ),
       child: Text(
         "${toBeginningOfSentenceCase(e?.date.formatDynamicWeeks())}${e?.timers != null ? " ${e?.timers.length}ta" : ""}",
@@ -118,24 +97,14 @@ class Calendar extends StatelessWidget {
     );
   }
 
-  Container timers(
-    BuildContext context,
-    Radius innerRadius,
-    Radius outerRadius,
-    CalendarEntity? e,
-  ) {
+  Container timers(BuildContext context, Radius innerRadius, Radius outerRadius, CalendarEntity? e) {
     final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
     final double width = isMobile ? 150 : 180;
 
     return Container(
       decoration: BoxDecoration(
         border: Border.all(width: 1, color: context.appColors.primaryContainer),
-        borderRadius: BorderRadius.only(
-          topLeft: innerRadius,
-          bottomLeft: outerRadius,
-          bottomRight: outerRadius,
-          topRight: outerRadius,
-        ),
+        borderRadius: BorderRadius.only(topLeft: innerRadius, bottomLeft: outerRadius, bottomRight: outerRadius, topRight: outerRadius),
       ),
       padding: EdgeInsets.all(5),
       child: (e != null && e.timers.isNotEmpty)
@@ -145,9 +114,7 @@ class Calendar extends StatelessWidget {
                 final episode = timer.episode.episodeNumber;
                 final hasEpisode = episode != 0;
                 return Badge(
-                  label: Text(
-                    "${timer.time.formatTime()}${hasEpisode ? "\t/\t$episode-qism" : ""} ",
-                  ),
+                  label: Text("${timer.time.formatTime()}${hasEpisode ? "\t/\t$episode-qism" : ""} "),
                   alignment: AlignmentGeometry.topLeft,
                   offset: Offset(6, 12),
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -160,12 +127,7 @@ class Calendar extends StatelessWidget {
               width: width,
               child: AspectRatio(
                 aspectRatio: 9 / 15,
-                child: Center(
-                  child: Text(
-                    "Hosircha bu kunda hech qanday anime rejalashtirilmagan",
-                    textAlign: TextAlign.center,
-                  ),
-                ),
+                child: Center(child: Text("Hosircha bu kunda hech qanday anime rejalashtirilmagan", textAlign: TextAlign.center)),
               ),
             ),
     );

@@ -15,6 +15,6 @@ class CommentResponseMapper {
         total: model?.total ?? 0,
         pages: model?.pages ?? 0,
         page: model?.page ?? 1,
-        next: model?.next ?? 2,
+        next: model?.next ?? 0,
       );
 }

@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:application/core/config/theme/app_colors.dart';
+import 'package:application/core/config/theme/app_theme.dart';
+import 'package:application/core/utils/base_url.dart';
 import 'package:application/features/common/presentation/widgets/error.dart';
 import 'package:application/features/slider/domain/entities/slider_entity.dart';
 import 'package:application/features/slider/presentation/bloc/slider_bloc.dart';
@@ -24,23 +26,18 @@ class CarouselWidget extends StatelessWidget {
       child: BlocBuilder<SliderBloc, SliderState>(
         builder: (context, state) {
           if (state is SliderLoading) {
-            return SizedBox(
-              height: 500,
-              child: Center(child: CircularProgressIndicator.adaptive()),
-            );
+            return SizedBox(height: 500, child: Center(child: CircularProgressIndicator.adaptive()));
           }
           if (state is SliderError) {
             return SizedBox(
               height: 500,
-              child: ErrorBuilder(
-                message: state.message,
-                refresh: () => context.read<SliderBloc>().add(GetFullSlider()),
-              ),
+              child: ErrorBuilder(message: state.message, refresh: () => context.read<SliderBloc>().add(GetFullSlider())),
             );
           }
           if (state is SliderSuccess) {
+            final h = MediaQuery.of(context).size.height;
             return SizedBox(
-              height: isMobile ? 370 : 600,
+              height: isMobile ? 370 : h,
               child: Carousel(items: state.data),
             );
           }
@@ -84,7 +81,7 @@ class _CarouselState extends State<Carousel> {
   }
 
   void nextPage() {
-    setPage((currentPage + 1) % (widget.items.length - 1));
+    setPage((currentPage + 1) % (widget.items.length));
   }
 
   void previousPage() {
@@ -112,10 +109,7 @@ class _CarouselState extends State<Carousel> {
           (e) => AnimatedOpacity(
             opacity: e.key == currentPage ? 1 : 0,
             duration: const Duration(milliseconds: 500),
-            child: IgnorePointer(
-              ignoring: e.key != currentPage,
-              child: carouselItem(e.value, context),
-            ),
+            child: IgnorePointer(ignoring: e.key != currentPage, child: carouselItem(e.value, context)),
           ),
         ),
         if (!isMobile)
@@ -128,102 +122,115 @@ class _CarouselState extends State<Carousel> {
                 InkWell(
                   mouseCursor: SystemMouseCursors.click,
                   onTap: previousPage,
-                  child: SizedBox(
-                    width: 100,
-                    child: Icon(Icons.keyboard_arrow_left),
-                  ),
+                  child: SizedBox(width: 100, child: Icon(Icons.keyboard_arrow_left)),
                 ),
                 InkWell(
                   mouseCursor: SystemMouseCursors.click,
                   onTap: nextPage,
-                  child: SizedBox(
-                    width: 100,
-                    child: Icon(Icons.keyboard_arrow_right),
-                  ),
+                  child: SizedBox(width: 100, child: Icon(Icons.keyboard_arrow_right)),
                 ),
               ],
             ),
           ),
-        Row(
-          crossAxisAlignment: .end,
-          mainAxisAlignment: .center,
-          spacing: 10,
-          children: entries.map((e) {
-            final isCurrent = e.key == currentPage;
-            final double radius = 12;
-            return InkWell(
-              onTap: () => setPage(e.key),
-              mouseCursor: SystemMouseCursors.click,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  color: isCurrent
-                      ? context.appColors.primaryContainer
-                      : context.appColors.primary,
-                ),
-                width: isCurrent ? 100 : radius,
-                height: radius,
-                clipBehavior: Clip.antiAlias,
-                alignment: AlignmentGeometry.centerStart,
-                child: AnimatedContainer(
-                  curve: Curves.easeOut,
-                  duration: isCurrent ? duration : Duration(seconds: 0),
-                  width: isCurrent ? 100 : 0,
-                  height: double.infinity,
-                  child: Container(color: context.appColors.primary),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
       ],
     );
   }
 
   Widget carouselItem(SliderEntity e, BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
-
     return GestureDetector(
-      onTap: () => context.pushNamed(
-        "anime",
-        pathParameters: {"type": e.anime.type, "slug": e.anime.slug},
-      ),
+      onTap: () => context.pushNamed("anime", pathParameters: {"type": e.anime.type, "slug": e.anime.slug}),
       child: Container(
         decoration: BoxDecoration(
-          image: DecorationImage(
-            image: CachedNetworkImageProvider(e.image),
-            fit: BoxFit.cover,
-          ),
+          image: DecorationImage(image: CachedNetworkImageProvider(e.image), fit: BoxFit.cover),
         ),
         child: Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: isMobile ? 10 : 70,
-            vertical: isMobile ? 40 : 90,
-          ),
+          padding: EdgeInsets.symmetric(horizontal: isMobile ? 10 : 100, vertical: isMobile ? 40 : 90),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [context.appColors.surface, Colors.transparent],
-              begin: AlignmentGeometry.bottomCenter,
+              begin: AlignmentGeometry.topStart,
               end: AlignmentGeometry.center,
             ),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.end,
-            spacing: 5,
+          child: Row(
+            crossAxisAlignment: .end,
+            mainAxisAlignment: .spaceBetween,
             children: [
-              Text(
-                "${e.anime.title.uz} [${e.anime.age}+]",
-                style: TextStyle(fontSize: 30),
-              ),
-              if (!isMobile)
-                Text(
-                  e.anime.description.uz,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 18),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 10,
+                  children: [
+                    Expanded(child: Container()),
+                    Text("${e.anime.title.uz} [${e.anime.age}+]", style: context.textTheme.displayMedium),
+                    if (!isMobile)
+                      SizedBox(
+                        width: 500,
+                        child: Text(e.anime.description.uz, maxLines: 4, overflow: TextOverflow.ellipsis, style: context.textTheme.bodyLarge),
+                      ),
+                    SizedBox(height: 10),
+                    Row(
+                      spacing: 10,
+                      children: [
+                        FilledButton.icon(
+                          onPressed: () {},
+                          icon: Icon(Icons.play_arrow),
+                          style: ButtonStyle(
+                            padding: WidgetStatePropertyAll(EdgeInsets.all(0)),
+                            fixedSize: WidgetStatePropertyAll(Size(150, 40)),
+                            shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(5))),
+                          ),
+                          label: Text("Tomosha qilish"),
+                        ),
+                        IconButton.outlined(
+                          onPressed: () {},
+                          padding: EdgeInsets.all(0),
+                          icon: Icon(Icons.bookmark_outline),
+                          style: ButtonStyle(
+                            fixedSize: WidgetStatePropertyAll(Size(40, 40)),
+                            shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(5))),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 100),
+                    Row(
+                      crossAxisAlignment: .end,
+                      mainAxisAlignment: .start,
+                      spacing: 10,
+                      children: widget.items.asMap().entries.map((e) {
+                        final isCurrent = e.key == currentPage;
+                        final double radius = 12;
+                        return InkWell(
+                          onTap: () => setPage(e.key),
+                          mouseCursor: SystemMouseCursors.click,
+                          child: AnimatedContainer(
+                            duration: Duration(milliseconds: 500),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              color: isCurrent ? context.appColors.primaryContainer : context.appColors.primary,
+                            ),
+                            width: isCurrent ? 100 : radius * 2,
+                            height: radius,
+                            clipBehavior: Clip.antiAlias,
+                            alignment: AlignmentGeometry.centerStart,
+                            child: AnimatedContainer(
+                              curve: Curves.linear,
+                              duration: isCurrent ? (duration + Durations.medium1) : Duration(seconds: 0),
+                              width: isCurrent ? 100 : 0,
+                              height: double.infinity,
+                              child: Container(color: context.appColors.primary),
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ],
                 ),
+              ),
+              CachedNetworkImage(imageUrl: addBaseUrl(e.mobileImage), height: 500, width: 300, fit: .cover),
             ],
           ),
         ),

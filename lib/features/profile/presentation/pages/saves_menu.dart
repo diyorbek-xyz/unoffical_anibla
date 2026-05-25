@@ -7,11 +7,6 @@ class SavesMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      shrinkWrap: true,
-      children: profile.savedMovies
-          .map((e) => ListTile(title: Text(e.toString())))
-          .toList(),
-    );
+    return Text("Notifications");
   }
 }

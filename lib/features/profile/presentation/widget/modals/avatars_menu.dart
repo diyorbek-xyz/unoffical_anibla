@@ -1,0 +1,301 @@
+import 'package:application/core/utils/base_url.dart';
+import 'package:application/features/profile/data/models/avatar_model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+
+void showAvatarsMenu(BuildContext context) => showDialog(
+  context: context,
+  builder: (context) {
+    return AlertDialog(
+      constraints: BoxConstraints.expand(width: 700, height: 600),
+      contentPadding: EdgeInsets.all(15),
+      actions: [
+        OutlinedButton(onPressed: () => Navigator.pop(context), child: Text("Cancel")),
+        FilledButton(onPressed: () {}, child: Text("Confirm")),
+      ],
+      content: GridView.builder(
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 160, crossAxisSpacing: 5, mainAxisSpacing: 5),
+        itemCount: models.length,
+        physics: BouncingScrollPhysics(),
+        addRepaintBoundaries: true,
+        itemBuilder: (context, index) {
+          final avatar = models.elementAt(index);
+          return RepaintBoundary(
+            child: Material(
+              borderRadius: BorderRadius.circular(15),
+              clipBehavior: Clip.antiAlias,
+              child: InkWell(
+                onTap: () {},
+                mouseCursor: SystemMouseCursors.click,
+                child: Ink.image(image: CachedNetworkImageProvider(addBaseUrl(avatar.avatar!)), fit: .cover),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  },
+);
+
+final sample = [
+  {
+    "_id": "680d04a5600d1dab5e3002cf",
+    "avatar": "/uploads/1745683618539-569727925.jpg",
+    "createdAt": "2025-04-26T16:07:01.719Z",
+    "updatedAt": "2025-04-26T16:07:01.719Z",
+    "__v": 0,
+  },
+  {
+    "_id": "692e0e10a0b7ae0470432f82",
+    "avatar": "/uploads/1764625933448-924863719.jpg",
+    "createdAt": "2025-12-01T21:52:16.628Z",
+    "updatedAt": "2025-12-01T21:52:16.628Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6932c6174bd2476ff43bd440",
+    "avatar": "/uploads/1764935189545-958698341.jpg",
+    "createdAt": "2025-12-05T11:46:31.278Z",
+    "updatedAt": "2025-12-05T11:46:31.278Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6932c6244bd2476ff43bd45f",
+    "avatar": "/uploads/1764935202514-487896922.jpg",
+    "createdAt": "2025-12-05T11:46:44.771Z",
+    "updatedAt": "2025-12-05T11:46:44.771Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6932c62f4bd2476ff43bd47e",
+    "avatar": "/uploads/1764935213483-368493323.jpg",
+    "createdAt": "2025-12-05T11:46:55.239Z",
+    "updatedAt": "2025-12-05T11:46:55.239Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6932c63c4bd2476ff43bd49e",
+    "avatar": "/uploads/1764935225986-213862263.jpg",
+    "createdAt": "2025-12-05T11:47:08.567Z",
+    "updatedAt": "2025-12-05T11:47:08.567Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6932c6464bd2476ff43bd4bd",
+    "avatar": "/uploads/1764935237349-252832073.jpg",
+    "createdAt": "2025-12-05T11:47:18.561Z",
+    "updatedAt": "2025-12-05T11:47:18.561Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6932c6514bd2476ff43bd4dc",
+    "avatar": "/uploads/1764935247966-157400075.jpg",
+    "createdAt": "2025-12-05T11:47:29.025Z",
+    "updatedAt": "2025-12-05T11:47:29.025Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6932c6634bd2476ff43bd4fb",
+    "avatar": "/uploads/1764935266313-283660591.jpg",
+    "createdAt": "2025-12-05T11:47:47.363Z",
+    "updatedAt": "2025-12-05T11:47:47.363Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6932c66d4bd2476ff43bd51a",
+    "avatar": "/uploads/1764935275671-594548417.jpg",
+    "createdAt": "2025-12-05T11:47:57.489Z",
+    "updatedAt": "2025-12-05T11:47:57.489Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6933a41e4bd2476ff43c99e1",
+    "avatar": "/uploads/1764992029329-759118993.jpg",
+    "createdAt": "2025-12-06T03:33:50.650Z",
+    "updatedAt": "2025-12-06T03:33:50.650Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6933a42f4bd2476ff43c9a01",
+    "avatar": "/uploads/1764992046042-950528210.jpg",
+    "createdAt": "2025-12-06T03:34:07.716Z",
+    "updatedAt": "2025-12-06T03:34:07.716Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6933a43e4bd2476ff43c9a20",
+    "avatar": "/uploads/1764992061069-452498240.jpg",
+    "createdAt": "2025-12-06T03:34:22.428Z",
+    "updatedAt": "2025-12-06T03:34:22.428Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6933a4574bd2476ff43c9a3f",
+    "avatar": "/uploads/1764992086129-909903766.jpg",
+    "createdAt": "2025-12-06T03:34:47.637Z",
+    "updatedAt": "2025-12-06T03:34:47.637Z",
+    "__v": 0,
+  },
+  {
+    "_id": "69679fb755a62033846e749c",
+    "avatar": "/uploads/1768398771175-63826268.jpg",
+    "createdAt": "2026-01-14T13:52:55.741Z",
+    "updatedAt": "2026-01-14T13:52:55.741Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6967a030ba53e48287f53851",
+    "avatar": "/uploads/1768398893805-284127141.jpg",
+    "createdAt": "2026-01-14T13:54:56.254Z",
+    "updatedAt": "2026-01-14T13:54:56.254Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6967a03d55a62033846e8747",
+    "avatar": "/uploads/1768398908506-744284274.jpg",
+    "createdAt": "2026-01-14T13:55:09.985Z",
+    "updatedAt": "2026-01-14T13:55:09.985Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6967a04fffc46c275b2aef3a",
+    "avatar": "/uploads/1768398926760-32294361.jpg",
+    "createdAt": "2026-01-14T13:55:27.683Z",
+    "updatedAt": "2026-01-14T13:55:27.683Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6967a058ba53e48287f53d43",
+    "avatar": "/uploads/1768398934898-254811237.jpg",
+    "createdAt": "2026-01-14T13:55:36.247Z",
+    "updatedAt": "2026-01-14T13:55:36.247Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6967a0c755a62033846e96a1",
+    "avatar": "/uploads/1768399045817-398484571.jpg",
+    "createdAt": "2026-01-14T13:57:27.522Z",
+    "updatedAt": "2026-01-14T13:57:27.522Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6967a1b8ba53e48287f56b8e",
+    "avatar": "/uploads/1768399286896-370945459.jpg",
+    "createdAt": "2026-01-14T14:01:28.353Z",
+    "updatedAt": "2026-01-14T14:01:28.353Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6967a1c155a62033846eb849",
+    "avatar": "/uploads/1768399294953-848745825.jpg",
+    "createdAt": "2026-01-14T14:01:37.189Z",
+    "updatedAt": "2026-01-14T14:01:37.189Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6967a1cfba53e48287f56ee2",
+    "avatar": "/uploads/1768399310058-384107490.jpg",
+    "createdAt": "2026-01-14T14:01:51.728Z",
+    "updatedAt": "2026-01-14T14:01:51.728Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6967a1d8ba53e48287f57027",
+    "avatar": "/uploads/1768399318729-668926190.jpg",
+    "createdAt": "2026-01-14T14:02:00.146Z",
+    "updatedAt": "2026-01-14T14:02:00.146Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6967a1e1ffc46c275b2b22df",
+    "avatar": "/uploads/1768399326853-197331910.jpg",
+    "createdAt": "2026-01-14T14:02:09.406Z",
+    "updatedAt": "2026-01-14T14:02:09.406Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6967a9c9ffc46c275b2c1c01",
+    "avatar": "/uploads/1768401351731-759248768.jpg",
+    "createdAt": "2026-01-14T14:35:53.323Z",
+    "updatedAt": "2026-01-14T14:35:53.323Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6967aa25ba53e48287f67456",
+    "avatar": "/uploads/1768401439890-259480474.jpg",
+    "createdAt": "2026-01-14T14:37:25.489Z",
+    "updatedAt": "2026-01-14T14:37:25.489Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6967aa31ba53e48287f676b0",
+    "avatar": "/uploads/1768401455899-336134361.jpg",
+    "createdAt": "2026-01-14T14:37:37.166Z",
+    "updatedAt": "2026-01-14T14:37:37.166Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6967aa3bba53e48287f678bb",
+    "avatar": "/uploads/1768401466226-792887500.jpg",
+    "createdAt": "2026-01-14T14:37:47.645Z",
+    "updatedAt": "2026-01-14T14:37:47.645Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6967aa4955a62033846fc6ee",
+    "avatar": "/uploads/1768401479736-499681013.jpg",
+    "createdAt": "2026-01-14T14:38:01.380Z",
+    "updatedAt": "2026-01-14T14:38:01.380Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6967aa5255a62033846fc870",
+    "avatar": "/uploads/1768401487160-732172954.jpg",
+    "createdAt": "2026-01-14T14:38:10.321Z",
+    "updatedAt": "2026-01-14T14:38:10.321Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6967aa5bba53e48287f67ee5",
+    "avatar": "/uploads/1768401498040-416017853.jpg",
+    "createdAt": "2026-01-14T14:38:19.750Z",
+    "updatedAt": "2026-01-14T14:38:19.750Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6967aa69ba53e48287f6811a",
+    "avatar": "/uploads/1768401510504-671625193.jpg",
+    "createdAt": "2026-01-14T14:38:33.507Z",
+    "updatedAt": "2026-01-14T14:38:33.507Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6967aa72ba53e48287f682e6",
+    "avatar": "/uploads/1768401520757-205211413.jpg",
+    "createdAt": "2026-01-14T14:38:42.553Z",
+    "updatedAt": "2026-01-14T14:38:42.553Z",
+    "__v": 0,
+  },
+  {
+    "_id": "698b6c11e0453ac754f18d0f",
+    "avatar": "/uploads/1770744841960-111830252.jpg",
+    "createdAt": "2026-02-10T17:34:09.445Z",
+    "updatedAt": "2026-02-10T17:34:09.445Z",
+    "__v": 0,
+  },
+  {
+    "_id": "69cac9c0eef73bd644d2e1a9",
+    "avatar": "/uploads/1774897593757-456658913.jpg",
+    "createdAt": "2026-03-30T19:06:40.758Z",
+    "updatedAt": "2026-03-30T19:06:40.758Z",
+    "__v": 0,
+  },
+  {
+    "_id": "6a05f30d3c8d33e3cc9335bc",
+    "avatar": "/uploads/1778774794975-991557571.jpg",
+    "createdAt": "2026-05-14T16:06:37.814Z",
+    "updatedAt": "2026-05-14T16:06:37.814Z",
+    "__v": 0,
+  },
+];
+final models = sample.map((e) => AvatarModel.fromJson(e)).toList();

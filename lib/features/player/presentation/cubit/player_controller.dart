@@ -203,10 +203,10 @@ class PlayerController extends Cubit<PlayerStates> {
   @override
   Future<void> close() async {
     if (isClosed) return;
+    emit(PlayerStates.empty());
+    await Utils.exitFullScreen();
     await saveTimeline();
     await player.dispose();
-    await Utils.exitFullScreen();
-    emit(PlayerStates.empty());
     super.close();
   }
 }

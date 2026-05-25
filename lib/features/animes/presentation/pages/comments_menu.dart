@@ -34,24 +34,28 @@ class _CommentsMenuState extends State<CommentsMenu> {
           key: const PageStorageKey("comments"),
           slivers: [
             SliverOverlapInjector(handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context)),
-            BlocBuilder<CommentBloc, CommentState>(
-              builder: (context, state) {
-                final fakeData = CommentMapper.modelToEntity(
-                  CommentModel(
-                    user: ProfileModel(name: "User Loading..."),
-                    message: "Message loading...",
-                  ),
-                );
-                final fake = List.generate(5, (i) => fakeData);
-                final comments = state.response?.comments ?? [];
-                return SliverInfiniteList(
-                  onFetchData: () => context.read<CommentBloc>().add(GetComments()),
-                  isLoading: state.state == .loading,
-                  itemCount: comments.length,
-                  loadingBuilder: (context) => Skeletonizer(enabled: true, child: Column(children: fake.map(commentTile).toList())),
-                  itemBuilder: (context, index) => commentTile(comments.elementAt(index)),
-                );
-              },
+            SliverPadding(
+              padding: EdgeInsetsGeometry.only(bottom: 80),
+              sliver: BlocBuilder<CommentBloc, CommentState>(
+                builder: (context, state) {
+                  final fakeData = CommentMapper.modelToEntity(
+                    CommentModel(
+                      user: ProfileModel(name: "User Loading..."),
+                      message: "Message loading...",
+                    ),
+                  );
+                  final fake = List.generate(5, (i) => fakeData);
+                  final comments = state.response?.comments ?? [];
+                  return SliverInfiniteList(
+                    onFetchData: () => context.read<CommentBloc>().add(GetComments()),
+                    isLoading: state.state == .loading,
+                    hasReachedMax: state.state == .endReached,
+                    itemCount: comments.length,
+                    loadingBuilder: (context) => Skeletonizer(enabled: true, child: Column(children: fake.map(commentTile).toList())),
+                    itemBuilder: (context, index) => commentTile(comments.elementAt(index)),
+                  );
+                },
+              ),
             ),
           ],
         ),
@@ -74,7 +78,11 @@ class _CommentsMenuState extends State<CommentsMenu> {
         ],
       ),
       isThreeLine: true,
-      subtitle: Column(crossAxisAlignment: CrossAxisAlignment.start, spacing: 5, children: [SelectableText(comment.message), commentActions(comment)]),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 5,
+        children: [SelectableText(comment.message), commentActions(comment)],
+      ),
     );
   }
 
