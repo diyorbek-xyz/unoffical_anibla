@@ -70,10 +70,13 @@ class _WatchPageState extends State<WatchPage> {
             listener: (context, state) => initMovie(),
           ),
         ],
-        child: BlocSelector<PlayerController, PlayerStates, bool>(
-          selector: (state) => state.hasError,
+        child: BlocSelector<PlayerController, PlayerStates, (String?, bool)>(
+          selector: (state) => (state.error, state.hasError),
           builder: (context, state) {
-            if (state) return Container(color: Colors.black, alignment: .center, child: CircularProgressIndicator());
+            if (state.$2) {
+              final error = state.$1 == "paid" ? "Bu animeni ko'rish uchun obuna sotib olding" : "";
+              return Container(color: Colors.black, alignment: .center, child: Text(error));
+            }
             return VideoPlayer();
           },
         ),

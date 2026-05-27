@@ -17,28 +17,28 @@ class MainPage extends StatelessWidget {
         final isMobile = constraints.maxWidth < MOBILE_WIDTH;
         return Scaffold(
           extendBodyBehindAppBar: true,
-          appBar: AppBar(
-            notificationPredicate: (notification) => true,
-            primary: true,
-            toolbarHeight: appbarHeight,
-            automaticallyImplyLeading: false,
-            backgroundColor: context.appColors.surface,
-            foregroundColor: context.appColors.primary,
-            surfaceTintColor: Colors.transparent,
-            shadowColor: Colors.transparent,
-            actionsPadding: EdgeInsets.zero,
-            leadingWidth: 200,
-            leading: logo(context),
-            actions: [
-              actionButton(() => context.goNamed("home"), "Home"),
-              actionButton(() => context.goNamed("explore"), "Explore"),
-              profile(context),
-            ],
-          ),
+          appBar: !isMobile ? appBar(context) : null,
           body: shell,
           bottomNavigationBar: isMobile ? BottomBar(shell: shell) : null,
         );
       },
+    );
+  }
+
+  AppBar appBar(BuildContext context) {
+    return AppBar(
+      notificationPredicate: (notification) => true,
+      primary: true,
+      toolbarHeight: appbarHeight,
+      automaticallyImplyLeading: false,
+      backgroundColor: context.appColors.surface,
+      foregroundColor: context.appColors.primary,
+      surfaceTintColor: Colors.transparent,
+      shadowColor: Colors.transparent,
+      actionsPadding: EdgeInsets.zero,
+      leadingWidth: 200,
+      leading: logo(context),
+      actions: [actionButton(() => context.goNamed("home"), "Home"), actionButton(() => context.goNamed("explore"), "Explore"), profile(context)],
     );
   }
 

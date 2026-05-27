@@ -84,6 +84,12 @@ class _CarouselState extends State<Carousel> {
     setPage((currentPage + 1) % (widget.items.length));
   }
 
+  void slide(DragEndDetails det) {
+    if (det.primaryVelocity == null) return;
+    if (det.primaryVelocity! < -50) previousPage();
+    if (det.primaryVelocity! > 50) nextPage();
+  }
+
   void previousPage() {
     if (currentPage == 0) {
       setPage(widget.items.length - 1);
@@ -136,105 +142,116 @@ class _CarouselState extends State<Carousel> {
     );
   }
 
-  Widget carouselItem(SliderEntity e, BuildContext context) {
-    final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
-    return GestureDetector(
-      onTap: () => context.pushNamed("anime", pathParameters: {"type": e.anime.type, "slug": e.anime.slug}),
-      child: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(image: CachedNetworkImageProvider(e.image), fit: BoxFit.cover),
-        ),
+  Widget carouselItem(SliderEntity e, BuildContext context) => LayoutBuilder(
+    builder: (context, consts) {
+      final isMobile = consts.maxWidth < MOBILE_WIDTH;
+      return GestureDetector(
+        onHorizontalDragEnd: slide,
+        onTap: () => context.pushNamed("anime", pathParameters: {"type": e.anime.type, "slug": e.anime.slug}),
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: isMobile ? 10 : 100, vertical: isMobile ? 40 : 90),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [context.appColors.surface, Colors.transparent],
-              begin: AlignmentGeometry.topStart,
-              end: AlignmentGeometry.center,
-            ),
+            image: DecorationImage(image: CachedNetworkImageProvider(e.image), fit: BoxFit.cover),
           ),
-          child: Row(
-            crossAxisAlignment: .end,
-            mainAxisAlignment: .spaceBetween,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  spacing: 10,
-                  children: [
-                    Expanded(child: Container()),
-                    Text("${e.anime.title.uz} [${e.anime.age}+]", style: context.textTheme.displayMedium),
-                    if (!isMobile)
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: isMobile ? 30 : 100, vertical: isMobile ? 10 : 90),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [context.appColors.surface, Colors.transparent],
+                begin: isMobile ? .bottomCenter : .topStart,
+                end: isMobile ? .center : .center,
+              ),
+            ),
+            child: Row(
+              crossAxisAlignment: .end,
+              mainAxisAlignment: .spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    spacing: 10,
+                    children: [
+                      Expanded(child: Container()),
+                      Text("${e.anime.title.uz} [${e.anime.age}+]", style: isMobile ? context.textTheme.titleLarge : context.textTheme.displayMedium),
                       SizedBox(
                         width: 500,
-                        child: Text(e.anime.description.uz, maxLines: 4, overflow: TextOverflow.ellipsis, style: context.textTheme.bodyLarge),
-                      ),
-                    SizedBox(height: 10),
-                    Row(
-                      spacing: 10,
-                      children: [
-                        FilledButton.icon(
-                          onPressed: () {},
-                          icon: Icon(Icons.play_arrow),
-                          style: ButtonStyle(
-                            padding: WidgetStatePropertyAll(EdgeInsets.all(0)),
-                            fixedSize: WidgetStatePropertyAll(Size(150, 40)),
-                            shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(5))),
-                          ),
-                          label: Text("Tomosha qilish"),
+                        child: Text(
+                          e.anime.description.uz,
+                          maxLines: isMobile ? 2 : 4,
+                          overflow: TextOverflow.ellipsis,
+                          style: isMobile ? context.textTheme.bodyMedium : context.textTheme.bodyLarge,
                         ),
-                        IconButton.outlined(
-                          onPressed: () {},
-                          padding: EdgeInsets.all(0),
-                          icon: Icon(Icons.bookmark_outline),
-                          style: ButtonStyle(
-                            fixedSize: WidgetStatePropertyAll(Size(40, 40)),
-                            shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(5))),
-                          ),
+                      ),
+
+                      if (!isMobile) ...[
+                        SizedBox(height: 10),
+                        Row(
+                          spacing: 10,
+                          children: [
+                            FilledButton.icon(
+                              onPressed: () {},
+                              icon: Icon(Icons.play_arrow),
+                              style: ButtonStyle(
+                                padding: WidgetStatePropertyAll(EdgeInsets.zero),
+                                fixedSize: WidgetStatePropertyAll(Size(150, 40)),
+                                shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(5))),
+                              ),
+                              label: Text("Tomosha qilish"),
+                            ),
+                            IconButton.outlined(
+                              onPressed: () {},
+                              padding: EdgeInsets.zero,
+                              icon: Icon(Icons.bookmark_outline),
+                              style: ButtonStyle(
+                                padding: WidgetStatePropertyAll(EdgeInsets.zero),
+                                fixedSize: WidgetStatePropertyAll(Size(40, 40)),
+                                shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(5))),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
-                    ),
-                    SizedBox(height: 100),
-                    Row(
-                      crossAxisAlignment: .end,
-                      mainAxisAlignment: .start,
-                      spacing: 10,
-                      children: widget.items.asMap().entries.map((e) {
-                        final isCurrent = e.key == currentPage;
-                        final double radius = 12;
-                        return InkWell(
-                          onTap: () => setPage(e.key),
-                          mouseCursor: SystemMouseCursors.click,
-                          child: AnimatedContainer(
-                            duration: Duration(milliseconds: 500),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              color: isCurrent ? context.appColors.primaryContainer : context.appColors.primary,
-                            ),
-                            width: isCurrent ? 100 : radius * 2,
-                            height: radius,
-                            clipBehavior: Clip.antiAlias,
-                            alignment: AlignmentGeometry.centerStart,
+                      SizedBox(height: isMobile ? 10 : 100),
+                      Row(
+                        crossAxisAlignment: .end,
+                        mainAxisAlignment: isMobile ? .center : .start,
+                        spacing: 10,
+                        children: widget.items.asMap().entries.map((e) {
+                          final isCurrent = e.key == currentPage;
+                          final double radius = isMobile ? 9 : 12;
+                          return InkWell(
+                            onTap: () => setPage(e.key),
+                            mouseCursor: SystemMouseCursors.click,
                             child: AnimatedContainer(
-                              curve: Curves.linear,
-                              duration: isCurrent ? (duration + Durations.medium1) : Duration(seconds: 0),
-                              width: isCurrent ? 100 : 0,
-                              height: double.infinity,
-                              child: Container(color: context.appColors.primary),
+                              duration: Duration(milliseconds: 500),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                color: isCurrent ? context.appColors.primaryContainer : context.appColors.primary,
+                              ),
+                              width: isCurrent ? radius * 8 : radius * 2,
+                              height: radius,
+                              clipBehavior: Clip.antiAlias,
+                              alignment: AlignmentGeometry.centerStart,
+                              child: AnimatedContainer(
+                                curve: Curves.linear,
+                                duration: isCurrent ? (duration + Durations.medium1) : Duration(seconds: 0),
+                                width: isCurrent ? radius * 8 : 0,
+                                height: double.infinity,
+                                child: Container(color: context.appColors.primary),
+                              ),
                             ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ],
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              CachedNetworkImage(imageUrl: addBaseUrl(e.mobileImage), height: 500, width: 300, fit: .cover),
-            ],
+                if (!(consts.maxWidth < 1000)) CachedNetworkImage(imageUrl: addBaseUrl(e.mobileImage), height: 500, width: 300, fit: .cover),
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
+    },
+  );
 }
