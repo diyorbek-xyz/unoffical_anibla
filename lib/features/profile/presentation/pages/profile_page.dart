@@ -177,38 +177,37 @@ class _ProfilePageState extends State<ProfilePage> {
     }).toList(),
   );
 
-  Widget get basicInfo => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20).add(EdgeInsetsGeometry.only(top: 40)),
-    child: BlocBuilder<ProfileBloc, ProfileState>(
-      builder: (context, state) {
-        final isLoading = state is! ProfileSuccess;
-        final fake = ProfileMapper.modelToEntity(ProfileModel());
-        final data = isLoading ? fake : state.data;
-        final responsive = Responsive.of(context);
-        if (responsive.isMobile) {
-          return Column(
-            crossAxisAlignment: .center,
-            mainAxisAlignment: .start,
-            children: [
-              AvatarSelector(url: data.image, isLoading: isLoading),
-              RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(text: data.name, style: TextStyle(fontSize: 24)),
-                    if (data.subscription != null) WidgetSpan(child: Icon(Icons.verified, color: context.appColors.onSurface)),
-                  ],
-                ),
+  Widget get basicInfo => BlocBuilder<ProfileBloc, ProfileState>(
+    builder: (context, state) {
+      final isLoading = state is! ProfileSuccess;
+      final fake = ProfileMapper.modelToEntity(ProfileModel());
+      final data = isLoading ? fake : state.data;
+      final responsive = Responsive.of(context);
+      late Widget child;
+      if (responsive.isMobile) {
+        child = Column(
+          crossAxisAlignment: .center,
+          mainAxisAlignment: .start,
+          children: [
+            AvatarSelector(url: data.image, isLoading: isLoading),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(text: data.name, style: TextStyle(fontSize: 24)),
+                  if (data.subscription != null) WidgetSpan(child: Icon(Icons.verified, color: context.appColors.onSurface)),
+                ],
               ),
-              RichText(
-                text: TextSpan(
-                  style: TextStyle(fontSize: 16, color: Colors.white70),
-                  children: [TextSpan(text: "Balans: ${data.balance} so'm")],
-                ),
+            ),
+            RichText(
+              text: TextSpan(
+                style: TextStyle(fontSize: 16, color: Colors.white70),
+                children: [TextSpan(text: "Balans: ${data.balance} so'm")],
               ),
-            ],
-          );
-        }
-        return Row(
+            ),
+          ],
+        );
+      } else {
+        child = Row(
           crossAxisAlignment: .center,
           spacing: 10,
           children: [
@@ -242,8 +241,12 @@ class _ProfilePageState extends State<ProfilePage> {
             SizedBox(width: 30),
           ],
         );
-      },
-    ),
+      }
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20).add(EdgeInsetsGeometry.only(top: responsive.isMobile ? 0 : 40)),
+        child: child,
+      );
+    },
   );
 
   SizedBox unauthorizedBuilder(BuildContext context) {

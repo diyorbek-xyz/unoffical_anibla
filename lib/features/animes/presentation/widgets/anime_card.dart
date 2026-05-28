@@ -6,23 +6,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class AnimeCard extends StatelessWidget {
   final AnimeEntity anime;
   final bool? expand;
   final double? aspectRatio;
-  const AnimeCard({
-    required this.anime,
-    super.key,
-    this.expand,
-    this.aspectRatio,
-  });
+  const AnimeCard({required this.anime, super.key, this.expand, this.aspectRatio});
 
-  void _showCustomMenu(
-    BuildContext context,
-    Offset position, {
-    required List<PopupMenuEntry<String>> items,
-  }) {
+  void _showCustomMenu(BuildContext context, Offset position, {required List<PopupMenuEntry<String>> items}) {
     final RelativeRect positionRect = RelativeRect.fromLTRB(
       position.dx - 170,
       position.dy,
@@ -30,12 +22,7 @@ class AnimeCard extends StatelessWidget {
       MediaQuery.of(context).size.height - position.dy,
     );
 
-    showMenu<String>(
-      context: context,
-      position: positionRect,
-      items: items,
-      elevation: 8.0,
-    );
+    showMenu<String>(context: context, position: positionRect, items: items, elevation: 8.0);
   }
 
   void handleClick(BuildContext context, Offset position) => _showCustomMenu(
@@ -45,18 +32,12 @@ class AnimeCard extends StatelessWidget {
       PopupMenuItem(
         height: 45,
         padding: EdgeInsets.symmetric(horizontal: 15),
-        child: Row(
-          spacing: 10,
-          children: [Icon(Icons.bookmark), Text("Saqlash")],
-        ),
+        child: Row(spacing: 10, children: [Icon(Icons.bookmark), Text("Saqlash")]),
       ),
       PopupMenuItem(
         height: 45,
         padding: EdgeInsets.symmetric(horizontal: 15),
-        child: Row(
-          spacing: 10,
-          children: [Icon(Icons.bookmark), Text("Saqlash")],
-        ),
+        child: Row(spacing: 10, children: [Icon(Icons.bookmark), Text("Saqlash")]),
       ),
     ],
   );
@@ -66,27 +47,16 @@ class AnimeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
     final cover = GestureDetector(
-      onSecondaryTapDown: (details) =>
-          handleClick(context, details.globalPosition),
-      onLongPressStart: (details) =>
-          handleClick(context, details.globalPosition),
+      onSecondaryTapDown: (details) => handleClick(context, details.globalPosition),
+      onLongPressStart: (details) => handleClick(context, details.globalPosition),
       child: InkWell(
         mouseCursor: SystemMouseCursors.click,
         borderRadius: BorderRadius.circular(15),
-        onTap: () => context.pushNamed(
-          "anime",
-          pathParameters: {"type": anime.type, "slug": anime.slug},
-        ),
-        splashColor: context.appColors.surfaceContainerHigh.withValues(
-          alpha: 0.2,
-        ),
-        hoverColor: context.appColors.surfaceContainerHigh.withValues(
-          alpha: 0.2,
-        ),
+        onTap: () => context.pushNamed("anime", pathParameters: {"type": anime.type, "slug": anime.slug}),
+        splashColor: context.appColors.surfaceContainerHigh.withValues(alpha: 0.2),
+        hoverColor: context.appColors.surfaceContainerHigh.withValues(alpha: 0.2),
         highlightColor: Colors.transparent,
-        focusColor: context.appColors.surfaceContainerHigh.withValues(
-          alpha: 0.2,
-        ),
+        focusColor: context.appColors.surfaceContainerHigh.withValues(alpha: 0.2),
         radius: 350,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,28 +65,17 @@ class AnimeCard extends StatelessWidget {
             AspectRatio(
               aspectRatio: 9 / 12,
               child: Ink(
-                decoration: !anime.thumbnail.endsWith(".avif")
+                decoration: (!anime.thumbnail.endsWith(".avif") && anime.thumbnail.isNotEmpty)
                     ? BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: context.appColors.surfaceContainerLowest,
-                            blurRadius: 4,
-                            offset: Offset(0, 2),
-                          ),
-                        ],
+                        boxShadow: [BoxShadow(color: context.appColors.surfaceContainerLowest, blurRadius: 4, offset: Offset(0, 2))],
                         image: DecorationImage(
-                          image: CachedNetworkImageProvider(
-                            addBaseUrl(anime.thumbnail),
-                          ),
+                          image: CachedNetworkImageProvider(addBaseUrl(anime.thumbnail)),
                           fit: BoxFit.cover,
                           alignment: AlignmentGeometry.center,
                         ),
                         borderRadius: BorderRadius.circular(14),
                       )
-                    : BoxDecoration(
-                        color: context.appColors.error,
-                        borderRadius: BorderRadius.circular(14),
-                      ),
+                    : BoxDecoration(color: context.appColors.primaryContainer, borderRadius: BorderRadius.circular(14)),
               ),
             ),
             Padding(
@@ -134,26 +93,19 @@ class AnimeCard extends StatelessWidget {
       ),
     );
     return SizedBox(
-      width: (expand != null && expand!)
-          ? double.infinity
-          : (isMobile ? 150 : 180),
+      width: (expand != null && expand!) ? double.infinity : (isMobile ? 150 : 180),
       child: Stack(
         children: [
-          (expand == null || !expand! || aspectRatio != null)
-              ? AspectRatio(aspectRatio: aspectRatio ?? 9 / 15, child: cover)
-              : cover,
+          (expand == null || !expand! || aspectRatio != null) ? AspectRatio(aspectRatio: aspectRatio ?? 9 / 15, child: cover) : cover,
+
           Positioned(
             right: 7,
             top: 5,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-              decoration: BoxDecoration(
-                color: context.appColors.primaryContainer.withAlpha(200),
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Text(
-                "${anime.publishedYear}-yil",
-                style: TextStyle(color: context.appColors.primary),
+            child: Skeleton.ignore(
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                decoration: BoxDecoration(color: context.appColors.primaryContainer.withAlpha(200), borderRadius: BorderRadius.circular(6)),
+                child: Text("${anime.publishedYear}-yil", style: TextStyle(color: context.appColors.primary)),
               ),
             ),
           ),

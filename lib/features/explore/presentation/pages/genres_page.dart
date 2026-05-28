@@ -4,6 +4,7 @@ import 'package:application/features/explore/domain/entities/genre_entity.dart';
 import 'package:application/features/explore/presentation/bloc/genre/genre_bloc.dart';
 import 'package:application/features/explore/presentation/bloc/genre/genre_event.dart';
 import 'package:application/features/explore/presentation/bloc/genre/genre_state.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,8 +18,14 @@ class GenresPage extends StatelessWidget {
     return CustomScrollView(
       scrollBehavior: ScrollBehavior().copyWith(scrollbars: false),
       key: const PageStorageKey("genres"),
+      physics: BouncingScrollPhysics(),
       slivers: [
-        SliverOverlapInjector(handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context)),
+        CupertinoSliverRefreshControl(
+          onRefresh: () async {
+            context.read<GenreBloc>().add(GetGenres());
+            await Future.delayed(Durations.extralong4);
+          },
+        ),
         BlocBuilder<GenreBloc, GenreState>(
           builder: (context, state) {
             switch (state) {
@@ -26,31 +33,17 @@ class GenresPage extends StatelessWidget {
                 return SliverFillRemaining(child: Center(child: CircularProgressIndicator()));
               case GenreFailed():
                 return SliverFillRemaining(
-                  child: ErrorBuilder(
-                    message: state.message,
-                    refresh: () => context.read<GenreBloc>().add(GetGenres()),
-                  ),
+                  child: ErrorBuilder(message: state.message, refresh: () => context.read<GenreBloc>().add(GetGenres())),
                 );
               case GenresFullSuccess():
-                return SliverFillRemaining(
-                  child: Padding(
-                    padding: EdgeInsetsGeometry.all(5),
-                    child: Material(
-                      clipBehavior: Clip.antiAlias,
-                      borderRadius: BorderRadius.circular(12),
-                      child: RefreshIndicator.adaptive(
-                        onRefresh: () async => context.read<GenreBloc>().add(GetGenres()),
-                        child: GridView.extent(
-                          physics: NeverScrollableScrollPhysics(),
-                          maxCrossAxisExtent: 250,
-                          childAspectRatio: 3 / 1,
-                          shrinkWrap: true,
-                          mainAxisSpacing: 2,
-                          crossAxisSpacing: 2,
-                          children: state.data.map((e) => genreItem(context, e)).toList(),
-                        ),
-                      ),
-                    ),
+                return SliverPadding(
+                  padding: EdgeInsetsGeometry.all(5),
+                  sliver: SliverGrid.extent(
+                    maxCrossAxisExtent: 250,
+                    childAspectRatio: 3 / 1,
+                    mainAxisSpacing: 2,
+                    crossAxisSpacing: 2,
+                    children: state.data.map((e) => genreItem(context, e)).toList(),
                   ),
                 );
               default:
@@ -75,17 +68,11 @@ class GenresPage extends StatelessWidget {
       highlightColor: context.appColors.primaryContainer.withAlpha(20),
       mouseCursor: SystemMouseCursors.click,
       child: Ink(
-        decoration: BoxDecoration(
-          color: context.appColors.primary,
-          borderRadius: BorderRadius.circular(4),
-        ),
+        decoration: BoxDecoration(color: context.appColors.primary, borderRadius: BorderRadius.circular(4)),
         padding: EdgeInsets.all(10),
         child: Align(
           alignment: AlignmentGeometry.center,
-          child: Text(
-            e.title.uz,
-            style: TextStyle(color: context.appColors.onPrimary, fontSize: 20),
-          ),
+          child: Text(e.title.uz, style: TextStyle(color: context.appColors.onPrimary, fontSize: 20)),
         ),
       ),
     );

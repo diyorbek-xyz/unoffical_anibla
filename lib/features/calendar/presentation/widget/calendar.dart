@@ -2,7 +2,11 @@ import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/core/constants/spacings.dart';
 import 'package:application/core/utils/extensions.dart';
+import 'package:application/features/animes/data/models/anime_model.dart';
 import 'package:application/features/animes/presentation/widgets/anime_card.dart';
+import 'package:application/features/calendar/data/mapper/calendar_mapper.dart';
+import 'package:application/features/calendar/data/models/calendar_model.dart';
+import 'package:application/features/calendar/data/models/timer_model.dart';
 import 'package:application/features/calendar/domain/entities/calendar_entity.dart';
 import 'package:application/features/calendar/presentation/bloc/calendar_bloc.dart';
 import 'package:application/features/calendar/presentation/bloc/calendar_event.dart';
@@ -12,6 +16,7 @@ import 'package:application/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class Calendar extends StatelessWidget {
   const Calendar({super.key});
@@ -22,53 +27,52 @@ class Calendar extends StatelessWidget {
       create: (context) => sl<CalendarBloc>()..add(GetCalendarWeekly()),
       child: BlocBuilder<CalendarBloc, CalendarState>(
         builder: (context, state) {
-          if (state is CalendarWeeklySuccess) {
-            return main(state, context);
-          }
-          if (state is CalendarError) {
-            return Text(state.message);
-          }
-          if (state is CalendarLoading) {
-            return SizedBox(height: 400, child: Center(child: CircularProgressIndicator.adaptive()));
-          }
-          return Text("loaded");
-        },
-      ),
-    );
-  }
+          final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
+          final isLoading = state is! CalendarWeeklySuccess;
+          final fakeTimers = List.generate(2, (index) => TimerModel(anime: AnimeModel(uz: {"title": lorem(20), "description": lorem()})));
+          final fake = List.generate(7, (index) => CalendarMapper.modelToEntity(CalendarModel(timers: fakeTimers)));
+          final data = isLoading ? fake : state.data;
 
-  Widget main(CalendarWeeklySuccess state, BuildContext context) {
-    final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
-
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: containerPadding),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Padding(
-            padding: EdgeInsetsGeometry.symmetric(horizontal: containerPadding),
-            child: Row(
-              spacing: 10,
-              children: [
-                IconButton(onPressed: () => context.read<CalendarBloc>().add(GetCalendarWeekly()), icon: Icon(Icons.refresh)),
-                Expanded(
-                  child: Text(
-                    "Kunlik chiqadigan Animelar ro'yxati",
-                    style: isMobile ? context.textTheme.headlineSmall : context.textTheme.headlineLarge,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 23),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
+          return Skeletonizer(
+            enabled: isLoading,
+            enableSwitchAnimation: true,
             child: Padding(
-              padding: EdgeInsetsGeometry.symmetric(horizontal: containerPadding),
-              child: Flex(direction: Axis.horizontal, spacing: 20, children: state.data.map((e) => dailyAnimes(e, context)).toList()),
+              padding: EdgeInsets.symmetric(vertical: containerPadding),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Skeleton.keep(
+                    keep: true,
+                    child: Padding(
+                      padding: EdgeInsetsGeometry.symmetric(horizontal: isMobile ? 10 : containerPadding),
+                      child: Row(
+                        textDirection: isMobile ? .rtl : .ltr,
+                        spacing: 10,
+                        children: [
+                          IconButton(onPressed: () => context.read<CalendarBloc>().add(GetCalendarWeekly()), icon: Icon(Icons.refresh)),
+                          Expanded(
+                            child: Text(
+                              "Kunlik chiqadigan Animelar ro'yxati",
+                              style: isMobile ? context.textTheme.headlineSmall : context.textTheme.headlineLarge,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 23),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Padding(
+                      padding: EdgeInsetsGeometry.symmetric(horizontal: isMobile ? 10 : containerPadding),
+                      child: Flex(direction: Axis.horizontal, spacing: 20, children: data.map((e) => dailyAnimes(e, context)).toList()),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
@@ -90,9 +94,12 @@ class Calendar extends StatelessWidget {
         color: context.appColors.primary,
         borderRadius: BorderRadius.only(bottomLeft: innerRadius, bottomRight: outerRadius, topLeft: outerRadius, topRight: outerRadius),
       ),
-      child: Text(
-        "${toBeginningOfSentenceCase(e?.date.formatDynamicWeeks())}${e?.timers != null ? " ${e?.timers.length}ta" : ""}",
-        style: TextStyle(color: context.appColors.onPrimary),
+      child: Skeleton.ignore(
+        ignore: true,
+        child: Text(
+          "${toBeginningOfSentenceCase(e?.date.formatDynamicWeeks())}${e?.timers != null ? " ${e?.timers.length}ta" : ""}",
+          style: TextStyle(color: context.appColors.onPrimary),
+        ),
       ),
     );
   }
@@ -114,7 +121,7 @@ class Calendar extends StatelessWidget {
                 final episode = timer.episode.episodeNumber;
                 final hasEpisode = episode != 0;
                 return Badge(
-                  label: Text("${timer.time.formatTime()}${hasEpisode ? "\t/\t$episode-qism" : ""} "),
+                  label: Skeleton.ignore(child: Text("${timer.time.formatTime()}${hasEpisode ? "\t/\t$episode-qism" : ""} ")),
                   alignment: AlignmentGeometry.topLeft,
                   offset: Offset(6, 12),
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
