@@ -206,7 +206,9 @@ class PlayerController extends Cubit<PlayerStates> {
     emit(PlayerStates.empty());
     await Utils.exitFullScreen();
     await saveTimeline();
-    await player.dispose();
+    try {
+      await player.dispose();
+    } catch (_) {}
     super.close();
   }
 }

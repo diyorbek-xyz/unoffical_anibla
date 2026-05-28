@@ -62,6 +62,7 @@ class Calendar extends StatelessWidget {
                   ),
                   SizedBox(height: 23),
                   SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
                     scrollDirection: Axis.horizontal,
                     child: Padding(
                       padding: EdgeInsetsGeometry.symmetric(horizontal: isMobile ? 10 : containerPadding),

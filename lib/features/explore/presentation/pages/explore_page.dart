@@ -93,15 +93,16 @@ class SearchBarDelegate extends SliverPersistentHeaderDelegate {
   Widget build(context, shrink, over) {
     final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
     return Material(
-      child: SizedBox(
+      child: Container(
         height: 100,
+        alignment: .bottomCenter,
         child: SearchBar(
           controller: controller,
           onChanged: (value) {
             if (value.isEmpty) clear(context);
           },
           onSubmitted: (value) => submit(value, context),
-          constraints: BoxConstraints(maxWidth: 700, minHeight: kToolbarHeight),
+          constraints: BoxConstraints(maxWidth: 500, minHeight: 100),
           shape: !isMobile ? null : WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(0))),
           leading: Padding(padding: EdgeInsetsGeometry.all(10), child: Icon(Icons.search)),
           trailing: [IconButton(onPressed: () => clear(context), icon: Icon(Icons.clear))],

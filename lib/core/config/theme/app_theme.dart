@@ -7,11 +7,13 @@ class AppThemes {
     colorScheme: AppColors.darkColorScheme,
     useMaterial3: true,
     fontFamily: GoogleFonts.googleSansFlex().fontFamily,
+    pageTransitionsTheme: pageTransitions,
   );
   static final lightTheme = ThemeData(
     colorScheme: AppColors.lightColorScheme,
     useMaterial3: true,
     fontFamily: GoogleFonts.googleSansFlex().fontFamily,
+    pageTransitionsTheme: pageTransitions,
   );
 
   static final pageTransitions = PageTransitionsTheme(
@@ -19,7 +21,7 @@ class AppThemes {
       TargetPlatform.android: CupertinoPageTransitionsBuilder(),
       TargetPlatform.fuchsia: CupertinoPageTransitionsBuilder(),
       TargetPlatform.windows: CupertinoPageTransitionsBuilder(),
-      TargetPlatform.linux: PredictiveBackFullscreenPageTransitionsBuilder(),
+      TargetPlatform.linux: FadeUpwardsPageTransitionsBuilder(),
       TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
       TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
     },
@@ -29,7 +31,6 @@ class AppThemes {
     elevation: WidgetStatePropertyAll(0),
     shadowColor: WidgetStatePropertyAll(Colors.transparent),
   );
-
 
   static ButtonStyle getErrorButtonStyle(BuildContext context) => ButtonStyle(
     backgroundColor: WidgetStatePropertyAll(context.appColors.error),
