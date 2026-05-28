@@ -57,8 +57,8 @@ class _CarouselState extends State<Carousel> {
 
   void slide(DragEndDetails det) {
     if (det.primaryVelocity == null) return;
-    if (det.primaryVelocity! < -50) previousPage();
-    if (det.primaryVelocity! > 50) nextPage();
+    if (det.primaryVelocity! < -50) nextPage();
+    if (det.primaryVelocity! > 50) previousPage();
   }
 
   void previousPage() {
@@ -243,9 +243,9 @@ class _CarouselState extends State<Carousel> {
                     ],
                   ),
                 ),
-                if (!(consts.maxWidth < 1000) && e.mobileImage.isNotEmpty)
+                if (!(consts.maxWidth < 1000) && e.mobileImage.isNotEmpty && !isMobile)
                   CachedNetworkImage(imageUrl: addBaseUrl(e.mobileImage), height: 500, width: 300, fit: .cover),
-                if (e.mobileImage.isEmpty) Container(height: 500, width: 300, color: context.appColors.primary),
+                if (e.mobileImage.isEmpty && !isMobile) Container(height: 500, width: 300, color: context.appColors.primary),
               ],
             ),
           ),
