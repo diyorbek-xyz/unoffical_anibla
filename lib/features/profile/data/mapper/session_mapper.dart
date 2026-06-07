@@ -1,4 +1,4 @@
-import 'package:application/features/profile/data/models/session_model.dart';
+import 'package:application/features/profile/data/models/profile/session_model.dart';
 import 'package:application/features/profile/domain/entities/session_entity.dart';
 
 class SessionMapper {

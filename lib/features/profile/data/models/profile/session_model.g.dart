@@ -17,14 +17,14 @@ class SessionModelAdapter extends TypeAdapter<SessionModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return SessionModel(
-      device: fields[3] as String?,
       id: fields[0] as String?,
-      ip: fields[4] as String?,
-      lastIp: fields[6] as String?,
-      lastLogin: fields[5] as DateTime?,
-      platform: fields[7] as String?,
-      tokenId: fields[2] as String?,
       userId: fields[1] as String?,
+      tokenId: fields[2] as String?,
+      lastLogin: fields[5] as DateTime?,
+      lastIp: fields[6] as String?,
+      platform: fields[7] as String?,
+      device: fields[3] as String?,
+      ip: fields[4] as String?,
     );
   }
 
@@ -74,8 +74,8 @@ class SessionsModelAdapter extends TypeAdapter<SessionsModel> {
     return SessionsModel(
       tokenId: fields[0] as String?,
       name: fields[1] as String?,
-      sessions: (fields[3] as List?)?.cast<SessionModel>(),
       total: (fields[2] as num?)?.toInt(),
+      sessions: (fields[3] as List?)?.cast<SessionModel>(),
     );
   }
 
@@ -108,42 +108,43 @@ class SessionsModelAdapter extends TypeAdapter<SessionsModel> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-SessionModel _$SessionModelFromJson(Map<String, dynamic> json) => SessionModel(
-  device: json['device'] as String?,
-  id: json['_id'] as String?,
-  ip: json['ip'] as String?,
-  lastIp: json['last_login_ip'] as String?,
-  lastLogin: json['last_login'] == null
-      ? null
-      : DateTime.parse(json['last_login'] as String),
-  platform: json['platform_os'] as String?,
-  tokenId: json['token_id'] as String?,
-  userId: json['user_id'] as String?,
-);
+_SessionModel _$SessionModelFromJson(Map<String, dynamic> json) =>
+    _SessionModel(
+      id: json['_id'] as String?,
+      userId: json['user_id'] as String?,
+      tokenId: json['token_id'] as String?,
+      lastLogin: json['last_login'] == null
+          ? null
+          : DateTime.parse(json['last_login'] as String),
+      lastIp: json['last_login_ip'] as String?,
+      platform: json['platform_os'] as String?,
+      device: json['device'] as String?,
+      ip: json['ip'] as String?,
+    );
 
-Map<String, dynamic> _$SessionModelToJson(SessionModel instance) =>
+Map<String, dynamic> _$SessionModelToJson(_SessionModel instance) =>
     <String, dynamic>{
       '_id': instance.id,
       'user_id': instance.userId,
       'token_id': instance.tokenId,
-      'device': instance.device,
-      'ip': instance.ip,
       'last_login': instance.lastLogin?.toIso8601String(),
       'last_login_ip': instance.lastIp,
       'platform_os': instance.platform,
+      'device': instance.device,
+      'ip': instance.ip,
     };
 
-SessionsModel _$SessionsModelFromJson(Map<String, dynamic> json) =>
-    SessionsModel(
+_SessionsModel _$SessionsModelFromJson(Map<String, dynamic> json) =>
+    _SessionsModel(
       tokenId: json['token_id'] as String?,
       name: json['name'] as String?,
+      total: (json['total'] as num?)?.toInt(),
       sessions: (json['sessions'] as List<dynamic>?)
           ?.map((e) => SessionModel.fromJson(e as Map<String, dynamic>))
           .toList(),
-      total: (json['total'] as num?)?.toInt(),
     );
 
-Map<String, dynamic> _$SessionsModelToJson(SessionsModel instance) =>
+Map<String, dynamic> _$SessionsModelToJson(_SessionsModel instance) =>
     <String, dynamic>{
       'token_id': instance.tokenId,
       'name': instance.name,

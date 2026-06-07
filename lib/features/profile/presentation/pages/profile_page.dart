@@ -2,7 +2,7 @@ import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/constants/spacings.dart';
 import 'package:application/features/common/presentation/widgets/error.dart';
 import 'package:application/features/profile/data/mapper/profile_mapper.dart';
-import 'package:application/features/profile/data/models/profile_model.dart';
+import 'package:application/features/profile/data/models/profile/profile_model.dart';
 import 'package:application/features/profile/presentation/bloc/notification/notification_bloc.dart';
 import 'package:application/features/profile/presentation/bloc/profile/profile_bloc.dart';
 import 'package:application/features/profile/presentation/bloc/profile/profile_event.dart';

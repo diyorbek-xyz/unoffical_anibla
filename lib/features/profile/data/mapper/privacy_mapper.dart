@@ -1,4 +1,4 @@
-import 'package:application/features/profile/data/models/privacy_model.dart';
+import 'package:application/features/profile/data/models/profile/privacy_model.dart';
 import 'package:application/features/profile/domain/entities/privacy_entity.dart';
 
 class PrivacyMapper {

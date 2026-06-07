@@ -1,6 +1,6 @@
 import 'package:application/core/resources/api_response.dart';
 import 'package:application/features/profile/data/mapper/session_mapper.dart';
-import 'package:application/features/profile/data/models/session_model.dart';
+import 'package:application/features/profile/data/models/profile/session_model.dart';
 import 'package:application/features/profile/domain/entities/session_entity.dart';
 import 'package:application/network/errors.dart';
 import 'package:dio/dio.dart';

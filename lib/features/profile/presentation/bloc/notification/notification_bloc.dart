@@ -17,11 +17,6 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   void onGetNotifications(GetNotifications event, Emitter<NotificationState> emit) async {
     emit(.loading());
     final either = await repository.getNotifications();
-    emit(
-      either.fold((f) => .failed(ExceptionMapper.mapFailureToMessage(f)), (r) {
-        print(r);
-        return .success(r);
-      }),
-    );
+    emit(either.fold((f) => .failed(ExceptionMapper.mapFailureToMessage(f)), (r) => .success(r)));
   }
 }

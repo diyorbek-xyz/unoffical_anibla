@@ -38,7 +38,7 @@ import 'package:application/features/explore/domain/repository/explore_repositor
 import 'package:application/features/explore/presentation/bloc/genre/genre_bloc.dart';
 import 'package:application/features/explore/presentation/bloc/history/history_bloc.dart';
 import 'package:application/features/explore/presentation/bloc/search/search_bloc.dart';
-import 'package:application/features/profile/data/models/profile_model.dart';
+import 'package:application/features/profile/data/models/profile/profile_model.dart';
 import 'package:application/features/profile/data/source/local/profile_local.dart';
 import 'package:application/features/profile/presentation/bloc/session/session_bloc.dart';
 import 'package:application/features/slider/data/models/slider_model.dart';

@@ -1,7 +1,7 @@
 import 'package:application/core/utils/base_url.dart';
 import 'package:application/features/animes/data/models/anime_model.dart';
-import 'package:application/features/profile/data/models/privacy_model.dart';
-import 'package:application/features/profile/data/models/session_model.dart';
+import 'package:application/features/profile/data/models/profile/privacy_model.dart';
+import 'package:application/features/profile/data/models/profile/session_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 

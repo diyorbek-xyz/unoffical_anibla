@@ -19,9 +19,9 @@ import 'package:application/features/profile/data/models/avatar_model.dart';
 import 'package:application/features/profile/data/models/notifications/ep_notif_model.dart';
 import 'package:application/features/profile/data/models/notifications/notification_model.dart';
 import 'package:application/features/profile/data/models/notifications/notification_response.dart';
-import 'package:application/features/profile/data/models/privacy_model.dart';
-import 'package:application/features/profile/data/models/profile_model.dart';
-import 'package:application/features/profile/data/models/session_model.dart';
+import 'package:application/features/profile/data/models/profile/privacy_model.dart';
+import 'package:application/features/profile/data/models/profile/profile_model.dart';
+import 'package:application/features/profile/data/models/profile/session_model.dart';
 import 'package:application/features/slider/data/models/slider_model.dart';
 import 'package:application/features/template/data/models/template_model.dart';
 

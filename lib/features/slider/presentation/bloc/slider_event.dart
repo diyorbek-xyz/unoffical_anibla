@@ -1,3 +1,6 @@
-sealed class SliderEvent {}
+part of "slider_bloc.dart";
 
-final class GetFullSlider extends SliderEvent {}
+@freezed
+sealed class SliderEvent with _$SliderEvent {
+  factory SliderEvent.getFull() = _GetFull;
+}

@@ -18,10 +18,8 @@ class CalendarRepositoryImpl implements CalendarRepository {
   Future<Either<Failure, CalendarEntity>> getCalendar(DateTime date) async {
     try {
       try {
-        final httpResponse = await calendarApi.getCalendar(
-          date.formatCompact(),
-        );
-        final model = CalendarModel.fromJson(httpResponse.data.data, date);
+        final httpResponse = await calendarApi.getCalendar(date.formatCompact());
+        final model = CalendarModel.fromJson(httpResponse.data.data).copyWith(date: date);
         await calendarLocal.saveCalendar(model);
         return Right(CalendarMapper.modelToEntity(model));
       } on DioException catch (e) {

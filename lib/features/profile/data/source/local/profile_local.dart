@@ -1,4 +1,4 @@
-import 'package:application/features/profile/data/models/profile_model.dart';
+import 'package:application/features/profile/data/models/profile/profile_model.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 
 abstract class ProfileLocal {

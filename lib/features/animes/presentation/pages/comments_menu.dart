@@ -8,7 +8,7 @@ import 'package:application/features/comment/domain/entities/comment_entity.dart
 import 'package:application/features/comment/presentation/bloc/comment_bloc.dart';
 import 'package:application/features/comment/presentation/bloc/comment_event.dart';
 import 'package:application/features/comment/presentation/bloc/comment_state.dart';
-import 'package:application/features/profile/data/models/profile_model.dart';
+import 'package:application/features/profile/data/models/profile/profile_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

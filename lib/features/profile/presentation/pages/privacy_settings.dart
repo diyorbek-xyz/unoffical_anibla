@@ -1,6 +1,6 @@
 import 'package:application/features/common/presentation/widgets/list.dart';
 import 'package:application/features/profile/data/mapper/profile_mapper.dart';
-import 'package:application/features/profile/data/models/profile_model.dart';
+import 'package:application/features/profile/data/models/profile/profile_model.dart';
 import 'package:application/features/profile/presentation/bloc/profile/profile_bloc.dart';
 import 'package:application/features/profile/presentation/bloc/profile/profile_state.dart';
 import 'package:flutter/material.dart';

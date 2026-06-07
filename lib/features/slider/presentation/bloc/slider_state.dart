@@ -1,17 +1,9 @@
-import 'package:application/features/slider/domain/entities/slider_entity.dart';
+part of "slider_bloc.dart";
 
-sealed class SliderState {}
-
-final class SliderInitial extends SliderState {}
-
-final class SliderLoading extends SliderState {}
-
-final class SliderSuccess extends SliderState {
-  final List<SliderEntity> data;
-  SliderSuccess(this.data);
-}
-
-final class SliderError extends SliderState {
-  final String message;
-  SliderError(this.message);
+@freezed
+sealed class SliderState with _$SliderState {
+  factory SliderState.success(List<SliderEntity> data) = _Success;
+  factory SliderState.failed(String message) = _Failed;
+  factory SliderState.initial() = _Initial;
+  factory SliderState.loading() = _Loading;
 }

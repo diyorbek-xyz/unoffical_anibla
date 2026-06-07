@@ -50,8 +50,8 @@ class CalendarModelAdapter extends TypeAdapter<CalendarModel> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-CalendarModel _$CalendarModelFromJson(Map<String, dynamic> json) =>
-    CalendarModel(
+_CalendarModel _$CalendarModelFromJson(Map<String, dynamic> json) =>
+    _CalendarModel(
       pagination: json['pagination'] == null
           ? null
           : Pagination.fromJson(json['pagination'] as Map<String, dynamic>),
@@ -63,7 +63,7 @@ CalendarModel _$CalendarModelFromJson(Map<String, dynamic> json) =>
           : DateTime.parse(json['date'] as String),
     );
 
-Map<String, dynamic> _$CalendarModelToJson(CalendarModel instance) =>
+Map<String, dynamic> _$CalendarModelToJson(_CalendarModel instance) =>
     <String, dynamic>{
       'pagination': instance.pagination,
       'timers': instance.timers,

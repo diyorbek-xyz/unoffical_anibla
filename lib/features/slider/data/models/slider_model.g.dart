@@ -18,9 +18,9 @@ class SliderModelAdapter extends TypeAdapter<SliderModel> {
     };
     return SliderModel(
       id: fields[0] as String?,
-      anime: fields[3] as AnimeModel?,
       image: fields[1] as String?,
       mobileImage: fields[2] as String?,
+      anime: fields[3] as AnimeModel?,
       type: fields[4] as dynamic,
     );
   }
@@ -56,15 +56,15 @@ class SliderModelAdapter extends TypeAdapter<SliderModel> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-SliderModel _$SliderModelFromJson(Map<String, dynamic> json) => SliderModel(
+_SliderModel _$SliderModelFromJson(Map<String, dynamic> json) => _SliderModel(
   id: json['_id'] as String?,
-  anime: json['media'] == null ? null : AnimeModel.fromJson(json['media']),
   image: addBaseUrl(json['image'] as String?),
   mobileImage: addBaseUrl(json['mobile_image'] as String?),
+  anime: json['media'] == null ? null : AnimeModel.fromJson(json['media']),
   type: json['mediaType'],
 );
 
-Map<String, dynamic> _$SliderModelToJson(SliderModel instance) =>
+Map<String, dynamic> _$SliderModelToJson(_SliderModel instance) =>
     <String, dynamic>{
       '_id': instance.id,
       'image': instance.image,

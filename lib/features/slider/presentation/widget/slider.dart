@@ -8,8 +8,6 @@ import 'package:application/features/slider/data/mapper/slider_mapper.dart';
 import 'package:application/features/slider/data/models/slider_model.dart';
 import 'package:application/features/slider/domain/entities/slider_entity.dart';
 import 'package:application/features/slider/presentation/bloc/slider_bloc.dart';
-import 'package:application/features/slider/presentation/bloc/slider_event.dart';
-import 'package:application/features/slider/presentation/bloc/slider_state.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/main.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -80,61 +78,65 @@ class _CarouselState extends State<Carousel> {
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
     return BlocProvider(
-      create: (context) => sl<SliderBloc>()..add(GetFullSlider()),
+      create: (context) => sl<SliderBloc>()..add(.getFull()),
       child: BlocConsumer<SliderBloc, SliderState>(
         listener: (context, state) {
-          if (state is SliderSuccess) {
-            setState(() => sliders = state.data);
-          }
+          state.whenOrNull(success: (value) => setState(() => sliders = value));
         },
         builder: (context, state) {
-          final isLoading = state is! SliderSuccess;
-          final h = MediaQuery.of(context).size.height;
-          final fake = List.generate(
-            4,
-            (index) => SliderMapper.modelToEntity(SliderModel(anime: AnimeModel(uz: {"title": lorem(5), "description": lorem()}))),
+          return state.maybeWhen(
+            loading: () {
+              final h = MediaQuery.of(context).size.height;
+              final fakeSlider = SliderModel(anime: AnimeModel(uz: {"title": lorem(5), "description": lorem()}));
+              final fake = List.generate(4, (index) => SliderMapper.modelToEntity(fakeSlider));
+              return Skeletonizer(enableSwitchAnimation: true, enabled: true, child: sliderBuilder(isMobile, h, fake, context));
+            },
+            success: (data) {
+              final h = MediaQuery.of(context).size.height;
+              return sliderBuilder(isMobile, h, data, context);
+            },
+            orElse: () => Text("Nimadur xato ketti"),
           );
-          final data = isLoading ? fake : state.data;
-          return Skeletonizer(
-            enableSwitchAnimation: true,
-            enabled: isLoading,
-            child: SizedBox(
-              height: isMobile ? 370 : h,
-              child: Stack(
-                fit: StackFit.expand,
+        },
+      ),
+    );
+  }
+
+  SizedBox sliderBuilder(bool isMobile, double h, List<dynamic> data, BuildContext context) {
+    return SizedBox(
+      height: isMobile ? 370 : h,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          ...data.asMap().entries.map(
+            (e) => AnimatedOpacity(
+              opacity: e.key == currentPage ? 1 : 0,
+              curve: Easing.legacy,
+              duration: const Duration(milliseconds: 500),
+              child: IgnorePointer(ignoring: e.key != currentPage, child: carouselItem(e.value, context)),
+            ),
+          ),
+          if (!isMobile)
+            Material(
+              type: MaterialType.transparency,
+              child: Row(
+                mainAxisAlignment: .spaceBetween,
+                crossAxisAlignment: .stretch,
                 children: [
-                  ...data.asMap().entries.map(
-                    (e) => AnimatedOpacity(
-                      opacity: e.key == currentPage ? 1 : 0,
-                      duration: const Duration(milliseconds: 500),
-                      child: IgnorePointer(ignoring: e.key != currentPage, child: carouselItem(e.value, context)),
-                    ),
+                  InkWell(
+                    mouseCursor: SystemMouseCursors.click,
+                    onTap: previousPage,
+                    child: SizedBox(width: 100, child: Icon(Icons.keyboard_arrow_left)),
                   ),
-                  if (!isMobile)
-                    Material(
-                      type: MaterialType.transparency,
-                      child: Row(
-                        mainAxisAlignment: .spaceBetween,
-                        crossAxisAlignment: .stretch,
-                        children: [
-                          InkWell(
-                            mouseCursor: SystemMouseCursors.click,
-                            onTap: previousPage,
-                            child: SizedBox(width: 100, child: Icon(Icons.keyboard_arrow_left)),
-                          ),
-                          InkWell(
-                            mouseCursor: SystemMouseCursors.click,
-                            onTap: nextPage,
-                            child: SizedBox(width: 100, child: Icon(Icons.keyboard_arrow_right)),
-                          ),
-                        ],
-                      ),
-                    ),
+                  InkWell(
+                    mouseCursor: SystemMouseCursors.click,
+                    onTap: nextPage,
+                    child: SizedBox(width: 100, child: Icon(Icons.keyboard_arrow_right)),
+                  ),
                 ],
               ),
             ),
-          );
-        },
+        ],
       ),
     );
   }
@@ -221,6 +223,7 @@ class _CarouselState extends State<Carousel> {
                             onTap: () => setPage(e.key),
                             mouseCursor: SystemMouseCursors.click,
                             child: AnimatedContainer(
+                              curve: Easing.legacy,
                               duration: Duration(milliseconds: 500),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(100),

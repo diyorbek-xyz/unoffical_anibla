@@ -25,7 +25,6 @@ dependencies:
     equatable: ^2.0.8
     retrofit: ^4.9.2
     logger: ^2.6.2
-    json_annotation: ^4.11.0
     get_it: ^9.2.0
     flutter_bloc: ^9.1.1
     skeletonizer: ^2.1.3
@@ -39,6 +38,7 @@ dependencies:
     native_splash_screen: 
     freezed_annotation:
     very_good_infinite_list: ^0.9.0
+    json_annotation: ^4.12.0
 
 
 
@@ -48,7 +48,7 @@ dev_dependencies:
     freezed: ^3.2.5
     flutter_lints: ^6.0.0
     retrofit_generator: ^10.2.3
-    json_serializable: ^6.12.0
+    json_serializable: ^6.14.0
     hive_ce_generator: ^1.11.1
     build_runner: ^2.11.1
     native_splash_screen_cli: 
