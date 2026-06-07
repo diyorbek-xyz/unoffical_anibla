@@ -1,14 +1,12 @@
 import 'dart:io';
-import 'package:native_splash_screen/native_splash_screen.dart'
-    as splash_screen;
+import 'package:native_splash_screen/native_splash_screen.dart' as splash_screen;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:window_manager/window_manager.dart';
 
 class Utils {
   static bool isMobilePlatform = Platform.isIOS || Platform.isAndroid;
-  static bool isDesktopPlatform =
-      Platform.isLinux || Platform.isMacOS || Platform.isWindows;
+  static bool isDesktopPlatform = Platform.isLinux || Platform.isMacOS || Platform.isWindows;
 
   static Future<void> initFullscreen() async {
     if (isMobilePlatform) return;
@@ -19,9 +17,7 @@ class Utils {
       center: true,
       backgroundColor: Colors.transparent,
       skipTaskbar: false,
-      titleBarStyle: Platform.isLinux
-          ? TitleBarStyle.hidden
-          : TitleBarStyle.normal,
+      titleBarStyle: Platform.isLinux ? TitleBarStyle.hidden : TitleBarStyle.normal,
     );
 
     windowManager.waitUntilReadyToShow(windowOptions, () async {
@@ -37,10 +33,7 @@ class Utils {
       return;
     }
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-    ]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
   }
 
   static Future<void> exitFullScreen() async {
@@ -49,14 +42,13 @@ class Utils {
       return;
     }
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   }
 
   static Future<void> closeSplashScreen() async {
     if (isMobilePlatform) return;
     await splash_screen.close(animation: splash_screen.CloseAnimation.fade);
   }
+
+  static void imageErrorListener(Object obj) {}
 }

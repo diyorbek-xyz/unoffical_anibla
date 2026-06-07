@@ -10,10 +10,7 @@ class AuthInterceptor extends Interceptor {
   final AuthStorage storage;
   AuthInterceptor(this.storage);
   @override
-  void onRequest(
-    RequestOptions options,
-    RequestInterceptorHandler handler,
-  ) async {
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     final token = await storage.getAccessToken();
     final newOptions = await setHeaders(options, token ?? "");
     handler.next(newOptions);
@@ -45,10 +42,7 @@ class AuthInterceptor extends Interceptor {
   }
 
   @override
-  void onResponse(
-    Response<dynamic> response,
-    ResponseInterceptorHandler handler,
-  ) {
+  void onResponse(Response<dynamic> response, ResponseInterceptorHandler handler) {
     if (response.data['success'] != null && !response.data['success']) {
       switch (response.data['error']) {
         case "too_many_sessions":
@@ -71,10 +65,7 @@ class AuthInterceptor extends Interceptor {
     }
   }
 
-  Future<RequestOptions> setHeaders(
-    RequestOptions options,
-    String token,
-  ) async {
+  Future<RequestOptions> setHeaders(RequestOptions options, String token) async {
     final device = await DeviceInfo.getDeviceInfo();
     options.headers['x-device'] = device.name;
     options.headers['x-platform-os'] = device.platformOS;

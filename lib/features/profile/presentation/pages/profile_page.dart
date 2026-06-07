@@ -3,10 +3,12 @@ import 'package:application/core/constants/spacings.dart';
 import 'package:application/features/common/presentation/widgets/error.dart';
 import 'package:application/features/profile/data/mapper/profile_mapper.dart';
 import 'package:application/features/profile/data/models/profile_model.dart';
+import 'package:application/features/profile/presentation/bloc/notification/notification_bloc.dart';
 import 'package:application/features/profile/presentation/bloc/profile/profile_bloc.dart';
 import 'package:application/features/profile/presentation/bloc/profile/profile_event.dart';
 import 'package:application/features/profile/presentation/bloc/profile/profile_state.dart';
 import 'package:application/features/profile/presentation/bloc/session/session_bloc.dart';
+import 'package:application/features/profile/presentation/pages/notifications_menu.dart';
 import 'package:application/features/profile/presentation/pages/privacy_settings.dart';
 import 'package:application/features/profile/presentation/widget/avatar_selector.dart';
 import 'package:application/features/profile/presentation/widget/sessions.dart';
@@ -18,7 +20,6 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:application/features/common/presentation/widgets/responsive.dart';
 import 'package:application/features/profile/presentation/pages/devices_menu.dart';
 import 'package:application/features/profile/presentation/pages/infos_menu.dart';
-import 'package:application/features/profile/presentation/pages/saves_menu.dart';
 import 'package:application/features/profile/presentation/widget/modals/logout_modal.dart';
 import 'package:application/main.dart';
 
@@ -55,6 +56,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => sl<ProfileBloc>()..add(GetProfile())),
+        BlocProvider(create: (context) => sl<NotificationBloc>()..add(.get())),
         BlocProvider(create: (context) => sl<SessionBloc>()),
       ],
       child: BlocBuilder<ProfileBloc, ProfileState>(
@@ -101,7 +103,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Builder(
                   builder: (context) {
                     final responsive = Responsive.of(context);
-                    final views = [ProfileInfosMenu(data: data), SavesMenu(profile: data), Text("obunalar"), ProfileDevicesMenu(), PrivacySettings()];
+                    final views = [ProfileInfosMenu(data: data), NotificationsMenu(), Text("obunalar"), ProfileDevicesMenu(), PrivacySettings()];
                     final mobile = SizedBox(
                       height: 900,
                       child: Column(

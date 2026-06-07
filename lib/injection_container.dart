@@ -5,6 +5,10 @@ import 'package:application/features/player/data/services/download_service.dart'
 import 'package:application/features/player/data/source/local/downloads.dart';
 import 'package:application/features/player/data/source/local/timeline.dart';
 import 'package:application/features/player/presentation/cubit/player_controller.dart';
+import 'package:application/features/profile/data/repository/notification_repository_impl.dart';
+import 'package:application/features/profile/data/source/remote/notifications_api.dart';
+import 'package:application/features/profile/domain/repository/notification_repository.dart';
+import 'package:application/features/profile/presentation/bloc/notification/notification_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:application/core/constants/constants.dart';
 import 'package:application/features/animes/data/models/anime_model.dart';
@@ -153,6 +157,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<TemplateApi>(TemplateApi(sl()));
   sl.registerSingleton<DownloadsLocal>(DownloadsLocalImpl(sl()));
   sl.registerSingleton<HlsDownloadService>(HlsDownloadService(sl()));
+  sl.registerSingleton<NotificationsApi>(NotificationsApi(sl()));
 
   // Register Local Storage Services;
   sl.registerSingleton<CalendarLocal>(CalendarLocalImpl(sl()));
@@ -172,6 +177,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<SeasonRepository>(SeasonRepositoryImpl(sl()));
   sl.registerSingleton<ExploreRepository>(ExploreRepositoryImpl(sl(), sl(), sl()));
   sl.registerSingleton<TemplateRepository>(TemplateRepositoryImpl(sl()));
+  sl.registerSingleton<NotificationRepository>(NotificationRepositoryImpl(sl()));
 
   // Register State managers;
   sl.registerFactory<SliderBloc>(() => SliderBloc(sl()));
@@ -188,6 +194,7 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<VideoBloc>(() => VideoBloc(sl()));
   sl.registerFactory<SearchBloc>(() => SearchBloc(sl()));
   sl.registerFactory<HistoryBloc>(() => HistoryBloc(sl()));
+  sl.registerFactory<NotificationBloc>(() => NotificationBloc(sl()));
 
   sl.registerFactory<PlayerController>(() => PlayerController(sl(), sl()));
 }

@@ -27,17 +27,17 @@ class MainPage extends StatelessWidget {
 
   AppBar appBar(BuildContext context) {
     return AppBar(
-      notificationPredicate: (notification) => true,
       primary: true,
-      toolbarHeight: appbarHeight,
-      automaticallyImplyLeading: false,
-      backgroundColor: context.appColors.surface,
-      foregroundColor: context.appColors.primary,
-      surfaceTintColor: Colors.transparent,
-      shadowColor: Colors.transparent,
-      actionsPadding: EdgeInsets.zero,
       leadingWidth: 200,
       leading: logo(context),
+      toolbarHeight: appbarHeight,
+      actionsPadding: EdgeInsets.zero,
+      automaticallyImplyLeading: false,
+      shadowColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
+      foregroundColor: context.appColors.primary,
+      backgroundColor: context.appColors.surface,
+      notificationPredicate: (notification) => true,
       actions: [actionButton(() => context.goNamed("home"), "Home"), actionButton(() => context.goNamed("explore"), "Explore"), profile(context)],
     );
   }

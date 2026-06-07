@@ -35,6 +35,7 @@ class _CarouselState extends State<Carousel> {
 
   void autoPlay() {
     timer = Timer.periodic(duration, (timer) {
+      if (!mounted) return;
       setState(() {
         if (currentPage == sliders.length - 1) {
           currentPage = 0;
