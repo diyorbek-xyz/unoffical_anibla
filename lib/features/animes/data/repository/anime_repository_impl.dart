@@ -1,3 +1,4 @@
+import 'package:application/core/resources/cache_entry.dart';
 import 'package:application/features/animes/data/mapper/anime_mapper.dart';
 import 'package:application/features/animes/data/source/remote/anime_api.dart';
 import 'package:application/features/animes/domain/entities/anime_entity.dart';
@@ -10,15 +11,20 @@ import 'package:dio/dio.dart';
 class AnimeRepositoryImpl implements AnimeRepository {
   final AnimeApi animeApi;
   final HistoryLocal historyLocal;
-  const AnimeRepositoryImpl(this.animeApi, this.historyLocal);
+  AnimeRepositoryImpl(this.animeApi, this.historyLocal);
+
+  final Map<String, CacheEntry<AnimeEntity>> _cache = {};
 
   @override
   Future<Either<Failure, AnimeEntity>> getSerie(String type, String slug) async {
     try {
+      final cached = _cache[slug];
+      if (cached != null && !cached.isExpired) return Right(cached.data);
       final serie = await animeApi.getSerie(type.toLowerCase(), slug);
       if (serie.data.success) {
-        await historyLocal.saveToHistory(serie.data.data!);
-        return Right(AnimeMapper.modelToEntity(serie.data.data));
+        final data = AnimeMapper.modelToEntity(serie.data.data);
+        _cache[slug] = CacheEntry(data);
+        return Right(data);
       } else {
         throw ExceptionMapper.mapResponseToDio(serie.response);
       }

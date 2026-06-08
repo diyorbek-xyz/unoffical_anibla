@@ -167,17 +167,17 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<Timeline>(TimelineImpl(sl()));
 
   // Register Repositories;
-  sl.registerSingleton<SliderRepository>(SliderRepositoryImpl(sl(), sl()));
-  sl.registerSingleton<CalendarRepository>(CalendarRepositoryImpl(sl(), sl()));
-  sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(sl(), sl()));
-  sl.registerSingleton<EpisodeRepository>(EpisodeRepositoryImpl(sl(), sl(), sl()));
-  sl.registerSingleton<CommentRepository>(CommentRepositoryImpl(sl()));
-  sl.registerSingleton<ProfileRepository>(ProfileRepositoryImpl(sl(), sl(), sl()));
-  sl.registerSingleton<AnimeRepository>(AnimeRepositoryImpl(sl(), sl()));
-  sl.registerSingleton<SeasonRepository>(SeasonRepositoryImpl(sl()));
-  sl.registerSingleton<ExploreRepository>(ExploreRepositoryImpl(sl(), sl(), sl()));
-  sl.registerSingleton<TemplateRepository>(TemplateRepositoryImpl(sl()));
-  sl.registerSingleton<NotificationRepository>(NotificationRepositoryImpl(sl()));
+  sl.registerLazySingleton<SliderRepository>(() => SliderRepositoryImpl(sl(), sl()));
+  sl.registerLazySingleton<CalendarRepository>(() => CalendarRepositoryImpl(sl(), sl()));
+  sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl(), sl()));
+  sl.registerLazySingleton<EpisodeRepository>(() => EpisodeRepositoryImpl(sl(), sl(), sl()));
+  sl.registerLazySingleton<CommentRepository>(() => CommentRepositoryImpl(sl()));
+  sl.registerLazySingleton<ProfileRepository>(() => ProfileRepositoryImpl(sl(), sl(), sl()));
+  sl.registerLazySingleton<AnimeRepository>(() => AnimeRepositoryImpl(sl(), sl()));
+  sl.registerLazySingleton<SeasonRepository>(() => SeasonRepositoryImpl(sl()));
+  sl.registerLazySingleton<ExploreRepository>(() => ExploreRepositoryImpl(sl(), sl(), sl()));
+  sl.registerLazySingleton<TemplateRepository>(() => TemplateRepositoryImpl(sl()));
+  sl.registerLazySingleton<NotificationRepository>(() => NotificationRepositoryImpl(sl()));
 
   // Register State managers;
   sl.registerFactory<SliderBloc>(() => SliderBloc(sl()));
