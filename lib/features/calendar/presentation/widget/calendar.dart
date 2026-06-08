@@ -118,7 +118,7 @@ class Calendar extends StatelessWidget {
       child: (e != null && e.timers.isNotEmpty)
           ? Row(
               spacing: 10,
-              children: e.timers.map((timer) {
+              children: e.timers.where((e) => e.anime.slug != "bir-soatli-qizcha-5").map((timer) {
                 final episode = timer.episode.episodeNumber;
                 final hasEpisode = episode != 0;
                 return Badge(
