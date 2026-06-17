@@ -4,6 +4,8 @@ import 'package:application/core/utils/base_url.dart';
 import 'package:application/features/animes/data/mapper/episode_mapper.dart';
 import 'package:application/features/animes/domain/entities/anime_entity.dart';
 import 'package:application/features/animes/domain/entities/episode_entity.dart';
+import 'package:application/features/animes/presentation/bloc/anime/anime_bloc.dart';
+import 'package:application/features/animes/presentation/bloc/anime/anime_state.dart';
 import 'package:application/features/animes/presentation/bloc/episode/episode_bloc.dart';
 import 'package:application/features/animes/presentation/bloc/episode/episode_state.dart';
 import 'package:application/features/player/presentation/cubit/player_controller.dart';
@@ -103,19 +105,29 @@ class _EpisodesListState extends State<EpisodesList> {
                     addRepaintBoundaries: true,
                     children: changeList(data).asMap().entries.map((entry) {
                       final episode = entry.value;
-                      final isCurrent = isLoading ? false : current == getStreamId(episode.video);
+                      final isCurrent = (current.isNotEmpty && episode.video.isNotEmpty) ? current == getStreamId(episode.video) : false;
                       final title = "${episode.episodeNumber}-qism: ${episode.title.uz}";
                       final PlaylistPosition pos = entry.key == 0
                           ? .first
                           : entry.key == (data.length - 1)
                           ? .last
                           : .middle;
-                      final props = PlayerProps(position: pos, type: AnimeType.serie, title: title, stream: episode.video);
+                      final animeState = context.read<AnimeBloc>().state;
+                      final anime = animeState is AnimeSuccess ? animeState.anime : null;
+                      final props = PlayerProps(
+                        position: pos,
+                        type: AnimeType.serie,
+                        title: title,
+                        stream: episode.video,
+                        cover: anime?.cover ?? "",
+                        anime: anime?.title.uz ?? "",
+                      );
+                      final timeline = episode.timeline;
                       return RepaintBoundary(
                         child: Stack(
                           fit: StackFit.passthrough,
                           children: [
-                            if (episode.timeline != null && (episode.timeline!.progress.inSeconds > 0 || episode.timeline!.duration.inSeconds > 0))
+                            if (timeline != null && timeline.progress.inSeconds > 0 && timeline.duration.inSeconds > 0)
                               Positioned(
                                 bottom: 0,
                                 left: 0,
@@ -126,7 +138,7 @@ class _EpisodesListState extends State<EpisodesList> {
                                     return Align(
                                       alignment: .centerStart,
                                       child: Container(
-                                        width: (consts.maxWidth * (episode.timeline!.progress.inSeconds / episode.timeline!.duration.inSeconds)),
+                                        width: (consts.maxWidth * (timeline.progress.inSeconds / timeline.duration.inSeconds)),
                                         color: context.appColors.primary.withAlpha(20),
                                       ),
                                     );

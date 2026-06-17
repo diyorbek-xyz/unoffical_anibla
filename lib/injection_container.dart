@@ -86,12 +86,12 @@ final baseOptions = BaseOptions(
     "Accept-Encoding": "gzip",
     "accept": "application/json",
     "Connection": "Keep-Alive",
-    "x-platform": "mobile",
-    "x-platform-os": "android",
-    "x-device": "Redmi 6A",
+    "x-platform": "desktop",
+    "x-platform-os": "arch",
+    "x-device": "Arch Linux",
     "x-app-version": "2.4.9",
     "Authorization":
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjZmYjliNzcwYzY1MjcxMGJlNTUxZjRmIiwidG9rZW5faWQiOiIzMzZkYmUxMS1iOTQ5LTQ0YjktOGE0ZC1iM2NhZDE1MzQxMTIiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzc4MTIwMDQ2LCJleHAiOjE3NzkzMjk2NDZ9.3wvNVk-43ULYFOKpdjFXD43qatnj-9c4HNZIDLK1zy0",
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjlkODlkZGRmZTlhZWY5ODRkMGNhNTkyIiwidG9rZW5faWQiOiI5YzExODU2Yy0wNjA0LTRiNmMtOGNhNC03OWJiOWEwMzc4OGQiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzgwOTI1ODMxLCJleHAiOjE3ODIxMzU0MzF9.fcrzN2Gvwcp4mzwnTG_2EER5Y3RPFViK2xc_kaqpVf8",
   },
 );
 final dio = Dio(baseOptions);

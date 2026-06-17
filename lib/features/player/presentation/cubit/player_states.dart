@@ -27,12 +27,14 @@ sealed class PlayerStates with _$PlayerStates {
     required String streamId,
     required String type,
     required PlaylistPosition position,
+    required String anime,
     String? error,
   }) = _PlayerStates;
 
   factory PlayerStates.empty() {
     return PlayerStates(
       title: "",
+      anime: "",
       streamId: "",
       type: AnimeType.serie,
       position: PlaylistPosition.none,
@@ -63,6 +65,15 @@ class PlayerProps {
   final String stream;
   final String type;
   final String title;
+  final String anime;
   final PlaylistPosition position;
-  const PlayerProps({required this.position, required this.type, required this.title, required this.stream});
+  final String cover;
+  const PlayerProps({
+    required this.position,
+    required this.type,
+    required this.cover,
+    required this.title,
+    required this.anime,
+    required this.stream,
+  });
 }

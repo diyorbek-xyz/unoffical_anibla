@@ -1,3 +1,4 @@
+import 'package:application/core/resources/cache_entry.dart';
 import 'package:application/core/utils/base_url.dart';
 import 'package:application/features/animes/data/mapper/episode_mapper.dart';
 import 'package:application/features/animes/data/mapper/video_mapper.dart';
@@ -15,13 +16,20 @@ class EpisodeRepositoryImpl implements EpisodeRepository {
   final EpisodeApi episodeApi;
   final VideoApi videoApi;
   final DownloadsLocal downloadsLocal;
-  const EpisodeRepositoryImpl(this.episodeApi, this.videoApi, this.downloadsLocal);
+  EpisodeRepositoryImpl(this.episodeApi, this.videoApi, this.downloadsLocal);
+
+  final Map<String, CacheEntry<List<EpisodeEntity>>> _cache = {};
 
   @override
   Future<Either<Failure, List<EpisodeEntity>>> getEpisodes(String animeSlug, String seasonSlug) async {
     try {
+      final cache = _cache[animeSlug];
+      if (cache != null && !cache.isExpired) return Right(cache.data);
+
       final httResponse = await episodeApi.getEpisodes(animeSlug, seasonSlug);
-      return Right(httResponse.data.data.map(EpisodeMapper.modelToEntity).toList());
+      final data = httResponse.data.data.map(EpisodeMapper.modelToEntity).toList();
+      _cache[animeSlug] = CacheEntry(data);
+      return Right(data);
     } on DioException catch (e) {
       return Left(ExceptionMapper.mapDioToFailure(e));
     }

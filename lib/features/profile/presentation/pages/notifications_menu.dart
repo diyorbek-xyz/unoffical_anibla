@@ -25,7 +25,7 @@ class _NotificationsMenuState extends State<NotificationsMenu> {
           loading: () => CircularProgressIndicator(),
           orElse: () => Text("Nimadur Xato ketti"),
           success: (response) => ListsWidget.builder(
-            itemCount: response.data.length,
+            itemCount: response.data.getRange(0, 2).length,
             builder: (i, borderRadius) {
               final notf = response.data.elementAt(i);
               return Material(

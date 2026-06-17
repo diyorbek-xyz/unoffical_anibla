@@ -1,4 +1,4 @@
-import 'package:application/features/player/presentation/widgets/video_controls.dart';
+import 'package:application/features/player/presentation/widgets/video_player.dart';
 import 'package:flutter/material.dart';
 
 class PlayerPage extends StatelessWidget {
@@ -6,6 +6,6 @@ class PlayerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return VideoPlayer();
+    return VideoPlayer(isFullscreen: true);
   }
 }

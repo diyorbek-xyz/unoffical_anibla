@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/constants/spacings.dart';
 import 'package:application/features/main/presentation/widgets/bottom_bar.dart';

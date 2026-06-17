@@ -1,7 +1,10 @@
+import 'package:application/core/config/theme/app_theme.dart';
+import 'package:application/core/utils/extensions.dart';
 import 'package:application/features/animes/presentation/bloc/episode/episode_bloc.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:application/core/config/theme/app_colors.dart';
+import 'package:application/features/animes/presentation/bloc/episode/episode_state.dart';
 import 'package:application/features/animes/presentation/widgets/episodes_list.dart';
 import 'package:application/features/common/presentation/widgets/responsive.dart';
 import 'package:application/features/player/presentation/cubit/player_controller.dart';
@@ -97,13 +100,15 @@ class _VideoPlayerState extends State<VideoPlayer> {
         final (hasError, error, fit) = state;
         if (hasError && error == "empty") return Center(child: Text("Nimadur xato ketti"));
         if (hasError && error == "paid") return Center(child: Text("Bu animeni ko'rish uchun obuna sotib oling"));
-        return Video(fit: fit, controller: controller.controller, controls: (state) => controlsBuilder);
+        return Video(fit: fit, controller: controller.controller, controls: (_) => controlsBuilder);
       },
     );
   }
 
-  ThemeData themeData(BuildContext context) => ThemeData(
-    useMaterial3: true,
+  ThemeData themeData(BuildContext context) => AppThemes.darkTheme.copyWith(
+    filledButtonTheme: FilledButtonThemeData(
+      style: ButtonStyle(shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: .circular(10)))),
+    ),
     iconButtonTheme: IconButtonThemeData(
       style: ButtonStyle(
         mouseCursor: WidgetStatePropertyAll(SystemMouseCursors.click),
@@ -145,7 +150,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
   );
 
   Widget get controls => BlocBuilder<PlayerController, PlayerStates>(
-    buildWhen: (previous, current) => (previous.hasError != current.hasError) && (previous.error != current.error),
+    buildWhen: (previous, current) => previous.hasError != current.hasError || previous.error != current.error,
     builder: (context, state) {
       final responsive = Responsive.of(context);
       return GestureDetector(
@@ -316,29 +321,37 @@ class _VideoPlayerState extends State<VideoPlayer> {
                   Align(
                     alignment: AlignmentGeometry.centerEnd,
                     child: Padding(
-                      padding: EdgeInsets.only(bottom: 30, right: 30),
-                      child: InkWell(
-                        onTap: controller.skipIntro,
-                        child: Ink(
-                          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(6), color: context.appColors.primary),
-                          child: Text("Introni o'tkazish", style: TextStyle(color: context.appColors.onPrimary)),
-                        ),
+                      padding: EdgeInsetsGeometry.only(right: 20),
+                      child: FilledButton.icon(
+                        onPressed: controller.skipIntro,
+                        style: ButtonStyle(),
+                        icon: Icon(Icons.skip_next),
+                        label: Text("Introni o'tkazish"),
                       ),
                     ),
                   ),
                 if (responsive.isMobile || isFullscreen)
-                  Container(
-                    padding: EdgeInsets.all(7),
-                    alignment: AlignmentGeometry.centerStart,
-                    child: Text(
-                      title,
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400, color: context.appColors.onPrimaryContainer),
-                    ),
+                  BlocSelector<EpisodeBloc, EpisodeState, String>(
+                    selector: (state) {
+                      if (state is EpisodeSuccess) {
+                        final ep = state.episodes.firstWhere((element) => element.episodeNumber == title.tryParseInt());
+                        return "$title-qism ~ ${ep.title.uz}";
+                      }
+                      return "$title-qism";
+                    },
+                    builder: (context, title) {
+                      return Container(
+                        padding: EdgeInsets.symmetric(horizontal: responsive.isMobile ? 7 : 20, vertical: 7),
+                        alignment: AlignmentGeometry.centerStart,
+                        child: Text(
+                          title,
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400, color: context.appColors.onPrimaryContainer),
+                        ),
+                      );
+                    },
                   ),
 
                 Container(
-                  color: context.appColors.onPrimary.withAlpha(80),
                   padding: EdgeInsets.symmetric(horizontal: responsive.isMobile ? 10 : 20, vertical: 10),
                   child: Column(
                     mainAxisSize: .min,
@@ -372,7 +385,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
                               thumbCanPaintOutsideBar: false,
                               timeLabelPadding: 10,
                               timeLabelTextStyle: TextStyle(color: context.appColors.primary, fontWeight: FontWeight.bold, fontSize: 14),
-                              timeLabelLocation: TimeLabelLocation.above,
+                              timeLabelLocation: TimeLabelLocation.sides,
                               onSeek: (value) => controller.seek(value),
                             );
                           },
