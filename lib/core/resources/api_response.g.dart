@@ -14,6 +14,9 @@ ApiResponse<T> _$ApiResponseFromJson<T>(
   success: json['success'] as bool,
   data: fromJsonT(json['data']),
   error: json['error'],
+  pagination: json['pagination'] == null
+      ? null
+      : Pagination.fromJson(json['pagination'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$ApiResponseToJson<T>(
@@ -22,6 +25,7 @@ Map<String, dynamic> _$ApiResponseToJson<T>(
 ) => <String, dynamic>{
   'success': instance.success,
   'message': instance.message,
+  'pagination': instance.pagination,
   'error': instance.error,
   'data': toJsonT(instance.data),
 };

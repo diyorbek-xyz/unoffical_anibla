@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:native_splash_screen/native_splash_screen.dart' as splash_screen;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -48,6 +49,13 @@ class Utils {
   static Future<void> closeSplashScreen() async {
     if (isMobilePlatform) return;
     await splash_screen.close(animation: splash_screen.CloseAnimation.fade);
+  }
+
+  static Future<bool> checkIsOnline() async {
+    final connections = await (Connectivity().checkConnectivity());
+    return connections.contains(ConnectivityResult.ethernet) ||
+        connections.contains(ConnectivityResult.mobile) ||
+        connections.contains(ConnectivityResult.wifi);
   }
 
   static void imageErrorListener(Object obj) {}

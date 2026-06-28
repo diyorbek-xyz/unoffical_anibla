@@ -1,9 +1,8 @@
-sealed class AnimeEvent {
-  const AnimeEvent();
-}
+part of 'anime_bloc.dart';
 
-final class GetSerie extends AnimeEvent {
-  final String slug;
-  final String type;
-  const GetSerie({required this.slug, required this.type});
+@freezed
+sealed class AnimeEvent with _$AnimeEvent {
+  factory AnimeEvent.getSingle({required final String slug, required final String type}) = _GetSingle;
+  factory AnimeEvent.getHome(final Paginator paginator) = _GetHome;
+  factory AnimeEvent.getMore() = _GetMore;
 }

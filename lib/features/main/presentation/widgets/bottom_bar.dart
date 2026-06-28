@@ -1,3 +1,4 @@
+import 'package:application/core/constants/tabs.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -13,23 +14,9 @@ class BottomBar extends StatelessWidget {
       },
       selectedIndex: shell.currentIndex,
       maintainBottomViewPadding: false,
-      destinations: tabs
-          .map(
-            (e) => NavigationDestination(
-              tooltip: e['label'],
-              icon: Icon(e['icon']),
-              label: e['label'],
-              selectedIcon: Icon(e['selectedIcon']),
-            ),
-          )
+      destinations: mobileTabs
+          .map((e) => NavigationDestination(tooltip: e.label, icon: Icon(e.icon), label: e.label, selectedIcon: Icon(e.activeIcon)))
           .toList(),
     );
   }
 }
-
-List<dynamic> tabs = [
-  {"icon": Icons.home_outlined, "label": "Home", "selectedIcon": Icons.home_rounded},
-  {"icon": Icons.grid_view_outlined, "label": "Explore", "selectedIcon": Icons.grid_view_rounded},
-  {"icon": Icons.bookmark_outline, "label": "Saved", "selectedIcon": Icons.bookmark_rounded},
-  {"icon": Icons.person_outline, "label": "Profile", "selectedIcon": Icons.person_rounded},
-];

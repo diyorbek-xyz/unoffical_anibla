@@ -1,95 +1,111 @@
 import 'dart:async';
 
+import 'package:application/core/utils/utils.dart';
 import 'package:application/features/animes/data/models/video_model.dart';
-import 'package:application/features/player/data/model/download_models.dart';
+import 'package:application/features/player/data/model/download/completed_models.dart';
+import 'package:application/features/player/data/model/parser_models.dart';
+import 'package:application/features/player/data/model/service/download_models.dart';
 import 'package:application/features/player/data/services/dowload_hls.dart';
 import 'package:application/features/player/data/source/local/downloads.dart';
 import 'package:application/injection_container.dart';
+import 'package:rxdart/rxdart.dart';
 
 class HlsDownloadService {
   final DownloadsLocal storage;
   HlsDownloadService(this.storage);
-  final _controller = StreamController<DownloadState>.broadcast();
 
-  Stream<DownloadState> get stream => _controller.stream;
-  Map<String, DownloadTask> get tasks => storage.getAllDownloads() as Map<String, DownloadTask>? ?? {};
   Map<String, DownloadState> states = {};
   DownloadTask? getTask(String id) => storage.getDownload(id);
 
-  Future<String?> downloadFromStream(DownloaderProps props) async {
-    final response = await dio.get(props.filePath, queryParameters: {"format": "api"});
+  Future<VideoModel> getUrlFromStream(String stream) async {
+    final response = await dio.get(stream, queryParameters: {"format": "api"});
     final video = VideoModel.fromJson(response.data);
-    if (video.file != null) return download(props.copyWith(filePath: video.file));
-    return null;
+    if (video.file == null) throw Exception("Invalid stream url");
+    return video;
   }
 
-  Future<String> download(DownloaderProps props) async {
-    final id = props.episodeId;
-    final state = states[id];
-    if (state != null && state.status != .completed) await cancel(id);
+  Future<MasterPlaylist> downloadMasterPlaylist(String url, String localUrl) async {
+    final isOnline = await Utils.checkIsOnline();
+    if (!isOnline) throw Exception("Enable your wifi or mobile network");
+    final master = await DownloadHlsPlaylist.downloadMasterPlaylist(url, localUrl);
+    return master;
+  }
 
-    final master = await DownloadHlsPlaylist.downloadMasterPlaylist(
-      props.filePath,
-      "${props.animeId}/${props.seasonId}/${props.episodeNumber}-qism:${props.episodeId}",
+  Future<DownloadTask> downloadFromStream(DownloadInfos info) async {
+    final video = await getUrlFromStream(info.streamUrl);
+    if (video.file == null) throw Exception("Invalid stream url");
+    return download(info.copyWith(downloadUrl: video.file!));
+  }
+
+  Future<DownloadTask> download(DownloadInfos info) async {
+    final isOnline = await Utils.checkIsOnline();
+    if (!isOnline) throw Exception("Enable your wifi or mobile network");
+    final id = info.episodeId;
+    final oldState = states[id];
+    if (oldState != null && oldState.status != .completed) await cancel(id);
+    final master = info.masterPlaylist ?? await DownloadHlsPlaylist.downloadMasterPlaylist(info.downloadUrl, info.localFolderUrl);
+    final media = await DownloadHlsPlaylist.downloadMediaPlaylist(info.variant ?? master.variants.last);
+    final state = states[id] = DownloadState(
+      id: id,
+      downloaded: 0,
+      total: media.chunks.length,
+      speed: 0,
+      status: .downloading,
+      bandwidth: media.bandwidth,
+      duration: media.duration,
     );
-
-    final media = await DownloadHlsPlaylist.downloadMediaPlaylist(master.variants.last);
-    final task = DownloadTask(props: props, masterPlaylist: master, mediaPlaylist: media, queue: media.chunks, isCompleted: false);
-    states[id] = DownloadState(id: id, downloaded: 0, total: media.chunks.length, speed: 0, status: .downloading);
-
+    final stream = BehaviorSubject<DownloadState>.seeded(state);
+    final task = DownloadTask(streamController: stream, infos: info, masterPlaylist: master, mediaPlaylist: media);
     await storage.saveDownload(id, task);
     start(task);
-    return id;
+    task.streamController!.add(state);
+    return task;
   }
 
   Future<void> start(DownloadTask task) async {
+    if (task.streamController == null) return;
+    List<String> downloads = [];
+
+    await Future.wait(List.generate(4, (_) => _worker(task, downloads)));
     final state = states[task.id]!;
-    task.queue = task.mediaPlaylist.chunks.reversed.toList();
+    if (state.status == .cancelled) return;
 
-    _controller.add(state);
-    final stopwatch = Stopwatch()..start();
-    _speedWorker(task, stopwatch);
-    await Future.wait(List.generate(4, (index) => _worker(task, stopwatch)));
     _emit(task.id, status: .completed);
-
-    final info = await DownloadHlsPlaylist.saveCompleted(task.props.copyWith(filePath: task.masterPlaylist.localUrl));
-    await storage.saveDownload(task.id, task.copyWith(isCompleted: true, infos: info));
+    await DownloadHlsPlaylist.saveCompleted(task.infos.copyWith(localFolderUrl: task.masterPlaylist.localUrl));
+    await storage.saveDownload(task.id, task.copyWith(isCompleted: true));
   }
 
-  Future<void> _worker(DownloadTask task, Stopwatch stopwatch) async {
-    while (task.queue.isNotEmpty) {
-      final state = states[task.id];
+  Future<void> _worker(DownloadTask task, List<String> downloads) async {
+    final id = task.id;
+    while (downloads.length < task.queue.length) {
+      final state = states[id];
       if (state == null || state.status == .cancelled) return;
       while (state.status == .paused) {
+        final state = states[id];
+        if (state?.status != .paused) break;
         await Future.delayed(Duration(milliseconds: 200));
       }
-      final segment = task.queue.removeLast();
-      _emit(task.id, downloaded: state.downloaded + 1, status: .downloading);
+      final segment = task.queue.firstWhere((element) => !downloads.contains(element.localUrl));
+      downloads.add(segment.localUrl);
+      _emit(id, downloaded: state.downloaded + 1, status: .downloading);
       await DownloadHlsPlaylist.downloadChunk(segment);
+      if (state.status == .cancelled) await cancel(id);
     }
-  }
-
-  Future<void> _speedWorker(DownloadTask task, Stopwatch sw) async {
-    while (task.queue.isNotEmpty) {
-      _emit(task.id, speed: _speed(task, sw));
-      await Future.delayed(Duration(seconds: 1));
-    }
-  }
-
-  double _speed(DownloadTask task, Stopwatch sw) {
-    if (sw.elapsedMilliseconds == 0) return 0;
-    final state = states[task.id]!;
-    final downloadedSegment = (state.downloaded / (sw.elapsedMilliseconds / 1000));
-    final byte = (downloadedSegment * task.mediaPlaylist.targetDuration * task.extraInfo.bandwidth) / (8 * 1024);
-    return byte;
   }
 
   void _emit(String id, {int? downloaded, int? total, double? speed, DownloadStatus? status}) {
     final state = states[id];
-    if (state == null) return;
-    final newState = state.copyWith(downloaded: downloaded, id: id, speed: speed, status: status, total: total);
+    final task = getTask(id);
+    if (state == null || task == null || task.streamController == null) return;
+    final newState = state.copyWith(
+      id: id,
+      downloaded: downloaded ?? state.downloaded,
+      speed: speed ?? state.speed,
+      status: status ?? state.status,
+      total: total ?? state.total,
+    );
     states[id] = newState;
-    _controller.add(newState);
+    task.streamController!.add(newState);
   }
 
   void toggle(String id) {
@@ -114,9 +130,5 @@ class HlsDownloadService {
     _emit(task.id, status: .cancelled, downloaded: 0, speed: 0);
     await storage.removeDownload(id);
     await DownloadHlsPlaylist.delete(folder);
-  }
-
-  Future<void> dispose() async {
-    await _controller.close();
   }
 }

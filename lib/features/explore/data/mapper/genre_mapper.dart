@@ -1,4 +1,4 @@
-import 'package:application/features/common/data/models/translated.dart';
+import 'package:application/features/common/data/models/helpers/translated.dart';
 import 'package:application/features/common/mapper/translated_mapper.dart';
 import 'package:application/features/explore/data/models/genre_model.dart';
 import 'package:application/features/explore/domain/entities/genre_entity.dart';

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:application/core/config/theme/app_colors.dart';
-import 'package:application/core/utils/base_url.dart';
 import 'package:application/features/animes/data/mapper/episode_mapper.dart';
 import 'package:application/features/animes/domain/entities/anime_entity.dart';
 import 'package:application/features/animes/domain/entities/episode_entity.dart';
@@ -8,8 +7,8 @@ import 'package:application/features/animes/presentation/bloc/anime/anime_bloc.d
 import 'package:application/features/animes/presentation/bloc/anime/anime_state.dart';
 import 'package:application/features/animes/presentation/bloc/episode/episode_bloc.dart';
 import 'package:application/features/animes/presentation/bloc/episode/episode_state.dart';
-import 'package:application/features/player/presentation/cubit/player_controller.dart';
-import 'package:application/features/player/presentation/cubit/player_states.dart';
+import 'package:application/features/player/presentation/cubit/player/player_controller.dart';
+import 'package:application/features/player/presentation/cubit/player/player_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -66,7 +65,7 @@ class _EpisodesListState extends State<EpisodesList> {
       builder: (context, state) {
         final isLoading = state is! EpisodeSuccess;
         final fake = List.generate(12, (index) => EpisodeMapper.modelToEntity(null));
-        final current = controller.state.streamId;
+        final current = controller.state.stream.offset;
         final data = isLoading ? fake : state.episodes;
         return Skeletonizer(
           enabled: isLoading,
@@ -105,17 +104,13 @@ class _EpisodesListState extends State<EpisodesList> {
                     addRepaintBoundaries: true,
                     children: changeList(data).asMap().entries.map((entry) {
                       final episode = entry.value;
-                      final isCurrent = (current.isNotEmpty && episode.video.isNotEmpty) ? current == getStreamId(episode.video) : false;
+                      final isCurrent = entry.key == current;
                       final title = "${episode.episodeNumber}-qism: ${episode.title.uz}";
-                      final PlaylistPosition pos = entry.key == 0
-                          ? .first
-                          : entry.key == (data.length - 1)
-                          ? .last
-                          : .middle;
                       final animeState = context.read<AnimeBloc>().state;
                       final anime = animeState is AnimeSuccess ? animeState.anime : null;
                       final props = PlayerProps(
-                        position: pos,
+                        all: data.length,
+                        offset: entry.key,
                         type: AnimeType.serie,
                         title: title,
                         stream: episode.video,

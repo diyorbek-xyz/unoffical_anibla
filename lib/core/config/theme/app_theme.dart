@@ -46,4 +46,17 @@ class AppThemes {
 
 extension FontSize on BuildContext {
   TextTheme get textTheme => Theme.of(this).textTheme;
+  ButtonStyles get buttonVariant => ButtonStyles(this);
+}
+
+class ButtonStyles {
+  final BuildContext context;
+  const ButtonStyles(this.context);
+
+  ButtonStyle get rectangle => ButtonStyle(
+    minimumSize: WidgetStatePropertyAll(Size(100, 50)),
+    maximumSize: WidgetStatePropertyAll(Size(double.infinity, 60)),
+    shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(7))),
+    textStyle: WidgetStatePropertyAll(context.textTheme.titleMedium),
+  );
 }

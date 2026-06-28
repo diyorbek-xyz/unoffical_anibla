@@ -6,7 +6,6 @@ import 'package:application/features/animes/data/mapper/anime_mapper.dart';
 import 'package:application/features/animes/data/models/anime_model.dart';
 import 'package:application/features/animes/domain/entities/anime_entity.dart';
 import 'package:application/features/animes/presentation/bloc/anime/anime_bloc.dart';
-import 'package:application/features/animes/presentation/bloc/anime/anime_event.dart';
 import 'package:application/features/animes/presentation/bloc/anime/anime_state.dart';
 import 'package:application/features/animes/presentation/bloc/episode/episode_bloc.dart';
 import 'package:application/features/animes/presentation/bloc/episode/episode_event.dart';
@@ -21,7 +20,7 @@ import 'package:application/features/comment/data/models/props.dart';
 import 'package:application/features/comment/presentation/bloc/comment_bloc.dart';
 import 'package:application/features/comment/presentation/bloc/comment_event.dart';
 import 'package:application/features/common/presentation/widgets/error.dart';
-import 'package:application/features/player/presentation/cubit/player_controller.dart';
+import 'package:application/features/player/presentation/cubit/player/player_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +41,7 @@ class _AnimePageState extends State<AnimePage> {
 
   @override
   void initState() {
-    context.read<AnimeBloc>().add(GetSerie(slug: widget.slug, type: widget.type));
+    context.read<AnimeBloc>().add(.getSingle(slug: widget.slug, type: widget.type));
     controller = context.read<PlayerController>();
     super.initState();
   }
@@ -97,7 +96,7 @@ class _AnimePageState extends State<AnimePage> {
           }
           return Scaffold(
             floatingActionButton: FloatingActionButton.extended(
-              onPressed: () => context.pushNamed("watch", pathParameters: {"type": widget.type, "slug": widget.slug}),
+              onPressed: () => context.pushNamed("watch", queryParameters: {"type": widget.type}),
               label: Text("Hello"),
               icon: Icon(Icons.play_arrow),
             ),
@@ -139,7 +138,7 @@ class _AnimePageState extends State<AnimePage> {
                         height: 400,
                         child: ErrorBuilder(
                           message: state.message,
-                          refresh: () => context.read<AnimeBloc>().add(GetSerie(slug: widget.slug, type: widget.type)),
+                          refresh: () => context.read<AnimeBloc>().add(.getSingle(slug: widget.slug, type: widget.type)),
                         ),
                       ),
                     ),

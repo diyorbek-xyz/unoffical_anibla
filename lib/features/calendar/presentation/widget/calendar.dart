@@ -23,57 +23,60 @@ class Calendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<CalendarBloc>()..add(GetCalendarWeekly()),
-      child: BlocBuilder<CalendarBloc, CalendarState>(
-        builder: (context, state) {
-          final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
-          final isLoading = state is! CalendarWeeklySuccess;
-          final fakeTimers = List.generate(2, (index) => TimerModel(anime: AnimeModel(uz: {"title": lorem(20), "description": lorem()})));
-          final fake = List.generate(7, (index) => CalendarMapper.modelToEntity(CalendarModel(timers: fakeTimers)));
-          final data = isLoading ? fake : state.data;
+    return FocusTraversalGroup(
+      policy: WidgetOrderTraversalPolicy(),
+      child: BlocProvider(
+        create: (context) => sl<CalendarBloc>()..add(GetCalendarWeekly()),
+        child: BlocBuilder<CalendarBloc, CalendarState>(
+          builder: (context, state) {
+            final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
+            final isLoading = state is! CalendarWeeklySuccess;
+            final fakeTimers = List.generate(2, (index) => TimerModel(anime: AnimeModel(uz: {"title": lorem(20), "description": lorem()})));
+            final fake = List.generate(7, (index) => CalendarMapper.modelToEntity(CalendarModel(timers: fakeTimers)));
+            final data = isLoading ? fake : state.data;
 
-          return Skeletonizer(
-            enabled: isLoading,
-            enableSwitchAnimation: true,
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: containerPadding),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Skeleton.keep(
-                    keep: true,
-                    child: Padding(
-                      padding: EdgeInsetsGeometry.symmetric(horizontal: isMobile ? 10 : containerPadding),
-                      child: Row(
-                        textDirection: isMobile ? .rtl : .ltr,
-                        spacing: 10,
-                        children: [
-                          IconButton(onPressed: () => context.read<CalendarBloc>().add(GetCalendarWeekly()), icon: Icon(Icons.refresh)),
-                          Expanded(
-                            child: Text(
-                              "Kunlik chiqadigan Animelar ro'yxati",
-                              style: isMobile ? context.textTheme.headlineSmall : context.textTheme.headlineLarge,
+            return Skeletonizer(
+              enabled: isLoading,
+              enableSwitchAnimation: true,
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: containerPadding),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Skeleton.keep(
+                      keep: true,
+                      child: Padding(
+                        padding: EdgeInsetsGeometry.symmetric(horizontal: isMobile ? 10 : containerPadding),
+                        child: Row(
+                          textDirection: isMobile ? .rtl : .ltr,
+                          spacing: 10,
+                          children: [
+                            IconButton(onPressed: () => context.read<CalendarBloc>().add(GetCalendarWeekly()), icon: Icon(Icons.refresh)),
+                            Expanded(
+                              child: Text(
+                                "Kunlik chiqadigan Animelar ro'yxati",
+                                style: isMobile ? context.textTheme.headlineSmall : context.textTheme.headlineLarge,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 23),
-                  SingleChildScrollView(
-                    physics: BouncingScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    child: Padding(
-                      padding: EdgeInsetsGeometry.symmetric(horizontal: isMobile ? 10 : containerPadding),
-                      child: Flex(direction: Axis.horizontal, spacing: 20, children: data.map((e) => dailyAnimes(e, context)).toList()),
+                    SizedBox(height: 23),
+                    SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      child: Padding(
+                        padding: EdgeInsetsGeometry.symmetric(horizontal: isMobile ? 10 : containerPadding),
+                        child: Flex(direction: Axis.horizontal, spacing: 20, children: data.map((e) => dailyAnimes(e, context)).toList()),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
@@ -105,7 +108,7 @@ class Calendar extends StatelessWidget {
     );
   }
 
-  Container timers(BuildContext context, Radius innerRadius, Radius outerRadius, CalendarEntity? e) {
+  Container timers(BuildContext context, Radius innerRadius, Radius outerRadius, CalendarEntity? calendar) {
     final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
     final double width = isMobile ? 150 : 180;
 
@@ -115,10 +118,11 @@ class Calendar extends StatelessWidget {
         borderRadius: BorderRadius.only(topLeft: innerRadius, bottomLeft: outerRadius, bottomRight: outerRadius, topRight: outerRadius),
       ),
       padding: EdgeInsets.all(5),
-      child: (e != null && e.timers.isNotEmpty)
+      child: (calendar != null && calendar.timers.isNotEmpty)
           ? Row(
               spacing: 10,
-              children: e.timers.where((e) => e.anime.slug != "bir-soatli-qizcha-5").map((timer) {
+              children: calendar.timers.where((e) => e.anime.slug != "bir-soatli-qizcha-5").toList().asMap().entries.map((e) {
+                final timer = e.value;
                 final episode = timer.episode.episodeNumber;
                 final hasEpisode = episode != 0;
                 return Badge(
@@ -127,7 +131,10 @@ class Calendar extends StatelessWidget {
                   offset: Offset(6, 12),
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   textStyle: TextStyle(fontSize: 16),
-                  child: AnimeCard(anime: timer.anime, expand: false),
+                  child: FocusTraversalOrder(
+                    order: NumericFocusOrder(calendar.date.year * 100 + calendar.date.month * 10 + calendar.date.day + (e.key * 0.1)),
+                    child: AnimeCard(anime: timer.anime, expand: false),
+                  ),
                 );
               }).toList(),
             )
@@ -135,7 +142,7 @@ class Calendar extends StatelessWidget {
               width: width,
               child: AspectRatio(
                 aspectRatio: 9 / 15,
-                child: Center(child: Text("Hosircha bu kunda hech qanday anime rejalashtirilmagan", textAlign: TextAlign.center)),
+                child: Center(child: Text("Hozircha bu kunda hech qanday anime rejalashtirilmagan", textAlign: TextAlign.center)),
               ),
             ),
     );

@@ -17,10 +17,10 @@ class MasterPlaylistAdapter extends TypeAdapter<MasterPlaylist> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return MasterPlaylist(
-      variants: (fields[2] as List).cast<Variant>(),
-      version: (fields[3] as num).toInt(),
-      downloadUrl: fields[0] as String,
-      localUrl: fields[1] as String,
+      variants: (fields[0] as List).cast<Variant>(),
+      version: (fields[1] as num).toInt(),
+      downloadUrl: fields[2] as String,
+      localUrl: fields[3] as String,
     );
   }
 
@@ -29,13 +29,13 @@ class MasterPlaylistAdapter extends TypeAdapter<MasterPlaylist> {
     writer
       ..writeByte(4)
       ..writeByte(0)
-      ..write(obj.downloadUrl)
-      ..writeByte(1)
-      ..write(obj.localUrl)
-      ..writeByte(2)
       ..write(obj.variants)
+      ..writeByte(1)
+      ..write(obj.version)
+      ..writeByte(2)
+      ..write(obj.downloadUrl)
       ..writeByte(3)
-      ..write(obj.version);
+      ..write(obj.localUrl);
   }
 
   @override
@@ -51,7 +51,7 @@ class MasterPlaylistAdapter extends TypeAdapter<MasterPlaylist> {
 
 class MediaPlaylistAdapter extends TypeAdapter<MediaPlaylist> {
   @override
-  final typeId = 792;
+  final typeId = 3725;
 
   @override
   MediaPlaylist read(BinaryReader reader) {
@@ -60,34 +60,46 @@ class MediaPlaylistAdapter extends TypeAdapter<MediaPlaylist> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return MediaPlaylist(
-      chunks: (fields[4] as List).cast<Chunk>(),
-      downloadUrl: fields[5] as String,
-      localUrl: fields[6] as String,
-      targetDuration: (fields[2] as num).toDouble(),
-      type: fields[0] as String,
-      version: (fields[1] as num).toInt(),
-      startIndex: (fields[3] as num).toInt(),
+      chunks: (fields[0] as List).cast<Chunk>(),
+      downloadUrl: fields[1] as String,
+      localUrl: fields[2] as String,
+      targetDuration: (fields[3] as num).toDouble(),
+      type: fields[4] as String,
+      version: (fields[5] as num).toInt(),
+      startIndex: (fields[6] as num).toInt(),
+      bandwidth: (fields[7] as num).toInt(),
+      height: (fields[8] as num).toInt(),
+      width: (fields[9] as num).toInt(),
+      codecs: fields[10] as dynamic,
     );
   }
 
   @override
   void write(BinaryWriter writer, MediaPlaylist obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(11)
       ..writeByte(0)
-      ..write(obj.type)
-      ..writeByte(1)
-      ..write(obj.version)
-      ..writeByte(2)
-      ..write(obj.targetDuration)
-      ..writeByte(3)
-      ..write(obj.startIndex)
-      ..writeByte(4)
       ..write(obj.chunks)
-      ..writeByte(5)
+      ..writeByte(1)
       ..write(obj.downloadUrl)
+      ..writeByte(2)
+      ..write(obj.localUrl)
+      ..writeByte(3)
+      ..write(obj.targetDuration)
+      ..writeByte(4)
+      ..write(obj.type)
+      ..writeByte(5)
+      ..write(obj.version)
       ..writeByte(6)
-      ..write(obj.localUrl);
+      ..write(obj.startIndex)
+      ..writeByte(7)
+      ..write(obj.bandwidth)
+      ..writeByte(8)
+      ..write(obj.height)
+      ..writeByte(9)
+      ..write(obj.width)
+      ..writeByte(10)
+      ..write(obj.codecs);
   }
 
   @override
@@ -112,8 +124,8 @@ class ChunkAdapter extends TypeAdapter<Chunk> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Chunk(
-      downloadUrl: fields[1] as String,
-      duration: (fields[0] as num).toDouble(),
+      downloadUrl: fields[0] as String,
+      duration: (fields[1] as num).toDouble(),
       localUrl: fields[2] as String,
       relativeUrl: fields[3] as String,
     );
@@ -124,9 +136,9 @@ class ChunkAdapter extends TypeAdapter<Chunk> {
     writer
       ..writeByte(4)
       ..writeByte(0)
-      ..write(obj.duration)
-      ..writeByte(1)
       ..write(obj.downloadUrl)
+      ..writeByte(1)
+      ..write(obj.duration)
       ..writeByte(2)
       ..write(obj.localUrl)
       ..writeByte(3)
@@ -159,8 +171,8 @@ class VariantAdapter extends TypeAdapter<Variant> {
       codecs: fields[1] as String,
       height: (fields[2] as num).toInt(),
       width: (fields[3] as num).toInt(),
-      localUrl: fields[5] as String,
-      downloadUrl: fields[4] as String,
+      localUrl: fields[4] as String,
+      downloadUrl: fields[5] as String,
       relativeUrl: fields[6] as String,
     );
   }
@@ -178,9 +190,9 @@ class VariantAdapter extends TypeAdapter<Variant> {
       ..writeByte(3)
       ..write(obj.width)
       ..writeByte(4)
-      ..write(obj.downloadUrl)
-      ..writeByte(5)
       ..write(obj.localUrl)
+      ..writeByte(5)
+      ..write(obj.downloadUrl)
       ..writeByte(6)
       ..write(obj.relativeUrl);
   }

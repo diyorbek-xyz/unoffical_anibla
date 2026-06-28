@@ -1,5 +1,5 @@
-import 'package:application/features/common/data/models/pagination.dart';
-import 'package:application/features/common/data/models/translated.dart';
+import 'package:application/features/common/data/models/helpers/pagination.dart';
+import 'package:application/features/common/data/models/helpers/translated.dart';
 import 'package:application/features/explore/data/mapper/genre_mapper.dart';
 import 'package:application/features/explore/domain/entities/genre_entity.dart';
 import 'package:hive_ce_flutter/adapters.dart';

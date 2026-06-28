@@ -14,16 +14,11 @@ class Pagination {
   final int pages;
   @HiveField(3)
   final int total;
-  const Pagination({
-    this.limit = 0,
-    this.total = 0,
-    this.pages = 0,
-    this.page = 0,
-  });
+  const Pagination({this.limit = 0, this.total = 0, this.pages = 0, this.page = 0});
 
-  factory Pagination.fromJson(Map<String, dynamic> json) =>
-      _$PaginationFromJson(json);
+  bool get hasMore => (page < pages) && pages > 0;
+
+  factory Pagination.fromJson(Map<String, dynamic> json) => _$PaginationFromJson(json);
   Map<String, dynamic> toJson() => _$PaginationToJson(this);
-  static Map<String, dynamic> staticToJson(Pagination json) =>
-      _$PaginationToJson(json);
+  static Map<String, dynamic> staticToJson(Pagination json) => _$PaginationToJson(json);
 }

@@ -3,17 +3,17 @@ import 'package:application/features/animes/presentation/bloc/anime/anime_bloc.d
 import 'package:application/features/animes/presentation/bloc/anime/anime_state.dart';
 import 'package:application/features/animes/presentation/bloc/episode/episode_bloc.dart';
 import 'package:application/features/animes/presentation/bloc/episode/episode_state.dart';
-import 'package:application/features/player/presentation/cubit/player_controller.dart';
-import 'package:application/features/player/presentation/cubit/player_states.dart';
+import 'package:application/features/player/presentation/cubit/player/player_controller.dart';
+import 'package:application/features/player/presentation/cubit/player/player_states.dart';
 import 'package:application/features/player/presentation/widgets/video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WatchPage extends StatefulWidget {
-  final String slug;
-  final String type;
-  final int episode;
-  const WatchPage({super.key, required this.slug, required this.type, required this.episode});
+  final String? type;
+  final int? episode;
+  final String? url;
+  const WatchPage({super.key, this.type, this.url, this.episode});
 
   @override
   State<WatchPage> createState() => _WatchPageState();
@@ -21,56 +21,77 @@ class WatchPage extends StatefulWidget {
 
 class _WatchPageState extends State<WatchPage> {
   late PlayerController controller;
+  late AnimeBloc anime;
+  @override
+  void didChangeDependencies() {
+    init();
+    super.didChangeDependencies();
+  }
 
   Future<void> initEpisode() async {
-    final anime = context.read<AnimeBloc>().state;
     final state = context.read<EpisodeBloc>().state;
-    if (state is EpisodeSuccess && anime is AnimeSuccess) {
-      final episode = state.episodes.firstWhere((e) => e.episodeNumber == widget.episode);
-      final PlaylistPosition pos = widget.episode == 1
-          ? .first
-          : widget.episode == state.episodes.length
-          ? .last
-          : .middle;
-      await controller.init(
-        PlayerProps(
-          anime: anime.anime.title.uz,
-          cover: anime.anime.cover,
-          position: pos,
-          type: widget.type,
-          title: episode.episodeNumber.toString(),
-          stream: episode.video,
-        ),
+    final animeState = anime.state;
+    if (state is EpisodeSuccess && animeState is AnimeSuccess) {
+      final episode = state.episodes.firstWhere((e) => e.episodeNumber == (widget.episode ?? 1));
+      final hasUrl = (widget.url != null && widget.url!.isNotEmpty);
+      final props = PlayerProps(
+        type: AnimeType.serie,
+        cover: animeState.anime.cover,
+        anime: animeState.anime.title.uz,
+        all: state.episodes.length,
+        title: episode.title.uz,
+        offset: episode.episodeNumber,
+        stream: hasUrl ? widget.url! : episode.video,
+        hasUrl: hasUrl,
       );
+      if (controller.state.status == .empty) {
+        await controller.init(props);
+      }
+      if (controller.state.status != .empty && widget.episode != null) {
+        await controller.openStream(props);
+      }
     }
   }
 
   Future<void> initMovie() async {
-    final state = context.read<AnimeBloc>().state;
-    if (state is AnimeSuccess) {
-      await controller.init(
-        PlayerProps(
-          anime: state.anime.title.uz,
-          position: .none,
-          cover: state.anime.cover,
-          type: widget.type,
-          title: state.anime.title.uz,
-          stream: state.anime.video,
-        ),
+    final animeState = anime.state;
+    if (animeState is AnimeSuccess) {
+      final hasUrl = (widget.url != null && widget.url!.isNotEmpty);
+      final props = PlayerProps(
+        offset: 0,
+        all: 0,
+        anime: animeState.anime.title.uz,
+        cover: animeState.anime.cover,
+        type: AnimeType.movie,
+        title: animeState.anime.title.uz,
+        stream: hasUrl ? widget.url! : animeState.anime.video,
+        hasUrl: hasUrl,
       );
+      if (controller.state.status == .empty) {
+        await controller.init(props);
+      }
+      if (controller.state.status != .empty) {
+        await controller.openStream(props);
+      }
+    }
+  }
+
+  void init() {
+    final animeState = anime.state;
+    if (animeState is! AnimeSuccess) return;
+    if (widget.type == AnimeType.movie || animeState.anime.totalEpisodes == 0 || animeState.anime.duration != 0) {
+      initMovie();
+    } else {
+      initEpisode();
     }
   }
 
   @override
   void initState() {
     controller = context.read<PlayerController>();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (widget.type == AnimeType.movie) {
-        initMovie();
-      } else {
-        initEpisode();
-      }
-    });
+    anime = context.read<AnimeBloc>();
+    WidgetsBinding.instance.addPostFrameCallback((_) => init());
+
     super.initState();
   }
 
@@ -87,16 +108,7 @@ class _WatchPageState extends State<WatchPage> {
           listener: (context, state) => initMovie(),
         ),
       ],
-      child: BlocSelector<PlayerController, PlayerStates, (String?, bool)>(
-        selector: (state) => (state.error, state.hasError),
-        builder: (context, state) {
-          if (state.$2) {
-            final error = state.$1 == "paid" ? "Bu animeni ko'rish uchun obuna sotib olding" : "";
-            return Container(color: Colors.black, alignment: .center, child: Text(error));
-          }
-          return VideoPlayer(isPage: true);
-        },
-      ),
+      child: VideoPlayer(isPage: true),
     );
   }
 }

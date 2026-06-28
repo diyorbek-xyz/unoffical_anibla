@@ -1,4 +1,4 @@
-import 'package:application/features/common/data/models/pagination.dart';
+import 'package:application/features/common/data/models/helpers/pagination.dart';
 import 'package:application/features/profile/data/mapper/ep_not_mapper.dart';
 import 'package:application/features/profile/data/models/notifications/notification_model.dart';
 import 'package:application/features/profile/data/models/notifications/notification_response.dart';

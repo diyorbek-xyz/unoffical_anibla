@@ -1,5 +1,5 @@
 import 'package:application/core/utils/base_url.dart';
-import 'package:application/features/common/data/models/item_model.dart';
+import 'package:application/features/common/data/models/miscs/item_model.dart';
 import 'package:application/features/explore/data/models/genre_model.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:json_annotation/json_annotation.dart';

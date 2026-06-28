@@ -1,5 +1,6 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/constants/spacings.dart';
+import 'package:application/features/common/domain/entities/tab_item.dart';
 import 'package:application/features/common/presentation/widgets/error.dart';
 import 'package:application/features/profile/data/mapper/profile_mapper.dart';
 import 'package:application/features/profile/data/models/profile/profile_model.dart';
@@ -23,19 +24,12 @@ import 'package:application/features/profile/presentation/pages/infos_menu.dart'
 import 'package:application/features/profile/presentation/widget/modals/logout_modal.dart';
 import 'package:application/main.dart';
 
-class TabModel {
-  final IconData icon;
-  final IconData activeIcon;
-  final String label;
-  const TabModel({required this.activeIcon, required this.icon, required this.label});
-}
-
-final List<TabModel> tabs = [
-  TabModel(activeIcon: Icons.info, icon: Icons.info_outline, label: "Profil ma'lumotlari"),
-  TabModel(activeIcon: Icons.notifications, icon: Icons.notifications_outlined, label: "Bildirishnomalar"),
-  TabModel(activeIcon: Icons.verified, icon: Icons.verified_outlined, label: "Obunalar"),
-  TabModel(activeIcon: Icons.devices, icon: Icons.devices_outlined, label: "Qurilmalar"),
-  TabModel(activeIcon: Icons.privacy_tip, icon: Icons.privacy_tip_outlined, label: "Xavfsizlik sozlamalari"),
+final List<TabItem> tabs = [
+  TabItem(activeIcon: Icons.info, icon: Icons.info_outline, label: "Profil ma'lumotlari"),
+  TabItem(activeIcon: Icons.notifications, icon: Icons.notifications_outlined, label: "Bildirishnomalar"),
+  TabItem(activeIcon: Icons.verified, icon: Icons.verified_outlined, label: "Obunalar"),
+  TabItem(activeIcon: Icons.devices, icon: Icons.devices_outlined, label: "Qurilmalar"),
+  TabItem(activeIcon: Icons.privacy_tip, icon: Icons.privacy_tip_outlined, label: "Xavfsizlik sozlamalari"),
 ];
 
 class ProfilePage extends StatefulWidget {

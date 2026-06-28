@@ -16,7 +16,7 @@ class TranslatedModelAdapter extends TypeAdapter<TranslatedModel> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return TranslatedModel(ru: fields[1] as String?, uz: fields[0] as String?);
+    return TranslatedModel(ru: fields[0] as String?, uz: fields[1] as String?);
   }
 
   @override
@@ -24,9 +24,9 @@ class TranslatedModelAdapter extends TypeAdapter<TranslatedModel> {
     writer
       ..writeByte(2)
       ..writeByte(0)
-      ..write(obj.uz)
+      ..write(obj.ru)
       ..writeByte(1)
-      ..write(obj.ru);
+      ..write(obj.uz);
   }
 
   @override
@@ -44,8 +44,8 @@ class TranslatedModelAdapter extends TypeAdapter<TranslatedModel> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-TranslatedModel _$TranslatedModelFromJson(Map<String, dynamic> json) =>
-    TranslatedModel(ru: json['ru'] as String?, uz: json['uz'] as String?);
+_TranslatedModel _$TranslatedModelFromJson(Map<String, dynamic> json) =>
+    _TranslatedModel(ru: json['ru'] as String?, uz: json['uz'] as String?);
 
-Map<String, dynamic> _$TranslatedModelToJson(TranslatedModel instance) =>
-    <String, dynamic>{'uz': instance.uz, 'ru': instance.ru};
+Map<String, dynamic> _$TranslatedModelToJson(_TranslatedModel instance) =>
+    <String, dynamic>{'ru': instance.ru, 'uz': instance.uz};

@@ -1,6 +1,7 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/utils/base_url.dart';
 import 'package:application/features/animes/domain/entities/anime_entity.dart';
+import 'package:application/features/common/presentation/widgets/tv_focuser.dart';
 import 'package:application/main.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -49,46 +50,50 @@ class AnimeCard extends StatelessWidget {
     final cover = GestureDetector(
       onSecondaryTapDown: (details) => handleClick(context, details.globalPosition),
       onLongPressStart: (details) => handleClick(context, details.globalPosition),
-      child: InkWell(
-        mouseCursor: SystemMouseCursors.click,
-        borderRadius: BorderRadius.circular(15),
-        onTap: () => context.pushNamed("anime", pathParameters: {"type": anime.type, "slug": anime.slug}),
-        splashColor: context.appColors.surfaceContainerHigh.withValues(alpha: 0.2),
-        hoverColor: context.appColors.surfaceContainerHigh.withValues(alpha: 0.2),
-        highlightColor: Colors.transparent,
-        focusColor: context.appColors.surfaceContainerHigh.withValues(alpha: 0.2),
-        radius: 350,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 5,
-          children: [
-            AspectRatio(
-              aspectRatio: 9 / 12,
-              child: Ink(
-                decoration: (!anime.thumbnail.endsWith(".avif") && anime.thumbnail.isNotEmpty)
-                    ? BoxDecoration(
-                        boxShadow: [BoxShadow(color: context.appColors.surfaceContainerLowest, blurRadius: 4, offset: Offset(0, 2))],
-                        image: DecorationImage(
-                          image: CachedNetworkImageProvider(addBaseUrl(anime.thumbnail)),
-                          fit: BoxFit.cover,
-                          alignment: AlignmentGeometry.center,
-                        ),
-                        borderRadius: BorderRadius.circular(14),
-                      )
-                    : BoxDecoration(color: context.appColors.primaryContainer, borderRadius: BorderRadius.circular(14)),
+      child: TvFocuser(
+        builder: (node) => InkWell(
+          focusNode: node,
+          mouseCursor: SystemMouseCursors.click,
+          borderRadius: BorderRadius.circular(15),
+          onTap: () => context.pushNamed("anime", pathParameters: {"type": anime.type, "slug": anime.slug}),
+          highlightColor: Colors.transparent,
+          splashColor: context.appColors.primaryContainer.withAlpha(50),
+          hoverColor: context.appColors.primaryContainer.withAlpha(50),
+          focusColor: context.appColors.onPrimaryContainer.withAlpha(50),
+          radius: 350,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 5,
+            children: [
+              AspectRatio(
+                aspectRatio: 9 / 12,
+                child: Ink(
+                  decoration: (!anime.thumbnail.endsWith(".avif") && anime.thumbnail.isNotEmpty)
+                      ? BoxDecoration(
+                          boxShadow: [BoxShadow(color: context.appColors.surfaceContainerLowest, blurRadius: 4, offset: Offset(0, 2))],
+                          image: DecorationImage(
+                            isAntiAlias: true,
+                            image: CachedNetworkImageProvider(addBaseUrl(anime.thumbnail)),
+                            fit: BoxFit.cover,
+                            alignment: AlignmentGeometry.center,
+                          ),
+                          borderRadius: BorderRadius.circular(14),
+                        )
+                      : BoxDecoration(color: context.appColors.primaryContainer, borderRadius: BorderRadius.circular(14)),
+                ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsetsGeometry.symmetric(horizontal: 5),
-              child: Text(
-                toBeginningOfSentenceCase(anime.title.uz),
-                maxLines: isMobile ? 1 : 2,
-                textAlign: TextAlign.start,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 15),
+              Padding(
+                padding: EdgeInsetsGeometry.symmetric(horizontal: 5),
+                child: Text(
+                  toBeginningOfSentenceCase(anime.title.uz),
+                  maxLines: isMobile ? 1 : 2,
+                  textAlign: TextAlign.start,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: 15),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

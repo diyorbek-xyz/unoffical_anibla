@@ -1,16 +1,16 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:application/features/player/data/model/download_models.dart';
+import 'package:application/features/player/data/model/download/completed_models.dart';
 import 'package:application/features/player/data/model/parser_models.dart';
 import 'package:application/features/player/data/services/parse_hls.dart';
 import 'package:dio/dio.dart';
-import 'package:path_provider/path_provider.dart';
 
 class DownloadHlsPlaylist {
-  static final dio = Dio();
+  static final dio = Dio(BaseOptions(persistentConnection: true));
   static Future<MasterPlaylist> downloadMasterPlaylist(String masterPath, String folderName) async {
-    final localDirectory = await getApplicationCacheDirectory();
+    // final directory = await getApplicationCacheDirectory();
+    final localDirectory = Directory("/home/user/Temp/");
     final localFolder = Uri.parse(localDirectory.uri.toFilePath()).resolve("downloads/$folderName/").toString();
     final masterDataResponse = await dio.get(masterPath);
     final masterData = masterDataResponse.data;
@@ -18,18 +18,18 @@ class DownloadHlsPlaylist {
 
     await createFolder(master.localUrl);
     final masterFile = File(master.localUrl);
-    await masterFile.writeAsString(master.toHLS());
+    await masterFile.writeAsString(master.hls);
     return master;
   }
 
   static Future<MediaPlaylist> downloadMediaPlaylist(Variant variant) async {
     final mediaDataResponse = await dio.get(variant.downloadUrl);
     final mediaData = mediaDataResponse.data;
-    final media = ParseHlsPlaylist.parseMedia(data: mediaData, downloadUrl: variant.downloadUrl, localFolder: variant.localUrl);
+    final media = ParseHlsPlaylist.parseMedia(data: mediaData, variant: variant);
     await createFolder(media.localUrl);
 
     final mediaFile = File(media.localUrl);
-    await mediaFile.writeAsString(media.toHLS());
+    await mediaFile.writeAsString(media.hls);
     await createFolder(media.chunks.first.localUrl);
     return media;
   }
@@ -38,23 +38,41 @@ class DownloadHlsPlaylist {
     return await dio.download(chunk.downloadUrl, chunk.localUrl);
   }
 
-  static Future<DownloadInfos> saveCompleted(DownloaderProps props) async {
-    final directory = Directory(props.filePath);
-    final stat = await directory.stat();
-    final localUri = Uri.parse(props.filePath);
+  static Future<void> downloadChunks(
+    MediaPlaylist media, {
+    int workerCount = 7,
+    void Function(int total)? onStart,
+    Future Function()? beforeDownloadChunk,
+    void Function(double progress, int downloaded)? onDownloadChunk,
+    void Function()? onComplete,
+  }) async {
+    List<Chunk> queue = List.from(media.chunks);
+    int total = media.chunks.length - 1;
+    int downloaded = 0;
+    double progress = 0;
+    Future worker() async {
+      while (queue.isNotEmpty) {
+        if (beforeDownloadChunk != null) await beforeDownloadChunk();
+        final chunk = queue.removeLast();
+        await downloadChunk(chunk);
+        downloaded++;
+        progress = downloaded / total;
+        if (onDownloadChunk != null) onDownloadChunk(progress * (media.sizeByte / (1024 * 1024)), downloaded);
+      }
+    }
+
+    if (onStart != null) onStart(total);
+    await Future.wait(List.generate(workerCount, (_) => worker()));
+    if (onComplete != null) onComplete();
+  }
+
+  static Future<void> saveCompleted(DownloadInfos info) async {
+    final localUri = Uri.parse(info.localFolderUrl);
+    final directory = Directory.fromUri(localUri);
+    final state = await directory.stat();
     final fileUri = localUri.resolve("completed.json");
-    final infos = DownloadInfos(
-      episodeNumber: props.episodeNumber,
-      filePath: fileUri.toFilePath(),
-      animeId: props.animeId,
-      seasonId: props.seasonId,
-      episodeId: props.episodeId,
-      downloadedAt: stat.changed,
-      size: stat.size,
-    );
     final file = File.fromUri(fileUri);
-    await file.writeAsString(jsonEncode(infos.toJson()));
-    return infos;
+    await file.writeAsString(jsonEncode(info.copyWith(size: state.size).toJson()));
   }
 
   static Future<void> createFolder(String url) async {

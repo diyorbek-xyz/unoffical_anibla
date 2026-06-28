@@ -1,10 +1,10 @@
 import 'package:application/core/utils/utils.dart';
-import 'package:application/features/player/data/model/download_models.dart';
+import 'package:application/features/player/data/model/service/download_models.dart';
 import 'package:application/features/player/data/model/timeline_model.dart';
 import 'package:application/features/player/data/services/download_service.dart';
 import 'package:application/features/player/data/source/local/downloads.dart';
 import 'package:application/features/player/data/source/local/timeline.dart';
-import 'package:application/features/player/presentation/cubit/player_controller.dart';
+import 'package:application/features/player/presentation/cubit/player/player_controller.dart';
 import 'package:application/features/profile/data/repository/notification_repository_impl.dart';
 import 'package:application/features/profile/data/source/remote/notifications_api.dart';
 import 'package:application/features/profile/domain/repository/notification_repository.dart';
@@ -25,7 +25,6 @@ import 'package:application/features/animes/domain/repository/season_repository.
 import 'package:application/features/animes/presentation/bloc/anime/anime_bloc.dart';
 import 'package:application/features/animes/presentation/bloc/episode/episode_bloc.dart';
 import 'package:application/features/animes/presentation/bloc/season/season_bloc.dart';
-import 'package:application/features/animes/presentation/bloc/video/video_bloc.dart';
 import 'package:application/features/comment/data/repository/comment_repository_impl.dart';
 import 'package:application/features/comment/data/source/remote/comment_api.dart';
 import 'package:application/features/comment/domain/repository/comment_repository.dart';
@@ -191,7 +190,6 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<EpisodeBloc>(() => EpisodeBloc(sl(), sl()));
   sl.registerFactory<CommentBloc>(() => CommentBloc(sl()));
   sl.registerFactory<TemplateBloc>(() => TemplateBloc(sl()));
-  sl.registerFactory<VideoBloc>(() => VideoBloc(sl()));
   sl.registerFactory<SearchBloc>(() => SearchBloc(sl()));
   sl.registerFactory<HistoryBloc>(() => HistoryBloc(sl()));
   sl.registerFactory<NotificationBloc>(() => NotificationBloc(sl()));

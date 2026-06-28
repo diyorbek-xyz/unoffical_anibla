@@ -1,6 +1,7 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/constants/spacings.dart';
 import 'package:application/features/main/presentation/widgets/bottom_bar.dart';
+import 'package:application/features/main/presentation/widgets/sidebar.dart';
 import 'package:application/main.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -16,53 +17,16 @@ class MainPage extends StatelessWidget {
       builder: (context, constraints) {
         final isMobile = constraints.maxWidth < MOBILE_WIDTH;
         return Scaffold(
-          extendBodyBehindAppBar: true,
-          appBar: !isMobile ? appBar(context) : null,
-          body: shell,
-          // Stack(
-          //   fit: .passthrough,
-          //   alignment: .topLeft,
-          //   children: [
-          //     shell,
-          //     Container(
-          //       clipBehavior: .antiAlias,
-          //       decoration: BoxDecoration(borderRadius: .horizontal(right: Radius.circular(40))),
-          //       width: 200,
-          //       child: BackdropFilter(
-          //         filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-          //         child: Material(
-          //           type: .transparency,
-          //           child: Column(
-          //             crossAxisAlignment: .stretch,
-          //             children: [
-          //               Center(child: Image.asset("assets/images/logo_dynamic.jpg")),
-          //               Padding(
-          //                 padding: const EdgeInsets.symmetric(vertical: 10).add(EdgeInsetsGeometry.only(right: 10)),
-          //                 child: Column(
-          //                   crossAxisAlignment: .start,
-          //                   spacing: 5,
-          //                   children: [
-          //                     InkWell(
-          //                       borderRadius: .horizontal(right: .circular(100)),
-          //                       onTap: () {},
-          //                       mouseCursor: SystemMouseCursors.click,
-          //                       child: Container(
-          //                         padding: .only(left: 20),
-          //                         height: 50,
-          //                         alignment: .centerLeft,
-          //                         child: Row(spacing: 10, children: [Icon(Icons.home), Text("Home")]),
-          //                       ),
-          //                     ),
-          //                   ],
-          //                 ),
-          //               ),
-          //             ],
-          //           ),
-          //         ),
-          //       ),
-          //     ),
-          //   ],
-          // ),
+          // extendBodyBehindAppBar: true,
+          // appBar: !isMobile ? appBar(context) : null,
+          body: isMobile
+              ? shell
+              : Row(
+                  children: [
+                    Sidebar(shell: shell),
+                    Expanded(child: shell),
+                  ],
+                ),
           bottomNavigationBar: isMobile ? BottomBar(shell: shell) : null,
         );
       },

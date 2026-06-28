@@ -12,8 +12,8 @@ class AuthInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     // final token = await storage.getAccessToken();
-    // final newOptions = await setHeaders(options, token ?? "");
-    handler.next(options);
+    final newOptions = await setHeaders(options, "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjlkODlkZGRmZTlhZWY5ODRkMGNhNTkyIiwidG9rZW5faWQiOiIyYWNlMmUwNS1hNGViLTQ4YjktYmIzYy0xZjcxZjdjZDIxNWEiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzgyMTUxMzEzLCJleHAiOjE3ODMzNjA5MTN9.CsfV0tUUNy4gWFEDCwWkZeYTpLJ5AzmMa0AnI6HTI6I");
+    handler.next(newOptions);
   }
 
   @override
@@ -28,11 +28,7 @@ class AuthInterceptor extends Interceptor {
           final options = await setHeaders(err.requestOptions, refreshToken);
           final response = await dio.fetch(options);
           return handler.resolve(response);
-        } on DioException catch (e) {
-          print(e.error.toString());
-          print(e.message.toString());
-          print(e.response.toString());
-          print(e.requestOptions.toString());
+        } on DioException catch (err) {
           await storage.clearTokens();
           return handler.next(err);
         }

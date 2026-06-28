@@ -1,15 +1,13 @@
 import 'dart:async';
-
 import 'package:application/core/config/theme/app_colors.dart';
-import 'package:application/core/utils/base_url.dart';
 import 'package:application/features/animes/domain/entities/anime_entity.dart';
 import 'package:application/features/animes/domain/entities/episode_entity.dart';
 import 'package:application/features/animes/presentation/bloc/anime/anime_bloc.dart';
 import 'package:application/features/animes/presentation/bloc/anime/anime_state.dart';
 import 'package:application/features/animes/presentation/bloc/episode/episode_bloc.dart';
 import 'package:application/features/animes/presentation/bloc/episode/episode_state.dart';
-import 'package:application/features/player/presentation/cubit/player_controller.dart';
-import 'package:application/features/player/presentation/cubit/player_states.dart';
+import 'package:application/features/player/presentation/cubit/player/player_controller.dart';
+import 'package:application/features/player/presentation/cubit/player/player_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -62,7 +60,7 @@ class _EpisodesDrawerState extends State<EpisodesDrawer> {
     return BlocBuilder<EpisodeBloc, EpisodeState>(
       builder: (context, state) {
         final List<EpisodeEntity> episodes = state is EpisodeSuccess ? state.episodes : [];
-        final current = controller.state.streamId;
+        final current = controller.state.stream.offset;
         return Column(
           children: [
             TextField(
@@ -75,10 +73,17 @@ class _EpisodesDrawerState extends State<EpisodesDrawer> {
                 contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
                 prefixIcon: Padding(
                   padding: EdgeInsetsGeometry.only(left: 10),
-                  child: IconButton(
-                    padding: EdgeInsets.all(0),
-                    onPressed: () => setState(() => isReversedEpisodeList = !isReversedEpisodeList),
-                    icon: Icon(isReversedEpisodeList ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down),
+                  child: Row(
+                    mainAxisSize: .min,
+                    spacing: 10,
+                    children: [
+                      IconButton(padding: EdgeInsets.all(0), onPressed: Scaffold.of(context).closeEndDrawer, icon: Icon(Icons.keyboard_arrow_left)),
+                      IconButton(
+                        padding: EdgeInsets.all(0),
+                        onPressed: () => setState(() => isReversedEpisodeList = !isReversedEpisodeList),
+                        icon: Icon(Icons.sort_by_alpha),
+                      ),
+                    ],
                   ),
                 ),
                 suffixIcon: Padding(
@@ -95,7 +100,7 @@ class _EpisodesDrawerState extends State<EpisodesDrawer> {
                 clipBehavior: .hardEdge,
                 child: GridView.extent(
                   padding: .all(10),
-                  maxCrossAxisExtent: 140,
+                  maxCrossAxisExtent: 160,
                   childAspectRatio: 15 / 8,
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 10,
@@ -103,28 +108,22 @@ class _EpisodesDrawerState extends State<EpisodesDrawer> {
                   physics: BouncingScrollPhysics(),
                   children: changeList(episodes).asMap().entries.map((entry) {
                     final episode = entry.value;
-                    final isCurrent = (current.isNotEmpty && episode.video.isNotEmpty) ? current == getStreamId(episode.video) : false;
+                    final isCurrent = current == entry.value.episodeNumber;
                     final title = "${episode.episodeNumber}-qism: ${episode.title.uz}";
-                    final PlaylistPosition pos = entry.key == 0
-                        ? .first
-                        : entry.key == (episodes.length - 1)
-                        ? .last
-                        : .middle;
                     final animeState = context.read<AnimeBloc>().state;
                     final anime = animeState is AnimeSuccess ? animeState.anime : null;
                     final props = PlayerProps(
-                      position: pos,
+                      all: episodes.length,
+                      offset: episode.episodeNumber,
                       type: AnimeType.serie,
-                      title: title,
+                      title: episode.title.uz,
                       stream: episode.video,
                       cover: anime?.cover ?? "",
                       anime: anime?.title.uz ?? "",
                     );
-                
                     final timeline = episode.timeline;
                     final typeColor = episode.type == 'free' ? context.appColors.secondary : context.appColors.primary;
                     final currentColor = typeColor.withAlpha(isCurrent ? 255 : 50);
-                
                     return RepaintBoundary(
                       child: Tooltip(
                         waitDuration: Duration(seconds: 1),
@@ -132,7 +131,7 @@ class _EpisodesDrawerState extends State<EpisodesDrawer> {
                         ignorePointer: true,
                         preferBelow: true,
                         textStyle: TextStyle(color: context.appColors.onPrimaryContainer),
-                        message: "${episode.episodeNumber}-qism ~ ${episode.title.uz}",
+                        message: title,
                         child: InkWell(
                           onTap: () => controller.openStream(props),
                           hoverColor: currentColor.withAlpha(50),
@@ -163,7 +162,6 @@ class _EpisodesDrawerState extends State<EpisodesDrawer> {
                                   ),
                                 ),
                               Container(
-                                padding: .all(10),
                                 decoration: BoxDecoration(
                                   border: Border.all(color: currentColor, width: 1),
                                   borderRadius: BorderRadius.circular(10),

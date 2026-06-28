@@ -1,3 +1,4 @@
+import 'package:application/features/common/data/models/helpers/pagination.dart';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -7,9 +8,10 @@ part 'api_response.g.dart';
 class ApiResponse<T> extends Equatable {
   final bool success;
   final String message;
+  final Pagination? pagination;
   final dynamic error;
   final T data;
-  const ApiResponse({required this.message, required this.success, required this.data, this.error});
+  const ApiResponse({required this.message, required this.success, required this.data, this.error, this.pagination});
 
   @override
   List<Object?> get props => [success, message, data];

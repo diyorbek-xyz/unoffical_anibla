@@ -1,12 +1,14 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:application/core/utils/base_url.dart';
 import 'package:application/core/utils/extensions.dart';
 import 'package:application/core/utils/utils.dart';
 import 'package:application/features/animes/data/mapper/video_mapper.dart';
+import 'package:application/features/animes/data/models/video_model.dart';
 import 'package:application/features/animes/data/source/remote/video_api.dart';
 import 'package:application/features/player/data/model/timeline_model.dart';
 import 'package:application/features/player/data/source/local/timeline.dart';
-import 'package:application/features/player/presentation/cubit/player_states.dart';
+import 'package:application/features/player/presentation/cubit/player/player_states.dart';
 import 'package:application/features/player/presentation/pages/player_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,7 +26,7 @@ class PlayerController extends Cubit<PlayerStates> {
   final player = Player(
     configuration: const PlayerConfiguration(
       async: true,
-      bufferSize: 8 * 1024 * 1024,
+      bufferSize: 64 * 1024 * 1024,
       osc: false,
       pitch: false,
       libass: false,
@@ -34,24 +36,42 @@ class PlayerController extends Cubit<PlayerStates> {
   );
   late final controller = VideoController(player, configuration: VideoControllerConfiguration(enableHardwareAcceleration: true, hwdec: 'auto'));
   final List<StreamSubscription> subscription = [];
-  late final MPRIS mpris;
-  ({Uri uri, Uri art, String title, List<String> artist})? _mediaInfo;
+  MPRIS? mpris;
 
   Future<void> init(PlayerProps props) async {
     if (isClosed) return;
-    mpris = await MPRIS.create(busName: "org.mpris.MediaPlayer2.anibla", identity: "Anibla.uz", desktopEntry: "");
-    mpris.setEventHandler(MPRISEventHandler(playPause: togglePlay, play: play, pause: pause, seek: seek, volume: setVolume));
+    if (Platform.isLinux) {
+      await mpris?.dispose();
+      mpris = await MPRIS.create(busName: "org.mpris.MediaPlayer2.anibla", identity: "Anibla.uz", desktopEntry: "anibla");
+      mpris!.setEventHandler(
+        MPRISEventHandler(
+          playPause: togglePlay,
+          play: play,
+          pause: pause,
+          seek: seek,
+          volume: setVolume,
+          setPosition: (trackId, position) async => seek(Duration(microseconds: position)),
+        ),
+      );
+    }
 
     _subscribeStreams();
     await openStream(props);
   }
 
   void _pushMprisMetadata(Duration length) {
-    final info = _mediaInfo;
-    if (info == null) return;
-    mpris.metadata = MPRISMetadata(info.uri, artUrl: info.art, length: length, title: info.title, artist: info.artist);
-    mpris
+    if (mpris == null) return;
+    final info = state.stream;
+    mpris!
+      ..metadata = MPRISMetadata(
+        Uri.parse(info.url),
+        artUrl: Uri.parse(info.cover),
+        length: length,
+        title: "${info.offset}. ${info.title}",
+        artist: [info.anime],
+      )
       ..playbackStatus = MPRISPlaybackStatus.playing
+      ..canSetFullscreen = false
       ..canPlay = true
       ..canPause = true
       ..canSeek = true
@@ -70,11 +90,11 @@ class PlayerController extends Cubit<PlayerStates> {
       player.stream.playlist.listen((event) => setOldTimeline()),
       player.stream.error.listen(
         (event) => emit(
-          state.copyWith(hasError: true, error: event.contains("https") ? event.replaceRange(event.indexOf("https"), null, "[URL hidden]") : event),
+          state.copyWith(status: .error, message: event.contains("https") ? event.replaceRange(event.indexOf("https"), null, "[URL hidden]") : event),
         ),
       ),
       player.stream.duration.distinct().listen((event) {
-        if (event > Duration.zero) _pushMprisMetadata(event);
+        if (event > Duration.zero && Platform.isLinux) _pushMprisMetadata(event);
         emit(state.copyWith(duration: event));
       }),
       Rx.combineLatest2(
@@ -89,12 +109,12 @@ class PlayerController extends Cubit<PlayerStates> {
     final (time, buffer) = progress;
     final hasSkip = state.skip.isNotEmpty;
     final hasIntro = hasSkip ? (time.inSeconds < state.skip.last && time.inSeconds > state.skip.first) : false;
-    mpris.position = time;
+    mpris?.position = time;
     emit(state.copyWith(progress: time, buffer: buffer, hasIntro: hasIntro));
   }
 
   Future<void> setOldTimeline([String? streamId]) async {
-    final time = timeline.getTimeline(streamId ?? state.streamId);
+    final time = timeline.getTimeline(streamId ?? state.stream.id);
     if (time != null) {
       await player.stream.duration.firstWhere((d) => d.inSeconds > 0).timeout(const Duration(seconds: 10), onTimeout: () => Duration.zero);
       await seek(time.progress);
@@ -104,7 +124,7 @@ class PlayerController extends Cubit<PlayerStates> {
   Future<void> saveTimeline([Duration? time]) async {
     final adjusted = (time ?? player.state.position) - const Duration(seconds: 3);
     final safeProgress = adjusted.isNegative ? Duration.zero : adjusted;
-    await timeline.saveTimeline(state.streamId, TimelineModel(progress: safeProgress, duration: state.duration));
+    await timeline.saveTimeline(state.stream.id, TimelineModel(progress: safeProgress, duration: state.duration));
   }
 
   Future<void> skipIntro() async {
@@ -113,34 +133,34 @@ class PlayerController extends Cubit<PlayerStates> {
   }
 
   Future<void> openStream(PlayerProps props) async {
-    if (props.stream.isEmpty) return emit(state.copyWith(error: "paid", hasError: true));
+    if (props.stream.isEmpty) return emit(state.copyWith(status: .paid));
     final streamId = getStreamId(props.stream);
-    final oldStreamId = getStreamId(state.streamId);
-    if (streamId == oldStreamId && oldStreamId.isNotEmpty && !state.hasError) return;
-    if (state.streamId.isNotEmpty) await saveTimeline();
+    final oldStreamId = getStreamId(state.stream.id);
+    if (streamId == oldStreamId && oldStreamId.isNotEmpty && state.status == .init && !props.hasUrl) return;
+    if (state.stream.id.isNotEmpty) await saveTimeline();
 
-    final response = await videoApi.getVideo(streamId);
-    final video = VideoMapper.modelToEntity(response.data);
+    final response = props.hasUrl ? VideoModel(file: props.stream) : (await videoApi.getVideo(streamId)).data;
+    final video = VideoMapper.modelToEntity(response);
     final skip = (video.skip as String?)?.split("-").map((e) => e.parseInt()).toList() ?? [];
     final currentVideo = player.state.playlist.medias.firstOrNull?.uri;
-    if (currentVideo == video.file) {
-      return emit(state.copyWith(hasError: false, error: "init"));
-    }
+
+    if (currentVideo == video.file && !props.hasUrl) return emit(state.copyWith(status: .init));
+
+    final stream = CurrentStream(id: streamId, offset: props.offset, title: props.title, anime: props.anime, cover: props.cover, url: video.file);
+
     emit(
       state.copyWith(
-        anime: props.anime,
-        title: props.title,
+        stream: stream,
         skip: skip,
-        hasError: false,
-        error: "init",
+        status: .init,
         isBuffering: true,
-        streamId: streamId,
         type: props.type,
-        position: props.position,
+        all: props.all,
+        offset: props.offset,
         isPaused: true,
       ),
     );
-    _mediaInfo = (uri: Uri.parse(video.file), art: Uri.parse(addBaseUrl(props.cover)), title: "${props.title}-qism", artist: [props.anime]);
+
     await player.open(Media(video.file), play: false);
   }
 
@@ -173,11 +193,10 @@ class PlayerController extends Cubit<PlayerStates> {
   }
 
   Future<void> seek(Duration time) async {
-    print(time);
     emit(state.copyWith(progress: time));
     await player.seek(time);
     await saveTimeline(time);
-    mpris.position = time;
+    mpris?.position = time;
   }
 
   Future<void> toggleMute() async {
@@ -209,13 +228,13 @@ class PlayerController extends Cubit<PlayerStates> {
 
   Future<void> play() async {
     emit(state.copyWith(isPaused: false));
-    mpris.playbackStatus = MPRISPlaybackStatus.playing;
+    mpris?.playbackStatus = MPRISPlaybackStatus.playing;
     await player.play();
   }
 
   Future<void> pause() async {
     emit(state.copyWith(isPaused: true));
-    mpris.playbackStatus = MPRISPlaybackStatus.paused;
+    mpris?.playbackStatus = MPRISPlaybackStatus.paused;
     await player.pause();
   }
 
@@ -266,7 +285,7 @@ class PlayerController extends Cubit<PlayerStates> {
     emit(PlayerStates.empty());
     await Utils.exitFullScreen();
     await saveTimeline();
-    await mpris.dispose();
+    await mpris?.dispose();
     try {
       await player.dispose();
     } catch (_) {}

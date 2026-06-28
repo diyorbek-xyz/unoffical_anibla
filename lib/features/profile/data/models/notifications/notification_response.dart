@@ -1,4 +1,4 @@
-import 'package:application/features/common/data/models/pagination.dart';
+import 'package:application/features/common/data/models/helpers/pagination.dart';
 import 'package:application/features/profile/data/models/notifications/notification_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive_ce/hive_ce.dart';

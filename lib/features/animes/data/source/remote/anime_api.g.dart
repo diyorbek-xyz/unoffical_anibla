@@ -56,36 +56,30 @@ class _AnimeApi implements AnimeApi {
   }
 
   @override
-  Future<HttpResponse<ApiResponse<List<AnimeModel>>>> getHomeAnimes() async {
+  Future<HttpResponse<BigResponseModel<AnimeModel>>> getHomeAnimes(
+    Paginator query,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
+    queryParameters.addAll(query.toJson());
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options =
-        _setStreamType<HttpResponse<ApiResponse<List<AnimeModel>>>>(
-          Options(method: 'GET', headers: _headers, extra: _extra)
-              .compose(
-                _dio.options,
-                '/v1/media/mobile',
-                queryParameters: queryParameters,
-                data: _data,
-              )
-              .copyWith(
-                baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl),
-              ),
-        );
+    final _options = _setStreamType<HttpResponse<BigResponseModel<AnimeModel>>>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/v1/media/mobile',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late ApiResponse<List<AnimeModel>> _value;
+    late BigResponseModel<AnimeModel> _value;
     try {
-      _value = ApiResponse<List<AnimeModel>>.fromJson(
+      _value = BigResponseModel<AnimeModel>.fromJson(
         _result.data!,
-        (json) => json is List<dynamic>
-            ? json
-                  .map<AnimeModel>(
-                    (i) => AnimeModel.fromJson(i as Map<String, dynamic>),
-                  )
-                  .toList()
-            : List.empty(),
+        (json) => AnimeModel.fromJson(json as Map<String, dynamic>),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);

@@ -39,7 +39,9 @@ class ParseHlsPlaylist {
     return variant;
   }
 
-  static MediaPlaylist parseMedia({required String data, required String downloadUrl, required String localFolder}) {
+  static MediaPlaylist parseMedia({required String data, required Variant variant}) {
+    final downloadUrl = variant.downloadUrl;
+    final localFolder = variant.localUrl;
     final regex = RegExp(r'(^#.*(?:\n(?!#).+)*)', multiLine: true);
     final datas = regex.allMatches(data).map((e) => e.group(0)!).toList();
     final chunksStr = datas.where((e) => e.startsWith("#EXTINF:")).toList();
@@ -53,6 +55,10 @@ class ParseHlsPlaylist {
     final downloadUri = Uri.parse(downloadUrl);
     final localUri = Uri.parse(localFolder);
     return MediaPlaylist(
+      bandwidth: variant.bandwidth,
+      codecs: variant.codecs,
+      height: variant.height,
+      width: variant.width,
       downloadUrl: downloadUrl,
       localUrl: localUri.resolve(downloadUri.pathSegments.last).toString(),
       chunks: chunks,

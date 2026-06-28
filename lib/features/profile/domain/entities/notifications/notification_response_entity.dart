@@ -1,4 +1,4 @@
-import 'package:application/features/common/data/models/pagination.dart';
+import 'package:application/features/common/data/models/helpers/pagination.dart';
 import 'package:application/features/profile/domain/entities/notifications/notification_entity.dart';
 import 'package:equatable/equatable.dart';
 

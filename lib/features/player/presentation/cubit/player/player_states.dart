@@ -20,29 +20,26 @@ sealed class PlayerStates with _$PlayerStates {
     required bool isMuted,
     required bool isPaused,
     required bool hasIntro,
-    required bool hasError,
+    required PlayerStatus status,
+    required String message,
     required BoxFit fit,
-
-    required String title,
-    required String streamId,
     required String type,
-    required PlaylistPosition position,
-    required String anime,
-    String? error,
+    required int all,
+    required int offset,
+    required CurrentStream stream,
   }) = _PlayerStates;
 
   factory PlayerStates.empty() {
     return PlayerStates(
-      title: "",
-      anime: "",
-      streamId: "",
+      all: 0,
+      offset: 0,
+      stream: CurrentStream.empty(),
       type: AnimeType.serie,
-      position: PlaylistPosition.none,
       buffer: Duration.zero,
       progress: Duration.zero,
       fit: BoxFit.contain,
-      hasError: true,
-      error: "empty",
+      status: PlayerStatus.empty,
+      message: "",
       skip: [],
       hasIntro: false,
       videoTrack: VideoTrack("", "", ""),
@@ -57,23 +54,31 @@ sealed class PlayerStates with _$PlayerStates {
   }
 }
 
-enum VideoPlayerState { loading, success, error }
+enum PlayerStatus { empty, init, error, paid }
 
-enum PlaylistPosition { first, middle, last, none }
+@freezed
+sealed class PlayerProps with _$PlayerProps {
+  factory PlayerProps({
+    required final String anime,
+    required final String type,
+    required final String cover,
+    required final String title,
+    required final int offset,
+    required final int all,
+    required final String stream,
+    @Default(false) final bool hasUrl,
+  }) = _PlayerProps;
+}
 
-class PlayerProps {
-  final String stream;
-  final String type;
-  final String title;
-  final String anime;
-  final PlaylistPosition position;
-  final String cover;
-  const PlayerProps({
-    required this.position,
-    required this.type,
-    required this.cover,
-    required this.title,
-    required this.anime,
-    required this.stream,
-  });
+@freezed
+sealed class CurrentStream with _$CurrentStream {
+  factory CurrentStream({
+    required final String id,
+    required final int offset,
+    required final String title,
+    required final String anime,
+    required final String cover,
+    required final String url,
+  }) = _CurrentStream;
+  factory CurrentStream.empty() => CurrentStream(anime: "", cover: "", id: "", offset: 0, title: "", url: "");
 }

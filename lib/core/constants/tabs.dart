@@ -1,24 +1,17 @@
+import 'package:application/features/common/domain/entities/tab_item.dart';
 import 'package:flutter/material.dart';
 
-const List tabs = [
-  {
-    "label": "Home",
-    "icon": Icon(Icons.home_outlined),
-    "selected": Icon(Icons.home),
-  },
-  {
-    "label": "Explore",
-    "icon": Icon(Icons.grid_view_outlined),
-    "selected": Icon(Icons.grid_view_sharp),
-  },
-  {
-    "label": "Saved",
-    "icon": Icon(Icons.bookmark_outline),
-    "selected": Icon(Icons.bookmark),
-  },
-  {
-    "label": "Profile",
-    "icon": Icon(Icons.person_outline),
-    "selected": Icon(Icons.person),
-  },
+const List<TabItem> mobileTabs = [
+  TabItem(activeIcon: Icons.home, icon: Icons.home_outlined, label: "Asosiy"),
+  TabItem(activeIcon: Icons.search, icon: Icons.search, label: "Qidirish"),
+  TabItem(activeIcon: Icons.home, icon: Icons.home_outlined, label: "Saqlanganlar"),
+  TabItem(activeIcon: Icons.home, icon: Icons.home_outlined, label: "Profile"),
+];
+
+const List<TabItem> desktopTabs = [
+  TabItem(activeIcon: Icons.home, icon: Icons.home_outlined, label: "Asosiy"),
+  TabItem(activeIcon: Icons.search, icon: Icons.search, label: "Qidirish"),
+  TabItem(activeIcon: Icons.home, icon: Icons.home_outlined, label: "Saqlanganlar"),
+  TabItem(activeIcon: Icons.account_circle, icon: Icons.account_circle_outlined, label: "Profile"),
+  TabItem(activeIcon: Icons.settings, icon: Icons.settings_outlined, label: "Sozlamalar"),
 ];

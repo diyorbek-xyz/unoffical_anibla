@@ -1,11 +1,11 @@
-import 'package:application/features/player/data/model/download_models.dart';
+import 'package:application/features/player/data/model/service/download_models.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 abstract class DownloadsLocal {
   Future<void> saveDownload(String episodeId, DownloadTask download);
   Future<void> removeDownload(String episodeId);
   DownloadTask? getDownload(String episodeId);
-  Map<dynamic, DownloadTask>? getAllDownloads();
+  Map<String, DownloadTask>? getAllDownloads();
 }
 
 class DownloadsLocalImpl implements DownloadsLocal {

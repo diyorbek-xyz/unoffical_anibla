@@ -1,10 +1,13 @@
+import 'dart:ui';
+
 import 'package:application/core/config/theme/app_theme.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:application/core/config/theme/app_colors.dart';
+import 'package:application/features/animes/domain/entities/anime_entity.dart';
 import 'package:application/features/common/presentation/widgets/responsive.dart';
-import 'package:application/features/player/presentation/cubit/player_controller.dart';
-import 'package:application/features/player/presentation/cubit/player_states.dart';
+import 'package:application/features/player/presentation/cubit/player/player_controller.dart';
+import 'package:application/features/player/presentation/cubit/player/player_states.dart';
 import 'package:application/features/player/presentation/widgets/episodes_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -112,14 +115,9 @@ class _VideoPlayerState extends State<VideoPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocSelector<PlayerController, PlayerStates, (bool, String?, BoxFit)>(
-      selector: (state) => (state.hasError, state.error, state.fit),
-      builder: (context, state) {
-        final (hasError, error, fit) = state;
-        if (hasError && error == "empty") return Center(child: Text("Nimadur xato ketti"));
-        if (hasError && error == "paid") return Center(child: Text("Bu animeni ko'rish uchun obuna sotib oling"));
-        return Video(fit: fit, controller: controller.controller, controls: (_) => controlsBuilder);
-      },
+    return BlocSelector<PlayerController, PlayerStates, BoxFit>(
+      selector: (state) => state.fit,
+      builder: (context, state) => Video(fit: state, controller: controller.controller, controls: (_) => controlsBuilder),
     );
   }
 
@@ -150,6 +148,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
         child: LayoutBuilder(
           builder: (_, constraints) {
             final main = Responsive(constraints: constraints, child: controls);
+
             if (main.isMobile) {
               return GestureDetector(excludeFromSemantics: true, behavior: HitTestBehavior.opaque, onTap: toggleControls, child: main);
             }
@@ -172,63 +171,85 @@ class _VideoPlayerState extends State<VideoPlayer> {
   );
 
   Widget get controls => BlocBuilder<PlayerController, PlayerStates>(
-    buildWhen: (previous, current) => previous.hasError != current.hasError || previous.error != current.error,
+    buildWhen: (previous, current) => previous.status != current.status,
     builder: (context, state) {
       final responsive = Responsive.of(context);
       return GestureDetector(
-        onTap: () => controller.togglePlay(),
+        onTap: responsive.isMobile ? null : controller.togglePlay,
         behavior: responsive.isMobile ? HitTestBehavior.translucent : HitTestBehavior.opaque,
         child: Focus(
           autofocus: true,
-          child: Stack(
-            alignment: AlignmentGeometry.center,
-            fit: StackFit.expand,
-            children: [
-              if (state.hasError && state.error != "empty")
-                Container(color: context.appColors.surface, alignment: .center, child: Text(state.error!)),
-              skippers,
-              AnimatedOpacity(
-                opacity: isControlsVisible ? 1 : 0,
-                duration: Duration(milliseconds: 200),
-                child: IgnorePointer(
-                  ignoring: !isControlsVisible,
-                  child: Scaffold(
-                    backgroundColor: Colors.transparent,
-                    endDrawer: episodesDrawer,
-                    endDrawerEnableOpenDragGesture: true,
-                    appBar: AppBar(
-                      backgroundColor: Colors.transparent,
-                      automaticallyImplyLeading: false,
-                      automaticallyImplyActions: false,
-                      titleSpacing: 0,
-                      toolbarHeight: kToolbarHeight + 30,
-                      actionsPadding: EdgeInsets.only(top: 30, right: 30),
-                      title: BlocSelector<PlayerController, PlayerStates, String>(
-                        selector: (state) => state.anime,
-                        builder: (context, state) => Padding(
-                          padding: .only(top: 30, left: 30),
-                          child: widget.isPage
-                              ? Row(
-                                  crossAxisAlignment: .center,
-                                  spacing: 20,
-                                  children: [
-                                    IconButton(onPressed: () => context.pop(), icon: Icon(Icons.keyboard_arrow_left)),
-                                    Text(state),
-                                  ],
-                                )
-                              : Text(state),
+          child: BlocSelector<PlayerController, PlayerStates, (PlayerStatus, String)>(
+            selector: (state) => (state.status, state.message),
+            builder: (context, state) {
+              final (status, error) = state;
+              return Stack(
+                alignment: AlignmentGeometry.center,
+                fit: StackFit.expand,
+                children: [
+                  if (status == .error)
+                    Container(
+                      color: context.appColors.surface.withAlpha(100),
+                      alignment: .center,
+                      child: Container(
+                        width: 400,
+                        height: 200,
+                        alignment: .bottomCenter,
+                        clipBehavior: .hardEdge,
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                          child: Text(status == .paid ? "Bu animeni ko'rish uchun obuna sotib oling" : error, textAlign: .center),
                         ),
                       ),
-                      actions: [topControls],
                     ),
-                    extendBody: true,
-                    extendBodyBehindAppBar: true,
-                    body: Center(child: overlayControls),
-                    bottomNavigationBar: bottomControls,
+                  skippers,
+                  AnimatedOpacity(
+                    opacity: isControlsVisible ? 1 : 0,
+                    duration: Duration(milliseconds: 200),
+                    child: IgnorePointer(
+                      ignoring: !isControlsVisible,
+                      child: Scaffold(
+                        backgroundColor: Colors.transparent,
+                        endDrawer: episodesDrawer,
+                        endDrawerEnableOpenDragGesture: true,
+                        appBar: AppBar(
+                          backgroundColor: Colors.transparent,
+                          automaticallyImplyLeading: false,
+                          automaticallyImplyActions: false,
+                          titleSpacing: 0,
+                          toolbarHeight: kToolbarHeight + 30,
+                          actionsPadding: EdgeInsets.only(top: 30, right: 30),
+                          title: BlocSelector<PlayerController, PlayerStates, String>(
+                            selector: (state) => state.stream.anime,
+                            builder: (context, state) => Padding(
+                              padding: .only(top: 30, left: 30),
+                              child: widget.isPage
+                                  ? responsive.isMobileWidth
+                                        ? IconButton(onPressed: context.pop, icon: Icon(Icons.keyboard_arrow_left))
+                                        : Row(
+                                            crossAxisAlignment: .center,
+                                            mainAxisAlignment: .start,
+                                            spacing: 20,
+                                            children: [
+                                              IconButton(onPressed: context.pop, icon: Icon(Icons.keyboard_arrow_left)),
+                                              Expanded(child: Text(state)),
+                                            ],
+                                          )
+                                  : Text(state),
+                            ),
+                          ),
+                          actions: [topControls],
+                        ),
+                        extendBody: true,
+                        extendBodyBehindAppBar: true,
+                        bottomNavigationBar: bottomControls,
+                        body: overlayControls,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ],
+                ],
+              );
+            },
           ),
         ),
       );
@@ -265,121 +286,139 @@ class _VideoPlayerState extends State<VideoPlayer> {
     );
   }
 
-  Widget get topControls => BlocSelector<PlayerController, PlayerStates, bool>(
-    selector: (state) => state.isFullscreen,
-    builder: (context, isFullscreen) {
+  Widget get topControls => BlocSelector<PlayerController, PlayerStates, (bool, String)>(
+    selector: (state) => (state.isFullscreen, state.type),
+    builder: (context, state) {
+      final (isFullscreen, type) = state;
+      final isMobile = Responsive.of(context).isMobileWidth;
+
       return Row(
         crossAxisAlignment: .center,
         spacing: 7,
+        mainAxisAlignment: isMobile ? .end : .start,
         children: [
           IconButton(onPressed: Scaffold.of(context).openEndDrawer, iconSize: 25, padding: EdgeInsets.zero, icon: Icon(Icons.list_sharp)),
           IconButton(onPressed: controller.toggleFit, iconSize: 25, padding: EdgeInsets.zero, icon: Icon(Icons.fit_screen_sharp)),
           IconButton(onPressed: openSettings, iconSize: 25, padding: EdgeInsets.zero, icon: Icon(Icons.settings_sharp)),
-          IconButton(
-            onPressed: () => controller.toggleFullscreen(context),
-            iconSize: 25,
-            padding: EdgeInsets.zero,
-            icon: Icon(isFullscreen ? Icons.fullscreen_exit_sharp : Icons.fullscreen_sharp),
-          ),
+          if (type == AnimeType.serie)
+            IconButton(
+              onPressed: () => controller.toggleFullscreen(context),
+              iconSize: 25,
+              padding: EdgeInsets.zero,
+              icon: Icon(isFullscreen ? Icons.fullscreen_exit_sharp : Icons.fullscreen_sharp),
+            ),
         ],
       );
     },
   );
 
-  Widget get overlayControls => BlocSelector<PlayerController, PlayerStates, (PlaylistPosition, bool, bool)>(
-    selector: (state) => (state.position, state.isPaused, state.isBuffering),
+  Widget get overlayControls => BlocSelector<PlayerController, PlayerStates, (int, int, bool, bool)>(
+    selector: (state) => (state.offset, state.all, state.isPaused, state.isBuffering),
     builder: (local, state) {
-      final (position, isPaused, isBuffering) = state;
-      final hasNext = (position == .first || position == .middle);
-      final hasPrev = (position == .last || position == .middle);
-      return Row(
-        crossAxisAlignment: .center,
-        mainAxisAlignment: .center,
-        spacing: 20,
-        children: [
-          Opacity(
-            opacity: hasPrev ? 1 : 0,
-            child: IconButton(
-              onPressed: hasPrev ? () {} : null,
-              mouseCursor: hasPrev ? SystemMouseCursors.click : .defer,
-              padding: EdgeInsets.all(10),
-              iconSize: 40,
-              icon: Icon(Icons.skip_previous),
-            ),
-          ),
-          Stack(
-            alignment: .center,
-            fit: .passthrough,
-            children: [
-              Opacity(
-                opacity: isBuffering ? 1 : 0,
-                child: CircularProgressIndicator.adaptive(
-                  strokeWidth: 7,
-                  constraints: BoxConstraints.tightFor(width: 100, height: 100),
-                  strokeCap: StrokeCap.round,
-                  valueColor: AlwaysStoppedAnimation(context.appColors.primary),
-                ),
-              ),
-              IconButton(
-                onPressed: controller.togglePlay,
+      final (offset, all, isPaused, isBuffering) = state;
+      final hasNext = offset >= 1 && offset < all && offset != 0 && all != 0;
+      final hasPrev = offset > 1 && offset <= all && offset != 0 && all != 0;
+      return Center(
+        child: Row(
+          crossAxisAlignment: .center,
+          mainAxisAlignment: .center,
+          spacing: 20,
+          children: [
+            Opacity(
+              opacity: hasPrev ? 1 : 0,
+              child: IconButton(
+                onPressed: hasPrev ? () {} : null,
+                mouseCursor: hasPrev ? SystemMouseCursors.click : .defer,
                 padding: EdgeInsets.all(10),
-                iconSize: 50,
-                isSelected: isPaused,
-                selectedIcon: Icon(Icons.play_arrow),
-                icon: Icon(Icons.pause),
+                iconSize: 40,
+                icon: Icon(Icons.skip_previous),
               ),
-            ],
-          ),
-          Opacity(
-            opacity: hasNext ? 1 : 0,
-            child: IconButton(
-              onPressed: hasNext ? () {} : null,
-              mouseCursor: hasNext ? SystemMouseCursors.click : .defer,
-              padding: EdgeInsets.all(10),
-              iconSize: 40,
-              icon: Icon(Icons.skip_next),
             ),
-          ),
-        ],
+            Stack(
+              alignment: .center,
+              fit: .passthrough,
+              children: [
+                Opacity(
+                  opacity: isBuffering ? 1 : 0,
+                  child: CircularProgressIndicator.adaptive(
+                    strokeWidth: 7,
+                    constraints: BoxConstraints.tightFor(width: 100, height: 100),
+                    strokeCap: StrokeCap.round,
+                    valueColor: AlwaysStoppedAnimation(context.appColors.primary),
+                  ),
+                ),
+                IconButton(
+                  onPressed: controller.togglePlay,
+                  padding: EdgeInsets.all(10),
+                  iconSize: 50,
+                  isSelected: isPaused,
+                  selectedIcon: Icon(Icons.play_arrow),
+                  icon: Icon(Icons.pause),
+                ),
+              ],
+            ),
+            Opacity(
+              opacity: hasNext ? 1 : 0,
+              child: IconButton(
+                onPressed: hasNext ? () {} : null,
+                mouseCursor: hasNext ? SystemMouseCursors.click : .defer,
+                padding: EdgeInsets.all(10),
+                iconSize: 40,
+                icon: Icon(Icons.skip_next),
+              ),
+            ),
+          ],
+        ),
       );
     },
   );
 
-  Widget get bottomControls => BlocSelector<PlayerController, PlayerStates, (bool, String?)>(
-    selector: (state) => (state.hasError, state.error),
-    builder: (_, stat) {
-      final (hasError, error) = stat;
-      if (hasError && error == "empty") return SizedBox.shrink();
+  Widget get bottomControls => BlocSelector<PlayerController, PlayerStates, (PlayerStatus, String)>(
+    selector: (state) => (state.status, state.message),
+    builder: (_, state) {
+      final (status, error) = state;
+      if (status == .empty) return SizedBox.shrink();
       return Container(
         padding: EdgeInsets.only(bottom: 50, left: 30, right: 30),
-        child: MouseRegion(
-          cursor: SystemMouseCursors.click,
-          child: BlocSelector<PlayerController, PlayerStates, (Duration, Duration, Duration)>(
-            selector: (state) => (state.progress, state.buffer, state.duration),
-            builder: (_, progress) => Focus(
-              canRequestFocus: true,
-              onKeyEvent: (node, event) => onKey(node, event, progress.$1, progress.$3),
-              autofocus: true,
-              child: ProgressBar(
-                progress: progress.$1,
-                buffered: progress.$2,
-                total: progress.$3,
-                progressBarColor: context.appColors.primary,
-                bufferedBarColor: context.appColors.primaryFixed.withAlpha(100),
-                barHeight: 5,
-                baseBarColor: context.appColors.onPrimary.withAlpha(100),
-                barCapShape: BarCapShape.round,
-                thumbRadius: 7,
-                thumbColor: context.appColors.primaryFixed,
-                thumbGlowRadius: 13,
-                thumbGlowColor: context.appColors.primaryFixedDim.withAlpha(100),
-                timeLabelPadding: 10,
-                timeLabelTextStyle: TextStyle(color: context.appColors.primary, fontWeight: FontWeight.bold, fontSize: 14),
-                timeLabelLocation: TimeLabelLocation.sides,
-                onSeek: (value) => controller.seek(value),
+        child: Column(
+          mainAxisAlignment: .end,
+          spacing: 30,
+          crossAxisAlignment: .start,
+          children: [
+            BlocSelector<PlayerController, PlayerStates, String>(
+              selector: (state) => "${state.stream.offset}-qism ~ ${state.stream.title}",
+              builder: (context, state) => Text(state, style: context.textTheme.titleLarge),
+            ),
+            MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: BlocSelector<PlayerController, PlayerStates, (Duration, Duration, Duration)>(
+                selector: (state) => (state.progress, state.buffer, state.duration),
+                builder: (_, progress) => Focus(
+                  canRequestFocus: true,
+                  onKeyEvent: (node, event) => onKey(node, event, progress.$1, progress.$3),
+                  autofocus: true,
+                  child: ProgressBar(
+                    progress: progress.$1,
+                    buffered: progress.$2,
+                    total: progress.$3,
+                    progressBarColor: context.appColors.primary,
+                    bufferedBarColor: context.appColors.primaryFixed.withAlpha(100),
+                    barHeight: 5,
+                    baseBarColor: context.appColors.onPrimary.withAlpha(100),
+                    barCapShape: BarCapShape.round,
+                    thumbRadius: 7,
+                    thumbColor: context.appColors.primaryFixed,
+                    thumbGlowRadius: 13,
+                    thumbGlowColor: context.appColors.primaryFixedDim.withAlpha(100),
+                    timeLabelPadding: 10,
+                    timeLabelTextStyle: TextStyle(color: context.appColors.primary, fontWeight: FontWeight.bold, fontSize: 14),
+                    timeLabelLocation: TimeLabelLocation.sides,
+                    onSeek: (value) => controller.seek(value),
+                  ),
+                ),
               ),
             ),
-          ),
+          ],
         ),
       );
     },
@@ -410,7 +449,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
       contentPadding: EdgeInsets.zero,
       titlePadding: EdgeInsets.all(20),
       shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(20)),
-      constraints: const BoxConstraints.tightFor(width: 400, height: 300),
+      constraints: const BoxConstraints.tightFor(width: 400, height: 400),
       title: Row(
         crossAxisAlignment: .center,
         mainAxisAlignment: .spaceBetween,
