@@ -90,6 +90,7 @@ class _DownloadMenuState extends State<DownloadMenu> {
   final downloader = sl<HlsDownloadService>();
   DownloadTask? task;
   MasterPlaylist? masterPlaylist;
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -99,16 +100,24 @@ class _DownloadMenuState extends State<DownloadMenu> {
   }
 
   void getVariants() async {
+    setState(() => isLoading = true);
     final url = await downloader.getUrlFromStream(widget.episode.video);
     final master = await downloader.downloadMasterPlaylist(url.file!, "${widget.episode.anime.id}/${widget.episode.season.id}/${widget.episode.id}");
-    setState(() => masterPlaylist = master);
+    setState(() {
+      masterPlaylist = master;
+      isLoading = false;
+    });
   }
 
   void downloadEpisode(Variant variant) async {
+    setState(() => isLoading = true);
     final dwTask = await downloader.download(
       DownloadInfos.fromEpisode(widget.episode).copyWith(variant: variant, masterPlaylist: masterPlaylist, downloadUrl: masterPlaylist!.downloadUrl),
     );
-    setState(() => task = dwTask);
+    setState(() {
+      task = dwTask;
+      isLoading = false;
+    });
   }
 
   void goToWatch([String? url]) {
@@ -120,7 +129,7 @@ class _DownloadMenuState extends State<DownloadMenu> {
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
     return AlertDialog(
-      constraints: !isMobile ? .tightFor(width: 500, height: 400) : BoxConstraints(minWidth: 500, minHeight: 400, maxHeight: 1024, maxWidth: 720),
+      constraints: !isMobile ? .tightFor(width: 500, height: 500) : BoxConstraints(minWidth: 500, minHeight: 400, maxHeight: 1024, maxWidth: 720),
       insetPadding: isMobile ? .all(0) : .all(5),
       shape: RoundedRectangleBorder(borderRadius: .circular(10)),
       contentPadding: EdgeInsets.symmetric(vertical: 30, horizontal: 15),
@@ -173,8 +182,11 @@ class _DownloadMenuState extends State<DownloadMenu> {
         final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
         final isCompleted = task?.isCompleted ?? false;
         final isNotReady = !(task == null || task!.streamController == null) || isCompleted;
+
         return Expanded(
-          child: !isNotReady
+          child: isLoading
+              ? Center(child: CircularProgressIndicator())
+              : !isNotReady
               ? variantsBuilder()
               : Column(
                   crossAxisAlignment: .center,
@@ -244,7 +256,7 @@ class _DownloadMenuState extends State<DownloadMenu> {
                                 Text("Tezlik: \t ${speedKb.toStringAsFixed(2)}Kb/s", style: context.textTheme.labelLarge),
                                 Text("Qolgan vaqt: \t $estimated", style: context.textTheme.labelLarge),
                                 SizedBox(height: 15),
-                                if (progress > 0.3)
+                                if (progress > 0.3 || isDownloaded)
                                   TextButton(
                                     onPressed: () => goToWatch(task?.mediaPlaylist.localUrl),
                                     style: ButtonStyle(
@@ -278,9 +290,28 @@ class _DownloadMenuState extends State<DownloadMenu> {
     );
   }
 
-  ListView variantsBuilder() {
-    return ListView(
-      children: masterPlaylist?.variants.map((e) => ListTile(onTap: () => downloadEpisode(e), title: Text("${e.width}p"))).toList() ?? [],
+  Widget variantsBuilder() {
+    return Column(
+      crossAxisAlignment: .start,
+      spacing: 10,
+      children: [
+        Text("Video sifatini tanlang:", style: context.textTheme.titleMedium),
+        Expanded(
+          child: ListView(
+            children:
+                masterPlaylist?.variants
+                    .map(
+                      (e) => ListTile(
+                        onTap: () => downloadEpisode(e),
+                        subtitle: Text("1daqiqa ~ ${((e.bandwidth * 60) / (8 * 1024 * 1024)).toStringAsFixed(1)}Mb"),
+                        title: Text("${e.width}p"),
+                      ),
+                    )
+                    .toList() ??
+                [],
+          ),
+        ),
+      ],
     );
   }
 }

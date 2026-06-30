@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PlayerStates {
 
- Duration get progress; Duration get buffer; Duration get duration; Tracks get tracks; VideoTrack get videoTrack; List<int> get skip; double get volume; bool get isBuffering; bool get isFullscreen; bool get isMuted; bool get isPaused; bool get hasIntro; PlayerStatus get status; String get message; BoxFit get fit; String get type; int get all; int get offset; CurrentStream get stream;
+ Duration get progress; Duration get buffer; Duration get duration; Tracks get tracks; VideoTrack get videoTrack; List<int> get skip; double get volume; bool get isBuffering; bool get isFullscreen; bool get isMuted; bool get isPaused; bool get hasIntro; PlayerStatus get status; String get message; BoxFit get fit; String get type; int get all; CurrentStream get stream;
 /// Create a copy of PlayerStates
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $PlayerStatesCopyWith<PlayerStates> get copyWith => _$PlayerStatesCopyWithImpl<P
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlayerStates&&(identical(other.progress, progress) || other.progress == progress)&&(identical(other.buffer, buffer) || other.buffer == buffer)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.tracks, tracks) || other.tracks == tracks)&&(identical(other.videoTrack, videoTrack) || other.videoTrack == videoTrack)&&const DeepCollectionEquality().equals(other.skip, skip)&&(identical(other.volume, volume) || other.volume == volume)&&(identical(other.isBuffering, isBuffering) || other.isBuffering == isBuffering)&&(identical(other.isFullscreen, isFullscreen) || other.isFullscreen == isFullscreen)&&(identical(other.isMuted, isMuted) || other.isMuted == isMuted)&&(identical(other.isPaused, isPaused) || other.isPaused == isPaused)&&(identical(other.hasIntro, hasIntro) || other.hasIntro == hasIntro)&&(identical(other.status, status) || other.status == status)&&(identical(other.message, message) || other.message == message)&&(identical(other.fit, fit) || other.fit == fit)&&(identical(other.type, type) || other.type == type)&&(identical(other.all, all) || other.all == all)&&(identical(other.offset, offset) || other.offset == offset)&&(identical(other.stream, stream) || other.stream == stream));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlayerStates&&(identical(other.progress, progress) || other.progress == progress)&&(identical(other.buffer, buffer) || other.buffer == buffer)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.tracks, tracks) || other.tracks == tracks)&&(identical(other.videoTrack, videoTrack) || other.videoTrack == videoTrack)&&const DeepCollectionEquality().equals(other.skip, skip)&&(identical(other.volume, volume) || other.volume == volume)&&(identical(other.isBuffering, isBuffering) || other.isBuffering == isBuffering)&&(identical(other.isFullscreen, isFullscreen) || other.isFullscreen == isFullscreen)&&(identical(other.isMuted, isMuted) || other.isMuted == isMuted)&&(identical(other.isPaused, isPaused) || other.isPaused == isPaused)&&(identical(other.hasIntro, hasIntro) || other.hasIntro == hasIntro)&&(identical(other.status, status) || other.status == status)&&(identical(other.message, message) || other.message == message)&&(identical(other.fit, fit) || other.fit == fit)&&(identical(other.type, type) || other.type == type)&&(identical(other.all, all) || other.all == all)&&(identical(other.stream, stream) || other.stream == stream));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,progress,buffer,duration,tracks,videoTrack,const DeepCollectionEquality().hash(skip),volume,isBuffering,isFullscreen,isMuted,isPaused,hasIntro,status,message,fit,type,all,offset,stream]);
+int get hashCode => Object.hash(runtimeType,progress,buffer,duration,tracks,videoTrack,const DeepCollectionEquality().hash(skip),volume,isBuffering,isFullscreen,isMuted,isPaused,hasIntro,status,message,fit,type,all,stream);
 
 @override
 String toString() {
-  return 'PlayerStates(progress: $progress, buffer: $buffer, duration: $duration, tracks: $tracks, videoTrack: $videoTrack, skip: $skip, volume: $volume, isBuffering: $isBuffering, isFullscreen: $isFullscreen, isMuted: $isMuted, isPaused: $isPaused, hasIntro: $hasIntro, status: $status, message: $message, fit: $fit, type: $type, all: $all, offset: $offset, stream: $stream)';
+  return 'PlayerStates(progress: $progress, buffer: $buffer, duration: $duration, tracks: $tracks, videoTrack: $videoTrack, skip: $skip, volume: $volume, isBuffering: $isBuffering, isFullscreen: $isFullscreen, isMuted: $isMuted, isPaused: $isPaused, hasIntro: $hasIntro, status: $status, message: $message, fit: $fit, type: $type, all: $all, stream: $stream)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $PlayerStatesCopyWith<$Res>  {
   factory $PlayerStatesCopyWith(PlayerStates value, $Res Function(PlayerStates) _then) = _$PlayerStatesCopyWithImpl;
 @useResult
 $Res call({
- Duration progress, Duration buffer, Duration duration, Tracks tracks, VideoTrack videoTrack, List<int> skip, double volume, bool isBuffering, bool isFullscreen, bool isMuted, bool isPaused, bool hasIntro, PlayerStatus status, String message, BoxFit fit, String type, int all, int offset, CurrentStream stream
+ Duration progress, Duration buffer, Duration duration, Tracks tracks, VideoTrack videoTrack, List<int> skip, double volume, bool isBuffering, bool isFullscreen, bool isMuted, bool isPaused, bool hasIntro, PlayerStatus status, String message, BoxFit fit, String type, int all, CurrentStream stream
 });
 
 
@@ -62,7 +62,7 @@ class _$PlayerStatesCopyWithImpl<$Res>
 
 /// Create a copy of PlayerStates
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? progress = null,Object? buffer = null,Object? duration = null,Object? tracks = null,Object? videoTrack = null,Object? skip = null,Object? volume = null,Object? isBuffering = null,Object? isFullscreen = null,Object? isMuted = null,Object? isPaused = null,Object? hasIntro = null,Object? status = null,Object? message = null,Object? fit = null,Object? type = null,Object? all = null,Object? offset = null,Object? stream = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? progress = null,Object? buffer = null,Object? duration = null,Object? tracks = null,Object? videoTrack = null,Object? skip = null,Object? volume = null,Object? isBuffering = null,Object? isFullscreen = null,Object? isMuted = null,Object? isPaused = null,Object? hasIntro = null,Object? status = null,Object? message = null,Object? fit = null,Object? type = null,Object? all = null,Object? stream = null,}) {
   return _then(_self.copyWith(
 progress: null == progress ? _self.progress : progress // ignore: cast_nullable_to_non_nullable
 as Duration,buffer: null == buffer ? _self.buffer : buffer // ignore: cast_nullable_to_non_nullable
@@ -81,7 +81,6 @@ as PlayerStatus,message: null == message ? _self.message : message // ignore: ca
 as String,fit: null == fit ? _self.fit : fit // ignore: cast_nullable_to_non_nullable
 as BoxFit,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,all: null == all ? _self.all : all // ignore: cast_nullable_to_non_nullable
-as int,offset: null == offset ? _self.offset : offset // ignore: cast_nullable_to_non_nullable
 as int,stream: null == stream ? _self.stream : stream // ignore: cast_nullable_to_non_nullable
 as CurrentStream,
   ));
@@ -174,10 +173,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Duration progress,  Duration buffer,  Duration duration,  Tracks tracks,  VideoTrack videoTrack,  List<int> skip,  double volume,  bool isBuffering,  bool isFullscreen,  bool isMuted,  bool isPaused,  bool hasIntro,  PlayerStatus status,  String message,  BoxFit fit,  String type,  int all,  int offset,  CurrentStream stream)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Duration progress,  Duration buffer,  Duration duration,  Tracks tracks,  VideoTrack videoTrack,  List<int> skip,  double volume,  bool isBuffering,  bool isFullscreen,  bool isMuted,  bool isPaused,  bool hasIntro,  PlayerStatus status,  String message,  BoxFit fit,  String type,  int all,  CurrentStream stream)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PlayerStates() when $default != null:
-return $default(_that.progress,_that.buffer,_that.duration,_that.tracks,_that.videoTrack,_that.skip,_that.volume,_that.isBuffering,_that.isFullscreen,_that.isMuted,_that.isPaused,_that.hasIntro,_that.status,_that.message,_that.fit,_that.type,_that.all,_that.offset,_that.stream);case _:
+return $default(_that.progress,_that.buffer,_that.duration,_that.tracks,_that.videoTrack,_that.skip,_that.volume,_that.isBuffering,_that.isFullscreen,_that.isMuted,_that.isPaused,_that.hasIntro,_that.status,_that.message,_that.fit,_that.type,_that.all,_that.stream);case _:
   return orElse();
 
 }
@@ -195,10 +194,10 @@ return $default(_that.progress,_that.buffer,_that.duration,_that.tracks,_that.vi
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Duration progress,  Duration buffer,  Duration duration,  Tracks tracks,  VideoTrack videoTrack,  List<int> skip,  double volume,  bool isBuffering,  bool isFullscreen,  bool isMuted,  bool isPaused,  bool hasIntro,  PlayerStatus status,  String message,  BoxFit fit,  String type,  int all,  int offset,  CurrentStream stream)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Duration progress,  Duration buffer,  Duration duration,  Tracks tracks,  VideoTrack videoTrack,  List<int> skip,  double volume,  bool isBuffering,  bool isFullscreen,  bool isMuted,  bool isPaused,  bool hasIntro,  PlayerStatus status,  String message,  BoxFit fit,  String type,  int all,  CurrentStream stream)  $default,) {final _that = this;
 switch (_that) {
 case _PlayerStates():
-return $default(_that.progress,_that.buffer,_that.duration,_that.tracks,_that.videoTrack,_that.skip,_that.volume,_that.isBuffering,_that.isFullscreen,_that.isMuted,_that.isPaused,_that.hasIntro,_that.status,_that.message,_that.fit,_that.type,_that.all,_that.offset,_that.stream);}
+return $default(_that.progress,_that.buffer,_that.duration,_that.tracks,_that.videoTrack,_that.skip,_that.volume,_that.isBuffering,_that.isFullscreen,_that.isMuted,_that.isPaused,_that.hasIntro,_that.status,_that.message,_that.fit,_that.type,_that.all,_that.stream);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -212,10 +211,10 @@ return $default(_that.progress,_that.buffer,_that.duration,_that.tracks,_that.vi
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Duration progress,  Duration buffer,  Duration duration,  Tracks tracks,  VideoTrack videoTrack,  List<int> skip,  double volume,  bool isBuffering,  bool isFullscreen,  bool isMuted,  bool isPaused,  bool hasIntro,  PlayerStatus status,  String message,  BoxFit fit,  String type,  int all,  int offset,  CurrentStream stream)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Duration progress,  Duration buffer,  Duration duration,  Tracks tracks,  VideoTrack videoTrack,  List<int> skip,  double volume,  bool isBuffering,  bool isFullscreen,  bool isMuted,  bool isPaused,  bool hasIntro,  PlayerStatus status,  String message,  BoxFit fit,  String type,  int all,  CurrentStream stream)?  $default,) {final _that = this;
 switch (_that) {
 case _PlayerStates() when $default != null:
-return $default(_that.progress,_that.buffer,_that.duration,_that.tracks,_that.videoTrack,_that.skip,_that.volume,_that.isBuffering,_that.isFullscreen,_that.isMuted,_that.isPaused,_that.hasIntro,_that.status,_that.message,_that.fit,_that.type,_that.all,_that.offset,_that.stream);case _:
+return $default(_that.progress,_that.buffer,_that.duration,_that.tracks,_that.videoTrack,_that.skip,_that.volume,_that.isBuffering,_that.isFullscreen,_that.isMuted,_that.isPaused,_that.hasIntro,_that.status,_that.message,_that.fit,_that.type,_that.all,_that.stream);case _:
   return null;
 
 }
@@ -227,7 +226,7 @@ return $default(_that.progress,_that.buffer,_that.duration,_that.tracks,_that.vi
 
 
 class _PlayerStates implements PlayerStates {
-   _PlayerStates({required this.progress, required this.buffer, required this.duration, required this.tracks, required this.videoTrack, required final  List<int> skip, required this.volume, required this.isBuffering, required this.isFullscreen, required this.isMuted, required this.isPaused, required this.hasIntro, required this.status, required this.message, required this.fit, required this.type, required this.all, required this.offset, required this.stream}): _skip = skip;
+   _PlayerStates({required this.progress, required this.buffer, required this.duration, required this.tracks, required this.videoTrack, required final  List<int> skip, required this.volume, required this.isBuffering, required this.isFullscreen, required this.isMuted, required this.isPaused, required this.hasIntro, required this.status, required this.message, required this.fit, required this.type, required this.all, required this.stream}): _skip = skip;
   
 
 @override final  Duration progress;
@@ -253,7 +252,6 @@ class _PlayerStates implements PlayerStates {
 @override final  BoxFit fit;
 @override final  String type;
 @override final  int all;
-@override final  int offset;
 @override final  CurrentStream stream;
 
 /// Create a copy of PlayerStates
@@ -266,16 +264,16 @@ _$PlayerStatesCopyWith<_PlayerStates> get copyWith => __$PlayerStatesCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlayerStates&&(identical(other.progress, progress) || other.progress == progress)&&(identical(other.buffer, buffer) || other.buffer == buffer)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.tracks, tracks) || other.tracks == tracks)&&(identical(other.videoTrack, videoTrack) || other.videoTrack == videoTrack)&&const DeepCollectionEquality().equals(other._skip, _skip)&&(identical(other.volume, volume) || other.volume == volume)&&(identical(other.isBuffering, isBuffering) || other.isBuffering == isBuffering)&&(identical(other.isFullscreen, isFullscreen) || other.isFullscreen == isFullscreen)&&(identical(other.isMuted, isMuted) || other.isMuted == isMuted)&&(identical(other.isPaused, isPaused) || other.isPaused == isPaused)&&(identical(other.hasIntro, hasIntro) || other.hasIntro == hasIntro)&&(identical(other.status, status) || other.status == status)&&(identical(other.message, message) || other.message == message)&&(identical(other.fit, fit) || other.fit == fit)&&(identical(other.type, type) || other.type == type)&&(identical(other.all, all) || other.all == all)&&(identical(other.offset, offset) || other.offset == offset)&&(identical(other.stream, stream) || other.stream == stream));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlayerStates&&(identical(other.progress, progress) || other.progress == progress)&&(identical(other.buffer, buffer) || other.buffer == buffer)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.tracks, tracks) || other.tracks == tracks)&&(identical(other.videoTrack, videoTrack) || other.videoTrack == videoTrack)&&const DeepCollectionEquality().equals(other._skip, _skip)&&(identical(other.volume, volume) || other.volume == volume)&&(identical(other.isBuffering, isBuffering) || other.isBuffering == isBuffering)&&(identical(other.isFullscreen, isFullscreen) || other.isFullscreen == isFullscreen)&&(identical(other.isMuted, isMuted) || other.isMuted == isMuted)&&(identical(other.isPaused, isPaused) || other.isPaused == isPaused)&&(identical(other.hasIntro, hasIntro) || other.hasIntro == hasIntro)&&(identical(other.status, status) || other.status == status)&&(identical(other.message, message) || other.message == message)&&(identical(other.fit, fit) || other.fit == fit)&&(identical(other.type, type) || other.type == type)&&(identical(other.all, all) || other.all == all)&&(identical(other.stream, stream) || other.stream == stream));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,progress,buffer,duration,tracks,videoTrack,const DeepCollectionEquality().hash(_skip),volume,isBuffering,isFullscreen,isMuted,isPaused,hasIntro,status,message,fit,type,all,offset,stream]);
+int get hashCode => Object.hash(runtimeType,progress,buffer,duration,tracks,videoTrack,const DeepCollectionEquality().hash(_skip),volume,isBuffering,isFullscreen,isMuted,isPaused,hasIntro,status,message,fit,type,all,stream);
 
 @override
 String toString() {
-  return 'PlayerStates(progress: $progress, buffer: $buffer, duration: $duration, tracks: $tracks, videoTrack: $videoTrack, skip: $skip, volume: $volume, isBuffering: $isBuffering, isFullscreen: $isFullscreen, isMuted: $isMuted, isPaused: $isPaused, hasIntro: $hasIntro, status: $status, message: $message, fit: $fit, type: $type, all: $all, offset: $offset, stream: $stream)';
+  return 'PlayerStates(progress: $progress, buffer: $buffer, duration: $duration, tracks: $tracks, videoTrack: $videoTrack, skip: $skip, volume: $volume, isBuffering: $isBuffering, isFullscreen: $isFullscreen, isMuted: $isMuted, isPaused: $isPaused, hasIntro: $hasIntro, status: $status, message: $message, fit: $fit, type: $type, all: $all, stream: $stream)';
 }
 
 
@@ -286,7 +284,7 @@ abstract mixin class _$PlayerStatesCopyWith<$Res> implements $PlayerStatesCopyWi
   factory _$PlayerStatesCopyWith(_PlayerStates value, $Res Function(_PlayerStates) _then) = __$PlayerStatesCopyWithImpl;
 @override @useResult
 $Res call({
- Duration progress, Duration buffer, Duration duration, Tracks tracks, VideoTrack videoTrack, List<int> skip, double volume, bool isBuffering, bool isFullscreen, bool isMuted, bool isPaused, bool hasIntro, PlayerStatus status, String message, BoxFit fit, String type, int all, int offset, CurrentStream stream
+ Duration progress, Duration buffer, Duration duration, Tracks tracks, VideoTrack videoTrack, List<int> skip, double volume, bool isBuffering, bool isFullscreen, bool isMuted, bool isPaused, bool hasIntro, PlayerStatus status, String message, BoxFit fit, String type, int all, CurrentStream stream
 });
 
 
@@ -303,7 +301,7 @@ class __$PlayerStatesCopyWithImpl<$Res>
 
 /// Create a copy of PlayerStates
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? progress = null,Object? buffer = null,Object? duration = null,Object? tracks = null,Object? videoTrack = null,Object? skip = null,Object? volume = null,Object? isBuffering = null,Object? isFullscreen = null,Object? isMuted = null,Object? isPaused = null,Object? hasIntro = null,Object? status = null,Object? message = null,Object? fit = null,Object? type = null,Object? all = null,Object? offset = null,Object? stream = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? progress = null,Object? buffer = null,Object? duration = null,Object? tracks = null,Object? videoTrack = null,Object? skip = null,Object? volume = null,Object? isBuffering = null,Object? isFullscreen = null,Object? isMuted = null,Object? isPaused = null,Object? hasIntro = null,Object? status = null,Object? message = null,Object? fit = null,Object? type = null,Object? all = null,Object? stream = null,}) {
   return _then(_PlayerStates(
 progress: null == progress ? _self.progress : progress // ignore: cast_nullable_to_non_nullable
 as Duration,buffer: null == buffer ? _self.buffer : buffer // ignore: cast_nullable_to_non_nullable
@@ -322,7 +320,6 @@ as PlayerStatus,message: null == message ? _self.message : message // ignore: ca
 as String,fit: null == fit ? _self.fit : fit // ignore: cast_nullable_to_non_nullable
 as BoxFit,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,all: null == all ? _self.all : all // ignore: cast_nullable_to_non_nullable
-as int,offset: null == offset ? _self.offset : offset // ignore: cast_nullable_to_non_nullable
 as int,stream: null == stream ? _self.stream : stream // ignore: cast_nullable_to_non_nullable
 as CurrentStream,
   ));

@@ -25,14 +25,12 @@ sealed class PlayerStates with _$PlayerStates {
     required BoxFit fit,
     required String type,
     required int all,
-    required int offset,
     required CurrentStream stream,
   }) = _PlayerStates;
 
   factory PlayerStates.empty() {
     return PlayerStates(
       all: 0,
-      offset: 0,
       stream: CurrentStream.empty(),
       type: AnimeType.serie,
       buffer: Duration.zero,

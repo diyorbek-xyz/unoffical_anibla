@@ -17,7 +17,5 @@ abstract class CommentApi {
   );
 
   @GET('/v1/comments/{id}')
-  Future<HttpResponse<ApiResponse<dynamic>>> getReplyComments(
-    @Path("id") String id,
-  );
+  Future<HttpResponse<ApiResponse<CommentResponseModel>>> getReplyComments(@Path("id") String id, [@Query("limit") int limit = 100]);
 }

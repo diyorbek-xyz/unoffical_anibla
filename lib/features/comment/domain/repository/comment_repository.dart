@@ -4,7 +4,6 @@ import 'package:application/network/resources/failure.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class CommentRepository {
-  Future<Either<Failure, CommentResponse>> getAnimeComments(
-    GetCommentsProps props,
-  );
+  Future<Either<Failure, CommentResponse>> getAnimeComments(GetCommentsProps props);
+  Future<Either<Failure, CommentResponse>> getReplies(String id);
 }

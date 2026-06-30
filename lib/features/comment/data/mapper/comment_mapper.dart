@@ -9,9 +9,18 @@ class CommentMapper {
     isCurrentUser: model.isCurrentUser ?? 0,
     likesCount: model.likesCount ?? 0,
     message: model.message ?? "",
-    repliedId: model.repliedId ?? "",
+    repliedId: "",
     repliesCount: model.repliesCount ?? 0,
-    user: ProfileMapper.modelToEntity(model.user),
+    user: ProfileMapper.modelToEntity(
+      (model.user != null &&
+              model.user!.image != null &&
+              model.user!.name != null &&
+              model.user!.name!.isNotEmpty &&
+              model.user!.image != null &&
+              model.user!.image!.isNotEmpty)
+          ? model.user
+          : model.userId,
+    ),
     createdAt: model.createdAt ?? DateTime(2026),
   );
 }

@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CommentState {
 
- CommentsState get state; GetCommentsProps? get props; String? get error; CommentResponse? get response;
+ CommentsState get state; GetCommentsProps? get props; String? get error; CommentResponse? get response; Map<String, CommentResponse>? get replies;
 /// Create a copy of CommentState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $CommentStateCopyWith<CommentState> get copyWith => _$CommentStateCopyWithImpl<C
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommentState&&(identical(other.state, state) || other.state == state)&&(identical(other.props, props) || other.props == props)&&(identical(other.error, error) || other.error == error)&&(identical(other.response, response) || other.response == response));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommentState&&(identical(other.state, state) || other.state == state)&&(identical(other.props, props) || other.props == props)&&(identical(other.error, error) || other.error == error)&&(identical(other.response, response) || other.response == response)&&const DeepCollectionEquality().equals(other.replies, replies));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,state,props,error,response);
+int get hashCode => Object.hash(runtimeType,state,props,error,response,const DeepCollectionEquality().hash(replies));
 
 @override
 String toString() {
-  return 'CommentState(state: $state, props: $props, error: $error, response: $response)';
+  return 'CommentState(state: $state, props: $props, error: $error, response: $response, replies: $replies)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $CommentStateCopyWith<$Res>  {
   factory $CommentStateCopyWith(CommentState value, $Res Function(CommentState) _then) = _$CommentStateCopyWithImpl;
 @useResult
 $Res call({
- CommentsState state, GetCommentsProps? props, String? error, CommentResponse? response
+ CommentsState state, GetCommentsProps? props, String? error, CommentResponse? response, Map<String, CommentResponse>? replies
 });
 
 
@@ -62,13 +62,14 @@ class _$CommentStateCopyWithImpl<$Res>
 
 /// Create a copy of CommentState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? state = null,Object? props = freezed,Object? error = freezed,Object? response = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? state = null,Object? props = freezed,Object? error = freezed,Object? response = freezed,Object? replies = freezed,}) {
   return _then(_self.copyWith(
 state: null == state ? _self.state : state // ignore: cast_nullable_to_non_nullable
 as CommentsState,props: freezed == props ? _self.props : props // ignore: cast_nullable_to_non_nullable
 as GetCommentsProps?,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
 as String?,response: freezed == response ? _self.response : response // ignore: cast_nullable_to_non_nullable
-as CommentResponse?,
+as CommentResponse?,replies: freezed == replies ? _self.replies : replies // ignore: cast_nullable_to_non_nullable
+as Map<String, CommentResponse>?,
   ));
 }
 /// Create a copy of CommentState
@@ -174,10 +175,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( CommentsState state,  GetCommentsProps? props,  String? error,  CommentResponse? response)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( CommentsState state,  GetCommentsProps? props,  String? error,  CommentResponse? response,  Map<String, CommentResponse>? replies)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CommentState() when $default != null:
-return $default(_that.state,_that.props,_that.error,_that.response);case _:
+return $default(_that.state,_that.props,_that.error,_that.response,_that.replies);case _:
   return orElse();
 
 }
@@ -195,10 +196,10 @@ return $default(_that.state,_that.props,_that.error,_that.response);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( CommentsState state,  GetCommentsProps? props,  String? error,  CommentResponse? response)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( CommentsState state,  GetCommentsProps? props,  String? error,  CommentResponse? response,  Map<String, CommentResponse>? replies)  $default,) {final _that = this;
 switch (_that) {
 case _CommentState():
-return $default(_that.state,_that.props,_that.error,_that.response);}
+return $default(_that.state,_that.props,_that.error,_that.response,_that.replies);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -212,10 +213,10 @@ return $default(_that.state,_that.props,_that.error,_that.response);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( CommentsState state,  GetCommentsProps? props,  String? error,  CommentResponse? response)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( CommentsState state,  GetCommentsProps? props,  String? error,  CommentResponse? response,  Map<String, CommentResponse>? replies)?  $default,) {final _that = this;
 switch (_that) {
 case _CommentState() when $default != null:
-return $default(_that.state,_that.props,_that.error,_that.response);case _:
+return $default(_that.state,_that.props,_that.error,_that.response,_that.replies);case _:
   return null;
 
 }
@@ -227,13 +228,22 @@ return $default(_that.state,_that.props,_that.error,_that.response);case _:
 
 
 class _CommentState implements CommentState {
-   _CommentState({required this.state, this.props, this.error, this.response});
+   _CommentState({required this.state, this.props, this.error, this.response, final  Map<String, CommentResponse>? replies}): _replies = replies;
   
 
 @override final  CommentsState state;
 @override final  GetCommentsProps? props;
 @override final  String? error;
 @override final  CommentResponse? response;
+ final  Map<String, CommentResponse>? _replies;
+@override Map<String, CommentResponse>? get replies {
+  final value = _replies;
+  if (value == null) return null;
+  if (_replies is EqualUnmodifiableMapView) return _replies;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(value);
+}
+
 
 /// Create a copy of CommentState
 /// with the given fields replaced by the non-null parameter values.
@@ -245,16 +255,16 @@ _$CommentStateCopyWith<_CommentState> get copyWith => __$CommentStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CommentState&&(identical(other.state, state) || other.state == state)&&(identical(other.props, props) || other.props == props)&&(identical(other.error, error) || other.error == error)&&(identical(other.response, response) || other.response == response));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CommentState&&(identical(other.state, state) || other.state == state)&&(identical(other.props, props) || other.props == props)&&(identical(other.error, error) || other.error == error)&&(identical(other.response, response) || other.response == response)&&const DeepCollectionEquality().equals(other._replies, _replies));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,state,props,error,response);
+int get hashCode => Object.hash(runtimeType,state,props,error,response,const DeepCollectionEquality().hash(_replies));
 
 @override
 String toString() {
-  return 'CommentState(state: $state, props: $props, error: $error, response: $response)';
+  return 'CommentState(state: $state, props: $props, error: $error, response: $response, replies: $replies)';
 }
 
 
@@ -265,7 +275,7 @@ abstract mixin class _$CommentStateCopyWith<$Res> implements $CommentStateCopyWi
   factory _$CommentStateCopyWith(_CommentState value, $Res Function(_CommentState) _then) = __$CommentStateCopyWithImpl;
 @override @useResult
 $Res call({
- CommentsState state, GetCommentsProps? props, String? error, CommentResponse? response
+ CommentsState state, GetCommentsProps? props, String? error, CommentResponse? response, Map<String, CommentResponse>? replies
 });
 
 
@@ -282,13 +292,14 @@ class __$CommentStateCopyWithImpl<$Res>
 
 /// Create a copy of CommentState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? state = null,Object? props = freezed,Object? error = freezed,Object? response = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? state = null,Object? props = freezed,Object? error = freezed,Object? response = freezed,Object? replies = freezed,}) {
   return _then(_CommentState(
 state: null == state ? _self.state : state // ignore: cast_nullable_to_non_nullable
 as CommentsState,props: freezed == props ? _self.props : props // ignore: cast_nullable_to_non_nullable
 as GetCommentsProps?,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
 as String?,response: freezed == response ? _self.response : response // ignore: cast_nullable_to_non_nullable
-as CommentResponse?,
+as CommentResponse?,replies: freezed == replies ? _self._replies : replies // ignore: cast_nullable_to_non_nullable
+as Map<String, CommentResponse>?,
   ));
 }
 

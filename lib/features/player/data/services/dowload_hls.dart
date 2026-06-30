@@ -5,12 +5,12 @@ import 'package:application/features/player/data/model/download/completed_models
 import 'package:application/features/player/data/model/parser_models.dart';
 import 'package:application/features/player/data/services/parse_hls.dart';
 import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
 
 class DownloadHlsPlaylist {
   static final dio = Dio(BaseOptions(persistentConnection: true));
   static Future<MasterPlaylist> downloadMasterPlaylist(String masterPath, String folderName) async {
-    // final directory = await getApplicationCacheDirectory();
-    final localDirectory = Directory("/home/user/Temp/");
+    final localDirectory = await getApplicationCacheDirectory();
     final localFolder = Uri.parse(localDirectory.uri.toFilePath()).resolve("downloads/$folderName/").toString();
     final masterDataResponse = await dio.get(masterPath);
     final masterData = masterDataResponse.data;

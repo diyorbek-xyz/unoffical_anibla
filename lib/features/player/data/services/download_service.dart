@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:application/core/utils/utils.dart';
 import 'package:application/features/animes/data/models/video_model.dart';
@@ -15,7 +16,14 @@ class HlsDownloadService {
   HlsDownloadService(this.storage);
 
   Map<String, DownloadState> states = {};
-  DownloadTask? getTask(String id) => storage.getDownload(id);
+  DownloadTask? getTask(String id) {
+    final task = storage.getDownload(id);
+    if (task == null) return null;
+    final dir = Directory.fromUri(Uri.parse(task.masterPlaylist.localUrl).resolve("./"));
+    if (dir.existsSync()) return task;
+    cancel(id);
+    return null;
+  }
 
   Future<VideoModel> getUrlFromStream(String stream) async {
     final response = await dio.get(stream, queryParameters: {"format": "api"});

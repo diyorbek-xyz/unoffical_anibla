@@ -113,8 +113,8 @@ class PlayerController extends Cubit<PlayerStates> {
     emit(state.copyWith(progress: time, buffer: buffer, hasIntro: hasIntro));
   }
 
-  Future<void> setOldTimeline([String? streamId]) async {
-    final time = timeline.getTimeline(streamId ?? state.stream.id);
+  Future<void> setOldTimeline([String? fileUrl]) async {
+    final time = timeline.getTimeline(fileUrl ?? state.stream.url);
     if (time != null) {
       await player.stream.duration.firstWhere((d) => d.inSeconds > 0).timeout(const Duration(seconds: 10), onTimeout: () => Duration.zero);
       await seek(time.progress);
@@ -124,12 +124,19 @@ class PlayerController extends Cubit<PlayerStates> {
   Future<void> saveTimeline([Duration? time]) async {
     final adjusted = (time ?? player.state.position) - const Duration(seconds: 3);
     final safeProgress = adjusted.isNegative ? Duration.zero : adjusted;
-    await timeline.saveTimeline(state.stream.id, TimelineModel(progress: safeProgress, duration: state.duration));
+    await timeline.saveTimeline(state.stream.url, TimelineModel(progress: safeProgress, duration: state.duration));
   }
 
   Future<void> skipIntro() async {
     if (state.skip.isEmpty) return;
     await player.seek(Duration(seconds: state.skip.last));
+  }
+
+  Future<void> openUrl(String url, int offset, String title) async {
+    if (state.status == .empty) return;
+    await openStream(
+      PlayerProps(anime: state.stream.anime, type: state.type, cover: state.stream.cover, title: title, offset: offset, all: state.all, stream: url),
+    );
   }
 
   Future<void> openStream(PlayerProps props) async {
@@ -148,18 +155,7 @@ class PlayerController extends Cubit<PlayerStates> {
 
     final stream = CurrentStream(id: streamId, offset: props.offset, title: props.title, anime: props.anime, cover: props.cover, url: video.file);
 
-    emit(
-      state.copyWith(
-        stream: stream,
-        skip: skip,
-        status: .init,
-        isBuffering: true,
-        type: props.type,
-        all: props.all,
-        offset: props.offset,
-        isPaused: true,
-      ),
-    );
+    emit(state.copyWith(stream: stream, skip: skip, status: .init, isBuffering: true, type: props.type, all: props.all, isPaused: true));
 
     await player.open(Media(video.file), play: false);
   }

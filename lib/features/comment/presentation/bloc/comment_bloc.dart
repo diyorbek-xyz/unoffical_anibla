@@ -8,6 +8,7 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
   final CommentRepository repository;
   CommentBloc(this.repository) : super(CommentState(state: .initial)) {
     on<GetComments>(onGetComments);
+    on<GetReplies>(onGetReplies);
     on<InitComments>(init);
   }
 
@@ -36,5 +37,22 @@ class CommentBloc extends Bloc<CommentEvent, CommentState> {
         ),
       ),
     );
+  }
+
+  void onGetReplies(GetReplies event, Emitter<CommentState> emit) async {
+    final either = await repository.getReplies(event.id);
+    either.fold((l) {}, (r) {
+      final replies = [...r.comments];
+      replies.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+
+      emit(
+        state.copyWith(
+          replies: {
+            ...(state.replies ?? {}),
+            event.id: r.copyWith(comments: replies),
+          },
+        ),
+      );
+    });
   }
 }

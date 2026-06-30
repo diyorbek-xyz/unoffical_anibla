@@ -83,17 +83,18 @@ class _ExplorePageState extends State<ExplorePage> with SingleTickerProviderStat
   }
 }
 
-// Custom Delegates for pinning SearchBar and TabBar
 class SearchBarDelegate extends SliverPersistentHeaderDelegate {
   final SearchController controller;
   final void Function(String, BuildContext) submit;
   final void Function(BuildContext) clear;
   const SearchBarDelegate({required this.controller, required this.submit, required this.clear});
+
   @override
   Widget build(context, shrink, over) {
     final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
     return Material(
       child: Container(
+        padding: .symmetric(vertical: 4),
         height: 100,
         alignment: .bottomCenter,
         child: SearchBar(
@@ -112,7 +113,7 @@ class SearchBarDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => 60;
+  double get maxExtent => 70;
   @override
   double get minExtent => 60;
   @override

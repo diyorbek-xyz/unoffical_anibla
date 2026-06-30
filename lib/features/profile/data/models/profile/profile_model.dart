@@ -8,8 +8,8 @@ import 'package:hive_ce_flutter/adapters.dart';
 part 'profile_model.g.dart';
 part 'profile_model.freezed.dart';
 
-@freezed
 @HiveType(typeId: 7)
+@Freezed(fromJson: true, toJson: true)
 sealed class ProfileModel with _$ProfileModel {
   factory ProfileModel({
     @HiveField(1) DateTime? createdAt,
@@ -42,5 +42,8 @@ sealed class ProfileModel with _$ProfileModel {
     @HiveField(28) @JsonKey(name: "privacy_settings") PrivacyModel? privacySettings,
   }) = _ProfileModel;
 
-  factory ProfileModel.fromJson(Map<String, dynamic> json) => _$ProfileModelFromJson(json);
+  factory ProfileModel.fromJson(dynamic json) {
+    if (json is Map<String, dynamic>) return _$ProfileModelFromJson(json);
+    return ProfileModel(id: json);
+  }
 }

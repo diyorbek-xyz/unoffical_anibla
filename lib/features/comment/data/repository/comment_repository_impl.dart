@@ -12,18 +12,20 @@ class CommentRepositoryImpl implements CommentRepository {
   CommentRepositoryImpl(this._apiService);
 
   @override
-  Future<Either<Failure, CommentResponse>> getAnimeComments(
-    GetCommentsProps props,
-  ) async {
+  Future<Either<Failure, CommentResponse>> getAnimeComments(GetCommentsProps props) async {
     try {
-      final httpResponse = await _apiService.getAnimeComments(
-        props.type.toLowerCase(),
-        props.id,
-        props.query,
-      );
-      return Right(
-        CommentResponseMapper.responseToEntity(httpResponse.data.data),
-      );
+      final httpResponse = await _apiService.getAnimeComments(props.type.toLowerCase(), props.id, props.query);
+      return Right(CommentResponseMapper.responseToEntity(httpResponse.data.data));
+    } on DioException catch (e) {
+      return Left(ExceptionMapper.mapDioToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, CommentResponse>> getReplies(String id) async {
+    try {
+      final httpResponse = await _apiService.getReplyComments(id);
+      return Right(CommentResponseMapper.responseToEntity(httpResponse.data.data));
     } on DioException catch (e) {
       return Left(ExceptionMapper.mapDioToFailure(e));
     }

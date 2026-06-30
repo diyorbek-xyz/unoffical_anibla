@@ -18,12 +18,9 @@ String lorem([int? len]) {
 }
 
 extension DateFormatting on DateTime {
-  String formatCompact({String divider = "-"}) =>
-      DateFormat("d${divider}MM${divider}y", 'uz-UZ').format(this);
-  String formatDay() =>
-      toBeginningOfSentenceCase(DateFormat(DateFormat.MONTH_DAY, 'uz-UZ').format(this));
-  String formatFull() =>
-      toBeginningOfSentenceCase(DateFormat("hh:mm d-MMMM y", 'uz-UZ').format(this));
+  String formatCompact({String divider = "-"}) => DateFormat("d${divider}MM${divider}y", 'uz-UZ').format(this);
+  String formatDay() => toBeginningOfSentenceCase(DateFormat(DateFormat.MONTH_DAY, 'uz-UZ').format(this));
+  String formatFull() => toBeginningOfSentenceCase(DateFormat("hh:mm d-MMMM y", 'uz-UZ').format(this));
   String formatWeekday() => toBeginningOfSentenceCase(DateFormat("EEEE", "uz-UZ").format(this));
   String formatTime() => DateFormat(DateFormat.HOUR24_MINUTE, 'uz-UZ').format(this);
   String formatDynamicWeeks() {
@@ -50,6 +47,9 @@ extension DateFormatting on DateTime {
     final diff = DateTime.now().difference(this);
     if (diff.inDays >= 365) {
       return "${diff.inDays / 365} yil oldin";
+    }
+    if (diff.inDays > 31) {
+      return "${(diff.inDays / 30).toInt()} oy oldin";
     }
     if (diff.inDays > 0) {
       return "${diff.inDays} kun oldin";
