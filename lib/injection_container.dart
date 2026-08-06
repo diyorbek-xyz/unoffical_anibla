@@ -9,6 +9,7 @@ import 'package:application/features/profile/data/repository/notification_reposi
 import 'package:application/features/profile/data/source/remote/notifications_api.dart';
 import 'package:application/features/profile/domain/repository/notification_repository.dart';
 import 'package:application/features/profile/presentation/bloc/notification/notification_bloc.dart';
+import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:application/core/constants/constants.dart';
 import 'package:application/features/animes/data/models/anime_model.dart';
@@ -69,7 +70,6 @@ import 'package:application/features/slider/domain/repository/slider_repository.
 import 'package:application/features/slider/presentation/bloc/slider_bloc.dart';
 import 'package:application/hive_registrar.g.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -90,7 +90,7 @@ final baseOptions = BaseOptions(
     "x-device": "Arch Linux",
     "x-app-version": "2.4.9",
     "Authorization":
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjlkODlkZGRmZTlhZWY5ODRkMGNhNTkyIiwidG9rZW5faWQiOiI5YzExODU2Yy0wNjA0LTRiNmMtOGNhNC03OWJiOWEwMzc4OGQiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzgwOTI1ODMxLCJleHAiOjE3ODIxMzU0MzF9.fcrzN2Gvwcp4mzwnTG_2EER5Y3RPFViK2xc_kaqpVf8",
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjZmYjliNzcwYzY1MjcxMGJlNTUxZjRmIiwidG9rZW5faWQiOiI1ZmEzNDY0Yy1mN2ZhLTRlYjQtODA3ZS1kYmFiZTFiZWU5YTMiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzg0NDY0NTkxLCJleHAiOjE3ODU2NzQxOTF9.vs-tSAcKpxrXc2WMm23kGiEAaep0yJD5fxMgCRHI5Pk",
   },
 );
 final dio = Dio(baseOptions);

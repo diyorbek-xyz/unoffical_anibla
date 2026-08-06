@@ -120,7 +120,8 @@ class _VideoPlayerState extends State<VideoPlayer> {
   Widget build(BuildContext context) {
     return BlocSelector<PlayerController, PlayerStates, BoxFit>(
       selector: (state) => state.fit,
-      builder: (context, state) => Video(fit: state, controller: controller.controller, controls: (_) => controlsBuilder),
+      builder: (context, state) =>
+          Video(fit: state, aspectRatio: 21 / 9, controller: controller.controller, controls: (_) => controlsBuilder),
     );
   }
 

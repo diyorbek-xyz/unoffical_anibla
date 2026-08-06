@@ -166,6 +166,7 @@ class _EpisodesDrawerState extends State<EpisodesDrawer> {
                                   border: Border.all(color: currentColor, width: 1),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
+                                padding: .symmetric(horizontal: 10),
                                 alignment: AlignmentGeometry.center,
                                 child: Column(
                                   crossAxisAlignment: .center,
