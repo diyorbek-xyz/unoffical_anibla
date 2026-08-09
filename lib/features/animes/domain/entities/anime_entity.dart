@@ -1,12 +1,8 @@
+import 'package:application/features/animes/data/models/anime_model.dart';
 import 'package:application/features/common/domain/entities/item_entity.dart';
 import 'package:application/features/common/domain/entities/translated_entity.dart';
 import 'package:application/features/explore/domain/entities/genre_entity.dart';
 import 'package:equatable/equatable.dart';
-
-abstract class AnimeType {
-  static const movie = "Movies";
-  static const serie = "Series";
-}
 
 class AnimeEntity extends Equatable {
   final List? keywords;
@@ -32,7 +28,7 @@ class AnimeEntity extends Equatable {
   final DateTime updatedAt;
   final int duration;
   final String video;
-  final String type;
+  final AnimeType type;
 
   const AnimeEntity({
     required this.age,
@@ -92,16 +88,8 @@ class AnimeEntity extends Equatable {
 final sample = {
   "keywords": [],
   "_id": "6973a4a6de2f55a4c7898aaa",
-  "uz": {
-    "title": "Re:Zero O'zga olamda Noldan hayot",
-    "description": "Do'kondan qaytayotganda, ",
-    "_id": "6973a4a6de2f55a4c7898aab",
-  },
-  "ru": {
-    "title": "Re:Zero. Жизнь с нуля в альтернативном мире",
-    "description": "На обратном пути из магазина",
-    "_id": "6973a4a6de2f55a4c7898aac",
-  },
+  "uz": {"title": "Re:Zero O'zga olamda Noldan hayot", "description": "Do'kondan qaytayotganda, ", "_id": "6973a4a6de2f55a4c7898aab"},
+  "ru": {"title": "Re:Zero. Жизнь с нуля в альтернативном мире", "description": "На обратном пути из магазина", "_id": "6973a4a6de2f55a4c7898aac"},
   "slug": "re-zero-o-zga-olamda-noldan-hayot",
   "country": {
     "_id": "67f51ec01af1f5ec7b37f5da",

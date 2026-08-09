@@ -1,4 +1,6 @@
 import 'package:application/core/utils/utils.dart';
+import 'package:application/features/animes/data/source/local/saved_ids_local.dart';
+import 'package:application/features/animes/presentation/controller/saved_controller.dart';
 import 'package:application/features/player/data/model/service/download_models.dart';
 import 'package:application/features/player/data/model/timeline_model.dart';
 import 'package:application/features/player/data/services/download_service.dart';
@@ -7,8 +9,9 @@ import 'package:application/features/player/data/source/local/timeline.dart';
 import 'package:application/features/player/presentation/cubit/player/player_controller.dart';
 import 'package:application/features/profile/data/repository/notification_repository_impl.dart';
 import 'package:application/features/profile/data/source/remote/notifications_api.dart';
+import 'package:application/features/profile/data/source/remote/plans_api.dart';
 import 'package:application/features/profile/domain/repository/notification_repository.dart';
-import 'package:application/features/profile/presentation/bloc/notification/notification_bloc.dart';
+import 'package:application/features/profile/presentation/controller/profile_controller.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:application/core/constants/constants.dart';
@@ -40,13 +43,8 @@ import 'package:application/features/explore/presentation/bloc/history/history_b
 import 'package:application/features/explore/presentation/bloc/search/search_bloc.dart';
 import 'package:application/features/profile/data/models/profile/profile_model.dart';
 import 'package:application/features/profile/data/source/local/profile_local.dart';
-import 'package:application/features/profile/presentation/bloc/session/session_bloc.dart';
 import 'package:application/features/slider/data/models/slider_model.dart';
 import 'package:application/features/slider/data/source/local/slider_local.dart';
-import 'package:application/features/template/data/repository/template_repository_impl.dart';
-import 'package:application/features/template/data/source/remote/template_api.dart';
-import 'package:application/features/template/domain/repository/template_repository.dart';
-import 'package:application/features/template/presentation/bloc/template_bloc.dart';
 import 'package:application/network/interceptors/auth_interceptor.dart';
 import 'package:application/network/interceptors/error_interceptor.dart';
 import 'package:application/features/auth/data/repository/auth_repository_impl.dart';
@@ -63,7 +61,6 @@ import 'package:application/features/calendar/presentation/bloc/calendar_bloc.da
 import 'package:application/features/profile/data/repository/account_repository_impl.dart';
 import 'package:application/features/profile/data/source/remote/profile_api.dart';
 import 'package:application/features/profile/domain/repository/profile_repository.dart';
-import 'package:application/features/profile/presentation/bloc/profile/profile_bloc.dart';
 import 'package:application/features/slider/data/repository/slider_repository_impl.dart';
 import 'package:application/features/slider/data/source/remote/slider_api.dart';
 import 'package:application/features/slider/domain/repository/slider_repository.dart';
@@ -90,7 +87,7 @@ final baseOptions = BaseOptions(
     "x-device": "Arch Linux",
     "x-app-version": "2.4.9",
     "Authorization":
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjZmYjliNzcwYzY1MjcxMGJlNTUxZjRmIiwidG9rZW5faWQiOiI1ZmEzNDY0Yy1mN2ZhLTRlYjQtODA3ZS1kYmFiZTFiZWU5YTMiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzg0NDY0NTkxLCJleHAiOjE3ODU2NzQxOTF9.vs-tSAcKpxrXc2WMm23kGiEAaep0yJD5fxMgCRHI5Pk",
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjZmYjliNzcwYzY1MjcxMGJlNTUxZjRmIiwidG9rZW5faWQiOiJhOTEyOWNkOC1jYjc2LTQ4OWMtYTZjMS0wMGFlZjExNWUyNWEiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzg2MDA4NjYwLCJleHAiOjE3ODcyMTgyNjB9.FoJYa5l0C_ceyVlTXfbnaJ0z4u_QyxtDL0ynupcPj_M",
   },
 );
 final dio = Dio(baseOptions);
@@ -118,6 +115,7 @@ Future<void> initializeDependencies() async {
   final historyBox = await Hive.openBox<AnimeModel>("historyBox");
   final timelineBox = await Hive.openBox<TimelineModel>("timelineBox");
   final downloadsBox = await Hive.openBox<DownloadTask>("downloadTaskBox");
+  final savedMediaIdBox = await Hive.openBox<String>("savedMediaIdBox");
 
   await Utils.closeSplashScreen();
 
@@ -132,6 +130,7 @@ Future<void> initializeDependencies() async {
   // Register local storages;
   sl.registerSingleton<Box<CalendarModel>>(calendarBox);
   sl.registerSingleton<Box<AnimeModel>>(historyBox, instanceName: "history");
+  sl.registerSingleton<Box<String>>(savedMediaIdBox, instanceName: "saved");
   sl.registerSingleton<Box<ProfileModel>>(profileBox);
   sl.registerSingleton<Box<SliderModel>>(sliderBox);
   sl.registerSingleton<Box<TimelineModel>>(timelineBox);
@@ -153,16 +152,17 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<CommentApi>(CommentApi(sl()));
   sl.registerSingleton<VideoApi>(VideoApi(sl()));
   sl.registerSingleton<FilterApi>(FilterApi(sl()));
-  sl.registerSingleton<TemplateApi>(TemplateApi(sl()));
   sl.registerSingleton<DownloadsLocal>(DownloadsLocalImpl(sl()));
   sl.registerSingleton<HlsDownloadService>(HlsDownloadService(sl()));
   sl.registerSingleton<NotificationsApi>(NotificationsApi(sl()));
+  sl.registerSingleton<PlansApi>(PlansApi(sl()));
 
   // Register Local Storage Services;
   sl.registerSingleton<CalendarLocal>(CalendarLocalImpl(sl()));
   sl.registerSingleton<ProfileLocal>(ProfileLocalImpl(sl()));
   sl.registerSingleton<SliderLocal>(SliderLocalImpl(sl()));
   sl.registerSingleton<HistoryLocal>(HistoryLocalImpl(sl(instanceName: 'history')));
+  sl.registerSingleton<SavedLocal>(SavedLocalImpl(sl(instanceName: 'saved')));
   sl.registerSingleton<Timeline>(TimelineImpl(sl()));
 
   // Register Repositories;
@@ -171,28 +171,26 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl(), sl()));
   sl.registerLazySingleton<EpisodeRepository>(() => EpisodeRepositoryImpl(sl(), sl(), sl()));
   sl.registerLazySingleton<CommentRepository>(() => CommentRepositoryImpl(sl()));
-  sl.registerLazySingleton<ProfileRepository>(() => ProfileRepositoryImpl(sl(), sl(), sl()));
+  sl.registerLazySingleton<ProfileRepository>(() => ProfileRepositoryImpl(sl(), sl(), sl(), sl()));
   sl.registerLazySingleton<AnimeRepository>(() => AnimeRepositoryImpl(sl(), sl()));
   sl.registerLazySingleton<SeasonRepository>(() => SeasonRepositoryImpl(sl()));
   sl.registerLazySingleton<ExploreRepository>(() => ExploreRepositoryImpl(sl(), sl(), sl()));
-  sl.registerLazySingleton<TemplateRepository>(() => TemplateRepositoryImpl(sl()));
   sl.registerLazySingleton<NotificationRepository>(() => NotificationRepositoryImpl(sl()));
 
   // Register State managers;
   sl.registerFactory<SliderBloc>(() => SliderBloc(sl()));
   sl.registerFactory<AuthBloc>(() => AuthBloc(sl()));
   sl.registerFactory<CalendarBloc>(() => CalendarBloc(sl()));
-  sl.registerFactory<ProfileBloc>(() => ProfileBloc(sl()));
-  sl.registerFactory<SessionBloc>(() => SessionBloc(sl()));
   sl.registerFactory<AnimeBloc>(() => AnimeBloc(sl()));
   sl.registerFactory<SeasonBloc>(() => SeasonBloc(sl()));
   sl.registerFactory<GenreBloc>(() => GenreBloc(sl()));
   sl.registerFactory<EpisodeBloc>(() => EpisodeBloc(sl(), sl()));
   sl.registerFactory<CommentBloc>(() => CommentBloc(sl()));
-  sl.registerFactory<TemplateBloc>(() => TemplateBloc(sl()));
   sl.registerFactory<SearchBloc>(() => SearchBloc(sl()));
   sl.registerFactory<HistoryBloc>(() => HistoryBloc(sl()));
-  sl.registerFactory<NotificationBloc>(() => NotificationBloc(sl()));
 
   sl.registerFactory<PlayerController>(() => PlayerController(sl(), sl()));
+
+  sl.registerLazySingleton<ProfileController>(() => ProfileController(sl(), sl()));
+  sl.registerLazySingleton<SavedController>(() => SavedController(sl(), sl()));
 }

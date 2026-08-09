@@ -3,6 +3,7 @@ import 'dart:io';
 abstract class Errors {
   static const String tooManySessions = "too_many_sessions";
   static const String userNotFound = "user_not_found";
+  static const String seriesAlreadyExist = "series_already_exist";
 }
 
 class ErrorMessages {
@@ -17,28 +18,16 @@ class ErrorMessages {
   static final String requestTimeout = "Sorov yuborish vaqti o'tdi";
   static final String unknown = "Nimadur xato ketti:";
 
-  static String fromStatus(int status) {
-    switch (status) {
-      case HttpStatus.badRequest:
-        return ErrorMessages.badRequest;
-      case HttpStatus.conflict:
-        return ErrorMessages.conflict;
-      case HttpStatus.unauthorized:
-        return ErrorMessages.unauthorized;
-      case HttpStatus.forbidden:
-        return ErrorMessages.forbidden;
-      case HttpStatus.notFound:
-        return ErrorMessages.notFound;
-      case HttpStatus.methodNotAllowed:
-        return ErrorMessages.methodNotAllowed;
-      case HttpStatus.loopDetected:
-        return ErrorMessages.loopDetected;
-      case HttpStatus.noContent:
-        return ErrorMessages.noContent;
-      case HttpStatus.requestTimeout:
-        return ErrorMessages.requestTimeout;
-      default:
-        return "${ErrorMessages.unknown} $status";
-    }
-  }
+  static String fromStatus(int status) => switch (status) {
+    HttpStatus.badRequest => ErrorMessages.badRequest,
+    HttpStatus.conflict => ErrorMessages.conflict,
+    HttpStatus.unauthorized => ErrorMessages.unauthorized,
+    HttpStatus.forbidden => ErrorMessages.forbidden,
+    HttpStatus.notFound => ErrorMessages.notFound,
+    HttpStatus.methodNotAllowed => ErrorMessages.methodNotAllowed,
+    HttpStatus.loopDetected => ErrorMessages.loopDetected,
+    HttpStatus.noContent => ErrorMessages.noContent,
+    HttpStatus.requestTimeout => ErrorMessages.requestTimeout,
+    _ => "${ErrorMessages.unknown} $status",
+  };
 }

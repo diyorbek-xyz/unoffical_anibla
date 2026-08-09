@@ -122,7 +122,7 @@ return getMore(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String slug,  String type)?  getSingle,TResult Function( Paginator paginator)?  getHome,TResult Function()?  getMore,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String slug,  AnimeType type)?  getSingle,TResult Function( Paginator paginator)?  getHome,TResult Function()?  getMore,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GetSingle() when getSingle != null:
 return getSingle(_that.slug,_that.type);case _GetHome() when getHome != null:
@@ -145,7 +145,7 @@ return getMore();case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String slug,  String type)  getSingle,required TResult Function( Paginator paginator)  getHome,required TResult Function()  getMore,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String slug,  AnimeType type)  getSingle,required TResult Function( Paginator paginator)  getHome,required TResult Function()  getMore,}) {final _that = this;
 switch (_that) {
 case _GetSingle():
 return getSingle(_that.slug,_that.type);case _GetHome():
@@ -164,7 +164,7 @@ return getMore();}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String slug,  String type)?  getSingle,TResult? Function( Paginator paginator)?  getHome,TResult? Function()?  getMore,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String slug,  AnimeType type)?  getSingle,TResult? Function( Paginator paginator)?  getHome,TResult? Function()?  getMore,}) {final _that = this;
 switch (_that) {
 case _GetSingle() when getSingle != null:
 return getSingle(_that.slug,_that.type);case _GetHome() when getHome != null:
@@ -185,7 +185,7 @@ class _GetSingle implements AnimeEvent {
   
 
  final  String slug;
- final  String type;
+ final  AnimeType type;
 
 /// Create a copy of AnimeEvent
 /// with the given fields replaced by the non-null parameter values.
@@ -217,7 +217,7 @@ abstract mixin class _$GetSingleCopyWith<$Res> implements $AnimeEventCopyWith<$R
   factory _$GetSingleCopyWith(_GetSingle value, $Res Function(_GetSingle) _then) = __$GetSingleCopyWithImpl;
 @useResult
 $Res call({
- String slug, String type
+ String slug, AnimeType type
 });
 
 
@@ -238,7 +238,7 @@ class __$GetSingleCopyWithImpl<$Res>
   return _then(_GetSingle(
 slug: null == slug ? _self.slug : slug // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as String,
+as AnimeType,
   ));
 }
 

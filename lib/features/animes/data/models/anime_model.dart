@@ -2,9 +2,27 @@ import 'package:application/core/utils/base_url.dart';
 import 'package:application/features/common/data/models/miscs/item_model.dart';
 import 'package:application/features/explore/data/models/genre_model.dart';
 import 'package:hive_ce_flutter/adapters.dart';
+import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'anime_model.g.dart';
+
+@HiveType(typeId: 9483)
+enum AnimeType {
+  @HiveField(0)
+  @JsonValue("Movies")
+  movie,
+  @HiveField(1)
+  @JsonValue("Series")
+  serie;
+
+  bool get isMovie => this == AnimeType.movie;
+  bool get isSerie => this == AnimeType.serie;
+  static AnimeType fromString(String str) => (str.toLowerCase()) == "movie" ? .movie : .serie;
+
+  @override
+  String toString() => toBeginningOfSentenceCase("${name}s");
+}
 
 @HiveType(typeId: 2)
 @JsonSerializable(includeIfNull: true)
@@ -64,7 +82,7 @@ class AnimeModel {
   final String? video;
   @HiveField(23)
   @JsonKey(name: "mediaType")
-  final String? type;
+  final AnimeType? type;
 
   const AnimeModel({
     this.duration,

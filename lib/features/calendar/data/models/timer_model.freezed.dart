@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TimerModel {
 
-@HiveField(0)@JsonKey(name: "media") AnimeModel? get anime;@HiveField(1)@JsonKey(name: "_id") String? get id;@HiveField(4)@JsonKey(name: "mediaType") String? get type;@HiveField(5)@JsonKey(name: "episode_id") EpisodeModel? get episode;@HiveField(3) DateTime? get time;
+@HiveField(0)@JsonKey(name: "media") AnimeModel? get anime;@HiveField(1)@JsonKey(name: "_id") String? get id;@HiveField(4)@JsonKey(name: "mediaType") AnimeType? get type;@HiveField(5)@JsonKey(name: "episode_id") EpisodeModel? get episode;@HiveField(3) DateTime? get time;
 /// Create a copy of TimerModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $TimerModelCopyWith<$Res>  {
   factory $TimerModelCopyWith(TimerModel value, $Res Function(TimerModel) _then) = _$TimerModelCopyWithImpl;
 @useResult
 $Res call({
-@HiveField(0)@JsonKey(name: "media") AnimeModel? anime,@HiveField(1)@JsonKey(name: "_id") String? id,@HiveField(4)@JsonKey(name: "mediaType") String? type,@HiveField(5)@JsonKey(name: "episode_id") EpisodeModel? episode,@HiveField(3) DateTime? time
+@HiveField(0)@JsonKey(name: "media") AnimeModel? anime,@HiveField(1)@JsonKey(name: "_id") String? id,@HiveField(4)@JsonKey(name: "mediaType") AnimeType? type,@HiveField(5)@JsonKey(name: "episode_id") EpisodeModel? episode,@HiveField(3) DateTime? time
 });
 
 
@@ -70,7 +70,7 @@ class _$TimerModelCopyWithImpl<$Res>
 anime: freezed == anime ? _self.anime : anime // ignore: cast_nullable_to_non_nullable
 as AnimeModel?,id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as String?,episode: freezed == episode ? _self.episode : episode // ignore: cast_nullable_to_non_nullable
+as AnimeType?,episode: freezed == episode ? _self.episode : episode // ignore: cast_nullable_to_non_nullable
 as EpisodeModel?,time: freezed == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
@@ -154,7 +154,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@HiveField(0)@JsonKey(name: "media")  AnimeModel? anime, @HiveField(1)@JsonKey(name: "_id")  String? id, @HiveField(4)@JsonKey(name: "mediaType")  String? type, @HiveField(5)@JsonKey(name: "episode_id")  EpisodeModel? episode, @HiveField(3)  DateTime? time)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@HiveField(0)@JsonKey(name: "media")  AnimeModel? anime, @HiveField(1)@JsonKey(name: "_id")  String? id, @HiveField(4)@JsonKey(name: "mediaType")  AnimeType? type, @HiveField(5)@JsonKey(name: "episode_id")  EpisodeModel? episode, @HiveField(3)  DateTime? time)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TimerModel() when $default != null:
 return $default(_that.anime,_that.id,_that.type,_that.episode,_that.time);case _:
@@ -175,7 +175,7 @@ return $default(_that.anime,_that.id,_that.type,_that.episode,_that.time);case _
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@HiveField(0)@JsonKey(name: "media")  AnimeModel? anime, @HiveField(1)@JsonKey(name: "_id")  String? id, @HiveField(4)@JsonKey(name: "mediaType")  String? type, @HiveField(5)@JsonKey(name: "episode_id")  EpisodeModel? episode, @HiveField(3)  DateTime? time)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@HiveField(0)@JsonKey(name: "media")  AnimeModel? anime, @HiveField(1)@JsonKey(name: "_id")  String? id, @HiveField(4)@JsonKey(name: "mediaType")  AnimeType? type, @HiveField(5)@JsonKey(name: "episode_id")  EpisodeModel? episode, @HiveField(3)  DateTime? time)  $default,) {final _that = this;
 switch (_that) {
 case _TimerModel():
 return $default(_that.anime,_that.id,_that.type,_that.episode,_that.time);}
@@ -192,7 +192,7 @@ return $default(_that.anime,_that.id,_that.type,_that.episode,_that.time);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@HiveField(0)@JsonKey(name: "media")  AnimeModel? anime, @HiveField(1)@JsonKey(name: "_id")  String? id, @HiveField(4)@JsonKey(name: "mediaType")  String? type, @HiveField(5)@JsonKey(name: "episode_id")  EpisodeModel? episode, @HiveField(3)  DateTime? time)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@HiveField(0)@JsonKey(name: "media")  AnimeModel? anime, @HiveField(1)@JsonKey(name: "_id")  String? id, @HiveField(4)@JsonKey(name: "mediaType")  AnimeType? type, @HiveField(5)@JsonKey(name: "episode_id")  EpisodeModel? episode, @HiveField(3)  DateTime? time)?  $default,) {final _that = this;
 switch (_that) {
 case _TimerModel() when $default != null:
 return $default(_that.anime,_that.id,_that.type,_that.episode,_that.time);case _:
@@ -212,7 +212,7 @@ class _TimerModel implements TimerModel {
 
 @override@HiveField(0)@JsonKey(name: "media") final  AnimeModel? anime;
 @override@HiveField(1)@JsonKey(name: "_id") final  String? id;
-@override@HiveField(4)@JsonKey(name: "mediaType") final  String? type;
+@override@HiveField(4)@JsonKey(name: "mediaType") final  AnimeType? type;
 @override@HiveField(5)@JsonKey(name: "episode_id") final  EpisodeModel? episode;
 @override@HiveField(3) final  DateTime? time;
 
@@ -249,7 +249,7 @@ abstract mixin class _$TimerModelCopyWith<$Res> implements $TimerModelCopyWith<$
   factory _$TimerModelCopyWith(_TimerModel value, $Res Function(_TimerModel) _then) = __$TimerModelCopyWithImpl;
 @override @useResult
 $Res call({
-@HiveField(0)@JsonKey(name: "media") AnimeModel? anime,@HiveField(1)@JsonKey(name: "_id") String? id,@HiveField(4)@JsonKey(name: "mediaType") String? type,@HiveField(5)@JsonKey(name: "episode_id") EpisodeModel? episode,@HiveField(3) DateTime? time
+@HiveField(0)@JsonKey(name: "media") AnimeModel? anime,@HiveField(1)@JsonKey(name: "_id") String? id,@HiveField(4)@JsonKey(name: "mediaType") AnimeType? type,@HiveField(5)@JsonKey(name: "episode_id") EpisodeModel? episode,@HiveField(3) DateTime? time
 });
 
 
@@ -271,7 +271,7 @@ class __$TimerModelCopyWithImpl<$Res>
 anime: freezed == anime ? _self.anime : anime // ignore: cast_nullable_to_non_nullable
 as AnimeModel?,id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as String?,episode: freezed == episode ? _self.episode : episode // ignore: cast_nullable_to_non_nullable
+as AnimeType?,episode: freezed == episode ? _self.episode : episode // ignore: cast_nullable_to_non_nullable
 as EpisodeModel?,time: freezed == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));

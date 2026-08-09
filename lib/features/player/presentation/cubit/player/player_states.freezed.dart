@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PlayerStates {
 
- Duration get progress; Duration get buffer; Duration get duration; Tracks get tracks; VideoTrack get videoTrack; List<int> get skip; double get volume; bool get isBuffering; bool get isFullscreen; bool get isMuted; bool get isPaused; bool get hasIntro; PlayerStatus get status; String get message; BoxFit get fit; String get type; int get all; CurrentStream get stream;
+ Duration get progress; Duration get buffer; Duration get duration; Tracks get tracks; VideoTrack get videoTrack; List<int> get skip; double get volume; bool get isBuffering; bool get isFullscreen; bool get isMuted; bool get isPaused; bool get hasIntro; PlayerStatus get status; String get message; BoxFit get fit; AnimeType get type; int get all; CurrentStream get stream;
 /// Create a copy of PlayerStates
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,7 +45,7 @@ abstract mixin class $PlayerStatesCopyWith<$Res>  {
   factory $PlayerStatesCopyWith(PlayerStates value, $Res Function(PlayerStates) _then) = _$PlayerStatesCopyWithImpl;
 @useResult
 $Res call({
- Duration progress, Duration buffer, Duration duration, Tracks tracks, VideoTrack videoTrack, List<int> skip, double volume, bool isBuffering, bool isFullscreen, bool isMuted, bool isPaused, bool hasIntro, PlayerStatus status, String message, BoxFit fit, String type, int all, CurrentStream stream
+ Duration progress, Duration buffer, Duration duration, Tracks tracks, VideoTrack videoTrack, List<int> skip, double volume, bool isBuffering, bool isFullscreen, bool isMuted, bool isPaused, bool hasIntro, PlayerStatus status, String message, BoxFit fit, AnimeType type, int all, CurrentStream stream
 });
 
 
@@ -80,7 +80,7 @@ as bool,status: null == status ? _self.status : status // ignore: cast_nullable_
 as PlayerStatus,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,fit: null == fit ? _self.fit : fit // ignore: cast_nullable_to_non_nullable
 as BoxFit,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as String,all: null == all ? _self.all : all // ignore: cast_nullable_to_non_nullable
+as AnimeType,all: null == all ? _self.all : all // ignore: cast_nullable_to_non_nullable
 as int,stream: null == stream ? _self.stream : stream // ignore: cast_nullable_to_non_nullable
 as CurrentStream,
   ));
@@ -173,7 +173,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Duration progress,  Duration buffer,  Duration duration,  Tracks tracks,  VideoTrack videoTrack,  List<int> skip,  double volume,  bool isBuffering,  bool isFullscreen,  bool isMuted,  bool isPaused,  bool hasIntro,  PlayerStatus status,  String message,  BoxFit fit,  String type,  int all,  CurrentStream stream)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Duration progress,  Duration buffer,  Duration duration,  Tracks tracks,  VideoTrack videoTrack,  List<int> skip,  double volume,  bool isBuffering,  bool isFullscreen,  bool isMuted,  bool isPaused,  bool hasIntro,  PlayerStatus status,  String message,  BoxFit fit,  AnimeType type,  int all,  CurrentStream stream)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PlayerStates() when $default != null:
 return $default(_that.progress,_that.buffer,_that.duration,_that.tracks,_that.videoTrack,_that.skip,_that.volume,_that.isBuffering,_that.isFullscreen,_that.isMuted,_that.isPaused,_that.hasIntro,_that.status,_that.message,_that.fit,_that.type,_that.all,_that.stream);case _:
@@ -194,7 +194,7 @@ return $default(_that.progress,_that.buffer,_that.duration,_that.tracks,_that.vi
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Duration progress,  Duration buffer,  Duration duration,  Tracks tracks,  VideoTrack videoTrack,  List<int> skip,  double volume,  bool isBuffering,  bool isFullscreen,  bool isMuted,  bool isPaused,  bool hasIntro,  PlayerStatus status,  String message,  BoxFit fit,  String type,  int all,  CurrentStream stream)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Duration progress,  Duration buffer,  Duration duration,  Tracks tracks,  VideoTrack videoTrack,  List<int> skip,  double volume,  bool isBuffering,  bool isFullscreen,  bool isMuted,  bool isPaused,  bool hasIntro,  PlayerStatus status,  String message,  BoxFit fit,  AnimeType type,  int all,  CurrentStream stream)  $default,) {final _that = this;
 switch (_that) {
 case _PlayerStates():
 return $default(_that.progress,_that.buffer,_that.duration,_that.tracks,_that.videoTrack,_that.skip,_that.volume,_that.isBuffering,_that.isFullscreen,_that.isMuted,_that.isPaused,_that.hasIntro,_that.status,_that.message,_that.fit,_that.type,_that.all,_that.stream);}
@@ -211,7 +211,7 @@ return $default(_that.progress,_that.buffer,_that.duration,_that.tracks,_that.vi
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Duration progress,  Duration buffer,  Duration duration,  Tracks tracks,  VideoTrack videoTrack,  List<int> skip,  double volume,  bool isBuffering,  bool isFullscreen,  bool isMuted,  bool isPaused,  bool hasIntro,  PlayerStatus status,  String message,  BoxFit fit,  String type,  int all,  CurrentStream stream)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Duration progress,  Duration buffer,  Duration duration,  Tracks tracks,  VideoTrack videoTrack,  List<int> skip,  double volume,  bool isBuffering,  bool isFullscreen,  bool isMuted,  bool isPaused,  bool hasIntro,  PlayerStatus status,  String message,  BoxFit fit,  AnimeType type,  int all,  CurrentStream stream)?  $default,) {final _that = this;
 switch (_that) {
 case _PlayerStates() when $default != null:
 return $default(_that.progress,_that.buffer,_that.duration,_that.tracks,_that.videoTrack,_that.skip,_that.volume,_that.isBuffering,_that.isFullscreen,_that.isMuted,_that.isPaused,_that.hasIntro,_that.status,_that.message,_that.fit,_that.type,_that.all,_that.stream);case _:
@@ -250,7 +250,7 @@ class _PlayerStates implements PlayerStates {
 @override final  PlayerStatus status;
 @override final  String message;
 @override final  BoxFit fit;
-@override final  String type;
+@override final  AnimeType type;
 @override final  int all;
 @override final  CurrentStream stream;
 
@@ -284,7 +284,7 @@ abstract mixin class _$PlayerStatesCopyWith<$Res> implements $PlayerStatesCopyWi
   factory _$PlayerStatesCopyWith(_PlayerStates value, $Res Function(_PlayerStates) _then) = __$PlayerStatesCopyWithImpl;
 @override @useResult
 $Res call({
- Duration progress, Duration buffer, Duration duration, Tracks tracks, VideoTrack videoTrack, List<int> skip, double volume, bool isBuffering, bool isFullscreen, bool isMuted, bool isPaused, bool hasIntro, PlayerStatus status, String message, BoxFit fit, String type, int all, CurrentStream stream
+ Duration progress, Duration buffer, Duration duration, Tracks tracks, VideoTrack videoTrack, List<int> skip, double volume, bool isBuffering, bool isFullscreen, bool isMuted, bool isPaused, bool hasIntro, PlayerStatus status, String message, BoxFit fit, AnimeType type, int all, CurrentStream stream
 });
 
 
@@ -319,7 +319,7 @@ as bool,status: null == status ? _self.status : status // ignore: cast_nullable_
 as PlayerStatus,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,fit: null == fit ? _self.fit : fit // ignore: cast_nullable_to_non_nullable
 as BoxFit,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as String,all: null == all ? _self.all : all // ignore: cast_nullable_to_non_nullable
+as AnimeType,all: null == all ? _self.all : all // ignore: cast_nullable_to_non_nullable
 as int,stream: null == stream ? _self.stream : stream // ignore: cast_nullable_to_non_nullable
 as CurrentStream,
   ));
@@ -340,7 +340,7 @@ $CurrentStreamCopyWith<$Res> get stream {
 /// @nodoc
 mixin _$PlayerProps {
 
- String get anime; String get type; String get cover; String get title; int get offset; int get all; String get stream; bool get hasUrl;
+ String get anime; AnimeType get type; String get cover; String get title; int get offset; int get all; String get stream; bool get hasUrl;
 /// Create a copy of PlayerProps
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -371,7 +371,7 @@ abstract mixin class $PlayerPropsCopyWith<$Res>  {
   factory $PlayerPropsCopyWith(PlayerProps value, $Res Function(PlayerProps) _then) = _$PlayerPropsCopyWithImpl;
 @useResult
 $Res call({
- String anime, String type, String cover, String title, int offset, int all, String stream, bool hasUrl
+ String anime, AnimeType type, String cover, String title, int offset, int all, String stream, bool hasUrl
 });
 
 
@@ -392,7 +392,7 @@ class _$PlayerPropsCopyWithImpl<$Res>
   return _then(_self.copyWith(
 anime: null == anime ? _self.anime : anime // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as String,cover: null == cover ? _self.cover : cover // ignore: cast_nullable_to_non_nullable
+as AnimeType,cover: null == cover ? _self.cover : cover // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,offset: null == offset ? _self.offset : offset // ignore: cast_nullable_to_non_nullable
 as int,all: null == all ? _self.all : all // ignore: cast_nullable_to_non_nullable
@@ -480,7 +480,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String anime,  String type,  String cover,  String title,  int offset,  int all,  String stream,  bool hasUrl)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String anime,  AnimeType type,  String cover,  String title,  int offset,  int all,  String stream,  bool hasUrl)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PlayerProps() when $default != null:
 return $default(_that.anime,_that.type,_that.cover,_that.title,_that.offset,_that.all,_that.stream,_that.hasUrl);case _:
@@ -501,7 +501,7 @@ return $default(_that.anime,_that.type,_that.cover,_that.title,_that.offset,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String anime,  String type,  String cover,  String title,  int offset,  int all,  String stream,  bool hasUrl)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String anime,  AnimeType type,  String cover,  String title,  int offset,  int all,  String stream,  bool hasUrl)  $default,) {final _that = this;
 switch (_that) {
 case _PlayerProps():
 return $default(_that.anime,_that.type,_that.cover,_that.title,_that.offset,_that.all,_that.stream,_that.hasUrl);}
@@ -518,7 +518,7 @@ return $default(_that.anime,_that.type,_that.cover,_that.title,_that.offset,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String anime,  String type,  String cover,  String title,  int offset,  int all,  String stream,  bool hasUrl)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String anime,  AnimeType type,  String cover,  String title,  int offset,  int all,  String stream,  bool hasUrl)?  $default,) {final _that = this;
 switch (_that) {
 case _PlayerProps() when $default != null:
 return $default(_that.anime,_that.type,_that.cover,_that.title,_that.offset,_that.all,_that.stream,_that.hasUrl);case _:
@@ -537,7 +537,7 @@ class _PlayerProps implements PlayerProps {
   
 
 @override final  String anime;
-@override final  String type;
+@override final  AnimeType type;
 @override final  String cover;
 @override final  String title;
 @override final  int offset;
@@ -575,7 +575,7 @@ abstract mixin class _$PlayerPropsCopyWith<$Res> implements $PlayerPropsCopyWith
   factory _$PlayerPropsCopyWith(_PlayerProps value, $Res Function(_PlayerProps) _then) = __$PlayerPropsCopyWithImpl;
 @override @useResult
 $Res call({
- String anime, String type, String cover, String title, int offset, int all, String stream, bool hasUrl
+ String anime, AnimeType type, String cover, String title, int offset, int all, String stream, bool hasUrl
 });
 
 
@@ -596,7 +596,7 @@ class __$PlayerPropsCopyWithImpl<$Res>
   return _then(_PlayerProps(
 anime: null == anime ? _self.anime : anime // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as String,cover: null == cover ? _self.cover : cover // ignore: cast_nullable_to_non_nullable
+as AnimeType,cover: null == cover ? _self.cover : cover // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,offset: null == offset ? _self.offset : offset // ignore: cast_nullable_to_non_nullable
 as int,all: null == all ? _self.all : all // ignore: cast_nullable_to_non_nullable

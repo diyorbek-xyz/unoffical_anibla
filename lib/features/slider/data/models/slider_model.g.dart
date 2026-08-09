@@ -21,7 +21,7 @@ class SliderModelAdapter extends TypeAdapter<SliderModel> {
       image: fields[1] as String?,
       mobileImage: fields[2] as String?,
       anime: fields[3] as AnimeModel?,
-      type: fields[4] as dynamic,
+      type: fields[4] as AnimeType?,
     );
   }
 
@@ -61,7 +61,7 @@ _SliderModel _$SliderModelFromJson(Map<String, dynamic> json) => _SliderModel(
   image: addBaseUrl(json['image'] as String?),
   mobileImage: addBaseUrl(json['mobile_image'] as String?),
   anime: json['media'] == null ? null : AnimeModel.fromJson(json['media']),
-  type: json['mediaType'],
+  type: $enumDecodeNullable(_$AnimeTypeEnumMap, json['mediaType']),
 );
 
 Map<String, dynamic> _$SliderModelToJson(_SliderModel instance) =>
@@ -70,5 +70,10 @@ Map<String, dynamic> _$SliderModelToJson(_SliderModel instance) =>
       'image': instance.image,
       'mobile_image': instance.mobileImage,
       'media': instance.anime,
-      'mediaType': instance.type,
+      'mediaType': _$AnimeTypeEnumMap[instance.type],
     };
+
+const _$AnimeTypeEnumMap = {
+  AnimeType.movie: 'Movies',
+  AnimeType.serie: 'Series',
+};

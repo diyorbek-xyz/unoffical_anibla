@@ -4,7 +4,7 @@ import 'package:application/core/config/theme/app_theme.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:application/core/config/theme/app_colors.dart';
-import 'package:application/features/animes/domain/entities/anime_entity.dart';
+import 'package:application/features/animes/data/models/anime_model.dart';
 import 'package:application/features/animes/domain/entities/episode_entity.dart';
 import 'package:application/features/animes/presentation/bloc/episode/episode_bloc.dart';
 import 'package:application/features/animes/presentation/bloc/episode/episode_state.dart';
@@ -120,8 +120,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
   Widget build(BuildContext context) {
     return BlocSelector<PlayerController, PlayerStates, BoxFit>(
       selector: (state) => state.fit,
-      builder: (context, state) =>
-          Video(fit: state, aspectRatio: 21 / 9, controller: controller.controller, controls: (_) => controlsBuilder),
+      builder: (context, state) => Video(fit: state, aspectRatio: 21 / 9, controller: controller.controller, controls: (_) => controlsBuilder),
     );
   }
 
@@ -297,7 +296,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
     );
   }
 
-  Widget get topControls => BlocSelector<PlayerController, PlayerStates, (bool, String)>(
+  Widget get topControls => BlocSelector<PlayerController, PlayerStates, (bool, AnimeType)>(
     selector: (state) => (state.isFullscreen, state.type),
     builder: (context, state) {
       final (isFullscreen, type) = state;
@@ -311,7 +310,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
           IconButton(onPressed: Scaffold.of(context).openEndDrawer, iconSize: 25, padding: EdgeInsets.zero, icon: Icon(Icons.list_sharp)),
           IconButton(onPressed: controller.toggleFit, iconSize: 25, padding: EdgeInsets.zero, icon: Icon(Icons.fit_screen_sharp)),
           IconButton(onPressed: openSettings, iconSize: 25, padding: EdgeInsets.zero, icon: Icon(Icons.settings_sharp)),
-          if (type == AnimeType.serie)
+          if (type.isSerie)
             IconButton(
               onPressed: () => controller.toggleFullscreen(context),
               iconSize: 25,

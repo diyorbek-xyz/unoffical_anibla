@@ -1,15 +1,11 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/utils/extensions.dart';
 import 'package:application/features/profile/domain/entities/session_entity.dart';
-import 'package:application/features/profile/presentation/bloc/profile/profile_bloc.dart';
-import 'package:application/features/profile/presentation/bloc/profile/profile_event.dart';
-import 'package:application/features/profile/presentation/bloc/session/session_bloc.dart';
-import 'package:application/features/profile/presentation/bloc/session/session_event.dart';
-import 'package:application/features/profile/presentation/bloc/session/session_state.dart';
+import 'package:application/features/profile/presentation/controller/profile_controller.dart';
 import 'package:application/features/profile/presentation/widget/platform.dart';
 import 'package:application/injection_container.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 class SessionsFailureWidget extends StatelessWidget {
   final SessionsEntity sessions;
@@ -17,30 +13,26 @@ class SessionsFailureWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<SessionBloc>(),
-      child: Align(
+    final profileController = sl<ProfileController>();
+    return Center(
+      child: Container(
+        width: 600,
         alignment: AlignmentGeometry.center,
-        child: Container(
-          width: 600,
-          alignment: AlignmentGeometry.center,
-          child: Column(
-            spacing: 5,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text("Qurilmalar soni limitiga yetdi", style: TextStyle(fontSize: 30)),
-              BlocConsumer<SessionBloc, SessionState>(
-                listener: (context, state) {
-                  if (state is SessionExitSuccess) context.read<ProfileBloc>().add(GetProfile());
-                },
-                builder: (context, state) {
-                  final bool loading = state is SessionExitLoading;
-                  return ListView(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    children: [
-                      ...sessions.sessions.map(
+        child: Column(
+          spacing: 5,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("Qurilmalar soni limitiga yetdi", style: TextStyle(fontSize: 30)),
+            SignalBuilder(
+              builder: (context) {
+                final state = profileController.sessionExitSignal.value;
+                final bool loading = state.isLoading;
+                return ListView(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+                  children: sessions.sessions
+                      .map(
                         (e) => ListTile(
                           textColor: context.appColors.onSurface,
                           iconColor: context.appColors.onSurface,
@@ -48,25 +40,21 @@ class SessionsFailureWidget extends StatelessWidget {
                           isThreeLine: true,
                           leading: PlatformWidget(platform: e.platform),
                           title: Text(e.device),
-                          subtitle: Text(
-                            "So'ngi kirish: ${e.lastLogin.formatCompact()} ${e.lastLogin.formatTime()} \t IP: ${e.lastIp}",
-                          ),
+                          subtitle: Text("So'ngi kirish: ${e.lastLogin.formatCompact()} ${e.lastLogin.formatTime()} \t IP: ${e.lastIp}"),
                           trailing: !loading
                               ? IconButton(
-                                  onPressed: () =>
-                                      context.read<SessionBloc>().add(ExitSession(e.tokenId)),
+                                  onPressed: () => profileController.exitSession(e.tokenId),
                                   color: Colors.red,
                                   icon: Icon(Icons.exit_to_app),
                                 )
                               : CircularProgressIndicator(),
                         ),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ],
-          ),
+                      )
+                      .toList(),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

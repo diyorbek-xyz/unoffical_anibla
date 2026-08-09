@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SliderModel {
 
-@HiveField(0)@JsonKey(name: "_id") String? get id;@HiveField(1)@JsonKey(includeFromJson: true, fromJson: addBaseUrl) String? get image;@HiveField(2)@JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl) String? get mobileImage;@HiveField(3)@JsonKey(name: "media") AnimeModel? get anime;@HiveField(4)@JsonKey(name: "mediaType") dynamic get type;
+@HiveField(0)@JsonKey(name: "_id") String? get id;@HiveField(1)@JsonKey(includeFromJson: true, fromJson: addBaseUrl) String? get image;@HiveField(2)@JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl) String? get mobileImage;@HiveField(3)@JsonKey(name: "media") AnimeModel? get anime;@HiveField(4)@JsonKey(name: "mediaType") AnimeType? get type;
 /// Create a copy of SliderModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,12 +28,12 @@ $SliderModelCopyWith<SliderModel> get copyWith => _$SliderModelCopyWithImpl<Slid
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SliderModel&&(identical(other.id, id) || other.id == id)&&(identical(other.image, image) || other.image == image)&&(identical(other.mobileImage, mobileImage) || other.mobileImage == mobileImage)&&(identical(other.anime, anime) || other.anime == anime)&&const DeepCollectionEquality().equals(other.type, type));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SliderModel&&(identical(other.id, id) || other.id == id)&&(identical(other.image, image) || other.image == image)&&(identical(other.mobileImage, mobileImage) || other.mobileImage == mobileImage)&&(identical(other.anime, anime) || other.anime == anime)&&(identical(other.type, type) || other.type == type));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,image,mobileImage,anime,const DeepCollectionEquality().hash(type));
+int get hashCode => Object.hash(runtimeType,id,image,mobileImage,anime,type);
 
 @override
 String toString() {
@@ -48,7 +48,7 @@ abstract mixin class $SliderModelCopyWith<$Res>  {
   factory $SliderModelCopyWith(SliderModel value, $Res Function(SliderModel) _then) = _$SliderModelCopyWithImpl;
 @useResult
 $Res call({
-@HiveField(0)@JsonKey(name: "_id") String? id,@HiveField(1)@JsonKey(includeFromJson: true, fromJson: addBaseUrl) String? image,@HiveField(2)@JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl) String? mobileImage,@HiveField(3)@JsonKey(name: "media") AnimeModel? anime,@HiveField(4)@JsonKey(name: "mediaType") dynamic type
+@HiveField(0)@JsonKey(name: "_id") String? id,@HiveField(1)@JsonKey(includeFromJson: true, fromJson: addBaseUrl) String? image,@HiveField(2)@JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl) String? mobileImage,@HiveField(3)@JsonKey(name: "media") AnimeModel? anime,@HiveField(4)@JsonKey(name: "mediaType") AnimeType? type
 });
 
 
@@ -72,7 +72,7 @@ as String?,image: freezed == image ? _self.image : image // ignore: cast_nullabl
 as String?,mobileImage: freezed == mobileImage ? _self.mobileImage : mobileImage // ignore: cast_nullable_to_non_nullable
 as String?,anime: freezed == anime ? _self.anime : anime // ignore: cast_nullable_to_non_nullable
 as AnimeModel?,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,
+as AnimeType?,
   ));
 }
 
@@ -154,7 +154,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@HiveField(0)@JsonKey(name: "_id")  String? id, @HiveField(1)@JsonKey(includeFromJson: true, fromJson: addBaseUrl)  String? image, @HiveField(2)@JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl)  String? mobileImage, @HiveField(3)@JsonKey(name: "media")  AnimeModel? anime, @HiveField(4)@JsonKey(name: "mediaType")  dynamic type)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@HiveField(0)@JsonKey(name: "_id")  String? id, @HiveField(1)@JsonKey(includeFromJson: true, fromJson: addBaseUrl)  String? image, @HiveField(2)@JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl)  String? mobileImage, @HiveField(3)@JsonKey(name: "media")  AnimeModel? anime, @HiveField(4)@JsonKey(name: "mediaType")  AnimeType? type)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SliderModel() when $default != null:
 return $default(_that.id,_that.image,_that.mobileImage,_that.anime,_that.type);case _:
@@ -175,7 +175,7 @@ return $default(_that.id,_that.image,_that.mobileImage,_that.anime,_that.type);c
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@HiveField(0)@JsonKey(name: "_id")  String? id, @HiveField(1)@JsonKey(includeFromJson: true, fromJson: addBaseUrl)  String? image, @HiveField(2)@JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl)  String? mobileImage, @HiveField(3)@JsonKey(name: "media")  AnimeModel? anime, @HiveField(4)@JsonKey(name: "mediaType")  dynamic type)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@HiveField(0)@JsonKey(name: "_id")  String? id, @HiveField(1)@JsonKey(includeFromJson: true, fromJson: addBaseUrl)  String? image, @HiveField(2)@JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl)  String? mobileImage, @HiveField(3)@JsonKey(name: "media")  AnimeModel? anime, @HiveField(4)@JsonKey(name: "mediaType")  AnimeType? type)  $default,) {final _that = this;
 switch (_that) {
 case _SliderModel():
 return $default(_that.id,_that.image,_that.mobileImage,_that.anime,_that.type);}
@@ -192,7 +192,7 @@ return $default(_that.id,_that.image,_that.mobileImage,_that.anime,_that.type);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@HiveField(0)@JsonKey(name: "_id")  String? id, @HiveField(1)@JsonKey(includeFromJson: true, fromJson: addBaseUrl)  String? image, @HiveField(2)@JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl)  String? mobileImage, @HiveField(3)@JsonKey(name: "media")  AnimeModel? anime, @HiveField(4)@JsonKey(name: "mediaType")  dynamic type)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@HiveField(0)@JsonKey(name: "_id")  String? id, @HiveField(1)@JsonKey(includeFromJson: true, fromJson: addBaseUrl)  String? image, @HiveField(2)@JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl)  String? mobileImage, @HiveField(3)@JsonKey(name: "media")  AnimeModel? anime, @HiveField(4)@JsonKey(name: "mediaType")  AnimeType? type)?  $default,) {final _that = this;
 switch (_that) {
 case _SliderModel() when $default != null:
 return $default(_that.id,_that.image,_that.mobileImage,_that.anime,_that.type);case _:
@@ -214,7 +214,7 @@ class _SliderModel implements SliderModel {
 @override@HiveField(1)@JsonKey(includeFromJson: true, fromJson: addBaseUrl) final  String? image;
 @override@HiveField(2)@JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl) final  String? mobileImage;
 @override@HiveField(3)@JsonKey(name: "media") final  AnimeModel? anime;
-@override@HiveField(4)@JsonKey(name: "mediaType") final  dynamic type;
+@override@HiveField(4)@JsonKey(name: "mediaType") final  AnimeType? type;
 
 /// Create a copy of SliderModel
 /// with the given fields replaced by the non-null parameter values.
@@ -229,12 +229,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SliderModel&&(identical(other.id, id) || other.id == id)&&(identical(other.image, image) || other.image == image)&&(identical(other.mobileImage, mobileImage) || other.mobileImage == mobileImage)&&(identical(other.anime, anime) || other.anime == anime)&&const DeepCollectionEquality().equals(other.type, type));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SliderModel&&(identical(other.id, id) || other.id == id)&&(identical(other.image, image) || other.image == image)&&(identical(other.mobileImage, mobileImage) || other.mobileImage == mobileImage)&&(identical(other.anime, anime) || other.anime == anime)&&(identical(other.type, type) || other.type == type));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,image,mobileImage,anime,const DeepCollectionEquality().hash(type));
+int get hashCode => Object.hash(runtimeType,id,image,mobileImage,anime,type);
 
 @override
 String toString() {
@@ -249,7 +249,7 @@ abstract mixin class _$SliderModelCopyWith<$Res> implements $SliderModelCopyWith
   factory _$SliderModelCopyWith(_SliderModel value, $Res Function(_SliderModel) _then) = __$SliderModelCopyWithImpl;
 @override @useResult
 $Res call({
-@HiveField(0)@JsonKey(name: "_id") String? id,@HiveField(1)@JsonKey(includeFromJson: true, fromJson: addBaseUrl) String? image,@HiveField(2)@JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl) String? mobileImage,@HiveField(3)@JsonKey(name: "media") AnimeModel? anime,@HiveField(4)@JsonKey(name: "mediaType") dynamic type
+@HiveField(0)@JsonKey(name: "_id") String? id,@HiveField(1)@JsonKey(includeFromJson: true, fromJson: addBaseUrl) String? image,@HiveField(2)@JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl) String? mobileImage,@HiveField(3)@JsonKey(name: "media") AnimeModel? anime,@HiveField(4)@JsonKey(name: "mediaType") AnimeType? type
 });
 
 
@@ -273,7 +273,7 @@ as String?,image: freezed == image ? _self.image : image // ignore: cast_nullabl
 as String?,mobileImage: freezed == mobileImage ? _self.mobileImage : mobileImage // ignore: cast_nullable_to_non_nullable
 as String?,anime: freezed == anime ? _self.anime : anime // ignore: cast_nullable_to_non_nullable
 as AnimeModel?,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as dynamic,
+as AnimeType?,
   ));
 }
 

@@ -14,7 +14,7 @@ sealed class SliderModel with _$SliderModel {
     @HiveField(1) @JsonKey(includeFromJson: true, fromJson: addBaseUrl) final String? image,
     @HiveField(2) @JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl) final String? mobileImage,
     @HiveField(3) @JsonKey(name: "media") final AnimeModel? anime,
-    @HiveField(4) @JsonKey(name: "mediaType") final dynamic type,
+    @HiveField(4) @JsonKey(name: "mediaType") final AnimeType? type,
   }) = _SliderModel;
 
   factory SliderModel.fromJson(Map<String, dynamic> json) => _$SliderModelFromJson(json);

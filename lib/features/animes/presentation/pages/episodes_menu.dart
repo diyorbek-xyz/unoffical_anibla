@@ -2,6 +2,7 @@ import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/core/utils/extensions.dart';
 import 'package:application/features/animes/data/mapper/episode_mapper.dart';
+import 'package:application/features/animes/data/models/anime_model.dart';
 import 'package:application/features/animes/domain/entities/anime_entity.dart';
 import 'package:application/features/animes/domain/entities/episode_entity.dart';
 import 'package:application/features/animes/presentation/bloc/episode/episode_bloc.dart';
@@ -121,7 +122,7 @@ class _DownloadMenuState extends State<DownloadMenu> {
   }
 
   void goToWatch([String? url]) {
-    context.pushNamed("watch", queryParameters: {"episode": widget.episode.episodeNumber.toString(), "type": AnimeType.serie, "url": url});
+    context.pushNamed("watch", queryParameters: {"episode": widget.episode.episodeNumber.toString(), "type": AnimeType.serie.name, "url": url});
     Navigator.pop(context);
   }
 

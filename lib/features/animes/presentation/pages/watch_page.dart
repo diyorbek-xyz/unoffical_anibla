@@ -1,4 +1,4 @@
-import 'package:application/features/animes/domain/entities/anime_entity.dart';
+import 'package:application/features/animes/data/models/anime_model.dart';
 import 'package:application/features/animes/presentation/bloc/anime/anime_bloc.dart';
 import 'package:application/features/animes/presentation/bloc/anime/anime_state.dart';
 import 'package:application/features/animes/presentation/bloc/episode/episode_bloc.dart';
@@ -79,7 +79,7 @@ class _WatchPageState extends State<WatchPage> {
   void init() {
     final animeState = anime.state;
     if (animeState is! AnimeSuccess) return;
-    if (widget.type == AnimeType.movie || animeState.anime.totalEpisodes == 0 || animeState.anime.duration != 0) {
+    if (widget.type == AnimeType.movie.name || animeState.anime.totalEpisodes == 0 || animeState.anime.duration != 0) {
       initMovie();
     } else {
       initEpisode();

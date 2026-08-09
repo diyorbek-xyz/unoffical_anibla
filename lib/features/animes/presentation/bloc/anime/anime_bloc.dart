@@ -1,3 +1,4 @@
+import 'package:application/features/animes/data/models/anime_model.dart';
 import 'package:application/features/animes/domain/repository/anime_repository.dart';
 import 'package:application/features/animes/presentation/bloc/anime/anime_state.dart';
 import 'package:application/network/resources/failure.dart';

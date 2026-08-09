@@ -1,11 +1,12 @@
+import 'dart:io';
+
 import 'package:application/core/resources/api_response.dart';
 import 'package:application/features/profile/data/mapper/session_mapper.dart';
-import 'package:application/features/profile/data/models/profile/session_model.dart';
 import 'package:application/features/profile/domain/entities/session_entity.dart';
 import 'package:application/network/errors.dart';
 import 'package:dio/dio.dart';
 
-sealed class Failure {
+sealed class Failure implements Exception {
   final String message;
   const Failure(this.message);
 }
@@ -34,56 +35,37 @@ final class UnknownFailure extends Failure {
 }
 
 abstract class ExceptionMapper {
-  static DioException mapResponseToDio(Response response) {
-    return DioException(
-      requestOptions: response.requestOptions,
-      error: response.data?['message'] ?? response.statusMessage ?? response.statusCode,
-      response: response,
-      type: DioExceptionType.badResponse,
-      message: response.data?['message'] ?? response.statusMessage,
-    );
-  }
+  static DioException mapResponseToDio(Response response) => DioException(
+    requestOptions: response.requestOptions,
+    error: response.data?['message'] ?? response.statusMessage ?? response.statusCode,
+    response: response,
+    type: DioExceptionType.badResponse,
+    message: response.data?['message'] ?? response.statusMessage,
+  );
 
-  static Failure mapDioToFailure(DioException exception) {
-    switch (exception.type) {
-      case DioExceptionType.connectionError:
-      case DioExceptionType.connectionTimeout:
-        return NetworkFailure();
-      case DioExceptionType.badResponse:
-        if (exception.response?.data is! Map<String, dynamic>) {
-          return SimpleFailure(exception.response?.data);
-        }
-        switch (exception.response?.data?['error']?.toString()) {
-          case Errors.userNotFound:
-            return SimpleFailure("Foydalanuvchi topilmadi");
-          case Errors.tooManySessions:
-            return SessionLimitedFailure(
-              ApiResponse.fromJson(
-                exception.response?.data,
-                (json) => SessionMapper.modelsToEntities(
-                  SessionsModel.fromJson(json as Map<String, dynamic>),
-                ),
-              ).data,
-            );
-          default:
-            final statusCode = exception.response?.statusCode;
-            return ServerFailure(statusCode ?? 400);
-        }
-      default:
-        return UnknownFailure(exception.toString());
-    }
-  }
+  static Failure mapDioToFailure(DioException exception) => switch (exception.type) {
+    DioExceptionType.connectionError || DioExceptionType.connectionTimeout => NetworkFailure(),
+    DioExceptionType.badResponse => (() {
+      if (exception.response?.data is! Map<String, dynamic>) return SimpleFailure(exception.response?.data);
+      return switch (exception.response?.data?['message']?.toString()) {
+        Errors.tooManySessions => SessionLimitedFailure(
+          ApiResponse.fromJson(exception.response?.data, (json) => SessionMapper.modelsToEntities(.fromJson(json as Map<String, dynamic>))).data,
+        ),
+        Errors.userNotFound => SimpleFailure("Foydalanuvchi topilmadi"),
+        Errors.seriesAlreadyExist => ServerFailure(HttpStatus.conflict),
+        _ => ServerFailure(exception.response?.statusCode ?? 400),
+      };
+    })(),
+    _ => UnknownFailure(exception.toString()),
+  };
 
-  static String mapFailureToMessage(Failure failure) {
-    if (failure is NetworkFailure) {
-      return "Internetga ulanmagansiz";
-    } else if (failure is ServerFailure) {
-      return ErrorMessages.fromStatus(failure.status);
-    } else if (failure is SimpleFailure) {
-      return failure.message;
-    }
-    return "Nimadur xato ketti: ${(failure as UnknownFailure).exception.toString()}";
-  }
+  static String mapFailureToMessage(Failure failure) => switch (failure) {
+    NetworkFailure() => "Internet aloqasi yo'q",
+    SessionLimitedFailure() => "Juda ko'p sessiya ochilgan",
+    UnknownFailure(:final exception) => "Nimadur xato ketti: $exception",
+    ServerFailure(:final status) => ErrorMessages.fromStatus(status),
+    SimpleFailure(:final message) => message,
+  };
 
   static String mapStatusToMessage(int status) => ErrorMessages.fromStatus(status);
 

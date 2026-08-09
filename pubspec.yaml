@@ -44,7 +44,7 @@ dependencies:
     json_annotation: ^4.12.0
     infinite_scroll_pagination: ^5.1.1
     connectivity_plus: ^7.2.0
-
+    signals_flutter: ^7.1.0
 dev_dependencies:
     flutter_test:
         sdk: flutter
@@ -55,6 +55,7 @@ dev_dependencies:
     hive_ce_generator: ^1.11.1
     build_runner: ^2.15.0
     native_splash_screen_cli:
+    signals_lint: ^7.1.0
 
 flutter:
     uses-material-design: true

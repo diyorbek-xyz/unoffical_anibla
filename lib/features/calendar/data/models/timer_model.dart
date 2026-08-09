@@ -12,7 +12,7 @@ sealed class TimerModel with _$TimerModel {
   factory TimerModel({
     @HiveField(0) @JsonKey(name: "media") final AnimeModel? anime,
     @HiveField(1) @JsonKey(name: "_id") final String? id,
-    @HiveField(4) @JsonKey(name: "mediaType") final String? type,
+    @HiveField(4) @JsonKey(name: "mediaType") final AnimeType? type,
     @HiveField(5) @JsonKey(name: "episode_id") final EpisodeModel? episode,
     @HiveField(3) final DateTime? time,
   }) = _TimerModel;

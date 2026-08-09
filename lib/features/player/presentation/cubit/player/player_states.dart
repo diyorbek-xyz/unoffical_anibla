@@ -1,4 +1,4 @@
-import 'package:application/features/animes/domain/entities/anime_entity.dart';
+import 'package:application/features/animes/data/models/anime_model.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:media_kit/media_kit.dart';
@@ -23,7 +23,7 @@ sealed class PlayerStates with _$PlayerStates {
     required PlayerStatus status,
     required String message,
     required BoxFit fit,
-    required String type,
+    required AnimeType type,
     required int all,
     required CurrentStream stream,
   }) = _PlayerStates;
@@ -58,7 +58,7 @@ enum PlayerStatus { empty, init, error, paid }
 sealed class PlayerProps with _$PlayerProps {
   factory PlayerProps({
     required final String anime,
-    required final String type,
+    required final AnimeType type,
     required final String cover,
     required final String title,
     required final int offset,

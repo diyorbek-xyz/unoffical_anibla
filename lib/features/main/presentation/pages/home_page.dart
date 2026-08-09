@@ -35,12 +35,8 @@ class _HomePageState extends State<HomePage> {
               scrollBehavior: ScrollBehavior().copyWith(scrollbars: false),
               slivers: [
                 isMobile
-                    ? SliverToBoxAdapter(
-                        child: SizedBox(height: 400, child: Carousel()),
-                      )
-                    : SliverFillViewport(
-                        delegate: SliverChildListDelegate([Carousel()]),
-                      ),
+                    ? SliverToBoxAdapter(child: SizedBox(height: 400, child: Carousel()))
+                    : SliverFillViewport(delegate: SliverChildListDelegate([Carousel()])),
                 SliverToBoxAdapter(child: Calendar()),
                 AnimeRecommends(),
               ],

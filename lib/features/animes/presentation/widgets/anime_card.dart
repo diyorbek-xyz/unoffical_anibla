@@ -1,7 +1,9 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/utils/base_url.dart';
 import 'package:application/features/animes/domain/entities/anime_entity.dart';
+import 'package:application/features/animes/presentation/controller/saved_controller.dart';
 import 'package:application/features/common/presentation/widgets/tv_focuser.dart';
+import 'package:application/injection_container.dart';
 import 'package:application/main.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -9,11 +11,25 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class AnimeCard extends StatelessWidget {
+class AnimeCard extends StatefulWidget {
   final AnimeEntity anime;
   final bool? expand;
   final double? aspectRatio;
   const AnimeCard({required this.anime, super.key, this.expand, this.aspectRatio});
+
+  static double width = 150;
+
+  @override
+  State<AnimeCard> createState() => _AnimeCardState();
+}
+
+class _AnimeCardState extends State<AnimeCard> {
+  late final SavedController savedController;
+  bool isSaved = false;
+  void save() {
+    setState(() => isSaved = !isSaved);
+    savedController.saveMedia(widget.anime.id, widget.anime.type);
+  }
 
   void _showCustomMenu(BuildContext context, Offset position, {required List<PopupMenuEntry<String>> items}) {
     final RelativeRect positionRect = RelativeRect.fromLTRB(
@@ -26,23 +42,27 @@ class AnimeCard extends StatelessWidget {
     showMenu<String>(context: context, position: positionRect, items: items, elevation: 8.0);
   }
 
-  void handleClick(BuildContext context, Offset position) => _showCustomMenu(
-    context,
-    position,
-    items: [
-      PopupMenuItem(
-        height: 45,
-        padding: EdgeInsets.symmetric(horizontal: 15),
-        child: Row(spacing: 10, children: [Icon(Icons.bookmark), Text("Saqlash")]),
-      ),
-      PopupMenuItem(
-        height: 45,
-        padding: EdgeInsets.symmetric(horizontal: 15),
-        child: Row(spacing: 10, children: [Icon(Icons.bookmark), Text("Saqlash")]),
-      ),
-    ],
-  );
-  static double width = 150;
+  void handleClick(BuildContext context, Offset position) {
+    setState(() => isSaved = savedController.isSaved(widget.anime.id));
+    _showCustomMenu(
+      context,
+      position,
+      items: [
+        PopupMenuItem(
+          height: 45,
+          padding: EdgeInsets.symmetric(horizontal: 15),
+          onTap: save,
+          child: Row(spacing: 10, children: [Icon(isSaved ? Icons.bookmark : Icons.bookmark_outline), Text(isSaved ? "Olib tashlash" : "Saqlash")]),
+        ),
+      ],
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    savedController = sl();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +75,7 @@ class AnimeCard extends StatelessWidget {
           focusNode: node,
           mouseCursor: SystemMouseCursors.click,
           borderRadius: BorderRadius.circular(15),
-          onTap: () => context.pushNamed("anime", pathParameters: {"type": anime.type, "slug": anime.slug}),
+          onTap: () => context.pushNamed("anime", pathParameters: {"type": widget.anime.type.name, "slug": widget.anime.slug}),
           highlightColor: Colors.transparent,
           splashColor: context.appColors.primaryContainer.withAlpha(50),
           hoverColor: context.appColors.primaryContainer.withAlpha(50),
@@ -68,12 +88,12 @@ class AnimeCard extends StatelessWidget {
               AspectRatio(
                 aspectRatio: 9 / 12,
                 child: Ink(
-                  decoration: (!anime.thumbnail.endsWith(".avif") && anime.thumbnail.isNotEmpty)
+                  decoration: (!widget.anime.thumbnail.endsWith(".avif") && widget.anime.thumbnail.isNotEmpty)
                       ? BoxDecoration(
                           boxShadow: [BoxShadow(color: context.appColors.surfaceContainerLowest, blurRadius: 4, offset: Offset(0, 2))],
                           image: DecorationImage(
                             isAntiAlias: true,
-                            image: CachedNetworkImageProvider(addBaseUrl(anime.thumbnail)),
+                            image: CachedNetworkImageProvider(addBaseUrl(widget.anime.thumbnail)),
                             fit: BoxFit.cover,
                             alignment: AlignmentGeometry.center,
                           ),
@@ -85,7 +105,7 @@ class AnimeCard extends StatelessWidget {
               Padding(
                 padding: EdgeInsetsGeometry.symmetric(horizontal: 5),
                 child: Text(
-                  toBeginningOfSentenceCase(anime.title.uz),
+                  toBeginningOfSentenceCase(widget.anime.title.uz),
                   maxLines: isMobile ? 1 : 2,
                   textAlign: TextAlign.start,
                   overflow: TextOverflow.ellipsis,
@@ -98,10 +118,12 @@ class AnimeCard extends StatelessWidget {
       ),
     );
     return SizedBox(
-      width: (expand != null && expand!) ? double.infinity : (isMobile ? 150 : 180),
+      width: (widget.expand != null && widget.expand!) ? double.infinity : (isMobile ? 150 : 180),
       child: Stack(
         children: [
-          (expand == null || !expand! || aspectRatio != null) ? AspectRatio(aspectRatio: aspectRatio ?? 9 / 15, child: cover) : cover,
+          (widget.expand == null || !widget.expand! || widget.aspectRatio != null)
+              ? AspectRatio(aspectRatio: widget.aspectRatio ?? 9 / 15, child: cover)
+              : cover,
 
           Positioned(
             right: 7,
@@ -110,7 +132,7 @@ class AnimeCard extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 5, vertical: 1),
                 decoration: BoxDecoration(color: context.appColors.primaryContainer.withAlpha(200), borderRadius: BorderRadius.circular(6)),
-                child: Text("${anime.publishedYear}-yil", style: TextStyle(color: context.appColors.primary)),
+                child: Text("${widget.anime.publishedYear}-yil", style: TextStyle(color: context.appColors.primary)),
               ),
             ),
           ),

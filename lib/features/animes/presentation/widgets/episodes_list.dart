@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/features/animes/data/mapper/episode_mapper.dart';
-import 'package:application/features/animes/domain/entities/anime_entity.dart';
+import 'package:application/features/animes/data/models/anime_model.dart';
 import 'package:application/features/animes/domain/entities/episode_entity.dart';
 import 'package:application/features/animes/presentation/bloc/anime/anime_bloc.dart';
 import 'package:application/features/animes/presentation/bloc/anime/anime_state.dart';

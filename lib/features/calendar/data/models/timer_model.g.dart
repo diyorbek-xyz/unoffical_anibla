@@ -19,7 +19,7 @@ class TimerModelAdapter extends TypeAdapter<TimerModel> {
     return TimerModel(
       anime: fields[0] as AnimeModel?,
       id: fields[1] as String?,
-      type: fields[4] as String?,
+      type: fields[4] as AnimeType?,
       episode: fields[5] as EpisodeModel?,
       time: fields[3] as DateTime?,
     );
@@ -59,7 +59,7 @@ class TimerModelAdapter extends TypeAdapter<TimerModel> {
 _TimerModel _$TimerModelFromJson(Map<String, dynamic> json) => _TimerModel(
   anime: json['media'] == null ? null : AnimeModel.fromJson(json['media']),
   id: json['_id'] as String?,
-  type: json['mediaType'] as String?,
+  type: $enumDecodeNullable(_$AnimeTypeEnumMap, json['mediaType']),
   episode: json['episode_id'] == null
       ? null
       : EpisodeModel.fromJson(json['episode_id'] as Map<String, dynamic>),
@@ -70,7 +70,12 @@ Map<String, dynamic> _$TimerModelToJson(_TimerModel instance) =>
     <String, dynamic>{
       'media': instance.anime,
       '_id': instance.id,
-      'mediaType': instance.type,
+      'mediaType': _$AnimeTypeEnumMap[instance.type],
       'episode_id': instance.episode,
       'time': instance.time?.toIso8601String(),
     };
+
+const _$AnimeTypeEnumMap = {
+  AnimeType.movie: 'Movies',
+  AnimeType.serie: 'Series',
+};

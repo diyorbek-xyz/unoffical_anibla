@@ -40,7 +40,7 @@ class AnimeModelAdapter extends TypeAdapter<AnimeModel> {
       updatedAt: fields[19] as DateTime?,
       ru: fields[20] as dynamic,
       uz: fields[2] as dynamic,
-      type: fields[23] as String?,
+      type: fields[23] as AnimeType?,
     );
   }
 
@@ -109,6 +109,43 @@ class AnimeModelAdapter extends TypeAdapter<AnimeModel> {
           typeId == other.typeId;
 }
 
+class AnimeTypeAdapter extends TypeAdapter<AnimeType> {
+  @override
+  final typeId = 9483;
+
+  @override
+  AnimeType read(BinaryReader reader) {
+    switch (reader.readByte()) {
+      case 0:
+        return AnimeType.movie;
+      case 1:
+        return AnimeType.serie;
+      default:
+        return AnimeType.movie;
+    }
+  }
+
+  @override
+  void write(BinaryWriter writer, AnimeType obj) {
+    switch (obj) {
+      case AnimeType.movie:
+        writer.writeByte(0);
+      case AnimeType.serie:
+        writer.writeByte(1);
+    }
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AnimeTypeAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
@@ -143,7 +180,7 @@ AnimeModel _$AnimeModelFromJson(Map<String, dynamic> json) => AnimeModel(
       : DateTime.parse(json['updatedAt'] as String),
   ru: json['ru'],
   uz: json['uz'],
-  type: json['mediaType'] as String?,
+  type: $enumDecodeNullable(_$AnimeTypeEnumMap, json['mediaType']),
 );
 
 Map<String, dynamic> _$AnimeModelToJson(AnimeModel instance) =>
@@ -171,5 +208,10 @@ Map<String, dynamic> _$AnimeModelToJson(AnimeModel instance) =>
       'updatedAt': instance.updatedAt?.toIso8601String(),
       'duration': instance.duration,
       'video': instance.video,
-      'mediaType': instance.type,
+      'mediaType': _$AnimeTypeEnumMap[instance.type],
     };
+
+const _$AnimeTypeEnumMap = {
+  AnimeType.movie: 'Movies',
+  AnimeType.serie: 'Series',
+};

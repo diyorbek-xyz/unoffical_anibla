@@ -39,27 +39,22 @@ class ListsWidget extends StatelessWidget {
   final ListBorderRadius borderRadius;
   const ListsWidget({super.key, this.spacing = 2, this.borderRadius = const ListBorderRadius(), required this.items});
 
-  static Column builder({
+  static Widget builder({
     ListBorderRadius borderRadius = const ListBorderRadius(),
     required int itemCount,
     required Widget Function(int index, BorderRadiusGeometry borderRadius) builder,
-  }) => Column(
-    spacing: 1.5,
-    crossAxisAlignment: .start,
-    mainAxisAlignment: .start,
-    mainAxisSize: .min,
-    children: List.generate(itemCount, (i) => i).map((i) => builder(i, borderRadius.fromIndex(i, itemCount))).toList(),
+  }) => SliverList.separated(
+    itemCount: itemCount,
+    separatorBuilder: (context, index) => const SizedBox(height: 1.5),
+    itemBuilder: (context, i) => builder(i, borderRadius.fromIndex(i, itemCount)),
   );
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      spacing: 1.5,
-      crossAxisAlignment: .start,
-      mainAxisAlignment: .start,
-      mainAxisSize: .min,
-      children: items.asMap().entries.map((e) {
-        final index = e.key;
+    return SliverList.separated(
+      itemCount: items.length,
+      separatorBuilder: (context, index) => const SizedBox(height: 1.5),
+      itemBuilder: (context, index) {
         final list = items[index];
         final responsive = Responsive.of(context);
         if (responsive.isMobile) {
@@ -90,7 +85,7 @@ class ListsWidget extends StatelessWidget {
           isThreeLine: list.isThreeLine,
           minTileHeight: list.height,
         );
-      }).toList(),
+      },
     );
   }
 }

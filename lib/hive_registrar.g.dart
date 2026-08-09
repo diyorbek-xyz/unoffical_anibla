@@ -24,11 +24,11 @@ import 'package:application/features/profile/data/models/profile/privacy_model.d
 import 'package:application/features/profile/data/models/profile/profile_model.dart';
 import 'package:application/features/profile/data/models/profile/session_model.dart';
 import 'package:application/features/slider/data/models/slider_model.dart';
-import 'package:application/features/template/data/models/template_model.dart';
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
     registerAdapter(AnimeModelAdapter());
+    registerAdapter(AnimeTypeAdapter());
     registerAdapter(AvatarModelAdapter());
     registerAdapter(CalendarModelAdapter());
     registerAdapter(ChunkAdapter());
@@ -51,7 +51,6 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(SessionModelAdapter());
     registerAdapter(SessionsModelAdapter());
     registerAdapter(SliderModelAdapter());
-    registerAdapter(TemplateModelAdapter());
     registerAdapter(TimelineModelAdapter());
     registerAdapter(TimerModelAdapter());
     registerAdapter(TranslatedModelAdapter());
@@ -62,6 +61,7 @@ extension HiveRegistrar on HiveInterface {
 extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
     registerAdapter(AnimeModelAdapter());
+    registerAdapter(AnimeTypeAdapter());
     registerAdapter(AvatarModelAdapter());
     registerAdapter(CalendarModelAdapter());
     registerAdapter(ChunkAdapter());
@@ -84,7 +84,6 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
     registerAdapter(SessionModelAdapter());
     registerAdapter(SessionsModelAdapter());
     registerAdapter(SliderModelAdapter());
-    registerAdapter(TemplateModelAdapter());
     registerAdapter(TimelineModelAdapter());
     registerAdapter(TimerModelAdapter());
     registerAdapter(TranslatedModelAdapter());

@@ -1,6 +1,5 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
-import 'package:application/core/constants/spacings.dart';
 import 'package:application/core/utils/extensions.dart';
 import 'package:application/features/animes/data/models/anime_model.dart';
 import 'package:application/features/animes/presentation/widgets/anime_card.dart';
@@ -39,14 +38,14 @@ class Calendar extends StatelessWidget {
               enabled: isLoading,
               enableSwitchAnimation: true,
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: containerPadding),
+                padding: .only(top: 30,bottom: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Skeleton.keep(
                       keep: true,
                       child: Padding(
-                        padding: EdgeInsetsGeometry.symmetric(horizontal: isMobile ? 10 : containerPadding),
+                        padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
                         child: Row(
                           textDirection: isMobile ? .rtl : .ltr,
                           spacing: 10,
@@ -67,7 +66,7 @@ class Calendar extends StatelessWidget {
                       physics: BouncingScrollPhysics(),
                       scrollDirection: Axis.horizontal,
                       child: Padding(
-                        padding: EdgeInsetsGeometry.symmetric(horizontal: isMobile ? 10 : containerPadding),
+                        padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
                         child: Flex(direction: Axis.horizontal, spacing: 20, children: data.map((e) => dailyAnimes(e, context)).toList()),
                       ),
                     ),

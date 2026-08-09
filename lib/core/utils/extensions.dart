@@ -1,3 +1,5 @@
+import 'package:application/network/resources/failure.dart';
+import 'package:dartz/dartz.dart';
 import 'package:intl/intl.dart';
 
 extension StringExt on String {
@@ -90,4 +92,8 @@ extension Extension<T> on List<T> {
     list.removeLast();
     return list;
   }
+}
+
+extension SignalForZ<T> on Either<Failure, T> {
+  T getData() => fold((l) => throw l, (r) => r);
 }

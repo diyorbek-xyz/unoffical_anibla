@@ -1,3 +1,4 @@
+import 'package:application/features/animes/data/models/anime_model.dart';
 import 'package:application/features/animes/domain/entities/anime_entity.dart';
 import 'package:application/features/explore/domain/repository/explore_repository.dart';
 import 'package:application/features/explore/presentation/bloc/search/search_event.dart';
@@ -13,8 +14,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   void onSearchAnime(SearchAnime event, Emitter<SearchState> emit) async {
     emit(SearchLoading());
     if (event.isEmpty) return emit(SearchInitial());
-    final series = await repository.searchAnime(AnimeType.serie.toLowerCase(), event.query);
-    final movies = await repository.searchAnime(AnimeType.movie.toLowerCase(), event.query);
+    final series = await repository.searchAnime(AnimeType.serie.name, event.query);
+    final movies = await repository.searchAnime(AnimeType.movie.name, event.query);
     List<AnimeEntity> serieAnimes = [];
     List<AnimeEntity> movieAnimes = [];
     series.fold((failure) => emit(SearchFailed(ExceptionMapper.mapFailureToMessage(failure))), (r) {

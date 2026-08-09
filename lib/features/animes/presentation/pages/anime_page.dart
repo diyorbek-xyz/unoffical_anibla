@@ -29,8 +29,10 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 class AnimePage extends StatefulWidget {
   final String slug;
-  final String type;
-  const AnimePage({super.key, required this.slug, required this.type});
+  final String typeSTR;
+  const AnimePage({super.key, required this.slug, required this.typeSTR});
+
+  AnimeType get type => AnimeType.fromString(typeSTR);
 
   @override
   State<AnimePage> createState() => _AnimePageState();
@@ -60,7 +62,7 @@ class _AnimePageState extends State<AnimePage> {
           listener: (context, state) {
             if (state is! AnimeSuccess) return;
             final anime = state.anime;
-            context.read<CommentBloc>().add(InitComments(GetCommentsProps(id: anime.id, limit: 20, page: 1, type: widget.type)));
+            context.read<CommentBloc>().add(InitComments(GetCommentsProps(id: anime.id, limit: 20, page: 1, type: widget.type.toString())));
             if (widget.type == AnimeType.serie) {
               context.read<SeasonBloc>().add(GetAllSeasons(anime.slug));
             }
@@ -121,7 +123,7 @@ class _AnimePageState extends State<AnimePage> {
                         AnimeInfosMenu(),
                         CommentsMenu(),
                         CreatorsMenu(anime: anime),
-                        if (widget.type == AnimeType.serie) AnimeEpisodesMenu(anime: anime),
+                        if (widget.type.isSerie) AnimeEpisodesMenu(anime: anime),
                       ],
                     ),
                   ),
