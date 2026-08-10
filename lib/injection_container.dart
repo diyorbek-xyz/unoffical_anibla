@@ -1,5 +1,6 @@
 import 'package:application/core/utils/utils.dart';
 import 'package:application/features/animes/data/source/local/saved_ids_local.dart';
+import 'package:application/features/animes/presentation/controller/anime_controller.dart';
 import 'package:application/features/animes/presentation/controller/saved_controller.dart';
 import 'package:application/features/player/data/model/service/download_models.dart';
 import 'package:application/features/player/data/model/timeline_model.dart';
@@ -193,4 +194,5 @@ Future<void> initializeDependencies() async {
 
   sl.registerLazySingleton<ProfileController>(() => ProfileController(sl(), sl()));
   sl.registerLazySingleton<SavedController>(() => SavedController(sl(), sl()));
+  sl.registerLazySingleton<AnimeController>(() => AnimeController(sl(), sl(), sl()));
 }

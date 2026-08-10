@@ -1,4 +1,4 @@
-import 'package:application/core/utils/extensions.dart';
+import 'package:application/features/animes/data/models/page_props.dart';
 import 'package:application/features/animes/presentation/pages/anime_page.dart';
 import 'package:application/features/animes/presentation/pages/anime_provider.dart';
 import 'package:application/features/animes/presentation/pages/watch_page.dart';
@@ -57,18 +57,14 @@ final GoRouter routerConfig = GoRouter(
       routes: [
         GoRoute(
           name: "anime",
-          path: '/anime/:type/:slug',
+          path: '/anime',
           builder: (context, state) =>
-              AnimePage(slug: state.pathParameters['slug'].toString(), typeSTR: state.pathParameters['type']?.toString() ?? "Series"),
+              AnimePage(slug: state.uri.queryParameters['slug'].toString(), typeSTR: state.uri.queryParameters['type']?.toString() ?? "Series"),
         ),
         GoRoute(
           name: "watch",
           path: '/watch',
-          builder: (context, state) => WatchPage(
-            type: state.uri.queryParameters['type']?.toString() ?? "Series",
-            episode: state.uri.queryParameters['episode'].toString().tryParseInt() ?? 1,
-            url: state.uri.queryParameters['url'],
-          ),
+          builder: (context, state) => WatchPage(props: AnimePageProps.fromJson(state.uri.queryParameters)),
         ),
       ],
     ),

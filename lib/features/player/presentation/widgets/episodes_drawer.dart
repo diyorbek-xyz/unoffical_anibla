@@ -2,14 +2,13 @@ import 'dart:async';
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/features/animes/data/models/anime_model.dart';
 import 'package:application/features/animes/domain/entities/episode_entity.dart';
-import 'package:application/features/animes/presentation/bloc/anime/anime_bloc.dart';
-import 'package:application/features/animes/presentation/bloc/anime/anime_state.dart';
-import 'package:application/features/animes/presentation/bloc/episode/episode_bloc.dart';
-import 'package:application/features/animes/presentation/bloc/episode/episode_state.dart';
+import 'package:application/features/animes/presentation/controller/anime_controller.dart';
 import 'package:application/features/player/presentation/cubit/player/player_controller.dart';
 import 'package:application/features/player/presentation/cubit/player/player_states.dart';
+import 'package:application/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 class EpisodesDrawer extends StatefulWidget {
   const EpisodesDrawer({super.key});
@@ -19,12 +18,15 @@ class EpisodesDrawer extends StatefulWidget {
 }
 
 class _EpisodesDrawerState extends State<EpisodesDrawer> {
-  late PlayerController controller;
+  late final PlayerController _playerController;
+  late final AnimeController _animeController;
+
   final searchController = TextEditingController();
   bool isReversedEpisodeList = false;
   bool isFocused = false;
   Timer? debounce;
   String? search;
+
   void onSearchChange(String val) {
     debounce?.cancel();
     debounce = Timer(const Duration(seconds: 1), () => onSearchSubmit(val));
@@ -51,16 +53,18 @@ class _EpisodesDrawerState extends State<EpisodesDrawer> {
 
   @override
   void initState() {
-    controller = context.read<PlayerController>();
+    _animeController = sl<AnimeController>();
+    _playerController = context.read<PlayerController>();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<EpisodeBloc, EpisodeState>(
-      builder: (context, state) {
-        final List<EpisodeEntity> episodes = state is EpisodeSuccess ? state.episodes : [];
-        final current = controller.state.stream.offset;
+    return SignalBuilder(
+      builder: (context) {
+        final state = _animeController.episodesState.value;
+        final episodes = state.value ?? _animeController.fakeEpisodes;
+        final current = _playerController.state.stream.offset;
         return Column(
           children: [
             TextField(
@@ -110,16 +114,16 @@ class _EpisodesDrawerState extends State<EpisodesDrawer> {
                     final episode = entry.value;
                     final isCurrent = current == entry.value.episodeNumber;
                     final title = "${episode.episodeNumber}-qism: ${episode.title.uz}";
-                    final animeState = context.read<AnimeBloc>().state;
-                    final anime = animeState is AnimeSuccess ? animeState.anime : null;
+                    final animeState = _animeController.mediaState.value;
+                    final anime = animeState.value ?? _animeController.fakeMedia;
                     final props = PlayerProps(
                       all: episodes.length,
                       offset: episode.episodeNumber,
                       type: AnimeType.serie,
                       title: episode.title.uz,
                       stream: episode.video,
-                      cover: anime?.cover ?? "",
-                      anime: anime?.title.uz ?? "",
+                      cover: anime.cover,
+                      anime: anime.title.uz,
                     );
                     final timeline = episode.timeline;
                     final typeColor = episode.type == 'free' ? context.appColors.secondary : context.appColors.primary;
@@ -133,7 +137,7 @@ class _EpisodesDrawerState extends State<EpisodesDrawer> {
                         textStyle: TextStyle(color: context.appColors.onPrimaryContainer),
                         message: title,
                         child: InkWell(
-                          onTap: () => controller.openStream(props),
+                          onTap: () => _playerController.openStream(props),
                           hoverColor: currentColor.withAlpha(50),
                           splashColor: currentColor.withAlpha(50),
                           focusColor: currentColor.withAlpha(50),

@@ -1,19 +1,19 @@
 import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/core/utils/base_url.dart';
 import 'package:application/core/utils/extensions.dart';
-import 'package:application/features/animes/data/mapper/anime_mapper.dart';
-import 'package:application/features/animes/presentation/bloc/anime/anime_bloc.dart';
-import 'package:application/features/animes/presentation/bloc/anime/anime_state.dart';
+import 'package:application/features/animes/presentation/controller/anime_controller.dart';
 import 'package:application/features/common/presentation/widgets/responsive.dart';
+import 'package:application/injection_container.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 class AnimeInfosMenu extends StatelessWidget {
   const AnimeInfosMenu({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final animeController = sl<AnimeController>();
     return CustomScrollView(
       scrollBehavior: ScrollBehavior().copyWith(scrollbars: false),
       key: const PageStorageKey("infos"),
@@ -24,12 +24,12 @@ class AnimeInfosMenu extends StatelessWidget {
             builder: (context, constrained) {
               return Responsive(
                 constraints: constrained,
-                child: BlocBuilder<AnimeBloc, AnimeState>(
-                  builder: (context, state) {
+                child: SignalBuilder(
+                  builder: (context) {
+                    final state = animeController.mediaState.value;
                     final responsive = Responsive.of(context);
-                    final isLoading = state is! AnimeSuccess;
-                    final fake = AnimeMapper.modelToEntity(null);
-                    final anime = isLoading ? fake : state.anime;
+                    final isLoading = state.isLoading;
+                    final anime = state.value ?? animeController.fakeMedia;
                     final titleStyle = responsive.isMobile ? context.textTheme.titleMedium : context.textTheme.titleLarge;
                     final bodyStyle = responsive.isMobile ? context.textTheme.bodySmall : context.textTheme.bodyLarge;
                     return Container(

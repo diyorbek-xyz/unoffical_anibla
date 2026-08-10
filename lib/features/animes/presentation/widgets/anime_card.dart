@@ -75,7 +75,7 @@ class _AnimeCardState extends State<AnimeCard> {
           focusNode: node,
           mouseCursor: SystemMouseCursors.click,
           borderRadius: BorderRadius.circular(15),
-          onTap: () => context.pushNamed("anime", pathParameters: {"type": widget.anime.type.name, "slug": widget.anime.slug}),
+          onTap: () => context.pushNamed("anime", queryParameters: {"type": widget.anime.type.name, "slug": widget.anime.slug}),
           highlightColor: Colors.transparent,
           splashColor: context.appColors.primaryContainer.withAlpha(50),
           hoverColor: context.appColors.primaryContainer.withAlpha(50),

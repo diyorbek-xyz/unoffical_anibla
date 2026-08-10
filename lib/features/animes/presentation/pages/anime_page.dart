@@ -2,16 +2,10 @@ import 'dart:ui';
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/core/utils/base_url.dart';
-import 'package:application/features/animes/data/mapper/anime_mapper.dart';
 import 'package:application/features/animes/data/models/anime_model.dart';
+import 'package:application/features/animes/data/models/page_props.dart';
 import 'package:application/features/animes/domain/entities/anime_entity.dart';
-import 'package:application/features/animes/presentation/bloc/anime/anime_bloc.dart';
-import 'package:application/features/animes/presentation/bloc/anime/anime_state.dart';
-import 'package:application/features/animes/presentation/bloc/episode/episode_bloc.dart';
-import 'package:application/features/animes/presentation/bloc/episode/episode_event.dart';
-import 'package:application/features/animes/presentation/bloc/season/season_bloc.dart';
-import 'package:application/features/animes/presentation/bloc/season/season_event.dart';
-import 'package:application/features/animes/presentation/bloc/season/season_state.dart';
+import 'package:application/features/animes/presentation/controller/anime_controller.dart';
 import 'package:application/features/animes/presentation/pages/comments_menu.dart';
 import 'package:application/features/animes/presentation/pages/creators_menu.dart';
 import 'package:application/features/animes/presentation/pages/episodes_menu.dart';
@@ -20,11 +14,12 @@ import 'package:application/features/comment/data/models/props.dart';
 import 'package:application/features/comment/presentation/bloc/comment_bloc.dart';
 import 'package:application/features/comment/presentation/bloc/comment_event.dart';
 import 'package:application/features/common/presentation/widgets/error.dart';
-import 'package:application/features/player/presentation/cubit/player/player_controller.dart';
+import 'package:application/injection_container.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class AnimePage extends StatefulWidget {
@@ -39,66 +34,41 @@ class AnimePage extends StatefulWidget {
 }
 
 class _AnimePageState extends State<AnimePage> {
-  late PlayerController controller;
+  late final AnimeController _animeController;
+  late final EffectCleanup _commentsDispose;
 
   @override
   void initState() {
-    context.read<AnimeBloc>().add(.getSingle(slug: widget.slug, type: widget.type));
-    controller = context.read<PlayerController>();
     super.initState();
+    _animeController = sl<AnimeController>()..getFullAnime(widget.type, widget.slug);
+    _commentsDispose = effect(() {
+      final anime = _animeController.mediaState.value.value;
+      if (anime == null) return;
+      context.read<CommentBloc>().add(InitComments(GetCommentsProps(id: anime.id, limit: 20, page: 1, type: widget.type.toString())));
+    });
   }
 
   @override
   void dispose() {
-    controller.close();
+    _commentsDispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<AnimeBloc, AnimeState>(
-          listener: (context, state) {
-            if (state is! AnimeSuccess) return;
-            final anime = state.anime;
-            context.read<CommentBloc>().add(InitComments(GetCommentsProps(id: anime.id, limit: 20, page: 1, type: widget.type.toString())));
-            if (widget.type == AnimeType.serie) {
-              context.read<SeasonBloc>().add(GetAllSeasons(anime.slug));
-            }
-          },
-        ),
-        BlocListener<SeasonBloc, SeasonState>(
-          listener: (context, state) {
-            if (widget.type != AnimeType.serie) return;
-            if (state is! SeasonSuccess) return;
-            if (state.seasons.isEmpty) return;
-            final animeState = context.read<AnimeBloc>().state;
-            if (animeState is! AnimeSuccess) return;
-            context.read<EpisodeBloc>().add(GetEpisodes(animeState.anime.slug, state.seasons.first.slug));
-          },
-        ),
-      ],
-      child: sliverBodyBuilder(),
-    );
+    return sliverBodyBuilder();
   }
 
   Widget sliverBodyBuilder() {
     return DefaultTabController(
       length: widget.type == AnimeType.serie ? 4 : 3,
-      child: BlocBuilder<AnimeBloc, AnimeState>(
-        builder: (context, state) {
-          final isLoading = state is! AnimeSuccess;
-          final isError = state is AnimeFilure;
-          late AnimeEntity anime;
-          if (isLoading) {
-            anime = AnimeMapper.modelToEntity(AnimeModel());
-          } else {
-            anime = state.anime;
-          }
+      child: SignalBuilder(
+        builder: (context) {
+          final state = _animeController.mediaState.value;
+          final data = state.value ?? _animeController.fakeMedia;
           return Scaffold(
             floatingActionButton: FloatingActionButton.extended(
-              onPressed: () => context.pushNamed("watch", queryParameters: {"type": widget.type}),
+              onPressed: () => context.pushNamed("watch", queryParameters: AnimePageProps(animeType: widget.type, animeSlug: widget.slug).toJson()),
               label: Text("Hello"),
               icon: Icon(Icons.play_arrow),
             ),
@@ -107,14 +77,14 @@ class _AnimePageState extends State<AnimePage> {
               fit: StackFit.expand,
               children: [
                 Skeletonizer(
-                  enabled: isLoading,
+                  enabled: state.isLoading,
                   child: NestedScrollView(
                     clipBehavior: Clip.hardEdge,
                     headerSliverBuilder: (context, innerBoxIsScrolled) {
                       return [
                         SliverOverlapAbsorber(
                           handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                          sliver: appBar(context, anime, innerBoxIsScrolled),
+                          sliver: appBar(context, data, innerBoxIsScrolled),
                         ),
                       ];
                     },
@@ -122,14 +92,14 @@ class _AnimePageState extends State<AnimePage> {
                       children: [
                         AnimeInfosMenu(),
                         CommentsMenu(),
-                        CreatorsMenu(anime: anime),
-                        if (widget.type.isSerie) AnimeEpisodesMenu(anime: anime),
+                        CreatorsMenu(anime: data),
+                        AnimeEpisodesMenu(),
                       ],
                     ),
                   ),
                 ),
 
-                if (isError)
+                if (state.hasError)
                   Skeleton.ignore(
                     ignore: true,
                     child: BackdropFilter(
@@ -139,8 +109,8 @@ class _AnimePageState extends State<AnimePage> {
                         width: 400,
                         height: 400,
                         child: ErrorBuilder(
-                          message: state.message,
-                          refresh: () => context.read<AnimeBloc>().add(.getSingle(slug: widget.slug, type: widget.type)),
+                          message: state.error ?? "Nimadur xato ketti",
+                          refresh: () => _animeController.getMedia(widget.type, widget.slug),
                         ),
                       ),
                     ),
