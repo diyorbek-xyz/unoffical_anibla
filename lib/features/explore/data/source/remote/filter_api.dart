@@ -10,10 +10,5 @@ abstract class FilterApi {
   factory FilterApi(Dio dio) = _FilterApi;
 
   @GET('/v1/{type}/mobile')
-  Future<HttpResponse<ApiResponse<List<AnimeModel>>>> searchAnime(
-    @Path("type") String type, {
-    @Query("search") String? search,
-    @Query("categories") String? category,
-    @Query("genres") String? genre,
-  });
+  Future<HttpResponse<ApiResponse<List<AnimeModel>>>> searchAnime(@Path("type") AnimeType type, @Queries() query);
 }

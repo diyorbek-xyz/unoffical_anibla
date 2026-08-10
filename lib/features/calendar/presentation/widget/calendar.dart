@@ -33,12 +33,14 @@ class Calendar extends StatelessWidget {
             final fakeTimers = List.generate(2, (index) => TimerModel(anime: AnimeModel(uz: {"title": lorem(20), "description": lorem()})));
             final fake = List.generate(7, (index) => CalendarMapper.modelToEntity(CalendarModel(timers: fakeTimers)));
             final data = isLoading ? fake : state.data;
+            final outerRadius = Radius.circular(15);
+            final innerRadius = Radius.circular(5);
 
             return Skeletonizer(
               enabled: isLoading,
               enableSwitchAnimation: true,
               child: Padding(
-                padding: .only(top: 30,bottom: 10),
+                padding: .only(top: 30, bottom: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -62,12 +64,33 @@ class Calendar extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 23),
-                    SingleChildScrollView(
-                      physics: BouncingScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      child: Padding(
-                        padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
-                        child: Flex(direction: Axis.horizontal, spacing: 20, children: data.map((e) => dailyAnimes(e, context)).toList()),
+                    SizedBox(
+                      height: 355,
+                      child: CustomScrollView(
+                        shrinkWrap: true,
+                        physics: BouncingScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        slivers: [
+                          SliverToBoxAdapter(child: SizedBox(width: 5)),
+                          ...data.map(
+                            (e) => SliverPadding(
+                              padding: .only(right: 5, left: 5),
+                              sliver: SliverCrossAxisGroup(
+                                slivers: [
+                                  SliverConstrainedCrossAxis(
+                                    maxExtent: 30,
+                                    sliver: PinnedHeaderSliver(child: weekTitle(context, innerRadius, outerRadius, e)),
+                                  ),
+                                  SliverToBoxAdapter(child: SizedBox(height: 5)),
+                                  SliverConstrainedCrossAxis(
+                                    maxExtent: 320,
+                                    sliver: SliverToBoxAdapter(child: timers(context, innerRadius, outerRadius, e)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -77,16 +100,6 @@ class Calendar extends StatelessWidget {
           },
         ),
       ),
-    );
-  }
-
-  Column dailyAnimes(CalendarEntity? e, BuildContext context) {
-    final outerRadius = Radius.circular(15);
-    final innerRadius = Radius.circular(5);
-    return Column(
-      spacing: 5,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [weekTitle(context, innerRadius, outerRadius, e), timers(context, innerRadius, outerRadius, e)],
     );
   }
 

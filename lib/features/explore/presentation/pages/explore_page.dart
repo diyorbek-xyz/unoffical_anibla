@@ -1,15 +1,10 @@
-import 'package:application/features/explore/presentation/bloc/genre/genre_bloc.dart';
-import 'package:application/features/explore/presentation/bloc/genre/genre_event.dart';
-import 'package:application/features/explore/presentation/bloc/history/history_bloc.dart';
-import 'package:application/features/explore/presentation/bloc/history/history_event.dart';
-import 'package:application/features/explore/presentation/bloc/search/search_bloc.dart';
-import 'package:application/features/explore/presentation/bloc/search/search_event.dart';
+import 'package:application/features/explore/data/models/search_query.dart';
+import 'package:application/features/explore/presentation/controller/explore_controller.dart';
 import 'package:application/features/explore/presentation/pages/genres_page.dart';
 import 'package:application/features/explore/presentation/pages/search_page.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({super.key});
@@ -19,26 +14,21 @@ class ExplorePage extends StatefulWidget {
 }
 
 class _ExplorePageState extends State<ExplorePage> with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+  final _exploreController = sl<ExploreController>();
+
+  late final TabController _tabController;
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => sl<GenreBloc>()..add(GetGenres())),
-        BlocProvider(create: (context) => sl<HistoryBloc>()..add(GetHistory())),
-        BlocProvider(create: (context) => sl<SearchBloc>()),
-      ],
-      child: SafeArea(
-        top: true,
-        child: Material(clipBehavior: .hardEdge, child: main()),
-      ),
+    return SafeArea(
+      top: true,
+      child: Material(clipBehavior: .hardEdge, child: main()),
     );
   }
 
   final searchController = SearchController();
   void submitSearch(String value, BuildContext context) {
-    context.read<SearchBloc>().add(SearchAnime.fromSearch(value));
+    _exploreController.searchAnime(SearchQuery.fromSearch(value));
     if (_tabController.index != 0) {
       _tabController.animateTo(0);
     }
@@ -46,7 +36,7 @@ class _ExplorePageState extends State<ExplorePage> with SingleTickerProviderStat
 
   void clearSearch(BuildContext context) {
     searchController.clear();
-    context.read<SearchBloc>().add(SearchAnime());
+    _exploreController.searchAnime(SearchQuery());
   }
 
   @override

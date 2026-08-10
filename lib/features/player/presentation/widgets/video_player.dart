@@ -5,13 +5,11 @@ import 'dart:async';
 import 'dart:io';
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/features/animes/data/models/anime_model.dart';
-import 'package:application/features/animes/domain/entities/episode_entity.dart';
-import 'package:application/features/animes/presentation/bloc/episode/episode_bloc.dart';
-import 'package:application/features/animes/presentation/bloc/episode/episode_state.dart';
 import 'package:application/features/common/presentation/widgets/responsive.dart';
 import 'package:application/features/player/presentation/cubit/player/player_controller.dart';
 import 'package:application/features/player/presentation/cubit/player/player_states.dart';
 import 'package:application/features/player/presentation/widgets/episodes_drawer.dart';
+import 'package:application/features/player/presentation/widgets/player_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -205,7 +203,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
                         extendBody: true,
                         extendBodyBehindAppBar: true,
                         bottomNavigationBar: bottomControls,
-                        body: overlayControls(),
+                        body: PlayerOverlayControls(controller: controller, bufferingIndicator: bufferingIndicator),
                       ),
                     ),
                   ),
@@ -218,53 +216,48 @@ class _VideoPlayerState extends State<VideoPlayer> {
     },
   );
 
-  AppBar appBar(Responsive responsive) {
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      automaticallyImplyLeading: false,
-      automaticallyImplyActions: false,
-      titleSpacing: 0,
-      toolbarHeight: kToolbarHeight + 30,
-      actionsPadding: EdgeInsets.only(top: 30, right: 30),
-      title: BlocSelector<PlayerController, PlayerStates, String>(
-        selector: (state) => state.stream.anime,
-        builder: (context, state) => Padding(
-          padding: .only(top: 30, left: 30),
-          child: widget.isPage
-              ? responsive.isMobileWidth
-                    ? IconButton(onPressed: context.pop, icon: Icon(Icons.keyboard_arrow_left))
-                    : Row(
-                        crossAxisAlignment: .center,
-                        mainAxisAlignment: .start,
-                        spacing: 20,
-                        children: [
-                          IconButton(onPressed: context.pop, icon: Icon(Icons.keyboard_arrow_left)),
-                          Expanded(child: Text(state)),
-                        ],
-                      )
-              : Text(state),
-        ),
+  AppBar appBar(Responsive responsive) => AppBar(
+    backgroundColor: Colors.transparent,
+    automaticallyImplyLeading: false,
+    automaticallyImplyActions: false,
+    titleSpacing: 0,
+    toolbarHeight: kToolbarHeight + 30,
+    actionsPadding: EdgeInsets.only(top: 30, right: 30),
+    title: BlocSelector<PlayerController, PlayerStates, String>(
+      selector: (state) => state.stream.anime,
+      builder: (context, state) => Padding(
+        padding: .only(top: 30, left: 30),
+        child: widget.isPage
+            ? responsive.isMobileWidth
+                  ? IconButton(onPressed: context.pop, icon: Icon(Icons.keyboard_arrow_left))
+                  : Row(
+                      crossAxisAlignment: .center,
+                      mainAxisAlignment: .start,
+                      spacing: 20,
+                      children: [
+                        IconButton(onPressed: context.pop, icon: Icon(Icons.keyboard_arrow_left)),
+                        Expanded(child: Text(state)),
+                      ],
+                    )
+            : Text(state),
       ),
-      actions: [topControls],
-    );
-  }
+    ),
+    actions: [topControls],
+  );
 
-  Container errorBuilder(BuildContext context, PlayerStatus status, String error) {
-    return Container(
-      color: context.appColors.surface.withAlpha(100),
-      alignment: .center,
-      child: Container(
-        width: 400,
-        height: 200,
-        alignment: .bottomCenter,
-        clipBehavior: .hardEdge,
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Text(status == .paid ? "Bu animeni ko'rish uchun obuna sotib oling" : error, textAlign: .center),
-        ),
+  Container errorBuilder(BuildContext context, PlayerStatus status, String error) => Container(
+    color: context.appColors.surface.withAlpha(100),
+    alignment: .center,
+    child: Container(
+      width: 400,
+      height: 200,
+      alignment: .bottomCenter,
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: Text(status == .paid ? "Bu animeni ko'rish uchun obuna sotib oling" : error, textAlign: .center),
       ),
-    );
-  }
+    ),
+  );
 
   Widget get skippers {
     Widget skipper(int step, bool isMobile) {
@@ -322,92 +315,6 @@ class _VideoPlayerState extends State<VideoPlayer> {
     },
   );
 
-  Widget overlayControls([bool atOverlay = true]) => BlocSelector<PlayerController, PlayerStates, (CurrentStream, int, bool, bool)>(
-    selector: (state) => (state.stream, state.all, state.isPaused, state.isBuffering),
-    builder: (context, state) {
-      final (stream, all, isPaused, isBuffering) = state;
-      final offset = stream.offset;
-      final hasNext = offset >= 1 && offset < all && offset != 0 && all != 0;
-      final hasPrev = offset > 1 && offset <= all && offset != 0 && all != 0;
-      final isMobile = Responsive.of(context).isMobile;
-      final double iconSize = atOverlay ? 40 : 30;
-      final double padding = atOverlay ? 10 : 5;
-      return Center(
-        child: ((!isMobile && !atOverlay) || (isMobile && atOverlay))
-            ? Row(
-                crossAxisAlignment: .center,
-                mainAxisAlignment: .center,
-                spacing: atOverlay ? 20 : 10,
-                children: [
-                  Opacity(
-                    opacity: hasPrev ? 1 : 0,
-                    child: BlocSelector<EpisodeBloc, EpisodeState, EpisodeEntity?>(
-                      selector: (state) {
-                        if (state is EpisodeSuccess && state.episodes.isNotEmpty) {
-                          return state.episodes.where((element) => element.episodeNumber == (offset - 1)).singleOrNull;
-                        }
-                        return null;
-                      },
-                      builder: (context, state) => IconButton(
-                        onPressed: (hasPrev && state != null) ? () => controller.openUrl(state.video, state.episodeNumber, state.title.uz) : null,
-                        mouseCursor: hasPrev ? SystemMouseCursors.click : .defer,
-                        padding: EdgeInsets.all(padding),
-                        iconSize: iconSize,
-                        icon: Icon(Icons.skip_previous),
-                      ),
-                    ),
-                  ),
-                  atOverlay
-                      ? Stack(
-                          alignment: .center,
-                          fit: .passthrough,
-                          children: [
-                            bufferingIndicator,
-                            IconButton(
-                              onPressed: controller.togglePlay,
-                              padding: EdgeInsets.all(10),
-                              iconSize: 50,
-                              isSelected: isPaused,
-                              selectedIcon: Icon(Icons.play_arrow),
-                              icon: Icon(Icons.pause),
-                            ),
-                          ],
-                        )
-                      : IconButton(
-                          onPressed: controller.togglePlay,
-                          padding: EdgeInsets.all(padding),
-                          iconSize: iconSize * 1.3,
-                          isSelected: isPaused,
-                          selectedIcon: Icon(Icons.play_arrow),
-                          icon: Icon(Icons.pause),
-                        ),
-                  Opacity(
-                    opacity: hasNext ? 1 : 0,
-                    child: BlocSelector<EpisodeBloc, EpisodeState, EpisodeEntity?>(
-                      selector: (state) {
-                        if (state is EpisodeSuccess && state.episodes.isNotEmpty) {
-                          return state.episodes.where((element) => element.episodeNumber == (offset + 1)).singleOrNull;
-                        }
-                        return null;
-                      },
-                      builder: (context, state) {
-                        return IconButton(
-                          onPressed: (hasPrev && state != null) ? () => controller.openUrl(state.video, state.episodeNumber, state.title.uz) : null,
-                          mouseCursor: hasNext ? SystemMouseCursors.click : .defer,
-                          padding: EdgeInsets.all(padding),
-                          iconSize: iconSize,
-                          icon: Icon(Icons.skip_next),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              )
-            : bufferingIndicator,
-      );
-    },
-  );
-
   Widget get bufferingIndicator => BlocSelector<PlayerController, PlayerStates, bool>(
     selector: (state) => state.isBuffering,
     builder: (context, state) => IgnorePointer(
@@ -455,7 +362,9 @@ class _VideoPlayerState extends State<VideoPlayer> {
                           builder: (context, state) => Text("${state.offset}-qism ~ ${state.title}", style: context.textTheme.titleMedium),
                         ),
                       ),
-                      Center(child: overlayControls(false)),
+                      Center(
+                        child: PlayerOverlayControls(controller: controller, bufferingIndicator: bufferingIndicator, atOverlay: false),
+                      ),
                       Expanded(child: SizedBox.shrink()),
                     ],
                   ),

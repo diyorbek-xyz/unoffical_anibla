@@ -20,11 +20,17 @@ class AnimeController {
 
   final homeState = signal(BigSignalState<AnimeEntity>());
 
-  void getHome(Paginator paginator) async {
+  Future<void> getHome(Paginator paginator) async {
     homeState.set(homeState.value.setLoading(true));
     final either = await _animeRepository.getHomeAnimes(paginator);
     final data = either.fold((l) => homeState.value.withError(l.message), (r) => homeState.value.withMore(r.pagination, r.datas));
     homeState.set(data);
+  }
+
+  Future<void> getHomeMore() async {
+    final pagination = homeState.value.pagination;
+    if (!pagination.hasMore) return;
+    await getHome(Paginator(limit: pagination.limit, page: pagination.page + 1));
   }
 
   final mediaState = signal(SignalState<AnimeEntity>());
@@ -78,11 +84,12 @@ class AnimeController {
     await getEpisodes();
   }
 
-  void resetMedia(){
+  void resetMedia() {
     mediaState.set(SignalState<AnimeEntity>());
     seasonsState.set(SignalState<List<SeasonEntity>>());
     episodesState.set(SignalState<List<EpisodeEntity>>());
   }
+
   void disposeMedia() {
     mediaState.dispose();
     seasonsState.dispose();

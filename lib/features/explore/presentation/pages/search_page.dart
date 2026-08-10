@@ -2,18 +2,17 @@ import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/features/animes/domain/entities/anime_entity.dart';
 import 'package:application/features/animes/presentation/widgets/anime_card.dart';
-import 'package:application/features/explore/presentation/bloc/history/history_bloc.dart';
-import 'package:application/features/explore/presentation/bloc/history/history_event.dart';
-import 'package:application/features/explore/presentation/bloc/history/history_state.dart';
-import 'package:application/features/explore/presentation/bloc/search/search_bloc.dart';
-import 'package:application/features/explore/presentation/bloc/search/search_state.dart';
+import 'package:application/features/explore/presentation/controller/explore_controller.dart';
+import 'package:application/injection_container.dart';
 import 'package:application/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 class SearchPage extends StatelessWidget {
-  const SearchPage({super.key});
+  SearchPage({super.key});
+
+  final _exploreController = sl<ExploreController>();
 
   @override
   Widget build(BuildContext context) {
@@ -24,35 +23,35 @@ class SearchPage extends StatelessWidget {
       slivers: [
         CupertinoSliverRefreshControl(
           onRefresh: () async {
-            context.read<HistoryBloc>().add(GetHistory());
+            _exploreController.refreshAll();
             await Future.delayed(Duration(seconds: 1));
           },
         ),
-
         SliverPadding(
           padding: EdgeInsetsGeometry.symmetric(horizontal: 10, vertical: 10),
-          sliver: BlocBuilder<SearchBloc, SearchState>(
-            builder: (context, state) {
-              switch (state) {
-                case SearchLoading():
-                  return SliverFillRemaining(child: Center(child: CircularProgressIndicator()));
-                case SearchFound():
-                  if (state.movies.isEmpty && state.series.isEmpty) {
-                    return SliverFillRemaining(child: Center(child: Text("Anime topilmadi")));
-                  }
-                  return SliverToBoxAdapter(
-                    child: Column(
-                      crossAxisAlignment: .start,
-                      spacing: 10,
-                      children: [
-                        if (state.series.isNotEmpty) gridView(context, "Seriyalar", state.series),
-                        if (state.movies.isNotEmpty) gridView(context, "Filmlar", state.movies),
-                      ],
-                    ),
-                  );
-                default:
-                  return hidtoryBuilder();
+          sliver: SignalBuilder(
+            builder: (context) {
+              final state = _exploreController.searchSignal.value;
+              if (state.isLoading) {
+                return SliverFillRemaining(child: Center(child: CircularProgressIndicator()));
               }
+              if (state.hasValue) {
+                final data = state.value ?? Searched.empty();
+                if (data.movies.isEmpty && data.series.isEmpty) {
+                  return SliverFillRemaining(child: Center(child: Text("Anime topilmadi")));
+                }
+                return SliverToBoxAdapter(
+                  child: Column(
+                    crossAxisAlignment: .start,
+                    spacing: 10,
+                    children: [
+                      if (data.series.isNotEmpty) gridView(context, "Seriyalar", data.series),
+                      if (data.movies.isNotEmpty) gridView(context, "Filmlar", data.movies),
+                    ],
+                  ),
+                );
+              }
+              return historyBuilder();
             },
           ),
         ),
@@ -60,20 +59,18 @@ class SearchPage extends StatelessWidget {
     );
   }
 
-  Widget hidtoryBuilder() {
-    return BlocBuilder<HistoryBloc, HistoryState>(
-      builder: (context, state) {
-        switch (state) {
-          case HistoryLoading():
-            return SliverFillRemaining(child: Center(child: CircularProgressIndicator()));
-          case HistorySuccess():
-            return SliverToBoxAdapter(child: gridView(context, "Tarix", state.anime, true));
-          default:
-            return SliverFillRemaining(child: Center(child: Text("Animelarni qidiring")));
-        }
-      },
-    );
-  }
+  Widget historyBuilder() => SignalBuilder(
+    builder: (context) {
+      final state = _exploreController.historySignal.value;
+      if (state.isLoading) {
+        return SliverFillRemaining(child: Center(child: CircularProgressIndicator()));
+      }
+      if (state.hasValue) {
+        return SliverToBoxAdapter(child: gridView(context, "Tarix", state.value ?? [], true));
+      }
+      return SliverFillRemaining(child: Center(child: Text("Animelarni qidiring")));
+    },
+  );
 
   Widget gridView(BuildContext context, String title, List<AnimeEntity> animes, [bool? isFromHistory]) {
     final width = MediaQuery.of(context).size.width;
@@ -93,25 +90,23 @@ class SearchPage extends StatelessWidget {
             childAspectRatio: 9 / 15,
           ),
           itemBuilder: (context, index) {
-            if (isFromHistory != null && isFromHistory) {
-              return Stack(
-                alignment: AlignmentGeometry.topLeft,
-                children: [
-                  AnimeCard(expand: true, aspectRatio: 9 / 15, anime: animes.elementAt(index)),
-                  Positioned(
-                    top: 4,
-                    left: 4,
-                    child: IconButton(
-                      mouseCursor: SystemMouseCursors.click,
-                      color: context.appColors.errorContainer,
-                      onPressed: () => context.read<HistoryBloc>().add(DeleteFromHistory(animes.elementAt(index).id)),
-                      icon: Icon(Icons.delete),
-                    ),
+            if (isFromHistory == null || !isFromHistory) return AnimeCard(expand: true, anime: animes.elementAt(index));
+            return Stack(
+              alignment: AlignmentGeometry.topLeft,
+              children: [
+                AnimeCard(expand: true, aspectRatio: 9 / 15, anime: animes.elementAt(index)),
+                Positioned(
+                  top: 4,
+                  left: 4,
+                  child: IconButton(
+                    mouseCursor: SystemMouseCursors.click,
+                    color: context.appColors.errorContainer,
+                    onPressed: () => _exploreController.deleteFromHistory(animes.elementAt(index).id),
+                    icon: Icon(Icons.delete),
                   ),
-                ],
-              );
-            }
-            return AnimeCard(expand: true, anime: animes.elementAt(index));
+                ),
+              ],
+            );
           },
         ),
       ],

@@ -2,6 +2,7 @@ import 'package:application/core/utils/utils.dart';
 import 'package:application/features/animes/data/source/local/saved_ids_local.dart';
 import 'package:application/features/animes/presentation/controller/anime_controller.dart';
 import 'package:application/features/animes/presentation/controller/saved_controller.dart';
+import 'package:application/features/explore/presentation/controller/explore_controller.dart';
 import 'package:application/features/player/data/model/service/download_models.dart';
 import 'package:application/features/player/data/model/timeline_model.dart';
 import 'package:application/features/player/data/services/download_service.dart';
@@ -27,9 +28,6 @@ import 'package:application/features/animes/data/source/remote/video_api.dart';
 import 'package:application/features/animes/domain/repository/anime_repository.dart';
 import 'package:application/features/animes/domain/repository/episode_repository.dart';
 import 'package:application/features/animes/domain/repository/season_repository.dart';
-import 'package:application/features/animes/presentation/bloc/anime/anime_bloc.dart';
-import 'package:application/features/animes/presentation/bloc/episode/episode_bloc.dart';
-import 'package:application/features/animes/presentation/bloc/season/season_bloc.dart';
 import 'package:application/features/comment/data/repository/comment_repository_impl.dart';
 import 'package:application/features/comment/data/source/remote/comment_api.dart';
 import 'package:application/features/comment/domain/repository/comment_repository.dart';
@@ -39,9 +37,6 @@ import 'package:application/features/explore/data/source/local/history_local.dar
 import 'package:application/features/explore/data/source/remote/filter_api.dart';
 import 'package:application/features/explore/data/source/remote/genre_api.dart';
 import 'package:application/features/explore/domain/repository/explore_repository.dart';
-import 'package:application/features/explore/presentation/bloc/genre/genre_bloc.dart';
-import 'package:application/features/explore/presentation/bloc/history/history_bloc.dart';
-import 'package:application/features/explore/presentation/bloc/search/search_bloc.dart';
 import 'package:application/features/profile/data/models/profile/profile_model.dart';
 import 'package:application/features/profile/data/source/local/profile_local.dart';
 import 'package:application/features/slider/data/models/slider_model.dart';
@@ -182,17 +177,12 @@ Future<void> initializeDependencies() async {
   sl.registerFactory<SliderBloc>(() => SliderBloc(sl()));
   sl.registerFactory<AuthBloc>(() => AuthBloc(sl()));
   sl.registerFactory<CalendarBloc>(() => CalendarBloc(sl()));
-  sl.registerFactory<AnimeBloc>(() => AnimeBloc(sl()));
-  sl.registerFactory<SeasonBloc>(() => SeasonBloc(sl()));
-  sl.registerFactory<GenreBloc>(() => GenreBloc(sl()));
-  sl.registerFactory<EpisodeBloc>(() => EpisodeBloc(sl(), sl()));
   sl.registerFactory<CommentBloc>(() => CommentBloc(sl()));
-  sl.registerFactory<SearchBloc>(() => SearchBloc(sl()));
-  sl.registerFactory<HistoryBloc>(() => HistoryBloc(sl()));
 
   sl.registerFactory<PlayerController>(() => PlayerController(sl(), sl()));
 
   sl.registerLazySingleton<ProfileController>(() => ProfileController(sl(), sl()));
   sl.registerLazySingleton<SavedController>(() => SavedController(sl(), sl()));
   sl.registerLazySingleton<AnimeController>(() => AnimeController(sl(), sl(), sl()));
+  sl.registerLazySingleton<ExploreController>(() => ExploreController(sl()));
 }

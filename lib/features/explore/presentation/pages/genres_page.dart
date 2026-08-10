@@ -1,17 +1,19 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/features/common/presentation/widgets/error.dart';
 import 'package:application/features/explore/domain/entities/genre_entity.dart';
-import 'package:application/features/explore/presentation/bloc/genre/genre_bloc.dart';
-import 'package:application/features/explore/presentation/bloc/genre/genre_event.dart';
-import 'package:application/features/explore/presentation/bloc/genre/genre_state.dart';
+import 'package:application/features/explore/presentation/controller/explore_controller.dart';
+import 'package:application/injection_container.dart';
+import 'package:application/network/resources/failure.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
 class GenresPage extends StatelessWidget {
   final SearchController controller;
   final Function(String value, BuildContext context) submit;
-  const GenresPage({super.key, required this.controller, required this.submit});
+  GenresPage({super.key, required this.controller, required this.submit});
+
+  final _exploreController = sl<ExploreController>();
 
   @override
   Widget build(BuildContext context) {
@@ -20,35 +22,30 @@ class GenresPage extends StatelessWidget {
       key: const PageStorageKey("genres"),
       physics: BouncingScrollPhysics(),
       slivers: [
-        CupertinoSliverRefreshControl(
-          onRefresh: () async {
-            context.read<GenreBloc>().add(GetGenres());
-            await Future.delayed(Durations.extralong4);
-          },
-        ),
-        BlocBuilder<GenreBloc, GenreState>(
-          builder: (context, state) {
-            switch (state) {
-              case GenreLoading():
-                return SliverFillRemaining(child: Center(child: CircularProgressIndicator()));
-              case GenreFailed():
-                return SliverFillRemaining(
-                  child: ErrorBuilder(message: state.message, refresh: () => context.read<GenreBloc>().add(GetGenres())),
-                );
-              case GenresFullSuccess():
-                return SliverPadding(
-                  padding: EdgeInsetsGeometry.all(5),
-                  sliver: SliverGrid.extent(
-                    maxCrossAxisExtent: 250,
-                    childAspectRatio: 3 / 1,
-                    mainAxisSpacing: 2,
-                    crossAxisSpacing: 2,
-                    children: state.data.map((e) => genreItem(context, e)).toList(),
-                  ),
-                );
-              default:
-                return SliverFillRemaining(child: Text("Janrlar"));
+        CupertinoSliverRefreshControl(onRefresh: _exploreController.refreshAll),
+        SignalBuilder(
+          builder: (context) {
+            final state = _exploreController.genresSignal.value;
+            if (state.isLoading) {
+              return SliverFillRemaining(child: Center(child: CircularProgressIndicator()));
             }
+            if (state.hasError) {
+              final failure = state.error as Failure;
+              return SliverFillRemaining(
+                child: ErrorBuilder(message: ExceptionMapper.mapFailureToMessage(failure), refresh: () => _exploreController.refreshAll()),
+              );
+            }
+            final data = state.value ?? _exploreController.fakeGenres;
+            return SliverPadding(
+              padding: EdgeInsetsGeometry.all(5),
+              sliver: SliverGrid.extent(
+                maxCrossAxisExtent: 200,
+                childAspectRatio: 5 / 2,
+                mainAxisSpacing: 2,
+                crossAxisSpacing: 2,
+                children: data.map((e) => genreItem(context, e)).toList(),
+              ),
+            );
           },
         ),
       ],

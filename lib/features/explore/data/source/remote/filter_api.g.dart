@@ -21,18 +21,12 @@ class _FilterApi implements FilterApi {
 
   @override
   Future<HttpResponse<ApiResponse<List<AnimeModel>>>> searchAnime(
-    String type, {
-    String? search,
-    String? category,
-    String? genre,
-  }) async {
+    AnimeType type,
+    dynamic query,
+  ) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{
-      r'search': search,
-      r'categories': category,
-      r'genres': genre,
-    };
-    queryParameters.removeWhere((k, v) => v == null);
+    final queryParameters = <String, dynamic>{};
+    queryParameters.addAll(query.toJson());
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options =

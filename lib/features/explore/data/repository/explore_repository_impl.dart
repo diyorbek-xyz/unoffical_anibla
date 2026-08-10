@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:application/features/animes/data/mapper/anime_mapper.dart';
+import 'package:application/features/animes/data/models/anime_model.dart';
 import 'package:application/features/animes/domain/entities/anime_entity.dart';
 import 'package:application/features/explore/data/models/search_query.dart';
 import 'package:application/features/explore/data/source/local/history_local.dart';
@@ -29,14 +30,9 @@ class ExploreRepositoryImpl implements ExploreRepository {
   }
 
   @override
-  Future<Either<Failure, List<AnimeEntity>>> searchAnime(String type, SearchQuery query) async {
+  Future<Either<Failure, List<AnimeEntity>>> searchAnime(AnimeType type, SearchQuery query) async {
     try {
-      final httpResponse = await _filterApi.searchAnime(
-        type,
-        search: query.search,
-        category: query.category,
-        genre: query.genre,
-      );
+      final httpResponse = await _filterApi.searchAnime(type, query);
       if (httpResponse.response.statusCode == HttpStatus.ok) {
         return Right(httpResponse.data.data.map(AnimeMapper.modelToEntity).toList());
       }

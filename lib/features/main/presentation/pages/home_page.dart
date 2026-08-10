@@ -1,4 +1,3 @@
-import 'package:application/features/animes/presentation/bloc/anime/anime_bloc.dart';
 import 'package:application/features/calendar/presentation/widget/calendar.dart';
 import 'package:application/features/common/presentation/widgets/responsive.dart';
 import 'package:application/features/main/presentation/widgets/recommends.dart';
@@ -22,7 +21,6 @@ class _HomePageState extends State<HomePage> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => sl<SliderBloc>()..add(.getFull())),
-        BlocProvider(create: (context) => sl<AnimeBloc>()),
       ],
       child: LayoutBuilder(
         builder: (context, consts) {
