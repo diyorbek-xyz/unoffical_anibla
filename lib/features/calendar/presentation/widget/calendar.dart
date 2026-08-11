@@ -55,7 +55,7 @@ class Calendar extends StatelessWidget {
                             IconButton(onPressed: () => context.read<CalendarBloc>().add(GetCalendarWeekly()), icon: Icon(Icons.refresh)),
                             Expanded(
                               child: Text(
-                                "Kunlik chiqadigan Animelar ro'yxati",
+                                "Har kunlik chiqadigan animelar ro'yxati",
                                 style: isMobile ? context.textTheme.headlineSmall : context.textTheme.headlineLarge,
                               ),
                             ),
@@ -65,25 +65,26 @@ class Calendar extends StatelessWidget {
                     ),
                     SizedBox(height: 23),
                     SizedBox(
-                      height: 355,
+                      height: isMobile ? 300 : 350,
                       child: CustomScrollView(
                         shrinkWrap: true,
-                        physics: BouncingScrollPhysics(),
+                        physics: const BouncingScrollPhysics(),
                         scrollDirection: Axis.horizontal,
                         slivers: [
-                          SliverToBoxAdapter(child: SizedBox(width: 5)),
+                          const SliverToBoxAdapter(child: SizedBox(width: 5)),
                           ...data.map(
                             (e) => SliverPadding(
-                              padding: .only(right: 5, left: 5),
+                              padding: const EdgeInsets.only(right: 5, left: 5),
                               sliver: SliverCrossAxisGroup(
                                 slivers: [
                                   SliverConstrainedCrossAxis(
-                                    maxExtent: 30,
+                                    maxExtent: 31,
                                     sliver: PinnedHeaderSliver(child: weekTitle(context, innerRadius, outerRadius, e)),
                                   ),
-                                  SliverToBoxAdapter(child: SizedBox(height: 5)),
-                                  SliverConstrainedCrossAxis(
-                                    maxExtent: 320,
+                                  SliverConstrainedCrossAxis(maxExtent: 5, sliver: const SliverToBoxAdapter(child: SizedBox())),
+                                  SliverCrossAxisExpanded(
+                                    flex: 1,
+                                    // maxExtent: timersHeight,
                                     sliver: SliverToBoxAdapter(child: timers(context, innerRadius, outerRadius, e)),
                                   ),
                                 ],

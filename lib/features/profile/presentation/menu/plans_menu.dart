@@ -16,7 +16,7 @@ class PlansMenu extends StatelessWidget {
       builder: (context) {
         final state = controller.plansSignal.value;
         final data = state.isLoading ? controller.fakePlans : state.value ?? [];
-        return SliverGrid.builder(
+        return GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 1.8, mainAxisSpacing: 5, crossAxisSpacing: 5),
           itemCount: data.length,
           itemBuilder: (context, index) {

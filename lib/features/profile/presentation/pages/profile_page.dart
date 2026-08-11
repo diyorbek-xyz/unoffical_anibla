@@ -3,9 +3,11 @@ import 'package:application/features/common/domain/entities/tab_item.dart';
 import 'package:application/features/common/presentation/widgets/error.dart';
 import 'package:application/features/profile/presentation/controller/profile_controller.dart';
 import 'package:application/features/profile/presentation/controller/profile_errors.dart';
+import 'package:application/features/profile/presentation/menu/devices_menu.dart';
+import 'package:application/features/profile/presentation/menu/infos_menu.dart';
 import 'package:application/features/profile/presentation/menu/notifications_menu.dart';
 import 'package:application/features/profile/presentation/menu/plans_menu.dart';
-import 'package:application/features/profile/presentation/pages/privacy_settings.dart';
+import 'package:application/features/profile/presentation/menu/privacy_settings.dart';
 import 'package:application/features/profile/presentation/widget/avatar_selector.dart';
 import 'package:application/features/profile/presentation/widget/sessions.dart';
 import 'package:application/injection_container.dart';
@@ -15,30 +17,32 @@ import 'package:go_router/go_router.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:application/features/common/presentation/widgets/responsive.dart';
-import 'package:application/features/profile/presentation/menu/devices_menu.dart';
-import 'package:application/features/profile/presentation/menu/infos_menu.dart';
 import 'package:application/features/profile/presentation/widget/modals/logout_modal.dart';
 
 final List<TabItem> tabs = [
-  TabItem(activeIcon: Icons.info, icon: Icons.info_outline, label: "Profil ma'lumotlari"),
-  TabItem(activeIcon: Icons.notifications, icon: Icons.notifications_outlined, label: "Bildirishnomalar"),
-  TabItem(activeIcon: Icons.verified, icon: Icons.verified_outlined, label: "Obunalar"),
-  TabItem(activeIcon: Icons.devices, icon: Icons.devices_outlined, label: "Qurilmalar"),
-  TabItem(activeIcon: Icons.privacy_tip, icon: Icons.privacy_tip_outlined, label: "Xavfsizlik sozlamalari"),
+  TabItem(path: "infos", activeIcon: Icons.info, icon: Icons.info_outline, label: "Profil ma'lumotlari"),
+  TabItem(path: "notifications", activeIcon: Icons.notifications, icon: Icons.notifications_outlined, label: "Bildirishnomalar"),
+  TabItem(path: "plans", activeIcon: Icons.verified, icon: Icons.verified_outlined, label: "Obunalar"),
+  TabItem(path: "devices", activeIcon: Icons.devices, icon: Icons.devices_outlined, label: "Qurilmalar"),
+  TabItem(path: "privacy", activeIcon: Icons.privacy_tip, icon: Icons.privacy_tip_outlined, label: "Xavfsizlik sozlamalari"),
 ];
 
 class ProfilePage extends StatefulWidget {
-  final Widget child;
-  const ProfilePage({super.key, required this.child});
+  const ProfilePage({super.key});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  List<Widget> get views => [ProfileInfosMenu(), NotificationsMenu(), PlansMenu(), ProfileDevicesMenu(), PrivacySettings()];
+
   late ProfileController profileController;
   int currentIndex = 0;
-  void setCurrentIndex(int index) => setState(() => currentIndex = index);
+  bool inTabs = true;
+
+  void setCurrentIndex(int index) => setState(() => [currentIndex = index, inTabs = false]);
+  void goToTabs() => setState(() => inTabs = true);
 
   @override
   void initState() {
@@ -66,56 +70,77 @@ class _ProfilePageState extends State<ProfilePage> {
           ProfileFailed(:final message) => ErrorBuilder(message: message, refresh: profileController.refreshAll),
         };
       }
-      final views = [ProfileInfosMenu(), NotificationsMenu(), PlansMenu(), ProfileDevicesMenu(), PrivacySettings()];
+      final resp = Responsive.of(context);
       return Skeletonizer(
         justifyMultiLineText: true,
         effect: PulseEffect(duration: Duration(seconds: 1), from: context.appColors.primary, to: context.appColors.onPrimary),
         enabled: state.isLoading,
-        child: CustomScrollView(
-          physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-          slivers: [
-            CupertinoSliverRefreshControl(onRefresh: profileController.refreshAll),
-            SliverToBoxAdapter(child: basicInfo),
-            SliverPadding(
-              padding: .symmetric(horizontal: 15),
-              sliver: SliverCrossAxisGroup(
-                slivers: [
-                  SliverCrossAxisExpanded(
-                    flex: 20,
-                    sliver: SliverList.separated(
-                      addRepaintBoundaries: true,
-                      itemCount: tabs.length,
-                      separatorBuilder: (context, index) => const SizedBox(height: 5),
-                      itemBuilder: (context, i) {
-                        final tab = tabs[i];
-                        final index = i;
-                        final selected = index == currentIndex;
-                        return ListTile(
-                          title: Text(tab.label),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(100)),
-                          onTap: () => setCurrentIndex(index),
-                          tileColor: Colors.transparent,
-                          selected: selected,
-                          selectedTileColor: context.appColors.primaryFixed.withValues(alpha: 0.1),
-                          contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 11),
-                          leading: Ink(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              color: selected ? context.appColors.primary : context.appColors.onPrimary,
-                            ),
-                            padding: EdgeInsets.all(10),
-                            child: Icon(tab.icon, color: selected ? context.appColors.onPrimary : context.appColors.primary),
-                          ),
-                        );
-                      },
-                    ),
+        child: (resp.isMobile && !inTabs)
+            ? Column(
+                children: [
+                  ListTile(
+                    leading: IconButton(onPressed: goToTabs, icon: Icon(Icons.keyboard_arrow_left)),
+                    title: Text(tabs[currentIndex].label),
+                    minTileHeight: 70,
                   ),
-                  SliverToBoxAdapter(),
-                  SliverCrossAxisExpanded(flex: 50, sliver: widget.child),
+                  Expanded(child: views[currentIndex]),
+                ],
+              )
+            : CustomScrollView(
+                physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                slivers: [
+                  CupertinoSliverRefreshControl(onRefresh: profileController.refreshAll),
+                  resp.isMobile
+                      ? SliverPadding(
+                          padding: .symmetric(vertical: 30, horizontal: 15),
+                          sliver: SliverToBoxAdapter(child: basicInfo),
+                        )
+                      : SliverToBoxAdapter(child: basicInfo),
+                  SliverPadding(
+                    padding: resp.isMobile ? .symmetric(horizontal: 5) : .only(right: 15),
+                    sliver: resp.isMobile ? mobileBody() : desktopBody(),
+                  ),
                 ],
               ),
-            ),
-          ],
+      );
+    },
+  );
+
+  Widget mobileBody() => SliverToBoxAdapter(child: navTabs());
+
+  Widget desktopBody() => SliverCrossAxisGroup(
+    slivers: [
+      SliverConstrainedCrossAxis(maxExtent: 350, sliver: SliverToBoxAdapter(child: navTabs())),
+      SliverConstrainedCrossAxis(maxExtent: 10, sliver: SliverToBoxAdapter()),
+      SliverFillRemaining(child: views[currentIndex]),
+    ],
+  );
+
+  Widget navTabs() => ListView.separated(
+    physics: NeverScrollableScrollPhysics(),
+    addRepaintBoundaries: true,
+    shrinkWrap: true,
+    itemCount: tabs.length,
+    separatorBuilder: (context, index) => const SizedBox(height: 5),
+    itemBuilder: (context, i) {
+      final tab = tabs[i];
+      final index = i;
+      final selected = index == currentIndex;
+      return ListTile(
+        title: Text(tab.label),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(100)),
+        onTap: () => setCurrentIndex(index),
+        tileColor: Colors.transparent,
+        selected: selected,
+        selectedTileColor: context.appColors.primaryFixed.withValues(alpha: 0.1),
+        contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 11),
+        leading: Ink(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(100),
+            color: selected ? context.appColors.primary : context.appColors.onPrimary,
+          ),
+          padding: EdgeInsets.all(10),
+          child: Icon(tab.icon, color: selected ? context.appColors.onPrimary : context.appColors.primary),
         ),
       );
     },

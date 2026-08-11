@@ -14,6 +14,7 @@ import 'package:application/features/profile/data/source/remote/notifications_ap
 import 'package:application/features/profile/data/source/remote/plans_api.dart';
 import 'package:application/features/profile/domain/repository/notification_repository.dart';
 import 'package:application/features/profile/presentation/controller/profile_controller.dart';
+import 'package:application/features/slider/presentation/controller/slider_controller.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:application/core/constants/constants.dart';
@@ -60,7 +61,6 @@ import 'package:application/features/profile/domain/repository/profile_repositor
 import 'package:application/features/slider/data/repository/slider_repository_impl.dart';
 import 'package:application/features/slider/data/source/remote/slider_api.dart';
 import 'package:application/features/slider/domain/repository/slider_repository.dart';
-import 'package:application/features/slider/presentation/bloc/slider_bloc.dart';
 import 'package:application/hive_registrar.g.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -174,7 +174,6 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<NotificationRepository>(() => NotificationRepositoryImpl(sl()));
 
   // Register State managers;
-  sl.registerFactory<SliderBloc>(() => SliderBloc(sl()));
   sl.registerFactory<AuthBloc>(() => AuthBloc(sl()));
   sl.registerFactory<CalendarBloc>(() => CalendarBloc(sl()));
   sl.registerFactory<CommentBloc>(() => CommentBloc(sl()));
@@ -185,4 +184,5 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<SavedController>(() => SavedController(sl(), sl()));
   sl.registerLazySingleton<AnimeController>(() => AnimeController(sl(), sl(), sl()));
   sl.registerLazySingleton<ExploreController>(() => ExploreController(sl()));
+  sl.registerLazySingleton<SliderController>(() => SliderController(sl()));
 }

@@ -2,16 +2,16 @@ import 'dart:async';
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/core/utils/base_url.dart';
-import 'package:application/core/utils/extensions.dart';
-import 'package:application/features/animes/data/models/anime_model.dart';
-import 'package:application/features/slider/data/mapper/slider_mapper.dart';
-import 'package:application/features/slider/data/models/slider_model.dart';
+import 'package:application/features/common/presentation/widgets/error.dart';
 import 'package:application/features/slider/domain/entities/slider_entity.dart';
-import 'package:application/features/slider/presentation/bloc/slider_bloc.dart';
+import 'package:application/features/slider/presentation/controller/slider_controller.dart';
+import 'package:application/injection_container.dart';
 import 'package:application/main.dart';
+import 'package:application/network/resources/failure.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class Carousel extends StatefulWidget {
@@ -25,6 +25,8 @@ class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin 
   @override
   bool get wantKeepAlive => true;
 
+  final _sliderController = sl<SliderController>();
+  late final EffectCleanup _effectCleanup;
   final pageController = PageController(initialPage: 0);
   int currentPage = 0;
   double progress = 0;
@@ -71,31 +73,36 @@ class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin 
 
   @override
   void initState() {
-    autoPlay();
     super.initState();
+    autoPlay();
+    _effectCleanup = effect(() {
+      final slider = _sliderController.sliderSignal.value;
+      if (slider.value == null || slider.value!.isEmpty) return;
+      setState(() => sliders = slider.value!);
+    });
+  }
+
+  @override
+  void dispose() {
+    _effectCleanup();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
     final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
-    return BlocConsumer<SliderBloc, SliderState>(
-      listener: (context, state) {
-        state.whenOrNull(success: (value) => setState(() => sliders = value));
-      },
-      builder: (context, state) {
-        return state.maybeWhen(
-          loading: () {
-            final h = MediaQuery.of(context).size.height;
-            final fakeSlider = SliderModel(anime: AnimeModel(uz: {"title": lorem(5), "description": lorem()}));
-            final fake = List.generate(4, (index) => SliderMapper.modelToEntity(fakeSlider));
-            return Skeletonizer(enableSwitchAnimation: true, enabled: true, child: sliderBuilder(isMobile, h, fake, context));
-          },
-          success: (data) {
-            final h = MediaQuery.of(context).size.height;
-            return sliderBuilder(isMobile, h, data, context);
-          },
-          orElse: () => Text("Nimadur xato ketti"),
+    return SignalBuilder(
+      builder: (context) {
+        final state = _sliderController.sliderSignal.value;
+        if (state.hasError) {
+          return ErrorBuilder(message: (state.error as Failure).message, refresh: _sliderController.refresh);
+        }
+        final h = MediaQuery.of(context).size.height;
+        return Skeletonizer(
+          enableSwitchAnimation: true,
+          enabled: state.isLoading,
+          child: sliderBuilder(isMobile, h, state.value ?? _sliderController.fakeSlider, context),
         );
       },
     );
@@ -187,36 +194,24 @@ class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin 
                         spacing: 10,
                         children: [
                           FilledButton.icon(
-                            onPressed: () {},
+                            onPressed: () => context.pushNamed("anime", queryParameters: {"type": e.anime.type.name, "slug": e.anime.slug}),
                             icon: Icon(Icons.play_arrow),
                             style: ButtonStyle(
-                              backgroundColor: WidgetStateProperty.fromMap({
-                                WidgetState.focused: context.appColors.primaryContainer,
-                                WidgetState.any: context.appColors.primary,
-                              }),
-                              foregroundColor: WidgetStateProperty.fromMap({
-                                WidgetState.focused: context.appColors.onPrimaryContainer,
-                                WidgetState.any: context.appColors.onPrimary,
-                              }),
+                              backgroundColor: WidgetStatePropertyAll(context.appColors.primary),
+                              foregroundColor: WidgetStatePropertyAll(context.appColors.onPrimary),
                               padding: WidgetStatePropertyAll(EdgeInsets.zero),
                               fixedSize: WidgetStatePropertyAll(Size(150, 40)),
                               shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(5))),
                             ),
                             label: Text("Tomosha qilish"),
                           ),
-                          IconButton.outlined(
+                          IconButton(
                             onPressed: () {},
                             padding: EdgeInsets.zero,
                             icon: Icon(Icons.bookmark_outline),
                             style: ButtonStyle(
-                              backgroundColor: WidgetStateProperty.fromMap({
-                                WidgetState.focused: context.appColors.primaryContainer,
-                                WidgetState.any: context.appColors.primary,
-                              }),
-                              foregroundColor: WidgetStateProperty.fromMap({
-                                WidgetState.focused: context.appColors.onPrimaryContainer,
-                                WidgetState.any: context.appColors.onPrimary,
-                              }),
+                              backgroundColor: WidgetStatePropertyAll(context.appColors.primary),
+                              foregroundColor: WidgetStatePropertyAll(context.appColors.onPrimary),
                               padding: WidgetStatePropertyAll(EdgeInsets.zero),
                               fixedSize: WidgetStatePropertyAll(Size(40, 40)),
                               shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: .circular(5))),

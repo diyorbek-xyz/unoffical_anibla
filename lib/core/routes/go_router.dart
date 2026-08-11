@@ -6,11 +6,6 @@ import 'package:application/features/auth/presentation/pages/login_page.dart';
 import 'package:application/features/explore/presentation/pages/explore_page.dart';
 import 'package:application/features/main/presentation/pages/home_page.dart';
 import 'package:application/features/main/presentation/pages/main_page.dart';
-import 'package:application/features/profile/presentation/menu/devices_menu.dart';
-import 'package:application/features/profile/presentation/menu/infos_menu.dart';
-import 'package:application/features/profile/presentation/menu/notifications_menu.dart';
-import 'package:application/features/profile/presentation/menu/plans_menu.dart';
-import 'package:application/features/profile/presentation/pages/privacy_settings.dart';
 import 'package:application/features/profile/presentation/pages/profile_page.dart';
 import 'package:application/features/profile/presentation/pages/saveds_page.dart';
 import 'package:flutter/material.dart';
@@ -37,18 +32,7 @@ final GoRouter routerConfig = GoRouter(
           routes: [GoRoute(path: '/saved', name: "saved", builder: (context, state) => const SavedsPage())],
         ),
         StatefulShellBranch(
-          routes: [
-            ShellRoute(
-              builder: (context, state, shell) => ProfilePage(child: shell),
-              routes: [
-                GoRoute(path: "/profile/infos", name: "infos", builder: (context, state) => const ProfileInfosMenu()),
-                GoRoute(path: "/profile/notifications", name: "notifications", builder: (context, state) => const NotificationsMenu()),
-                GoRoute(path: "/profile/plans", name: "plans", builder: (context, state) => const PlansMenu()),
-                GoRoute(path: "/profile/devices", name: "devices", builder: (context, state) => const ProfileDevicesMenu()),
-                GoRoute(path: "/profile/privacy", name: "privacy", builder: (context, state) => const PrivacySettings()),
-              ],
-            ),
-          ],
+          routes: [GoRoute(path: "/profile", name: "profile", builder: (context, state) => const ProfilePage())],
         ),
       ],
     ),

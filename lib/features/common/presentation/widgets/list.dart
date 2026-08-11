@@ -43,16 +43,20 @@ class ListsWidget extends StatelessWidget {
     ListBorderRadius borderRadius = const ListBorderRadius(),
     required int itemCount,
     required Widget Function(int index, BorderRadiusGeometry borderRadius) builder,
-  }) => SliverList.separated(
+  }) => ListView.separated(
+    physics: NeverScrollableScrollPhysics(),
     itemCount: itemCount,
+    shrinkWrap: true,
     separatorBuilder: (context, index) => const SizedBox(height: 1.5),
     itemBuilder: (context, i) => builder(i, borderRadius.fromIndex(i, itemCount)),
   );
 
   @override
   Widget build(BuildContext context) {
-    return SliverList.separated(
+    return ListView.separated(
+      physics: NeverScrollableScrollPhysics(),
       itemCount: items.length,
+      shrinkWrap: true,
       separatorBuilder: (context, index) => const SizedBox(height: 1.5),
       itemBuilder: (context, index) {
         final list = items[index];
