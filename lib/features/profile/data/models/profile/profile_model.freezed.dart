@@ -52,7 +52,7 @@ $Res call({
 });
 
 
-$PrivacyModelCopyWith<$Res>? get privacySettings;
+$AnimeModelCopyWith<$Res>? get lastAnime;$PrivacyModelCopyWith<$Res>? get privacySettings;
 
 }
 /// @nodoc
@@ -99,6 +99,18 @@ as PrivacyModel?,
   ));
 }
 /// Create a copy of ProfileModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$AnimeModelCopyWith<$Res>? get lastAnime {
+    if (_self.lastAnime == null) {
+    return null;
+  }
+
+  return $AnimeModelCopyWith<$Res>(_self.lastAnime!, (value) {
+    return _then(_self.copyWith(lastAnime: value));
+  });
+}/// Create a copy of ProfileModel
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -343,7 +355,7 @@ $Res call({
 });
 
 
-@override $PrivacyModelCopyWith<$Res>? get privacySettings;
+@override $AnimeModelCopyWith<$Res>? get lastAnime;@override $PrivacyModelCopyWith<$Res>? get privacySettings;
 
 }
 /// @nodoc
@@ -391,6 +403,18 @@ as PrivacyModel?,
 }
 
 /// Create a copy of ProfileModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$AnimeModelCopyWith<$Res>? get lastAnime {
+    if (_self.lastAnime == null) {
+    return null;
+  }
+
+  return $AnimeModelCopyWith<$Res>(_self.lastAnime!, (value) {
+    return _then(_self.copyWith(lastAnime: value));
+  });
+}/// Create a copy of ProfileModel
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')

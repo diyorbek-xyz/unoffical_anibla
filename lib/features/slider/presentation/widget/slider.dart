@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/core/utils/base_url.dart';
+import 'package:application/features/animes/data/models/page_props.dart';
 import 'package:application/features/common/presentation/widgets/error.dart';
 import 'package:application/features/slider/domain/entities/slider_entity.dart';
 import 'package:application/features/slider/presentation/controller/slider_controller.dart';
@@ -108,52 +109,47 @@ class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin 
     );
   }
 
-  Widget sliderBuilder(bool isMobile, double h, List<dynamic> data, BuildContext context) {
-    return FocusTraversalGroup(
-      policy: ReadingOrderTraversalPolicy(),
-      child: GestureDetector(
-        onHorizontalDragEnd: slide,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            ...data.asMap().entries.map(
-              (e) => AnimatedOpacity(
-                opacity: e.key == currentPage ? 1 : 0,
-                curve: Easing.legacy,
-                duration: const Duration(milliseconds: 500),
-                child: IgnorePointer(ignoring: e.key != currentPage, child: carouselItem(e.value, context)),
-              ),
-            ),
-            if (!isMobile)
-              Material(
-                type: MaterialType.transparency,
-                child: Row(
-                  mainAxisAlignment: .spaceBetween,
-                  crossAxisAlignment: .stretch,
-                  children: [
-                    InkWell(
-                      mouseCursor: SystemMouseCursors.click,
-                      onTap: previousPage,
-                      child: SizedBox(width: 100, child: Icon(Icons.keyboard_arrow_left)),
-                    ),
-                    InkWell(
-                      mouseCursor: SystemMouseCursors.click,
-                      onTap: nextPage,
-                      child: SizedBox(width: 100, child: Icon(Icons.keyboard_arrow_right)),
-                    ),
-                  ],
-                ),
-              ),
-          ],
+  Widget sliderBuilder(bool isMobile, double h, List<dynamic> data, BuildContext context) => GestureDetector(
+    onHorizontalDragEnd: slide,
+    child: Stack(
+      fit: StackFit.expand,
+      children: [
+        ...data.asMap().entries.map(
+          (e) => AnimatedOpacity(
+            opacity: e.key == currentPage ? 1 : 0,
+            curve: Easing.legacy,
+            duration: const Duration(milliseconds: 500),
+            child: IgnorePointer(ignoring: e.key != currentPage, child: carouselItem(e.value, context)),
+          ),
         ),
-      ),
-    );
-  }
+        if (!isMobile)
+          Material(
+            type: MaterialType.transparency,
+            child: Row(
+              mainAxisAlignment: .spaceBetween,
+              crossAxisAlignment: .stretch,
+              children: [
+                InkWell(
+                  mouseCursor: SystemMouseCursors.click,
+                  onTap: previousPage,
+                  child: SizedBox(width: 100, child: Icon(Icons.keyboard_arrow_left)),
+                ),
+                InkWell(
+                  mouseCursor: SystemMouseCursors.click,
+                  onTap: nextPage,
+                  child: SizedBox(width: 100, child: Icon(Icons.keyboard_arrow_right)),
+                ),
+              ],
+            ),
+          ),
+      ],
+    ),
+  );
 
   Widget carouselItem(SliderEntity e, BuildContext context) => LayoutBuilder(
     builder: (context, consts) {
       final isMobile = consts.maxWidth < MOBILE_WIDTH;
-      return Container(
+      return DecoratedBox(
         decoration: BoxDecoration(
           image: e.image.isEmpty ? null : DecorationImage(image: CachedNetworkImageProvider(e.image), fit: BoxFit.cover),
           color: e.image.isEmpty ? context.appColors.surface : null,
@@ -194,7 +190,10 @@ class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin 
                         spacing: 10,
                         children: [
                           FilledButton.icon(
-                            onPressed: () => context.pushNamed("anime", queryParameters: {"type": e.anime.type.name, "slug": e.anime.slug}),
+                            onPressed: () => context.pushNamed(
+                              "anime",
+                              queryParameters: AnimePageProps(animeType: e.anime.type, animeSlug: e.anime.slug).toJson(),
+                            ),
                             icon: Icon(Icons.play_arrow),
                             style: ButtonStyle(
                               backgroundColor: WidgetStatePropertyAll(context.appColors.primary),
@@ -202,6 +201,12 @@ class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin 
                               padding: WidgetStatePropertyAll(EdgeInsets.zero),
                               fixedSize: WidgetStatePropertyAll(Size(150, 40)),
                               shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(5))),
+                              side: WidgetStateProperty.fromMap({
+                                WidgetState.selected | WidgetState.focused | WidgetState.hovered: BorderSide(
+                                  width: 3,
+                                  color: context.appColors.secondary,
+                                ),
+                              }),
                             ),
                             label: Text("Tomosha qilish"),
                           ),
@@ -210,6 +215,12 @@ class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin 
                             padding: EdgeInsets.zero,
                             icon: Icon(Icons.bookmark_outline),
                             style: ButtonStyle(
+                              side: WidgetStateProperty.fromMap({
+                                WidgetState.selected | WidgetState.focused | WidgetState.hovered: BorderSide(
+                                  width: 3,
+                                  color: context.appColors.secondary,
+                                ),
+                              }),
                               backgroundColor: WidgetStatePropertyAll(context.appColors.primary),
                               foregroundColor: WidgetStatePropertyAll(context.appColors.onPrimary),
                               padding: WidgetStatePropertyAll(EdgeInsets.zero),

@@ -138,10 +138,6 @@ class _EpisodesDrawerState extends State<EpisodesDrawer> {
                         message: title,
                         child: InkWell(
                           onTap: () => _playerController.openStream(props),
-                          hoverColor: currentColor.withAlpha(50),
-                          splashColor: currentColor.withAlpha(50),
-                          focusColor: currentColor.withAlpha(50),
-                          highlightColor: currentColor.withAlpha(50),
                           borderRadius: BorderRadius.circular(10),
                           mouseCursor: SystemMouseCursors.click,
                           child: Stack(

@@ -26,6 +26,7 @@ final List<TabItem> tabs = [
   TabItem(path: "devices", activeIcon: Icons.devices, icon: Icons.devices_outlined, label: "Qurilmalar"),
   TabItem(path: "privacy", activeIcon: Icons.privacy_tip, icon: Icons.privacy_tip_outlined, label: "Xavfsizlik sozlamalari"),
 ];
+final List<Widget> views = [ProfileInfosMenu(), NotificationsMenu(), PlansMenu(), ProfileDevicesMenu(), PrivacySettings()];
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -35,9 +36,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  List<Widget> get views => [ProfileInfosMenu(), NotificationsMenu(), PlansMenu(), ProfileDevicesMenu(), PrivacySettings()];
+  final ProfileController profileController = sl<ProfileController>();
 
-  late ProfileController profileController;
   int currentIndex = 0;
   bool inTabs = true;
 
@@ -45,17 +45,31 @@ class _ProfilePageState extends State<ProfilePage> {
   void goToTabs() => setState(() => inTabs = true);
 
   @override
-  void initState() {
-    super.initState();
-    profileController = sl<ProfileController>();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 5,
-      child: LayoutBuilder(
-        builder: (context, constraints) => Responsive(constraints: constraints, child: sliverMethod()),
+    return Responsive.provider(
+      (context, resp) => SignalAnimatedBuilder(
+        child: sliverMethod(),
+        builder: (context, child) {
+          final state = profileController.profileSignal.value;
+          if (state.hasError) {
+            return switch (state.error as ProfileFailure) {
+              ProfileLimitSession(:final sessions) => SessionsFailureWidget(sessions: sessions),
+              ProfileUnauthorized() => unauthorizedBuilder(context),
+              ProfileFailed(:final message) => ErrorBuilder(message: message, refresh: profileController.refreshAll),
+            };
+          }
+          // print("IsLoading :${state.isLoading}");
+          // print("IsRefreshing :${state.isRefreshing}");
+          // print("IsReloading :${state.isReloading}");
+          // print("IsHasError :${state.hasError}");
+          // print("Error :${state.error}");
+          return Skeletonizer(
+            justifyMultiLineText: true,
+            effect: PulseEffect(duration: Duration(seconds: 1), from: context.appColors.primary, to: context.appColors.onPrimary),
+            enabled: state.value == null || state.isLoading,
+            child: child!,
+          );
+        },
       ),
     );
   }
@@ -151,10 +165,12 @@ class _ProfilePageState extends State<ProfilePage> {
       final state = profileController.profileSignal.value;
       final isLoading = !state.hasValue;
       final data = state.value ?? profileController.fakeProfile;
-      final responsive = Responsive.of(context);
-      late Widget child;
-      if (responsive.isMobile) {
-        child = Column(
+      return PlatformBuilder(
+        containerBuilder: (context, _, isMobile, child) => Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20).add(.only(top: isMobile ? 0 : 40)),
+          child: child,
+        ),
+        mobileBuilder: (_, _) => Column(
           crossAxisAlignment: .center,
           mainAxisAlignment: .start,
           children: [
@@ -174,9 +190,8 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
           ],
-        );
-      } else {
-        child = Row(
+        ),
+        desktopBuilder: (_, _) => Row(
           crossAxisAlignment: .center,
           spacing: 10,
           children: [
@@ -204,27 +219,21 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             SizedBox(width: 30),
           ],
-        );
-      }
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20).add(.only(top: responsive.isMobile ? 0 : 40)),
-        child: child,
+        ),
       );
     },
   );
 
-  SizedBox unauthorizedBuilder(BuildContext context) {
-    return SizedBox.expand(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        spacing: 10,
-        children: [
-          Text("Royxatdan otish", style: TextStyle(fontSize: 28)),
-          ElevatedButton(onPressed: () => context.pushNamed("login"), child: Text("Kirish")),
-        ],
-      ),
-    );
-  }
+  SizedBox unauthorizedBuilder(BuildContext context) => SizedBox.expand(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
+      spacing: 10,
+      children: [
+        Text("Royxatdan otish", style: TextStyle(fontSize: 28)),
+        ElevatedButton(onPressed: () => context.pushNamed("login"), child: Text("Kirish")),
+      ],
+    ),
+  );
 }

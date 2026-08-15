@@ -8,12 +8,13 @@ import 'package:application/features/player/data/model/parser_models.dart';
 import 'package:application/features/player/data/model/service/download_models.dart';
 import 'package:application/features/player/data/services/dowload_hls.dart';
 import 'package:application/features/player/data/source/local/downloads.dart';
-import 'package:application/injection_container.dart';
+import 'package:dio/dio.dart';
 import 'package:rxdart/rxdart.dart';
 
 class HlsDownloadService {
   final DownloadsLocal storage;
-  HlsDownloadService(this.storage);
+  final Dio dio;
+  HlsDownloadService(this.storage, this.dio);
 
   Map<String, DownloadState> states = {};
   DownloadTask? getTask(String id) {

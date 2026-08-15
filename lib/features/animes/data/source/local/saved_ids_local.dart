@@ -5,11 +5,18 @@ abstract class SavedLocal {
   bool isThisSaved(String id);
   Future<void> saveMedia(String id);
   Future<void> unsaveMedia(String id);
+  Future<void> fullChange(List<String> animeIds);
 }
 
 class SavedLocalImpl implements SavedLocal {
   final Box<String> box;
   const SavedLocalImpl(this.box);
+
+  @override
+  Future<void> fullChange(List<String> animeIds) async {
+    await box.clear();
+    await box.addAll(animeIds);
+  }
 
   @override
   bool isThisSaved(String id) {

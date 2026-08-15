@@ -6,11 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 class ProfileInfosMenu extends StatelessWidget {
-  const ProfileInfosMenu({super.key});
+  ProfileInfosMenu({super.key});
+
+  final profileController = sl<ProfileController>();
 
   @override
   Widget build(BuildContext context) {
-    final profileController = sl<ProfileController>();
     return SignalBuilder(
       builder: (context) {
         final state = profileController.profileSignal.value;

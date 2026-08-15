@@ -52,7 +52,7 @@ $Res call({
 });
 
 
-
+$AnimeModelCopyWith<$Res>? get anime;
 
 }
 /// @nodoc
@@ -75,7 +75,19 @@ as AnimeModel?,type: freezed == type ? _self.type : type // ignore: cast_nullabl
 as AnimeType?,
   ));
 }
+/// Create a copy of SliderModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$AnimeModelCopyWith<$Res>? get anime {
+    if (_self.anime == null) {
+    return null;
+  }
 
+  return $AnimeModelCopyWith<$Res>(_self.anime!, (value) {
+    return _then(_self.copyWith(anime: value));
+  });
+}
 }
 
 
@@ -253,7 +265,7 @@ $Res call({
 });
 
 
-
+@override $AnimeModelCopyWith<$Res>? get anime;
 
 }
 /// @nodoc
@@ -277,7 +289,19 @@ as AnimeType?,
   ));
 }
 
+/// Create a copy of SliderModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$AnimeModelCopyWith<$Res>? get anime {
+    if (_self.anime == null) {
+    return null;
+  }
 
+  return $AnimeModelCopyWith<$Res>(_self.anime!, (value) {
+    return _then(_self.copyWith(anime: value));
+  });
+}
 }
 
 // dart format on

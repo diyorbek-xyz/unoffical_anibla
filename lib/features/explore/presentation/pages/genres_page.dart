@@ -59,10 +59,6 @@ class GenresPage extends StatelessWidget {
 
     return InkWell(
       onTap: searchGenre,
-      focusColor: context.appColors.primaryContainer.withAlpha(20),
-      hoverColor: context.appColors.primaryContainer.withAlpha(20),
-      splashColor: context.appColors.primaryContainer.withAlpha(20),
-      highlightColor: context.appColors.primaryContainer.withAlpha(20),
       mouseCursor: SystemMouseCursors.click,
       child: Ink(
         decoration: BoxDecoration(color: context.appColors.primary, borderRadius: BorderRadius.circular(4)),

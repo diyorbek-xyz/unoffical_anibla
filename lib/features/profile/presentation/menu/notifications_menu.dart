@@ -1,6 +1,8 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/core/utils/base_url.dart';
+import 'package:application/features/animes/data/models/anime_model.dart';
+import 'package:application/features/animes/data/models/page_props.dart';
 import 'package:application/features/common/presentation/widgets/error.dart';
 import 'package:application/features/common/presentation/widgets/list.dart';
 import 'package:application/features/profile/presentation/controller/profile_controller.dart';
@@ -20,12 +22,7 @@ class NotificationsMenu extends StatefulWidget {
 }
 
 class _NotificationsMenuState extends State<NotificationsMenu> {
-  late final ProfileController profileController;
-  @override
-  void initState() {
-    super.initState();
-    profileController = sl();
-  }
+  final ProfileController profileController = sl<ProfileController>();
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +41,10 @@ class _NotificationsMenuState extends State<NotificationsMenu> {
                 borderRadius: .circular(20),
                 clipBehavior: .antiAlias,
                 child: InkWell(
-                  onTap: () => context.pushNamed('anime', pathParameters: {"type": notf.data.mediaType, "slug": notf.data.mediaSlug}),
+                  onTap: () => context.pushNamed(
+                    'anime',
+                    queryParameters: AnimePageProps(animeType: AnimeType.fromString(notf.data.mediaType), animeSlug: notf.data.mediaSlug).toJson(),
+                  ),
                   child: Ink(
                     color: context.appColors.primaryContainer,
                     height: 200,

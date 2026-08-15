@@ -16,12 +16,7 @@ class ProfileDevicesMenu extends StatefulWidget {
 }
 
 class _ProfileDevicesMenuState extends State<ProfileDevicesMenu> {
-  late final ProfileController profileController;
-  @override
-  void initState() {
-    super.initState();
-    profileController = sl<ProfileController>();
-  }
+  final ProfileController profileController = sl<ProfileController>();
 
   @override
   Widget build(BuildContext context) {

@@ -1,11 +1,12 @@
 import 'package:application/core/utils/base_url.dart';
 import 'package:application/features/common/data/models/miscs/item_model.dart';
 import 'package:application/features/explore/data/models/genre_model.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:intl/intl.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 part 'anime_model.g.dart';
+part 'anime_model.freezed.dart';
 
 @HiveType(typeId: 9483)
 enum AnimeType {
@@ -18,102 +19,41 @@ enum AnimeType {
 
   bool get isMovie => this == AnimeType.movie;
   bool get isSerie => this == AnimeType.serie;
-  static AnimeType fromString(String str) => (str.toLowerCase()) == "movie" ? .movie : .serie;
+  static AnimeType fromString(String str) => str.toLowerCase().contains("movie") ? .movie : .serie;
 
   @override
   String toString() => toBeginningOfSentenceCase("${name}s");
 }
 
+@freezed
 @HiveType(typeId: 2)
-@JsonSerializable(includeIfNull: true)
-class AnimeModel {
-  @HiveField(0)
-  final List? keywords;
-  @HiveField(1)
-  @JsonKey(name: "_id")
-  final String? id;
-  @HiveField(2)
-  final dynamic uz;
-  @HiveField(20)
-  final dynamic ru;
-  @HiveField(3)
-  final String? slug;
-  @HiveField(4)
-  final dynamic country;
-  @HiveField(5)
-  final dynamic studio;
-  @HiveField(6)
-  final dynamic director;
-  @HiveField(7)
-  final List<ItemModel>? creators;
-  @HiveField(8)
-  final List<GenreModel>? genres;
-  @HiveField(9)
-  final dynamic categories;
-  @HiveField(10)
-  @JsonKey(name: "published_year")
-  final int? publishedYear;
-  @HiveField(11)
-  @JsonKey(fromJson: addBaseUrl, includeFromJson: true)
-  final String? thumbnail;
-  @HiveField(12)
-  @JsonKey(fromJson: addBaseUrl, includeFromJson: true)
-  final String? cover;
-  @HiveField(13)
-  @JsonKey(fromJson: addBaseUrlAsList, includeFromJson: true)
-  final List<String>? images;
-  @HiveField(14)
-  final String? trailer;
-  @HiveField(15)
-  final int? age;
-  @HiveField(16)
-  @JsonKey(name: "total_episodes")
-  final int? totalEpisodes;
-  @HiveField(17)
-  @JsonKey(name: "for_only_mdh")
-  final bool? forOnlyMDH;
-  @HiveField(18)
-  final DateTime? createdAt;
-  @HiveField(19)
-  final DateTime? updatedAt;
-  @HiveField(21)
-  final int? duration;
-  @HiveField(22)
-  final String? video;
-  @HiveField(23)
-  @JsonKey(name: "mediaType")
-  final AnimeType? type;
+abstract class AnimeModel with _$AnimeModel {
+  factory AnimeModel({
+    @HiveField(15) int? age,
+    @HiveField(2) dynamic uz,
+    @HiveField(20) dynamic ru,
+    @HiveField(3) String? slug,
+    @HiveField(0) List? keywords,
+    @HiveField(5) dynamic studio,
+    @HiveField(21) int? duration,
+    @HiveField(22) String? video,
+    @HiveField(4) dynamic country,
+    @HiveField(14) String? trailer,
+    @HiveField(6) dynamic director,
+    @HiveField(9) dynamic categories,
+    @HiveField(18) DateTime? createdAt,
+    @HiveField(19) DateTime? updatedAt,
+    @HiveField(8) List<GenreModel>? genres,
+    @HiveField(7) List<ItemModel>? creators,
+    @HiveField(1) @JsonKey(name: "_id") String? id,
+    @HiveField(23) @JsonKey(name: "mediaType") AnimeType? type,
+    @HiveField(17) @JsonKey(name: "for_only_mdh") bool? forOnlyMDH,
+    @HiveField(10) @JsonKey(name: "published_year") int? publishedYear,
+    @HiveField(16) @JsonKey(name: "total_episodes") int? totalEpisodes,
+    @HiveField(11) @JsonKey(fromJson: addBaseUrl, includeFromJson: true) String? thumbnail,
+    @HiveField(12) @JsonKey(fromJson: addBaseUrl, includeFromJson: true) String? cover,
+    @HiveField(13) @JsonKey(fromJson: addBaseUrlAsList, includeFromJson: true) List<String>? images,
+  }) = _AnimeModel;
 
-  const AnimeModel({
-    this.duration,
-    this.video,
-    this.age,
-    this.categories,
-    this.country,
-    this.cover,
-    this.createdAt,
-    this.creators,
-    this.director,
-    this.forOnlyMDH,
-    this.genres,
-    this.images,
-    this.id,
-    this.keywords,
-    this.publishedYear,
-    this.slug,
-    this.studio,
-    this.thumbnail,
-    this.totalEpisodes,
-    this.trailer,
-    this.updatedAt,
-    this.ru,
-    this.uz,
-    this.type,
-  });
-
-  factory AnimeModel.fromJson(dynamic json) {
-    if (json is String) return AnimeModel(id: json);
-    return _$AnimeModelFromJson(json);
-  }
-  Map<String, dynamic> toJson() => _$AnimeModelToJson(this);
+  factory AnimeModel.fromJson(dynamic json) => (json is String) ? AnimeModel(id: json) : _$AnimeModelFromJson(json);
 }

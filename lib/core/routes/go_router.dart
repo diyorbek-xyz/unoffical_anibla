@@ -42,8 +42,7 @@ final GoRouter routerConfig = GoRouter(
         GoRoute(
           name: "anime",
           path: '/anime',
-          builder: (context, state) =>
-              AnimePage(slug: state.uri.queryParameters['slug'].toString(), typeSTR: state.uri.queryParameters['type']?.toString() ?? "Series"),
+          builder: (context, state) => AnimePage(props: AnimePageProps.fromJson(state.uri.queryParameters)),
         ),
         GoRoute(
           name: "watch",

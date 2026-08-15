@@ -17,7 +17,6 @@ import 'package:application/features/profile/presentation/controller/profile_con
 import 'package:application/features/slider/presentation/controller/slider_controller.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:application/core/constants/constants.dart';
 import 'package:application/features/animes/data/models/anime_model.dart';
 import 'package:application/features/animes/data/repository/anime_repository_impl.dart';
 import 'package:application/features/animes/data/repository/episode_repository_impl.dart';
@@ -71,22 +70,6 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:media_kit/media_kit.dart';
 
 final sl = GetIt.instance;
-final baseOptions = BaseOptions(
-  baseUrl: "$amediatvBaseUrl/api",
-  headers: {
-    "User-Agent": "okhttp/4.12.0",
-    "Accept-Encoding": "gzip",
-    "accept": "application/json",
-    "Connection": "Keep-Alive",
-    "x-platform": "desktop",
-    "x-platform-os": "arch",
-    "x-device": "Arch Linux",
-    "x-app-version": "2.4.9",
-    "Authorization":
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjZmYjliNzcwYzY1MjcxMGJlNTUxZjRmIiwidG9rZW5faWQiOiJhOTEyOWNkOC1jYjc2LTQ4OWMtYTZjMS0wMGFlZjExNWUyNWEiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzg2MDA4NjYwLCJleHAiOjE3ODcyMTgyNjB9.FoJYa5l0C_ceyVlTXfbnaJ0z4u_QyxtDL0ynupcPj_M",
-  },
-);
-final dio = Dio(baseOptions);
 final secureStorage = FlutterSecureStorage();
 
 Future<void> initializeDependencies() async {
@@ -103,6 +86,23 @@ Future<void> initializeDependencies() async {
   await dotenv.load(fileName: '.env');
   await initializeDateFormatting('uz');
 
+  final baseOptions = BaseOptions(
+    baseUrl: "${dotenv.env['BASE_URL']}/api",
+    headers: {
+      "User-Agent": "okhttp/4.12.0",
+      "Accept-Encoding": "gzip",
+      "accept": "application/json",
+      "Connection": "Keep-Alive",
+      "x-platform": "desktop",
+      "x-platform-os": "arch",
+      "x-device": "Arch Linux",
+      "x-app-version": "2.4.9",
+      "Authorization":
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjZmYjliNzcwYzY1MjcxMGJlNTUxZjRmIiwidG9rZW5faWQiOiJhOTEyOWNkOC1jYjc2LTQ4OWMtYTZjMS0wMGFlZjExNWUyNWEiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzg2MDA4NjYwLCJleHAiOjE3ODcyMTgyNjB9.FoJYa5l0C_ceyVlTXfbnaJ0z4u_QyxtDL0ynupcPj_M",
+    },
+  );
+  final dio = Dio(baseOptions);
+
   // Open boxes;
   await Hive.deleteBoxFromDisk("cacheBox");
   final calendarBox = await Hive.openBox<CalendarModel>("calendarBox");
@@ -116,73 +116,70 @@ Future<void> initializeDependencies() async {
   await Utils.closeSplashScreen();
 
   // Register / Setup network logic;
-  sl.registerSingleton<FlutterSecureStorage>(secureStorage);
-  sl.registerSingleton<AuthStorage>(AuthStorageImpl(sl()));
-  sl.registerLazySingleton<ErrorInterceptor>(() => ErrorInterceptor());
-  sl.registerLazySingleton<AuthInterceptor>(() => AuthInterceptor(sl()));
+  sl
+    ..registerSingleton<FlutterSecureStorage>(secureStorage)
+    ..registerSingleton<AuthStorage>(AuthStorageImpl(sl()))
+    ..registerLazySingleton<ErrorInterceptor>(() => ErrorInterceptor())
+    ..registerLazySingleton<AuthInterceptor>(() => AuthInterceptor(sl()));
   dio.interceptors.add(sl<ErrorInterceptor>());
   dio.interceptors.add(sl<AuthInterceptor>());
 
-  // Register local storages;
-  sl.registerSingleton<Box<CalendarModel>>(calendarBox);
-  sl.registerSingleton<Box<AnimeModel>>(historyBox, instanceName: "history");
-  sl.registerSingleton<Box<String>>(savedMediaIdBox, instanceName: "saved");
-  sl.registerSingleton<Box<ProfileModel>>(profileBox);
-  sl.registerSingleton<Box<SliderModel>>(sliderBox);
-  sl.registerSingleton<Box<TimelineModel>>(timelineBox);
-  sl.registerSingleton<Box<DownloadTask>>(downloadsBox);
-
-  // Register miscs;
-  sl.registerSingleton<Dio>(dio);
-  sl.registerSingleton<DotEnv>(dotenv);
-
-  // Register remote Api Services;
-  sl.registerSingleton<SliderApi>(SliderApi(sl()));
-  sl.registerSingleton<CalendarApi>(CalendarApi(sl()));
-  sl.registerSingleton<AuthApi>(AuthApi(sl()));
-  sl.registerSingleton<ProfileApi>(ProfileApi(sl()));
-  sl.registerSingleton<AnimeApi>(AnimeApi(sl()));
-  sl.registerSingleton<SeasonApi>(SeasonApi(sl()));
-  sl.registerSingleton<EpisodeApi>(EpisodeApi(sl()));
-  sl.registerSingleton<GenreApi>(GenreApi(sl()));
-  sl.registerSingleton<CommentApi>(CommentApi(sl()));
-  sl.registerSingleton<VideoApi>(VideoApi(sl()));
-  sl.registerSingleton<FilterApi>(FilterApi(sl()));
-  sl.registerSingleton<DownloadsLocal>(DownloadsLocalImpl(sl()));
-  sl.registerSingleton<HlsDownloadService>(HlsDownloadService(sl()));
-  sl.registerSingleton<NotificationsApi>(NotificationsApi(sl()));
-  sl.registerSingleton<PlansApi>(PlansApi(sl()));
-
-  // Register Local Storage Services;
-  sl.registerSingleton<CalendarLocal>(CalendarLocalImpl(sl()));
-  sl.registerSingleton<ProfileLocal>(ProfileLocalImpl(sl()));
-  sl.registerSingleton<SliderLocal>(SliderLocalImpl(sl()));
-  sl.registerSingleton<HistoryLocal>(HistoryLocalImpl(sl(instanceName: 'history')));
-  sl.registerSingleton<SavedLocal>(SavedLocalImpl(sl(instanceName: 'saved')));
-  sl.registerSingleton<Timeline>(TimelineImpl(sl()));
-
-  // Register Repositories;
-  sl.registerLazySingleton<SliderRepository>(() => SliderRepositoryImpl(sl(), sl()));
-  sl.registerLazySingleton<CalendarRepository>(() => CalendarRepositoryImpl(sl(), sl()));
-  sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl(), sl()));
-  sl.registerLazySingleton<EpisodeRepository>(() => EpisodeRepositoryImpl(sl(), sl(), sl()));
-  sl.registerLazySingleton<CommentRepository>(() => CommentRepositoryImpl(sl()));
-  sl.registerLazySingleton<ProfileRepository>(() => ProfileRepositoryImpl(sl(), sl(), sl(), sl()));
-  sl.registerLazySingleton<AnimeRepository>(() => AnimeRepositoryImpl(sl(), sl()));
-  sl.registerLazySingleton<SeasonRepository>(() => SeasonRepositoryImpl(sl()));
-  sl.registerLazySingleton<ExploreRepository>(() => ExploreRepositoryImpl(sl(), sl(), sl()));
-  sl.registerLazySingleton<NotificationRepository>(() => NotificationRepositoryImpl(sl()));
-
-  // Register State managers;
-  sl.registerFactory<AuthBloc>(() => AuthBloc(sl()));
-  sl.registerFactory<CalendarBloc>(() => CalendarBloc(sl()));
-  sl.registerFactory<CommentBloc>(() => CommentBloc(sl()));
-
-  sl.registerFactory<PlayerController>(() => PlayerController(sl(), sl()));
-
-  sl.registerLazySingleton<ProfileController>(() => ProfileController(sl(), sl()));
-  sl.registerLazySingleton<SavedController>(() => SavedController(sl(), sl()));
-  sl.registerLazySingleton<AnimeController>(() => AnimeController(sl(), sl(), sl()));
-  sl.registerLazySingleton<ExploreController>(() => ExploreController(sl()));
-  sl.registerLazySingleton<SliderController>(() => SliderController(sl()));
+  sl
+    // Register local storages;
+    ..registerSingleton<Box<CalendarModel>>(calendarBox)
+    ..registerSingleton<Box<AnimeModel>>(historyBox, instanceName: "history")
+    ..registerSingleton<Box<String>>(savedMediaIdBox, instanceName: "saved")
+    ..registerSingleton<Box<ProfileModel>>(profileBox)
+    ..registerSingleton<Box<SliderModel>>(sliderBox)
+    ..registerSingleton<Box<TimelineModel>>(timelineBox)
+    ..registerSingleton<Box<DownloadTask>>(downloadsBox)
+    // Register miscs;
+    ..registerSingleton<Dio>(dio)
+    ..registerSingleton<DotEnv>(dotenv)
+    ..registerSingleton<BaseOptions>(baseOptions)
+    // Register remote Api Services;
+    ..registerSingleton<SliderApi>(SliderApi(sl()))
+    ..registerSingleton<CalendarApi>(CalendarApi(sl()))
+    ..registerSingleton<AuthApi>(AuthApi(sl()))
+    ..registerSingleton<ProfileApi>(ProfileApi(sl()))
+    ..registerSingleton<AnimeApi>(AnimeApi(sl()))
+    ..registerSingleton<SeasonApi>(SeasonApi(sl()))
+    ..registerSingleton<EpisodeApi>(EpisodeApi(sl()))
+    ..registerSingleton<GenreApi>(GenreApi(sl()))
+    ..registerSingleton<CommentApi>(CommentApi(sl()))
+    ..registerSingleton<VideoApi>(VideoApi(sl()))
+    ..registerSingleton<FilterApi>(FilterApi(sl()))
+    ..registerSingleton<DownloadsLocal>(DownloadsLocalImpl(sl()))
+    ..registerSingleton<HlsDownloadService>(HlsDownloadService(sl(), sl()))
+    ..registerSingleton<NotificationsApi>(NotificationsApi(sl()))
+    ..registerSingleton<PlansApi>(PlansApi(sl()))
+    // Register Local Storage Services;
+    ..registerSingleton<CalendarLocal>(CalendarLocalImpl(sl()))
+    ..registerSingleton<ProfileLocal>(ProfileLocalImpl(sl()))
+    ..registerSingleton<SliderLocal>(SliderLocalImpl(sl()))
+    ..registerSingleton<HistoryLocal>(HistoryLocalImpl(sl(instanceName: 'history')))
+    ..registerSingleton<SavedLocal>(SavedLocalImpl(sl(instanceName: 'saved')))
+    ..registerSingleton<Timeline>(TimelineImpl(sl()))
+    // Register Repositories;
+    ..registerLazySingleton<SliderRepository>(() => SliderRepositoryImpl(sl(), sl()))
+    ..registerLazySingleton<CalendarRepository>(() => CalendarRepositoryImpl(sl(), sl()))
+    ..registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl(), sl()))
+    ..registerLazySingleton<EpisodeRepository>(() => EpisodeRepositoryImpl(sl(), sl(), sl()))
+    ..registerLazySingleton<CommentRepository>(() => CommentRepositoryImpl(sl()))
+    ..registerLazySingleton<ProfileRepository>(() => ProfileRepositoryImpl(sl(), sl(), sl(), sl()))
+    ..registerLazySingleton<AnimeRepository>(() => AnimeRepositoryImpl(sl(), sl(), sl()))
+    ..registerLazySingleton<SeasonRepository>(() => SeasonRepositoryImpl(sl()))
+    ..registerLazySingleton<ExploreRepository>(() => ExploreRepositoryImpl(sl(), sl(), sl()))
+    ..registerLazySingleton<NotificationRepository>(() => NotificationRepositoryImpl(sl()))
+    // Register State managers;
+    ..registerFactory<AuthBloc>(() => AuthBloc(sl()))
+    ..registerFactory<CalendarBloc>(() => CalendarBloc(sl()))
+    ..registerFactory<CommentBloc>(() => CommentBloc(sl()))
+    ..registerFactory<PlayerController>(() => PlayerController(sl(), sl()))
+    // Register Signal controllers;
+    ..registerLazySingleton<ProfileController>(() => ProfileController(sl(), sl()))
+    ..registerLazySingleton<SavedController>(() => SavedController(sl(), sl()))
+    ..registerLazySingleton<AnimeController>(() => AnimeController(sl(), sl(), sl()))
+    ..registerLazySingleton<ExploreController>(() => ExploreController(sl()))
+    ..registerLazySingleton<SliderController>(() => SliderController(sl()));
 }

@@ -1,10 +1,8 @@
 import 'dart:io';
-
 import 'package:application/core/utils/extensions.dart';
 import 'package:application/features/profile/data/mapper/notification_mapper.dart';
 import 'package:application/features/profile/data/mapper/plan_mapper.dart';
 import 'package:application/features/profile/data/mapper/profile_mapper.dart';
-import 'package:application/features/profile/data/models/notifications/notification_response.dart';
 import 'package:application/features/profile/domain/repository/notification_repository.dart';
 import 'package:application/features/profile/domain/repository/profile_repository.dart';
 import 'package:application/features/profile/presentation/controller/profile_errors.dart';
@@ -29,19 +27,19 @@ class ProfileController {
       };
     }
   });
-  final fakeProfile = ProfileMapper.modelToEntity(.new());
+  final fakeProfile = ProfileMapper.modelToEntity(null);
 
   late final notificationSignal = futureSignal(() async {
     final either = await _notificationRepository.getNotifications();
     return either.getData();
   });
-  final fakeNotification = NotificationMapper.responseFromModel(NotificationResponse());
+  final fakeNotification = NotificationMapper.responseFromModel(null);
 
   late final plansSignal = futureSignal(() async {
     final either = await _profileRepository.getPlans();
     return either.getData();
   });
-  final fakePlans = List.generate(4, (index) => PlanMapper.modelToEntity(.new(time: index)));
+  final fakePlans = List.generate(4, (index) => PlanMapper.modelToEntity(null));
 
   late final sessionExitSignal = signal(const SessionState());
   void exitSession(String tokenId) async {

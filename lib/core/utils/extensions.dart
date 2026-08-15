@@ -25,6 +25,7 @@ extension DateFormatting on DateTime {
   String formatFull() => toBeginningOfSentenceCase(DateFormat("hh:mm d-MMMM y", 'uz-UZ').format(this));
   String formatWeekday() => toBeginningOfSentenceCase(DateFormat("EEEE", "uz-UZ").format(this));
   String formatTime() => DateFormat(DateFormat.HOUR24_MINUTE, 'uz-UZ').format(this);
+  List<DateTime> getWeekDays() => List.generate(7, (index) => add(Duration(days: index)));
   String formatDynamicWeeks() {
     final today = DateTime.now();
     final tomorrow = today.add(Duration(days: 1));
@@ -44,7 +45,6 @@ extension DateFormatting on DateTime {
     return formatWeekday();
   }
 
-  List<DateTime> getWeekDays() => List.generate(7, (index) => add(Duration(days: index)));
   String formatRemaining() {
     final diff = DateTime.now().difference(this);
     if (diff.inDays >= 365) {

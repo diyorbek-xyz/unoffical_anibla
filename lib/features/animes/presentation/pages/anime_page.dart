@@ -2,10 +2,10 @@ import 'dart:ui';
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/core/utils/base_url.dart';
-import 'package:application/features/animes/data/models/anime_model.dart';
 import 'package:application/features/animes/data/models/page_props.dart';
 import 'package:application/features/animes/domain/entities/anime_entity.dart';
 import 'package:application/features/animes/presentation/controller/anime_controller.dart';
+import 'package:application/features/animes/presentation/controller/saved_controller.dart';
 import 'package:application/features/animes/presentation/pages/comments_menu.dart';
 import 'package:application/features/animes/presentation/pages/creators_menu.dart';
 import 'package:application/features/animes/presentation/pages/episodes_menu.dart';
@@ -23,34 +23,39 @@ import 'package:signals_flutter/signals_flutter.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class AnimePage extends StatefulWidget {
-  final String slug;
-  final String typeSTR;
-  const AnimePage({super.key, required this.slug, required this.typeSTR});
-
-  AnimeType get type => AnimeType.fromString(typeSTR);
+  final AnimePageProps props;
+  const AnimePage({super.key, required this.props});
 
   @override
   State<AnimePage> createState() => _AnimePageState();
 }
 
 class _AnimePageState extends State<AnimePage> {
+  late final SavedController _savedController;
   late final AnimeController _animeController;
-  late final EffectCleanup _commentsDispose;
+  late final EffectCleanup _commentsCleanup;
+  bool isSaved = false;
+
+  void toggleSave(String id) {
+    _savedController.saveMedia(id, widget.props.animeType);
+    setState(() => isSaved = !isSaved);
+  }
 
   @override
   void initState() {
     super.initState();
-    _animeController = sl<AnimeController>()..getFullAnime(widget.type, widget.slug);
-    _commentsDispose = effect(() {
+    _savedController = sl<SavedController>();
+    _animeController = sl<AnimeController>()..getFullAnime(widget.props.animeType, widget.props.animeSlug);
+    _commentsCleanup = effect(() {
       final anime = _animeController.mediaState.value.value;
       if (anime == null) return;
-      context.read<CommentBloc>().add(InitComments(GetCommentsProps(id: anime.id, limit: 20, page: 1, type: widget.type.toString())));
+      context.read<CommentBloc>().add(InitComments(GetCommentsProps(id: anime.id, limit: 20, page: 1, type: widget.props.animeType.toString())));
     });
   }
 
   @override
   void dispose() {
-    _commentsDispose();
+    _commentsCleanup();
     super.dispose();
   }
 
@@ -61,16 +66,16 @@ class _AnimePageState extends State<AnimePage> {
 
   Widget sliverBodyBuilder() {
     return DefaultTabController(
-      length: widget.type == AnimeType.serie ? 4 : 3,
+      length: widget.props.animeType.isSerie ? 4 : 3,
       child: SignalBuilder(
         builder: (context) {
           final state = _animeController.mediaState.value;
           final data = state.value ?? _animeController.fakeMedia;
           return Scaffold(
-            floatingActionButton: FloatingActionButton.extended(
-              onPressed: () => context.pushNamed("watch", queryParameters: AnimePageProps(animeType: widget.type, animeSlug: widget.slug).toJson()),
-              label: Text("Hello"),
-              icon: Icon(Icons.play_arrow),
+            floatingActionButton: FloatingActionButton(
+              shape: CircleBorder(),
+              onPressed: () => context.pushNamed("watch", queryParameters: widget.props.toJson()),
+              child: Icon(Icons.play_arrow),
             ),
             body: Stack(
               alignment: AlignmentGeometry.center,
@@ -110,7 +115,7 @@ class _AnimePageState extends State<AnimePage> {
                         height: 400,
                         child: ErrorBuilder(
                           message: state.error ?? "Nimadur xato ketti",
-                          refresh: () => _animeController.getMedia(widget.type, widget.slug),
+                          refresh: () => _animeController.getMedia(widget.props.animeType, widget.props.animeSlug),
                         ),
                       ),
                     ),
@@ -145,7 +150,7 @@ class _AnimePageState extends State<AnimePage> {
           Tab(text: "Ma'lumotlar"),
           Tab(text: "Izohlar"),
           Tab(text: "Ovoz beruvchilar"),
-          if (widget.type == AnimeType.serie) Tab(text: "Episodlar ${anime.totalEpisodes}ta"),
+          if (widget.props.animeType.isSerie) Tab(text: "Episodlar ${anime.totalEpisodes}ta"),
         ],
       ),
       forceElevated: innerBoxIsScrolled,
@@ -218,7 +223,11 @@ class _AnimePageState extends State<AnimePage> {
                                 infoItem(context: context, label: "Studia:", value: anime.studio?['name'] ?? "NN"),
                               ],
                             ),
-                            FilledButton.icon(onPressed: () {}, icon: Icon(Icons.bookmark_outline), label: Text("Saqlash")),
+                            FilledButton.icon(
+                              onPressed: () => toggleSave(anime.id),
+                              icon: Icon(isSaved ? Icons.bookmark : Icons.bookmark_outline),
+                              label: Text(isSaved ? "O'chirish" : "Saqlash"),
+                            ),
                           ],
                         ),
                       ),

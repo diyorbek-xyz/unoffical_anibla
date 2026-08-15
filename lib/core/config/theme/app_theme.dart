@@ -4,17 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppThemes {
-  static final darkTheme = ThemeData(
-    colorScheme: AppColors.darkColorScheme,
+  static final darkTheme = _themeBuilder(AppColors.darkColorScheme);
+  static final lightTheme = _themeBuilder(AppColors.lightColorScheme);
+
+  static ThemeData _themeBuilder(ColorScheme colorScheme) => ThemeData(
+    colorScheme: colorScheme,
+
     useMaterial3: true,
     fontFamily: GoogleFonts.googleSansFlex().fontFamily,
     pageTransitionsTheme: pageTransitions,
-  );
-  static final lightTheme = ThemeData(
-    colorScheme: AppColors.lightColorScheme,
-    useMaterial3: true,
-    fontFamily: GoogleFonts.googleSansFlex().fontFamily,
-    pageTransitionsTheme: pageTransitions,
+    splashColor: colorScheme.primary.withAlpha(25),
+    highlightColor: colorScheme.primary.withAlpha(25),
+    hoverColor: colorScheme.primary.withAlpha(25),
+    
   );
 
   static final pageTransitions = PageTransitionsTheme(
@@ -26,11 +28,6 @@ class AppThemes {
       TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
       TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
     },
-  );
-  static final searchBarTheme = SearchBarThemeData(
-    backgroundColor: WidgetStatePropertyAll(AppColors.secondary),
-    elevation: WidgetStatePropertyAll(0),
-    shadowColor: WidgetStatePropertyAll(Colors.transparent),
   );
 
   static ButtonStyle getErrorButtonStyle(BuildContext context) => ButtonStyle(

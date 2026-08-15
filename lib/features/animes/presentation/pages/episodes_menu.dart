@@ -1,4 +1,3 @@
-import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/features/animes/domain/entities/episode_entity.dart';
 import 'package:application/features/animes/presentation/controller/anime_controller.dart';
 import 'package:application/features/animes/presentation/widgets/download_dialog.dart';
@@ -52,10 +51,6 @@ class _AnimeEpisodesMenuState extends State<AnimeEpisodesMenu> {
                         .map(
                           (e) => InkWell(
                             onTap: () => openDownloadMenu(e),
-                            hoverColor: context.appColors.primaryContainer.withAlpha(70),
-                            splashColor: context.appColors.primaryContainer.withAlpha(70),
-                            focusColor: context.appColors.primaryContainer.withAlpha(70),
-                            highlightColor: context.appColors.primaryContainer.withAlpha(70),
                             borderRadius: BorderRadius.circular(16),
                             mouseCursor: SystemMouseCursors.click,
                             child: Align(alignment: AlignmentGeometry.center, child: Text("${e.episodeNumber}-qism")),

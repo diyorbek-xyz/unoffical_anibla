@@ -19,12 +19,12 @@ class SavedController {
   });
 
   List<String> get savedMedias => _savedLocal.getSavedIds();
-  bool isSaved(String id) => _savedLocal.isThisSaved(id);
+
+  bool isThisSaved(String id) => _savedLocal.isThisSaved(id);
 
   void saveMedia(String id, AnimeType type, [bool? exist]) async {
     try {
-      final saveds = savedMedias;
-      final isSaved = exist ?? saveds.contains(id);
+      final isSaved = exist ?? isThisSaved(id);
       late Either<Failure, bool> either;
       if (isSaved) {
         either = await _animeRepository.unsaveMedia(id, type);
@@ -32,17 +32,10 @@ class SavedController {
         either = await _animeRepository.saveMedia(id, type);
       }
       final success = either.getData();
-      if (success) {
-        if (isSaved) {
-          await _savedLocal.unsaveMedia(id);
-        } else {
-          await _savedLocal.saveMedia(id);
-        }
-        await savedMediaSignal.refresh();
-      }
+      if (success) await savedMediaSignal.refresh();
     } on Failure catch (e) {
       if (e is ServerFailure && e.status == HttpStatus.conflict) return saveMedia(id, type, true);
-      // TODO -> Handle errors
+      // Handle errors
     }
   }
 

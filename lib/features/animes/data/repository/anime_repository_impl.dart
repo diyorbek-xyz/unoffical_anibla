@@ -2,6 +2,7 @@ import 'package:application/core/resources/api_response.dart';
 import 'package:application/core/resources/cache_entry.dart';
 import 'package:application/features/animes/data/mapper/anime_mapper.dart';
 import 'package:application/features/animes/data/models/anime_model.dart';
+import 'package:application/features/animes/data/source/local/saved_ids_local.dart';
 import 'package:application/features/animes/data/source/remote/anime_api.dart';
 import 'package:application/features/animes/domain/entities/anime_entity.dart';
 import 'package:application/features/animes/domain/entities/saved_medias.dart';
@@ -17,9 +18,10 @@ import 'package:intl/intl.dart';
 import 'package:retrofit/retrofit.dart';
 
 class AnimeRepositoryImpl implements AnimeRepository {
-  final AnimeApi animeApi;
-  final HistoryLocal historyLocal;
-  AnimeRepositoryImpl(this.animeApi, this.historyLocal);
+  final AnimeApi _animeApi;
+  final HistoryLocal _historyLocal;
+  final SavedLocal _savedLocal;
+  AnimeRepositoryImpl(this._animeApi, this._historyLocal, this._savedLocal);
 
   final Map<String, CacheEntry<AnimeEntity>> _cache = {};
 
@@ -28,11 +30,11 @@ class AnimeRepositoryImpl implements AnimeRepository {
     try {
       final cached = _cache[slug];
       if (cached != null && !cached.isExpired) return Right(cached.data);
-      final serie = await animeApi.getSerie(toBeginningOfSentenceCase("${type.name}s"), slug);
+      final serie = await _animeApi.getSerie(toBeginningOfSentenceCase("${type.name}s"), slug);
       if (serie.data.success) {
         final data = AnimeMapper.modelToEntity(serie.data.data);
         _cache[slug] = CacheEntry(data);
-        await historyLocal.saveToHistory(serie.data.data!);
+        await _historyLocal.saveToHistory(serie.data.data!);
         return Right(data);
       } else {
         throw ExceptionMapper.mapResponseToDio(serie.response);
@@ -45,7 +47,7 @@ class AnimeRepositoryImpl implements AnimeRepository {
   @override
   Future<Either<Failure, BigResponse<AnimeEntity>>> getHomeAnimes(Paginator query) async {
     try {
-      final animes = await animeApi.getHomeAnimes(query);
+      final animes = await _animeApi.getHomeAnimes(query);
       return Right(
         BigResponseMapper.toEntity<AnimeModel, AnimeEntity>(animes.data, (a) => a is List ? a!.map(AnimeMapper.modelToEntity).toList() : []),
       );
@@ -58,9 +60,12 @@ class AnimeRepositoryImpl implements AnimeRepository {
   Future<Either<Failure, bool>> saveMedia(String id, AnimeType type) async {
     try {
       late HttpResponse<ApiResponse> response;
-      if (type.isSerie) response = await animeApi.saveSeries({"media": id});
-      if (type.isMovie) response = await animeApi.saveMovies({"media": id});
-      if (response.data.success) return Right(true);
+      if (type.isSerie) response = await _animeApi.saveSeries({"media": id});
+      if (type.isMovie) response = await _animeApi.saveMovies({"media": id});
+      if (response.data.success) {
+        await _savedLocal.saveMedia(id);
+        return Right(true);
+      }
       throw ExceptionMapper.mapResponseToDio(response.response);
     } on DioException catch (e) {
       return Left(ExceptionMapper.mapDioToFailure(e));
@@ -71,9 +76,12 @@ class AnimeRepositoryImpl implements AnimeRepository {
   Future<Either<Failure, bool>> unsaveMedia(String id, AnimeType type) async {
     try {
       late HttpResponse<ApiResponse> response;
-      if (type.isSerie) response = await animeApi.unsaveSeries(id);
-      if (type.isMovie) response = await animeApi.unsaveMovies(id);
-      if (response.data.success) return Right(true);
+      if (type.isSerie) response = await _animeApi.unsaveSeries(id);
+      if (type.isMovie) response = await _animeApi.unsaveMovies(id);
+      if (response.data.success) {
+        await _savedLocal.unsaveMedia(id);
+        return Right(true);
+      }
       throw ExceptionMapper.mapResponseToDio(response.response);
     } on DioException catch (e) {
       return Left(ExceptionMapper.mapDioToFailure(e));
@@ -83,10 +91,11 @@ class AnimeRepositoryImpl implements AnimeRepository {
   @override
   Future<Either<Failure, SavedMedias>> getSaveMedias() async {
     try {
-      final movieRes = await animeApi.getSavedMovies();
-      final serieRes = await animeApi.getSavedSeries();
+      final movieRes = await _animeApi.getSavedMovies();
+      final serieRes = await _animeApi.getSavedSeries();
       final movies = movieRes.data.data.map((e) => AnimeMapper.modelToEntity(e.anime)).toList();
       final series = serieRes.data.data.map((e) => AnimeMapper.modelToEntity(e.anime)).toList();
+      await _savedLocal.fullChange((movies + series).map((e) => e.id).toList());
 
       return Right(SavedMedias(movies: movies, series: series));
     } on DioException catch (e) {

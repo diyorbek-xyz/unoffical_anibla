@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 class PrivacySettings extends StatelessWidget {
-  const PrivacySettings({super.key});
+  PrivacySettings({super.key});
+  final profileController = sl<ProfileController>();
 
   @override
   Widget build(BuildContext context) {
-    final profileController = sl<ProfileController>();
     return SignalBuilder(
       builder: (context) {
         final state = profileController.profileSignal.value;

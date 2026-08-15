@@ -1,5 +1,6 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/utils/base_url.dart';
+import 'package:application/features/animes/data/models/page_props.dart';
 import 'package:application/features/animes/domain/entities/anime_entity.dart';
 import 'package:application/features/animes/presentation/controller/saved_controller.dart';
 import 'package:application/features/common/presentation/widgets/tv_focuser.dart';
@@ -31,30 +32,27 @@ class _AnimeCardState extends State<AnimeCard> {
     savedController.saveMedia(widget.anime.id, widget.anime.type);
   }
 
-  void _showCustomMenu(BuildContext context, Offset position, {required List<PopupMenuEntry<String>> items}) {
-    final RelativeRect positionRect = RelativeRect.fromLTRB(
-      position.dx - 170,
-      position.dy,
-      MediaQuery.of(context).size.width - position.dx + 0,
-      MediaQuery.of(context).size.height - position.dy,
-    );
-
-    showMenu<String>(context: context, position: positionRect, items: items, elevation: 8.0);
-  }
-
-  void handleClick(BuildContext context, Offset position) {
-    setState(() => isSaved = savedController.isSaved(widget.anime.id));
-    _showCustomMenu(
-      context,
-      position,
+  void handleClick(BuildContext context, Offset position, double space) {
+    setState(() => isSaved = savedController.isThisSaved(widget.anime.id));
+    final overlay = (Overlay.of(context).context.findRenderObject() as RenderBox).size;
+    final screen = MediaQuery.sizeOf(context);
+    showMenu<String>(
+      context: context,
+      position: RelativeRect.fromLTRB(
+        position.dx - (screen.width - overlay.width) + space,
+        position.dy + space,
+        screen.width - position.dx + space,
+        screen.height - position.dy + space,
+      ),
       items: [
         PopupMenuItem(
-          height: 45,
+          // height: 45,
           padding: EdgeInsets.symmetric(horizontal: 15),
           onTap: save,
           child: Row(spacing: 10, children: [Icon(isSaved ? Icons.bookmark : Icons.bookmark_outline), Text(isSaved ? "Olib tashlash" : "Saqlash")]),
         ),
       ],
+      elevation: 8.0,
     );
   }
 
@@ -68,18 +66,17 @@ class _AnimeCardState extends State<AnimeCard> {
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
     final cover = GestureDetector(
-      onSecondaryTapDown: (details) => handleClick(context, details.globalPosition),
-      onLongPressStart: (details) => handleClick(context, details.globalPosition),
+      onSecondaryTapDown: (details) => handleClick(context, details.globalPosition, 10),
+      onLongPressStart: (details) => handleClick(context, details.globalPosition, 10),
       child: TvFocuser(
         builder: (node) => InkWell(
           focusNode: node,
           mouseCursor: SystemMouseCursors.click,
           borderRadius: BorderRadius.circular(15),
-          onTap: () => context.pushNamed("anime", queryParameters: {"type": widget.anime.type.name, "slug": widget.anime.slug}),
-          highlightColor: Colors.transparent,
-          splashColor: context.appColors.primaryContainer.withAlpha(50),
-          hoverColor: context.appColors.primaryContainer.withAlpha(50),
-          focusColor: context.appColors.onPrimaryContainer.withAlpha(50),
+          onTap: () => context.pushNamed(
+            "anime",
+            queryParameters: AnimePageProps(animeType: widget.anime.type, animeSlug: widget.anime.slug).toJson(),
+          ),
           radius: 350,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

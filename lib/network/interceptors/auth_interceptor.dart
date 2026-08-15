@@ -18,20 +18,18 @@ class AuthInterceptor extends Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
-    if (err.type == DioExceptionType.badResponse) {
-      if (err.response?.statusCode == HttpStatus.unauthorized) {
-        try {
-          final refreshToken = await storage.getRefreshToken();
-          if (refreshToken == null) return handler.next(err);
-          final dio = Dio(baseOptions);
-          dio.interceptors.add(ErrorInterceptor());
-          final options = await setHeaders(err.requestOptions, refreshToken);
-          final response = await dio.fetch(options);
-          return handler.resolve(response);
-        } on DioException catch (err) {
-          await storage.clearTokens();
-          return handler.next(err);
-        }
+    if (err.type == DioExceptionType.badResponse && err.response?.statusCode == HttpStatus.unauthorized) {
+      try {
+        final refreshToken = await storage.getRefreshToken();
+        if (refreshToken == null) return handler.next(err);
+        final dio = Dio(sl<BaseOptions>());
+        dio.interceptors.add(ErrorInterceptor());
+        final options = await setHeaders(err.requestOptions, refreshToken);
+        final response = await dio.fetch(options);
+        return handler.resolve(response);
+      } on DioException catch (err) {
+        await storage.clearTokens();
+        return handler.next(err);
       }
     }
     handler.next(err);
