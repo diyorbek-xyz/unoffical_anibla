@@ -20,6 +20,7 @@ class HlsDownloadService {
   DownloadTask? getTask(String id) {
     final task = storage.getDownload(id);
     if (task == null) return null;
+	print(task.masterPlaylist.localUrl);
     final dir = Directory.fromUri(Uri.parse(task.masterPlaylist.localUrl).resolve("./"));
     if (dir.existsSync()) return task;
     cancel(id);

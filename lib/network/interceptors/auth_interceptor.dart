@@ -12,8 +12,8 @@ class AuthInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     final token = await storage.getAccessToken();
-    // final newOptions = await setHeaders(options, token ?? "");
-    handler.next(options);
+    final newOptions = await setHeaders(options, token ?? "");
+    handler.next(newOptions);
   }
 
   @override

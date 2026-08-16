@@ -13,23 +13,19 @@ class Utils {
     if (isMobilePlatform) return;
     await windowManager.ensureInitialized();
     WindowOptions windowOptions = WindowOptions(
-      size: Size(800, 600),
       title: "Anibla.uz Birinchi uz fandab!",
-      center: true,
-      backgroundColor: Colors.transparent,
-      skipTaskbar: false,
-      titleBarStyle: Platform.isLinux ? TitleBarStyle.hidden : TitleBarStyle.normal,
+      windowButtonVisibility: false,
+      center:true,
+      titleBarStyle: Platform.isLinux ? TitleBarStyle.hidden : null,
     );
-
-    windowManager.waitUntilReadyToShow(windowOptions, () async {
-      await windowManager.maximize();
-      await windowManager.show();
-      await windowManager.focus();
-    });
   }
 
   static Future<void> enterFullScreen() async {
     if (isDesktopPlatform) {
+      if (await windowManager.isMaximized()) {
+          await windowManager.unmaximize(); // clears the stuck WS_MAXIMIZE flag
+          await Future.delayed(const Duration(milliseconds: 50)); // let Win32 settle
+      }
       await windowManager.setFullScreen(true);
       return;
     }
@@ -40,6 +36,8 @@ class Utils {
   static Future<void> exitFullScreen() async {
     if (isDesktopPlatform) {
       await windowManager.setFullScreen(false);
+      await Future.delayed(const Duration(milliseconds: 50));
+      await windowManager.maximize(); // resets geometry cleanly
       return;
     }
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);

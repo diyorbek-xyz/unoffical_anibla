@@ -118,7 +118,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
   Widget build(BuildContext context) {
     return BlocSelector<PlayerController, PlayerStates, BoxFit>(
       selector: (state) => state.fit,
-      builder: (context, state) => Video(fit: state, aspectRatio: 21 / 9, controller: controller.controller, controls: (_) => controlsBuilder),
+      builder: (context, state) => Video(fit: state, controller: controller.controller, controls: (_) => controlsBuilder),
     );
   }
 
@@ -339,9 +339,6 @@ class _VideoPlayerState extends State<VideoPlayer> {
       final isMobile = Responsive.of(context).isMobileWidth;
       return Container(
         constraints: BoxConstraints.tightFor(height: 200),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(begin: AlignmentGeometry.bottomCenter, end: .directional(0, 1), colors: [Colors.black87, Colors.transparent]),
-        ),
         padding: EdgeInsets.only(bottom: isMobile ? 30 : 50, left: isMobile ? 10 : 30, right: isMobile ? 10 : 30),
         child: Column(
           mainAxisAlignment: .end,
