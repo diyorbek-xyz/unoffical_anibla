@@ -43,5 +43,5 @@ sealed class DownloadTask with _$DownloadTask {
   int get total => mediaPlaylist.chunks.length;
   List<Chunk> get queue => mediaPlaylist.chunks;
   double get sizeByte => mediaPlaylist.sizeByte;
-  String get id => infos.episodeId;
+  String get id => infos.episode.id;
 }

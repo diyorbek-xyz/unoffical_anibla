@@ -11,6 +11,7 @@ sealed class AnimePageProps with _$AnimePageProps {
     @JsonKey(name: "anime") required String animeSlug,
     @JsonKey(name: "season") String? seasonSlug,
     @JsonKey(name: "episode") String? episodeSlug,
+    @JsonKey(name: "video") String? localPath,
   }) = _AnimePageProps;
   factory AnimePageProps.fromJson(Map<String, dynamic> json) => _$AnimePagePropsFromJson(json);
 }

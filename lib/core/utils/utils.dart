@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:native_splash_screen/native_splash_screen.dart' as splash_screen;
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -12,12 +11,12 @@ class Utils {
   static Future<void> initFullscreen() async {
     if (isMobilePlatform) return;
     await windowManager.ensureInitialized();
-    WindowOptions windowOptions = WindowOptions(
-      title: "Anibla.uz Birinchi uz fandab!",
-      windowButtonVisibility: false,
-      center:true,
-      titleBarStyle: Platform.isLinux ? TitleBarStyle.hidden : null,
-    );
+    // WindowOptions windowOptions = WindowOptions(
+    //   title: "Anibla.uz Birinchi uz fandab!",
+    //   windowButtonVisibility: false,
+    //   center:true,
+    //   titleBarStyle: Platform.isLinux ? TitleBarStyle.hidden : null,
+    // );
   }
 
   static Future<void> enterFullScreen() async {

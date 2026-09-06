@@ -52,7 +52,7 @@ $Res call({
 });
 
 
-$AnimeModelCopyWith<$Res>? get anime;
+$AnimeModelCopyWith<$Res>? get anime;$EpisodeModelCopyWith<$Res>? get episode;
 
 }
 /// @nodoc
@@ -86,6 +86,18 @@ $AnimeModelCopyWith<$Res>? get anime {
 
   return $AnimeModelCopyWith<$Res>(_self.anime!, (value) {
     return _then(_self.copyWith(anime: value));
+  });
+}/// Create a copy of TimerModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EpisodeModelCopyWith<$Res>? get episode {
+    if (_self.episode == null) {
+    return null;
+  }
+
+  return $EpisodeModelCopyWith<$Res>(_self.episode!, (value) {
+    return _then(_self.copyWith(episode: value));
   });
 }
 }
@@ -265,7 +277,7 @@ $Res call({
 });
 
 
-@override $AnimeModelCopyWith<$Res>? get anime;
+@override $AnimeModelCopyWith<$Res>? get anime;@override $EpisodeModelCopyWith<$Res>? get episode;
 
 }
 /// @nodoc
@@ -300,6 +312,18 @@ $AnimeModelCopyWith<$Res>? get anime {
 
   return $AnimeModelCopyWith<$Res>(_self.anime!, (value) {
     return _then(_self.copyWith(anime: value));
+  });
+}/// Create a copy of TimerModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EpisodeModelCopyWith<$Res>? get episode {
+    if (_self.episode == null) {
+    return null;
+  }
+
+  return $EpisodeModelCopyWith<$Res>(_self.episode!, (value) {
+    return _then(_self.copyWith(episode: value));
   });
 }
 }

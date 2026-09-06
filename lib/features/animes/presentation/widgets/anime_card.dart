@@ -25,7 +25,7 @@ class AnimeCard extends StatefulWidget {
 }
 
 class _AnimeCardState extends State<AnimeCard> {
-  late final SavedController savedController;
+  late final LocalAnimesController savedController;
   bool isSaved = false;
   void save() {
     setState(() => isSaved = !isSaved);

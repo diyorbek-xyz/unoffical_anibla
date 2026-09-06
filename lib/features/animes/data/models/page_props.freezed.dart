@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AnimePageProps {
 
-@JsonKey(name: "type") AnimeType get animeType;@JsonKey(name: "anime") String get animeSlug;@JsonKey(name: "season") String? get seasonSlug;@JsonKey(name: "episode") String? get episodeSlug;
+@JsonKey(name: "type") AnimeType get animeType;@JsonKey(name: "anime") String get animeSlug;@JsonKey(name: "season") String? get seasonSlug;@JsonKey(name: "episode") String? get episodeSlug;@JsonKey(name: "video") String? get localPath;
 /// Create a copy of AnimePageProps
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $AnimePagePropsCopyWith<AnimePageProps> get copyWith => _$AnimePagePropsCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AnimePageProps&&(identical(other.animeType, animeType) || other.animeType == animeType)&&(identical(other.animeSlug, animeSlug) || other.animeSlug == animeSlug)&&(identical(other.seasonSlug, seasonSlug) || other.seasonSlug == seasonSlug)&&(identical(other.episodeSlug, episodeSlug) || other.episodeSlug == episodeSlug));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AnimePageProps&&(identical(other.animeType, animeType) || other.animeType == animeType)&&(identical(other.animeSlug, animeSlug) || other.animeSlug == animeSlug)&&(identical(other.seasonSlug, seasonSlug) || other.seasonSlug == seasonSlug)&&(identical(other.episodeSlug, episodeSlug) || other.episodeSlug == episodeSlug)&&(identical(other.localPath, localPath) || other.localPath == localPath));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,animeType,animeSlug,seasonSlug,episodeSlug);
+int get hashCode => Object.hash(runtimeType,animeType,animeSlug,seasonSlug,episodeSlug,localPath);
 
 @override
 String toString() {
-  return 'AnimePageProps(animeType: $animeType, animeSlug: $animeSlug, seasonSlug: $seasonSlug, episodeSlug: $episodeSlug)';
+  return 'AnimePageProps(animeType: $animeType, animeSlug: $animeSlug, seasonSlug: $seasonSlug, episodeSlug: $episodeSlug, localPath: $localPath)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $AnimePagePropsCopyWith<$Res>  {
   factory $AnimePagePropsCopyWith(AnimePageProps value, $Res Function(AnimePageProps) _then) = _$AnimePagePropsCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "type") AnimeType animeType,@JsonKey(name: "anime") String animeSlug,@JsonKey(name: "season") String? seasonSlug,@JsonKey(name: "episode") String? episodeSlug
+@JsonKey(name: "type") AnimeType animeType,@JsonKey(name: "anime") String animeSlug,@JsonKey(name: "season") String? seasonSlug,@JsonKey(name: "episode") String? episodeSlug,@JsonKey(name: "video") String? localPath
 });
 
 
@@ -65,12 +65,13 @@ class _$AnimePagePropsCopyWithImpl<$Res>
 
 /// Create a copy of AnimePageProps
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? animeType = null,Object? animeSlug = null,Object? seasonSlug = freezed,Object? episodeSlug = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? animeType = null,Object? animeSlug = null,Object? seasonSlug = freezed,Object? episodeSlug = freezed,Object? localPath = freezed,}) {
   return _then(_self.copyWith(
 animeType: null == animeType ? _self.animeType : animeType // ignore: cast_nullable_to_non_nullable
 as AnimeType,animeSlug: null == animeSlug ? _self.animeSlug : animeSlug // ignore: cast_nullable_to_non_nullable
 as String,seasonSlug: freezed == seasonSlug ? _self.seasonSlug : seasonSlug // ignore: cast_nullable_to_non_nullable
 as String?,episodeSlug: freezed == episodeSlug ? _self.episodeSlug : episodeSlug // ignore: cast_nullable_to_non_nullable
+as String?,localPath: freezed == localPath ? _self.localPath : localPath // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -153,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "type")  AnimeType animeType, @JsonKey(name: "anime")  String animeSlug, @JsonKey(name: "season")  String? seasonSlug, @JsonKey(name: "episode")  String? episodeSlug)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "type")  AnimeType animeType, @JsonKey(name: "anime")  String animeSlug, @JsonKey(name: "season")  String? seasonSlug, @JsonKey(name: "episode")  String? episodeSlug, @JsonKey(name: "video")  String? localPath)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AnimePageProps() when $default != null:
-return $default(_that.animeType,_that.animeSlug,_that.seasonSlug,_that.episodeSlug);case _:
+return $default(_that.animeType,_that.animeSlug,_that.seasonSlug,_that.episodeSlug,_that.localPath);case _:
   return orElse();
 
 }
@@ -174,10 +175,10 @@ return $default(_that.animeType,_that.animeSlug,_that.seasonSlug,_that.episodeSl
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "type")  AnimeType animeType, @JsonKey(name: "anime")  String animeSlug, @JsonKey(name: "season")  String? seasonSlug, @JsonKey(name: "episode")  String? episodeSlug)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "type")  AnimeType animeType, @JsonKey(name: "anime")  String animeSlug, @JsonKey(name: "season")  String? seasonSlug, @JsonKey(name: "episode")  String? episodeSlug, @JsonKey(name: "video")  String? localPath)  $default,) {final _that = this;
 switch (_that) {
 case _AnimePageProps():
-return $default(_that.animeType,_that.animeSlug,_that.seasonSlug,_that.episodeSlug);}
+return $default(_that.animeType,_that.animeSlug,_that.seasonSlug,_that.episodeSlug,_that.localPath);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -191,10 +192,10 @@ return $default(_that.animeType,_that.animeSlug,_that.seasonSlug,_that.episodeSl
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "type")  AnimeType animeType, @JsonKey(name: "anime")  String animeSlug, @JsonKey(name: "season")  String? seasonSlug, @JsonKey(name: "episode")  String? episodeSlug)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "type")  AnimeType animeType, @JsonKey(name: "anime")  String animeSlug, @JsonKey(name: "season")  String? seasonSlug, @JsonKey(name: "episode")  String? episodeSlug, @JsonKey(name: "video")  String? localPath)?  $default,) {final _that = this;
 switch (_that) {
 case _AnimePageProps() when $default != null:
-return $default(_that.animeType,_that.animeSlug,_that.seasonSlug,_that.episodeSlug);case _:
+return $default(_that.animeType,_that.animeSlug,_that.seasonSlug,_that.episodeSlug,_that.localPath);case _:
   return null;
 
 }
@@ -206,13 +207,14 @@ return $default(_that.animeType,_that.animeSlug,_that.seasonSlug,_that.episodeSl
 @JsonSerializable()
 
 class _AnimePageProps implements AnimePageProps {
-   _AnimePageProps({@JsonKey(name: "type") required this.animeType, @JsonKey(name: "anime") required this.animeSlug, @JsonKey(name: "season") this.seasonSlug, @JsonKey(name: "episode") this.episodeSlug});
+   _AnimePageProps({@JsonKey(name: "type") required this.animeType, @JsonKey(name: "anime") required this.animeSlug, @JsonKey(name: "season") this.seasonSlug, @JsonKey(name: "episode") this.episodeSlug, @JsonKey(name: "video") this.localPath});
   factory _AnimePageProps.fromJson(Map<String, dynamic> json) => _$AnimePagePropsFromJson(json);
 
 @override@JsonKey(name: "type") final  AnimeType animeType;
 @override@JsonKey(name: "anime") final  String animeSlug;
 @override@JsonKey(name: "season") final  String? seasonSlug;
 @override@JsonKey(name: "episode") final  String? episodeSlug;
+@override@JsonKey(name: "video") final  String? localPath;
 
 /// Create a copy of AnimePageProps
 /// with the given fields replaced by the non-null parameter values.
@@ -227,16 +229,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AnimePageProps&&(identical(other.animeType, animeType) || other.animeType == animeType)&&(identical(other.animeSlug, animeSlug) || other.animeSlug == animeSlug)&&(identical(other.seasonSlug, seasonSlug) || other.seasonSlug == seasonSlug)&&(identical(other.episodeSlug, episodeSlug) || other.episodeSlug == episodeSlug));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AnimePageProps&&(identical(other.animeType, animeType) || other.animeType == animeType)&&(identical(other.animeSlug, animeSlug) || other.animeSlug == animeSlug)&&(identical(other.seasonSlug, seasonSlug) || other.seasonSlug == seasonSlug)&&(identical(other.episodeSlug, episodeSlug) || other.episodeSlug == episodeSlug)&&(identical(other.localPath, localPath) || other.localPath == localPath));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,animeType,animeSlug,seasonSlug,episodeSlug);
+int get hashCode => Object.hash(runtimeType,animeType,animeSlug,seasonSlug,episodeSlug,localPath);
 
 @override
 String toString() {
-  return 'AnimePageProps(animeType: $animeType, animeSlug: $animeSlug, seasonSlug: $seasonSlug, episodeSlug: $episodeSlug)';
+  return 'AnimePageProps(animeType: $animeType, animeSlug: $animeSlug, seasonSlug: $seasonSlug, episodeSlug: $episodeSlug, localPath: $localPath)';
 }
 
 
@@ -247,7 +249,7 @@ abstract mixin class _$AnimePagePropsCopyWith<$Res> implements $AnimePagePropsCo
   factory _$AnimePagePropsCopyWith(_AnimePageProps value, $Res Function(_AnimePageProps) _then) = __$AnimePagePropsCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "type") AnimeType animeType,@JsonKey(name: "anime") String animeSlug,@JsonKey(name: "season") String? seasonSlug,@JsonKey(name: "episode") String? episodeSlug
+@JsonKey(name: "type") AnimeType animeType,@JsonKey(name: "anime") String animeSlug,@JsonKey(name: "season") String? seasonSlug,@JsonKey(name: "episode") String? episodeSlug,@JsonKey(name: "video") String? localPath
 });
 
 
@@ -264,12 +266,13 @@ class __$AnimePagePropsCopyWithImpl<$Res>
 
 /// Create a copy of AnimePageProps
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? animeType = null,Object? animeSlug = null,Object? seasonSlug = freezed,Object? episodeSlug = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? animeType = null,Object? animeSlug = null,Object? seasonSlug = freezed,Object? episodeSlug = freezed,Object? localPath = freezed,}) {
   return _then(_AnimePageProps(
 animeType: null == animeType ? _self.animeType : animeType // ignore: cast_nullable_to_non_nullable
 as AnimeType,animeSlug: null == animeSlug ? _self.animeSlug : animeSlug // ignore: cast_nullable_to_non_nullable
 as String,seasonSlug: freezed == seasonSlug ? _self.seasonSlug : seasonSlug // ignore: cast_nullable_to_non_nullable
 as String?,episodeSlug: freezed == episodeSlug ? _self.episodeSlug : episodeSlug // ignore: cast_nullable_to_non_nullable
+as String?,localPath: freezed == localPath ? _self.localPath : localPath // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

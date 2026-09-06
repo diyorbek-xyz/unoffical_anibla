@@ -31,7 +31,7 @@ class AnimePage extends StatefulWidget {
 }
 
 class _AnimePageState extends State<AnimePage> {
-  late final SavedController _savedController;
+  late final LocalAnimesController _savedController;
   late final AnimeController _animeController;
   late final EffectCleanup _commentsCleanup;
   bool isSaved = false;
@@ -44,7 +44,7 @@ class _AnimePageState extends State<AnimePage> {
   @override
   void initState() {
     super.initState();
-    _savedController = sl<SavedController>();
+    _savedController = sl<LocalAnimesController>();
     _animeController = sl<AnimeController>()..getFullAnime(widget.props.animeType, widget.props.animeSlug);
     _commentsCleanup = effect(() {
       final anime = _animeController.mediaState.value.value;

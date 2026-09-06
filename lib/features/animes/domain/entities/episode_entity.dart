@@ -18,8 +18,6 @@ class EpisodeEntity extends Equatable {
   final String video;
   final bool isDownloaded;
   final TimelineModel? timeline;
-  final AnimeEntity anime;
-  final SeasonEntity season;
 
   const EpisodeEntity({
     required this.episodeNumber,
@@ -29,8 +27,6 @@ class EpisodeEntity extends Equatable {
     required this.type,
     required this.video,
     required this.isDownloaded,
-    required this.anime,
-    required this.season,
     this.timeline,
   });
 
@@ -46,8 +42,6 @@ class EpisodeEntity extends Equatable {
     SeasonEntity? season,
     AnimeEntity? anime,
   }) => EpisodeEntity(
-    anime: anime ?? this.anime,
-    season: season ?? this.season,
     episodeNumber: episodeNumber ?? this.episodeNumber,
     id: id ?? this.id,
     slug: slug ?? this.slug,

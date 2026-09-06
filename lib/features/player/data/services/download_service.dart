@@ -20,7 +20,6 @@ class HlsDownloadService {
   DownloadTask? getTask(String id) {
     final task = storage.getDownload(id);
     if (task == null) return null;
-	print(task.masterPlaylist.localUrl);
     final dir = Directory.fromUri(Uri.parse(task.masterPlaylist.localUrl).resolve("./"));
     if (dir.existsSync()) return task;
     cancel(id);
@@ -50,7 +49,7 @@ class HlsDownloadService {
   Future<DownloadTask> download(DownloadInfos info) async {
     final isOnline = await Utils.checkIsOnline();
     if (!isOnline) throw Exception("Enable your wifi or mobile network");
-    final id = info.episodeId;
+    final id = info.episode.id;
     final oldState = states[id];
     if (oldState != null && oldState.status != .completed) await cancel(id);
     final master = info.masterPlaylist ?? await DownloadHlsPlaylist.downloadMasterPlaylist(info.downloadUrl, info.localFolderUrl);
@@ -81,7 +80,7 @@ class HlsDownloadService {
     if (state.status == .cancelled) return;
 
     _emit(task.id, status: .completed);
-    await DownloadHlsPlaylist.saveCompleted(task.infos.copyWith(localFolderUrl: task.masterPlaylist.localUrl));
+    await DownloadHlsPlaylist.saveCompleted(task.infos.copyWith(localPath: task.masterPlaylist.localUrl));
     await storage.saveDownload(task.id, task.copyWith(isCompleted: true));
   }
 

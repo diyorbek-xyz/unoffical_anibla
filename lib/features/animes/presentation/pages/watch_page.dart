@@ -23,22 +23,32 @@ class _WatchPageState extends State<WatchPage> {
   late final EffectCleanup _cleanup;
   late PlayerController controller;
 
+  EffectCleanup signalListener() => effect(() {
+    final anime = _animeController.mediaState.value.value;
+    final seasons = _animeController.seasonsState.value.value;
+    final episodes = _animeController.episodesState.value.value;
+    if (anime == null || seasons == null || episodes == null) return;
+    if (widget.props.animeType.isMovie) {
+      initMovie(anime);
+    } else {
+      initEpisode(anime);
+    }
+  });
+
+  void fetchData() async {
+    final animeState = _animeController.mediaState.value;
+    if (!animeState.isLoading && !animeState.hasValue && !animeState.hasError) {
+      await _animeController.getFullAnime(widget.props.animeType, widget.props.animeSlug);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     controller = context.read<PlayerController>();
     _animeController = sl<AnimeController>();
-    _cleanup = effect(() {
-      final anime = _animeController.mediaState.value.value;
-      final seasons = _animeController.seasonsState.value.value;
-      final episodes = _animeController.episodesState.value.value;
-      if (anime == null || seasons == null || episodes == null) return;
-      if (widget.props.animeType.isMovie) {
-        initMovie(anime);
-      } else {
-        initEpisode(anime);
-      }
-    });
+    _cleanup = signalListener();
+    fetchData();
   }
 
   @override
@@ -52,14 +62,14 @@ class _WatchPageState extends State<WatchPage> {
     if (episodes == null || episodes.isEmpty) return;
     final episode = episodes.firstWhere((e) => e.slug == widget.props.episodeSlug, orElse: () => episodes.first);
     final props = PlayerProps(
-      type: AnimeType.serie,
       cover: anime.cover,
       anime: anime.title.uz,
-      all: episodes.length,
       title: episode.title.uz,
+      type: AnimeType.serie,
+      all: episodes.length,
       offset: episode.episodeNumber,
-      stream: episode.video,
-      hasUrl: false,
+      stream: widget.props.localPath ?? episode.video,
+      hasUrl: widget.props.localPath != null,
     );
     if (controller.state.status == .empty) await controller.init(props);
     if (controller.state.status != .empty && widget.props.episodeSlug != null) await controller.openStream(props);
@@ -73,8 +83,8 @@ class _WatchPageState extends State<WatchPage> {
       cover: anime.cover,
       type: AnimeType.movie,
       title: anime.title.uz,
-      stream: anime.video,
-      hasUrl: false,
+      stream: widget.props.localPath ?? anime.video,
+      hasUrl: widget.props.localPath != null,
     );
     if (controller.state.status == .empty) await controller.init(props);
     if (controller.state.status != .empty) await controller.openStream(props);

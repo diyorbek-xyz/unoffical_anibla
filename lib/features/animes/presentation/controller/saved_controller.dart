@@ -4,14 +4,16 @@ import 'package:application/core/utils/extensions.dart';
 import 'package:application/features/animes/data/models/anime_model.dart';
 import 'package:application/features/animes/data/source/local/saved_ids_local.dart';
 import 'package:application/features/animes/domain/repository/anime_repository.dart';
+import 'package:application/features/player/data/source/local/downloads.dart';
 import 'package:application/network/resources/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
-class SavedController {
+class LocalAnimesController {
   final AnimeRepository _animeRepository;
   final SavedLocal _savedLocal;
-  SavedController(this._animeRepository, this._savedLocal);
+  final DownloadsLocal _downloadsLocal;
+  LocalAnimesController(this._animeRepository, this._savedLocal, this._downloadsLocal);
 
   late final savedMediaSignal = futureSignal(() async {
     final either = await _animeRepository.getSaveMedias();
@@ -40,4 +42,6 @@ class SavedController {
   }
 
   Future<void> refreshSaveds() => savedMediaSignal.refresh();
+
+  late final downloadedMediaSignal = (_downloadsLocal.getAllDownloads()?.values.toList() ?? []).toSignal();
 }

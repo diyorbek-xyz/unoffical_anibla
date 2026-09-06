@@ -17,22 +17,20 @@ class EpisodeModelAdapter extends TypeAdapter<EpisodeModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return EpisodeModel(
-      episodeNumber: (fields[4] as num?)?.toInt(),
       id: fields[0] as String?,
+      uz: fields[1] as dynamic,
       ru: fields[2] as dynamic,
       slug: fields[3] as String?,
-      uz: fields[1] as dynamic,
+      episodeNumber: (fields[4] as num?)?.toInt(),
       type: fields[5] as String?,
       video: fields[6] as String?,
-      season: fields[8] as SeasonModel?,
-      anime: fields[7] as AnimeModel?,
     );
   }
 
   @override
   void write(BinaryWriter writer, EpisodeModel obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -46,11 +44,7 @@ class EpisodeModelAdapter extends TypeAdapter<EpisodeModel> {
       ..writeByte(5)
       ..write(obj.type)
       ..writeByte(6)
-      ..write(obj.video)
-      ..writeByte(7)
-      ..write(obj.anime)
-      ..writeByte(8)
-      ..write(obj.season);
+      ..write(obj.video);
   }
 
   @override
@@ -68,23 +62,18 @@ class EpisodeModelAdapter extends TypeAdapter<EpisodeModel> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-EpisodeModel _$EpisodeModelFromJson(Map<String, dynamic> json) => EpisodeModel(
-  episodeNumber: (json['episode_number'] as num?)?.toInt(),
-  id: json['_id'] as String?,
-  ru: json['ru'],
-  slug: json['slug'] as String?,
-  uz: json['uz'],
-  type: json['type'] as String?,
-  video: json['video'] as String?,
-  season: json['season_id'] == null
-      ? null
-      : SeasonModel.fromJson(json['season_id'] as Map<String, dynamic>),
-  anime: json['series_id'] == null
-      ? null
-      : AnimeModel.fromJson(json['series_id']),
-);
+_EpisodeModel _$EpisodeModelFromJson(Map<String, dynamic> json) =>
+    _EpisodeModel(
+      id: json['_id'] as String?,
+      uz: json['uz'],
+      ru: json['ru'],
+      slug: json['slug'] as String?,
+      episodeNumber: (json['episode_number'] as num?)?.toInt(),
+      type: json['type'] as String?,
+      video: json['video'] as String?,
+    );
 
-Map<String, dynamic> _$EpisodeModelToJson(EpisodeModel instance) =>
+Map<String, dynamic> _$EpisodeModelToJson(_EpisodeModel instance) =>
     <String, dynamic>{
       '_id': instance.id,
       'uz': instance.uz,
@@ -93,6 +82,4 @@ Map<String, dynamic> _$EpisodeModelToJson(EpisodeModel instance) =>
       'episode_number': instance.episodeNumber,
       'type': instance.type,
       'video': instance.video,
-      'series_id': instance.anime,
-      'season_id': instance.season,
     };

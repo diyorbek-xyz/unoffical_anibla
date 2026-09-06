@@ -178,7 +178,7 @@ Future<void> initializeDependencies() async {
     ..registerFactory<PlayerController>(() => PlayerController(sl(), sl()))
     // Register Signal controllers;
     ..registerLazySingleton<ProfileController>(() => ProfileController(sl(), sl()))
-    ..registerLazySingleton<SavedController>(() => SavedController(sl(), sl()))
+    ..registerLazySingleton<LocalAnimesController>(() => LocalAnimesController(sl(), sl(), sl()))
     ..registerLazySingleton<AnimeController>(() => AnimeController(sl(), sl(), sl()))
     ..registerLazySingleton<ExploreController>(() => ExploreController(sl()))
     ..registerLazySingleton<SliderController>(() => SliderController(sl()));

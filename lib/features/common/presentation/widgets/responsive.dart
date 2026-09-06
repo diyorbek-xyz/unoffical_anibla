@@ -60,10 +60,7 @@ class PlatformBuilder extends StatelessWidget {
     final isDesktop = constraints.maxWidth >= MOBILE_WIDTH;
     final mobile = mobileBuilder?.call(context, isMobile);
     final desktop = desktopBuilder?.call(context, isDesktop);
-    print(mustMobile);
-    print(isMobile);
     if ((mustMobile ?? isMobile) && mobile != null) return mobile;
-    print("Hello");
     if (isDesktop && desktop != null) return desktop;
     if (child != null) return child!;
     return null;

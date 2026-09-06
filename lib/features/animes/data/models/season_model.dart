@@ -1,17 +1,13 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
 part 'season_model.g.dart';
+part 'season_model.freezed.dart';
 
-@JsonSerializable()
-class SeasonModel {
-  @JsonKey(name: "_id")
-  final String? id;
-  final dynamic uz;
-  final dynamic ru;
-  final String? slug;
-  const SeasonModel({this.id, this.ru, this.slug, this.uz});
+@freezed
+@HiveType(typeId: 4353)
+abstract class SeasonModel with _$SeasonModel {
+  factory SeasonModel({@JsonKey(name: "_id") String? id, dynamic uz, dynamic ru, String? slug}) = _SeasonModel;
 
-  factory SeasonModel.fromJson(Map<String, dynamic> json) =>
-      _$SeasonModelFromJson(json);
-  Map<String, dynamic> toJson() => _$SeasonModelToJson(this);
+  factory SeasonModel.fromJson(Map<String, dynamic> json) => _$SeasonModelFromJson(json);
 }
