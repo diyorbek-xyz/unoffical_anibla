@@ -9,6 +9,7 @@ import 'package:application/features/comment/domain/entities/response_entity.dar
 import 'package:application/features/comment/presentation/bloc/comment_bloc.dart';
 import 'package:application/features/comment/presentation/bloc/comment_event.dart';
 import 'package:application/features/comment/presentation/bloc/comment_state.dart';
+import 'package:application/features/common/presentation/image_provider/fallback_provider.dart';
 import 'package:application/features/profile/data/models/profile/profile_model.dart';
 import 'package:application/main.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -108,7 +109,7 @@ class _CommentsMenuState extends State<CommentsMenu> {
         minTileHeight: 100,
         leading: CircleAvatar(
           radius: isMobile ? 20 : 30,
-          backgroundImage: CachedNetworkImageProvider(comment.user.image),
+          backgroundImage: imageProviderFallback(comment.user.image),
           onBackgroundImageError: (exception, stackTrace) => exception.toString(),
         ),
         title: Row(

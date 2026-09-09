@@ -1,5 +1,6 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/features/animes/domain/entities/anime_entity.dart';
+import 'package:application/features/common/presentation/image_provider/fallback_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +25,7 @@ class CreatorsMenu extends StatelessWidget {
                 return ListTile(
                   leading: CircleAvatar(
                     radius: 30,
-                    backgroundImage: CachedNetworkImageProvider(creator.image),
+                    backgroundImage: imageProviderFallback(creator.image),
                     onBackgroundImageError: (exception, stackTrace) => exception.toString(),
                   ),
                   title: Text(creator.name, style: TextStyle(color: context.appColors.primary)),

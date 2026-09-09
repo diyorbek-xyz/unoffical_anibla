@@ -1,6 +1,6 @@
 import 'package:application/core/config/theme/app_colors.dart';
+import 'package:application/features/common/presentation/image_provider/fallback_provider.dart';
 import 'package:application/features/profile/presentation/widget/modals/avatars_menu.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class AvatarSelector extends StatefulWidget {
@@ -23,7 +23,7 @@ class _AvatarSelectorState extends State<AvatarSelector> {
         CircleAvatar(
           radius: 54,
           backgroundColor: context.appColors.primary,
-          backgroundImage: widget.isLoading ? null : CachedNetworkImageProvider(widget.url),
+          backgroundImage: widget.isLoading ? null : imageProviderFallback(widget.url),
           child: (widget.fallback != null) ? Text(widget.isLoading ? "N" : widget.fallback!, style: TextStyle(fontSize: 42)) : null,
         ),
         IconButton(

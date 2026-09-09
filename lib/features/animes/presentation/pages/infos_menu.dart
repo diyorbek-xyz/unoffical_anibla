@@ -2,9 +2,9 @@ import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/core/utils/base_url.dart';
 import 'package:application/core/utils/extensions.dart';
 import 'package:application/features/animes/presentation/controller/anime_controller.dart';
+import 'package:application/features/common/presentation/image_provider/fallback_provider.dart';
 import 'package:application/features/common/presentation/widgets/responsive.dart';
 import 'package:application/injection_container.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
@@ -93,7 +93,7 @@ class AnimeInfosMenu extends StatelessWidget {
                                 consumeMaxWeight: true,
                                 padding: EdgeInsets.all(3),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(30)),
-                                children: anime.images.map((e) => Ink.image(fit: .cover, image: CachedNetworkImageProvider(addBaseUrl(e)))).toList(),
+                                children: anime.images.map((e) => Ink.image(fit: .cover, image: imageProviderFallback(addBaseUrl(e)))).toList(),
                               ),
                             ),
                           ],

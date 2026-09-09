@@ -13,9 +13,10 @@ import 'package:application/features/animes/presentation/pages/infos_menu.dart';
 import 'package:application/features/comment/data/models/props.dart';
 import 'package:application/features/comment/presentation/bloc/comment_bloc.dart';
 import 'package:application/features/comment/presentation/bloc/comment_event.dart';
+import 'package:application/features/common/presentation/image_provider/fallback_provider.dart';
 import 'package:application/features/common/presentation/widgets/error.dart';
+import 'package:application/features/common/presentation/widgets/image.dart';
 import 'package:application/injection_container.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -160,16 +161,9 @@ class _AnimePageState extends State<AnimePage> {
 
   Widget animeInfo(BuildContext context, AnimeEntity anime) {
     return DecoratedBox(
-      decoration: hasBaseUrl(anime.cover)
-          ? BoxDecoration(
-              image: DecorationImage(
-                image: CachedNetworkImageProvider(anime.cover),
-                opacity: 0.6,
-                alignment: AlignmentGeometry.xy(0, -0.7),
-                fit: BoxFit.cover,
-              ),
-            )
-          : BoxDecoration(),
+      decoration: BoxDecoration(
+        image: DecorationImage(image: imageProviderFallback(anime.cover), opacity: 0.6, alignment: AlignmentGeometry.xy(0, -0.7), fit: BoxFit.cover),
+      ),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
         child: Container(
@@ -203,8 +197,8 @@ class _AnimePageState extends State<AnimePage> {
                           constraints: BoxConstraints(maxWidth: 300, minWidth: 100),
                           child: AspectRatio(
                             aspectRatio: 0.65,
-                            child: hasBaseUrl(anime.thumbnail)
-                                ? CachedNetworkImage(imageUrl: anime.thumbnail, fit: BoxFit.cover)
+                            child: isUsable(anime.thumbnail)
+                                ? SafeImage(imageUrl: anime.thumbnail, fit: BoxFit.cover,)
                                 : Skeleton.leaf(enabled: true, child: Container(color: context.appColors.error)),
                           ),
                         ),

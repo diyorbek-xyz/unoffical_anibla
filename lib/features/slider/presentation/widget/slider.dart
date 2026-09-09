@@ -3,13 +3,14 @@ import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/core/utils/base_url.dart';
 import 'package:application/features/animes/data/models/page_props.dart';
+import 'package:application/features/common/presentation/image_provider/fallback_provider.dart';
 import 'package:application/features/common/presentation/widgets/error.dart';
+import 'package:application/features/common/presentation/widgets/image.dart';
 import 'package:application/features/slider/domain/entities/slider_entity.dart';
 import 'package:application/features/slider/presentation/controller/slider_controller.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/main.dart';
 import 'package:application/network/resources/failure.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -151,7 +152,7 @@ class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin 
       final isMobile = consts.maxWidth < MOBILE_WIDTH;
       return DecoratedBox(
         decoration: BoxDecoration(
-          image: e.image.isEmpty ? null : DecorationImage(image: CachedNetworkImageProvider(e.image), fit: BoxFit.cover),
+          image: e.image.isEmpty ? null : DecorationImage(image: imageProviderFallback(e.image), fit: BoxFit.cover),
           color: e.image.isEmpty ? context.appColors.surface : null,
         ),
         child: Container(
@@ -235,7 +236,7 @@ class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin 
                 ),
               ),
               if (!(consts.maxWidth < 1000) && e.mobileImage.isNotEmpty && !isMobile)
-                CachedNetworkImage(imageUrl: addBaseUrl(e.mobileImage), height: 500, width: 300, fit: .cover),
+                SafeImage(imageUrl: addBaseUrl(e.mobileImage), height: 500, width: 300, fit: .cover),
               if (e.mobileImage.isEmpty && !isMobile) Container(height: 500, width: 300, color: context.appColors.primary),
             ],
           ),

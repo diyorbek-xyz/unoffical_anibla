@@ -1,6 +1,6 @@
 import 'package:application/core/utils/base_url.dart';
+import 'package:application/features/common/presentation/image_provider/fallback_provider.dart';
 import 'package:application/features/profile/data/models/avatar_model.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 void showAvatarsMenu(BuildContext context) => showDialog(
@@ -27,7 +27,7 @@ void showAvatarsMenu(BuildContext context) => showDialog(
               child: InkWell(
                 onTap: () {},
                 mouseCursor: SystemMouseCursors.click,
-                child: Ink.image(image: CachedNetworkImageProvider(addBaseUrl(avatar.avatar!)), fit: .cover),
+                child: Ink.image(image: imageProviderFallback(addBaseUrl(avatar.avatar!)), fit: .cover),
               ),
             ),
           );

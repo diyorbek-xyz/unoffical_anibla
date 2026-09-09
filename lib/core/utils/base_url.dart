@@ -23,6 +23,10 @@ bool hasBaseUrl(String? path) {
   return path?.contains(dotenv.env['BASE_URL']!) ?? false;
 }
 
+bool isUsable(String? path) {
+  return hasBaseUrl(path) && !(path?.endsWith(".avif") ?? true);
+}
+
 String getStreamId(String path) {
   if (path.isEmpty) return "";
   final url = Uri.parse(path);

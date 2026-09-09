@@ -3,6 +3,7 @@ import 'package:application/core/utils/base_url.dart';
 import 'package:application/features/animes/data/models/page_props.dart';
 import 'package:application/features/animes/domain/entities/anime_entity.dart';
 import 'package:application/features/animes/presentation/controller/saved_controller.dart';
+import 'package:application/features/common/presentation/image_provider/fallback_provider.dart';
 import 'package:application/features/common/presentation/widgets/tv_focuser.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/main.dart';
@@ -90,7 +91,7 @@ class _AnimeCardState extends State<AnimeCard> {
                           boxShadow: [BoxShadow(color: context.appColors.surfaceContainerLowest, blurRadius: 4, offset: Offset(0, 2))],
                           image: DecorationImage(
                             isAntiAlias: true,
-                            image: CachedNetworkImageProvider(addBaseUrl(widget.anime.thumbnail)),
+                            image: imageProviderFallback(addBaseUrl(widget.anime.thumbnail)),
                             fit: BoxFit.cover,
                             alignment: AlignmentGeometry.center,
                           ),
