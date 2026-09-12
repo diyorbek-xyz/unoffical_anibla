@@ -43,6 +43,7 @@ class PlayerController extends Cubit<PlayerStates> {
     if (Platform.isLinux) {
       await mpris?.dispose();
       mpris = await MPRIS.create(busName: "org.mpris.MediaPlayer2.anibla", identity: "Anibla.uz", desktopEntry: "anibla");
+      print("object");
       mpris!.setEventHandler(
         MPRISEventHandler(
           playPause: togglePlay,

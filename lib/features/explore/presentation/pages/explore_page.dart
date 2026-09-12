@@ -27,6 +27,7 @@ class _ExplorePageState extends State<ExplorePage> with SingleTickerProviderStat
   }
 
   final searchController = SearchController();
+
   void submitSearch(String value, BuildContext context) {
     _exploreController.searchAnime(SearchQuery.fromSearch(value));
     if (_tabController.index != 0) {
@@ -56,6 +57,7 @@ class _ExplorePageState extends State<ExplorePage> with SingleTickerProviderStat
       headerSliverBuilder: (context, _) => [
         SliverPersistentHeader(
           pinned: true,
+          floating: true,
           delegate: SearchBarDelegate(clear: clearSearch, controller: searchController, submit: submitSearch),
         ),
         SliverPersistentHeader(pinned: false, delegate: TabDelegate(_tabController)),
@@ -64,7 +66,7 @@ class _ExplorePageState extends State<ExplorePage> with SingleTickerProviderStat
         controller: _tabController,
         physics: BouncingScrollPhysics(),
         children: [
-          SearchPage(),
+          SearchPage(controller: searchController, submit: submitSearch),
           Text("hello"),
           GenresPage(controller: searchController, submit: submitSearch),
         ],
@@ -84,7 +86,7 @@ class SearchBarDelegate extends SliverPersistentHeaderDelegate {
     final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
     return Material(
       child: Container(
-        padding: .symmetric(vertical: 4),
+        padding: .only(bottom: 4, top: isMobile ? 0 : 4),
         height: 100,
         alignment: .bottomCenter,
         child: SearchBar(

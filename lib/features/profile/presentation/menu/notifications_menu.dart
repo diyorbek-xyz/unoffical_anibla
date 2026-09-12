@@ -1,16 +1,9 @@
-import 'package:application/core/config/theme/app_colors.dart';
-import 'package:application/core/config/theme/app_theme.dart';
-import 'package:application/core/utils/base_url.dart';
-import 'package:application/features/animes/data/models/anime_model.dart';
-import 'package:application/features/animes/data/models/page_props.dart';
 import 'package:application/features/common/presentation/widgets/error.dart';
-import 'package:application/features/common/presentation/widgets/image.dart';
 import 'package:application/features/common/presentation/widgets/list.dart';
 import 'package:application/features/profile/presentation/controller/profile_controller.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/network/resources/failure.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -33,56 +26,19 @@ class _NotificationsMenuState extends State<NotificationsMenu> {
         final data = state.value ?? profileController.fakeNotification;
         return Skeletonizer(
           enabled: state.isLoading,
-          child: ListsWidget.builder(
-            itemCount: data.data.length,
-            builder: (i, borderRadius) {
-              final notf = data.data.elementAt(i);
-              return Material(
-                borderRadius: .circular(20),
-                clipBehavior: .antiAlias,
-                child: InkWell(
-                  onTap: () => context.pushNamed(
-                    'anime',
-                    queryParameters: AnimePageProps(animeType: AnimeType.fromString(notf.data.mediaType), animeSlug: notf.data.mediaSlug).toJson(),
+          child: ListsWidget(
+            items: data.data
+                .map(
+                  (e) => ListModel(
+                    label: e.data.seriesName,
+                    value: "${e.data.seasonNumber}-fasl ${e.data.episodeNumber}-qism",
+                    actions: [
+                      IconButton(onPressed: () {}, icon: Icon(Icons.remove_red_eye)),
+                      IconButton(onPressed: () {}, icon: Icon(Icons.delete)),
+                    ],
                   ),
-                  child: Ink(
-                    color: context.appColors.primaryContainer,
-                    height: 190,
-                    child: Row(
-                      crossAxisAlignment: .start,
-                      children: [
-                        Padding(
-                          padding: .all(3),
-                          child: Container(
-                            clipBehavior: .antiAlias,
-                            decoration: BoxDecoration(borderRadius: .circular(15)),
-                            child: SafeImage(alignment: .center, fit: .cover, width: 130, imageUrl: addBaseUrl(notf.data.image)),
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: .symmetric(vertical: 30, horizontal: 15),
-                            child: Column(
-                              crossAxisAlignment: .start,
-                              mainAxisAlignment: .start,
-                              spacing: 5,
-                              children: [
-                                Text(notf.title, style: context.textTheme.titleLarge),
-                                Expanded(child: Text(notf.body, style: context.textTheme.bodyLarge)),
-                                Row(
-                                  mainAxisAlignment: .end,
-                                  children: [TextButton.icon(onPressed: () {}, icon: Icon(Icons.clear), label: Text("O'chirish"))],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
+                )
+                .toList(),
           ),
         );
       },

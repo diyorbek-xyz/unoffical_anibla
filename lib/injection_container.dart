@@ -2,6 +2,7 @@ import 'package:application/core/utils/utils.dart';
 import 'package:application/features/animes/data/source/local/saved_ids_local.dart';
 import 'package:application/features/animes/presentation/controller/anime_controller.dart';
 import 'package:application/features/animes/presentation/controller/saved_controller.dart';
+import 'package:application/features/explore/data/source/local/search_history_local.dart';
 import 'package:application/features/explore/presentation/controller/explore_controller.dart';
 import 'package:application/features/player/data/model/service/download_models.dart';
 import 'package:application/features/player/data/model/timeline_model.dart';
@@ -112,6 +113,7 @@ Future<void> initializeDependencies() async {
   final timelineBox = await Hive.openBox<TimelineModel>("timelineBox");
   final downloadsBox = await Hive.openBox<DownloadTask>("downloadTaskBox");
   final savedMediaIdBox = await Hive.openBox<String>("savedMediaIdBox");
+  final searchHistory = await Hive.openBox<String>("searchHistory");
 
   await Utils.closeSplashScreen();
 
@@ -133,6 +135,7 @@ Future<void> initializeDependencies() async {
     ..registerSingleton<Box<SliderModel>>(sliderBox)
     ..registerSingleton<Box<TimelineModel>>(timelineBox)
     ..registerSingleton<Box<DownloadTask>>(downloadsBox)
+    ..registerSingleton<Box<String>>(searchHistory)
     // Register miscs;
     ..registerSingleton<Dio>(dio)
     ..registerSingleton<DotEnv>(dotenv)
@@ -160,6 +163,7 @@ Future<void> initializeDependencies() async {
     ..registerSingleton<HistoryLocal>(HistoryLocalImpl(sl(instanceName: 'history')))
     ..registerSingleton<SavedLocal>(SavedLocalImpl(sl(instanceName: 'saved')))
     ..registerSingleton<Timeline>(TimelineImpl(sl()))
+    ..registerSingleton<SearchHistoryLocal>(SearchHistoryLocalImpl(sl()))
     // Register Repositories;
     ..registerLazySingleton<SliderRepository>(() => SliderRepositoryImpl(sl(), sl()))
     ..registerLazySingleton<CalendarRepository>(() => CalendarRepositoryImpl(sl(), sl()))
@@ -180,6 +184,6 @@ Future<void> initializeDependencies() async {
     ..registerLazySingleton<ProfileController>(() => ProfileController(sl(), sl()))
     ..registerLazySingleton<LocalAnimesController>(() => LocalAnimesController(sl(), sl(), sl()))
     ..registerLazySingleton<AnimeController>(() => AnimeController(sl(), sl(), sl()))
-    ..registerLazySingleton<ExploreController>(() => ExploreController(sl()))
+    ..registerLazySingleton<ExploreController>(() => ExploreController(sl(), sl()))
     ..registerLazySingleton<SliderController>(() => SliderController(sl()));
 }

@@ -7,7 +7,7 @@ class SliderController {
   final SliderRepository _sliderRepository;
   SliderController(this._sliderRepository);
 
-  final fakeSlider = List.generate(4, (index) => SliderMapper.modelToEntity(null));
+  final fakeSlider = List.generate(4, (index) => SliderMapper.modelToEntity(.new(anime: .new(uz: {"description": lorem(300)}))));
   late final sliderSignal = futureSignal(() async {
     final either = await _sliderRepository.getSlider();
     return either.getData();

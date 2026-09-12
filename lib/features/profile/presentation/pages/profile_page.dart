@@ -11,7 +11,6 @@ import 'package:application/features/profile/presentation/menu/privacy_settings.
 import 'package:application/features/profile/presentation/widget/avatar_selector.dart';
 import 'package:application/features/profile/presentation/widget/sessions.dart';
 import 'package:application/injection_container.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -77,13 +76,6 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget sliverMethod() => SignalBuilder(
     builder: (context) {
       final state = profileController.profileSignal.value;
-      if (state.hasError) {
-        return switch (state.error as ProfileFailure) {
-          ProfileLimitSession(:final sessions) => SessionsFailureWidget(sessions: sessions),
-          ProfileUnauthorized() => unauthorizedBuilder(context),
-          ProfileFailed(:final message) => ErrorBuilder(message: message, refresh: profileController.refreshAll),
-        };
-      }
       final resp = Responsive.of(context);
       return Skeletonizer(
         justifyMultiLineText: true,
@@ -100,48 +92,49 @@ class _ProfilePageState extends State<ProfilePage> {
                   Expanded(child: views[currentIndex]),
                 ],
               )
-            : CustomScrollView(
+            : SingleChildScrollView(
+                padding: .only(bottom: resp.isMobile ? 50 : 0),
                 physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                slivers: [
-                  CupertinoSliverRefreshControl(onRefresh: profileController.refreshAll),
-                  resp.isMobile
-                      ? SliverPadding(
-                          padding: .symmetric(vertical: 30, horizontal: 15),
-                          sliver: SliverToBoxAdapter(child: basicInfo),
-                        )
-                      : SliverToBoxAdapter(child: basicInfo),
-                  SliverPadding(
-                    padding: resp.isMobile ? .symmetric(horizontal: 5) : .only(right: 15),
-                    sliver: resp.isMobile ? mobileBody() : desktopBody(),
-                  ),
-                ],
+                child: Column(
+                  children: [
+                    resp.isMobile ? Padding(padding: .symmetric(vertical: 30, horizontal: 15), child: basicInfo) : basicInfo,
+                    Padding(
+                      padding: resp.isMobile ? .symmetric(horizontal: 5) : .only(right: 15),
+                      child: resp.isMobile ? mobileBody() : desktopBody(),
+                    ),
+                  ],
+                ),
               ),
       );
     },
   );
 
-  Widget mobileBody() => SliverToBoxAdapter(child: navTabs());
+  Widget mobileBody() => navTabs();
 
-  Widget desktopBody() => SliverCrossAxisGroup(
-    slivers: [
-      SliverConstrainedCrossAxis(maxExtent: 350, sliver: SliverToBoxAdapter(child: navTabs())),
-      SliverConstrainedCrossAxis(maxExtent: 10, sliver: SliverToBoxAdapter()),
-      SliverFillRemaining(child: views[currentIndex]),
+  Widget desktopBody() => Row(
+    spacing: 10,
+    crossAxisAlignment: .start,
+    children: [
+      SizedBox(width: 350, child: navTabs()),
+      Expanded(child: views[currentIndex]),
     ],
   );
 
   Widget navTabs() => ListView.separated(
     physics: NeverScrollableScrollPhysics(),
-    addRepaintBoundaries: true,
     shrinkWrap: true,
+    addRepaintBoundaries: true,
+    addAutomaticKeepAlives: false,
     itemCount: tabs.length,
     separatorBuilder: (context, index) => const SizedBox(height: 5),
     itemBuilder: (context, i) {
       final tab = tabs[i];
       final index = i;
       final selected = index == currentIndex;
+      final isNotf = index == 1;
+      final notfS = profileController.notificationSignal.value.value?.data.length;
       return ListTile(
-        title: Text(tab.label),
+        title: Text("${tab.label}${isNotf ? " ($notfS)" : ""}"),
         shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(100)),
         onTap: () => setCurrentIndex(index),
         tileColor: Colors.transparent,
@@ -175,6 +168,7 @@ class _ProfilePageState extends State<ProfilePage> {
           mainAxisAlignment: .start,
           children: [
             AvatarSelector(url: data.image, isLoading: isLoading),
+
             RichText(
               text: TextSpan(
                 children: [
@@ -213,6 +207,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ],
             ),
             Expanded(child: Container()),
+            IconButton(onPressed: () => profileController.refreshAll(), icon: Icon(Icons.refresh)),
             IconButton(
               onPressed: () => showLogoutModal(context, tokenId: data.tokenId, isCurrent: true),
               icon: Icon(Icons.exit_to_app),

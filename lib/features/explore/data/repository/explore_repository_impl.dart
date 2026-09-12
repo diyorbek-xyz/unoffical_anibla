@@ -5,6 +5,7 @@ import 'package:application/features/animes/data/models/anime_model.dart';
 import 'package:application/features/animes/domain/entities/anime_entity.dart';
 import 'package:application/features/explore/data/models/search_query.dart';
 import 'package:application/features/explore/data/source/local/history_local.dart';
+import 'package:application/features/explore/data/source/local/search_history_local.dart';
 import 'package:application/features/explore/data/source/remote/filter_api.dart';
 import 'package:application/features/explore/data/source/remote/genre_api.dart';
 import 'package:application/features/explore/domain/entities/genre_entity.dart';

@@ -2,6 +2,7 @@ import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/features/animes/domain/entities/anime_entity.dart';
 import 'package:application/features/animes/presentation/widgets/anime_card.dart';
+import 'package:application/features/common/presentation/widgets/list.dart';
 import 'package:application/features/explore/presentation/controller/explore_controller.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/main.dart';
@@ -10,7 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 class SearchPage extends StatelessWidget {
-  SearchPage({super.key});
+  final SearchController controller;
+  final Function(String value, BuildContext context) submit;
+  SearchPage({super.key, required this.controller, required this.submit});
 
   final _exploreController = sl<ExploreController>();
 
@@ -61,12 +64,28 @@ class SearchPage extends StatelessWidget {
 
   Widget historyBuilder() => SignalBuilder(
     builder: (context) {
-      final state = _exploreController.historySignal.value;
+      final state = _exploreController.searchHistorySignal.value;
       if (state.isLoading) {
         return SliverFillRemaining(child: Center(child: CircularProgressIndicator()));
       }
-      if (state.hasValue) {
-        return SliverToBoxAdapter(child: gridView(context, "Tarix", state.value ?? [], true));
+      if (state.hasValue && state.value!.isNotEmpty) {
+        return SliverToBoxAdapter(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: .tightFor(width: 700),
+              child: ListsWidget.builder(
+                builder: (index, radius) => ListTile(
+                  shape: RoundedRectangleBorder(borderRadius: radius),
+                  title: Text(state.value![index]),
+                  leading: Icon(Icons.youtube_searched_for),
+                  onTap: () => submit(state.value![index], context),
+                  trailing: IconButton(onPressed: () => _exploreController.deleteFromSearch(state.value![index]), icon: Icon(Icons.close)),
+                ),
+                itemCount: state.value!.length,
+              ),
+            ),
+          ),
+        );
       }
       return SliverFillRemaining(child: Center(child: Text("Animelarni qidiring")));
     },

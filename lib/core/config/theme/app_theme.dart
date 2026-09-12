@@ -9,14 +9,12 @@ class AppThemes {
 
   static ThemeData _themeBuilder(ColorScheme colorScheme) => ThemeData(
     colorScheme: colorScheme,
-
     useMaterial3: true,
     fontFamily: GoogleFonts.googleSansFlex().fontFamily,
     pageTransitionsTheme: pageTransitions,
     splashColor: colorScheme.primary.withAlpha(25),
     highlightColor: colorScheme.primary.withAlpha(25),
     hoverColor: colorScheme.primary.withAlpha(25),
-    
   );
 
   static final pageTransitions = PageTransitionsTheme(

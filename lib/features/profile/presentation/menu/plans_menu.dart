@@ -12,14 +12,14 @@ class PlansMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = sl<ProfileController>();
-    final scrollController = PrimaryScrollController.of(context);
     return SignalBuilder(
       builder: (context) {
         final state = controller.plansSignal.value;
         final data = state.isLoading ? controller.fakePlans : state.value ?? [];
         return GridView.builder(
-          controller: scrollController,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 2.5, mainAxisSpacing: 5, crossAxisSpacing: 5),
+          physics: NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
           itemCount: data.length,
           itemBuilder: (context, index) {
             final pricePerM = (data[index].price / data[index].time);

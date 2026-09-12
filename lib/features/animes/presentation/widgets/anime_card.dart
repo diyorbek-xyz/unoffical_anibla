@@ -7,7 +7,6 @@ import 'package:application/features/common/presentation/image_provider/fallback
 import 'package:application/features/common/presentation/widgets/tv_focuser.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/main.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';

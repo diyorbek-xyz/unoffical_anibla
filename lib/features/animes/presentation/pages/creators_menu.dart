@@ -1,7 +1,6 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/features/animes/domain/entities/anime_entity.dart';
 import 'package:application/features/common/presentation/image_provider/fallback_provider.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class CreatorsMenu extends StatelessWidget {

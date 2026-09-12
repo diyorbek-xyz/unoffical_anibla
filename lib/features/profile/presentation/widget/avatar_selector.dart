@@ -26,14 +26,16 @@ class _AvatarSelectorState extends State<AvatarSelector> {
           backgroundImage: widget.isLoading ? null : imageProviderFallback(widget.url),
           child: (widget.fallback != null) ? Text(widget.isLoading ? "N" : widget.fallback!, style: TextStyle(fontSize: 42)) : null,
         ),
-        IconButton(
-          onPressed: () => showAvatarsMenu(context),
-          constraints: BoxConstraints.tightFor(height: 35, width: 35),
-          padding: EdgeInsets.all(0),
-          mouseCursor: SystemMouseCursors.click,
-          color: context.appColors.onPrimary,
-          style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(context.appColors.primary)),
-          icon: Icon(Icons.edit),
+        RepaintBoundary(
+          child: IconButton(
+            onPressed: () => showAvatarsMenu(context),
+            constraints: BoxConstraints.tightFor(height: 35, width: 35),
+            padding: EdgeInsets.all(0),
+            mouseCursor: SystemMouseCursors.click,
+            color: context.appColors.onPrimary,
+            style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(context.appColors.primary)),
+            icon: Icon(Icons.edit),
+          ),
         ),
       ],
     );

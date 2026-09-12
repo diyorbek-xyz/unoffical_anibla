@@ -12,7 +12,6 @@ import 'package:application/features/comment/presentation/bloc/comment_state.dar
 import 'package:application/features/common/presentation/image_provider/fallback_provider.dart';
 import 'package:application/features/profile/data/models/profile/profile_model.dart';
 import 'package:application/main.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';

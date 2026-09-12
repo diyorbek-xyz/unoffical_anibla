@@ -48,6 +48,9 @@ class ListsWidget extends StatelessWidget {
       controller: PrimaryScrollController.maybeOf(context),
       itemCount: itemCount,
       shrinkWrap: true,
+      addRepaintBoundaries: true,
+      addAutomaticKeepAlives: false,
+      physics: NeverScrollableScrollPhysics(),
       separatorBuilder: (context, index) => const SizedBox(height: 1.5),
       itemBuilder: (context, i) => builder(i, borderRadius.fromIndex(i, itemCount)),
     ),
@@ -59,6 +62,8 @@ class ListsWidget extends StatelessWidget {
       controller: PrimaryScrollController.maybeOf(context),
       itemCount: items.length,
       shrinkWrap: true,
+      addRepaintBoundaries: true,
+      addAutomaticKeepAlives: false,
       separatorBuilder: (context, index) => const SizedBox(height: 1.5),
       itemBuilder: (context, index) {
         final list = items[index];
