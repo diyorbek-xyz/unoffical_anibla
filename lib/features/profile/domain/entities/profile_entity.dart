@@ -1,4 +1,4 @@
-import 'package:application/features/animes/domain/entities/anime_entity.dart';
+import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/features/profile/domain/entities/privacy_entity.dart';
 import 'package:application/features/profile/domain/entities/session_entity.dart';
 import 'package:equatable/equatable.dart';
@@ -25,7 +25,7 @@ class ProfileEntity extends Equatable {
   final String nameLC;
   final String phoneStr;
   final String paymentIdStr;
-  final AnimeEntity lastAnime;
+  final Anime lastAnime;
   final String tokenId;
   final List<SessionEntity> sessions;
   final List<dynamic> savedSeries;

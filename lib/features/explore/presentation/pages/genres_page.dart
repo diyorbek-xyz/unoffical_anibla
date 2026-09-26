@@ -1,6 +1,6 @@
 import 'package:application/core/config/theme/app_colors.dart';
+import 'package:application/features/anibla/data/models/data/genre.dart';
 import 'package:application/features/common/presentation/widgets/error.dart';
-import 'package:application/features/explore/domain/entities/genre_entity.dart';
 import 'package:application/features/explore/presentation/controller/explore_controller.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/network/resources/failure.dart';
@@ -52,7 +52,7 @@ class GenresPage extends StatelessWidget {
     );
   }
 
-  InkWell genreItem(BuildContext context, GenreEntity e) {
+  InkWell genreItem(BuildContext context, Genre e) {
     void searchGenre() {
       submit(controller.text += " g:${e.id}", context);
     }

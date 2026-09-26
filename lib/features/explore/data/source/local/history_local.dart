@@ -1,16 +1,16 @@
-import 'package:application/features/animes/data/models/anime_model.dart';
+import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:hive_ce/hive_ce.dart';
 
 abstract class HistoryLocal {
-  Future<void> saveToHistory(AnimeModel anime);
+  Future<void> saveToHistory(Anime anime);
   Future<void> deleteFromHistory(String id);
-  Future<AnimeModel?> getFromHistory(String id);
+  Future<Anime?> getFromHistory(String id);
   Future<void> clearHistory();
-  Future<List<AnimeModel>?> getHistory();
+  Future<List<Anime>?> getHistory();
 }
 
 class HistoryLocalImpl implements HistoryLocal {
-  final Box<AnimeModel> box;
+  final Box<Anime> box;
   const HistoryLocalImpl(this.box);
 
   @override
@@ -24,17 +24,17 @@ class HistoryLocalImpl implements HistoryLocal {
   }
 
   @override
-  Future<AnimeModel?> getFromHistory(String id) async {
+  Future<Anime?> getFromHistory(String id) async {
     return box.get(id);
   }
 
   @override
-  Future<void> saveToHistory(AnimeModel anime) async {
+  Future<void> saveToHistory(Anime anime) async {
     await box.put(anime.id, anime);
   }
 
   @override
-  Future<List<AnimeModel>?> getHistory() async {
+  Future<List<Anime>?> getHistory() async {
     return box.values.toList();
   }
 }

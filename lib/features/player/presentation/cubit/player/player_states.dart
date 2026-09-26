@@ -1,4 +1,4 @@
-import 'package:application/features/animes/data/models/anime_model.dart';
+import 'package:application/features/anibla/data/enums/anime_type.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:media_kit/media_kit.dart';

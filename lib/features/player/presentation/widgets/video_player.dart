@@ -4,7 +4,7 @@ import 'package:application/core/config/theme/app_theme.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:application/core/config/theme/app_colors.dart';
-import 'package:application/features/animes/data/models/anime_model.dart';
+import 'package:application/features/anibla/data/enums/anime_type.dart';
 import 'package:application/features/common/presentation/widgets/responsive.dart';
 import 'package:application/features/player/presentation/cubit/player/player_controller.dart';
 import 'package:application/features/player/presentation/cubit/player/player_states.dart';

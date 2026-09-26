@@ -1,5 +1,6 @@
 import 'package:application/core/resources/api_response.dart';
-import 'package:application/features/animes/data/models/anime_model.dart';
+import 'package:application/features/anibla/data/enums/anime_type.dart';
+import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -10,5 +11,5 @@ abstract class FilterApi {
   factory FilterApi(Dio dio) = _FilterApi;
 
   @GET('/v1/{type}/mobile')
-  Future<HttpResponse<ApiResponse<List<AnimeModel>>>> searchAnime(@Path("type") AnimeType type, @Queries() query);
+  Future<HttpResponse<ApiResponse<List<Anime>>>> searchAnime(@Path("type") AnimeType type, @Queries() query);
 }

@@ -1,12 +1,6 @@
-import 'package:application/features/animes/data/mapper/anime_mapper.dart';
-import 'package:application/features/animes/data/mapper/episode_mapper.dart';
-import 'package:application/features/animes/data/mapper/season_mapper.dart';
-import 'package:application/features/animes/data/models/anime_model.dart';
-import 'package:application/features/animes/data/models/episode_model.dart';
-import 'package:application/features/animes/data/models/season_model.dart';
-import 'package:application/features/animes/domain/entities/anime_entity.dart';
-import 'package:application/features/animes/domain/entities/episode_entity.dart';
-import 'package:application/features/animes/domain/entities/season_entity.dart';
+import 'package:application/features/anibla/data/models/main/anime.dart';
+import 'package:application/features/anibla/data/models/main/episode.dart';
+import 'package:application/features/anibla/data/models/main/season.dart';
 import 'package:application/features/player/data/model/parser_models.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
@@ -22,9 +16,9 @@ abstract class DownloadInfos with _$DownloadInfos {
     @HiveField(0) final DateTime? downloadedAt,
     @HiveField(1) required final int size,
     @HiveField(2) required final String downloadUrl,
-    @HiveField(4) required final AnimeModel animeModel,
-    @HiveField(5) required final SeasonModel seasonModel,
-    @HiveField(6) required final EpisodeModel episodeModel,
+    @HiveField(4) required final Anime anime,
+    @HiveField(5) required final Season season,
+    @HiveField(6) required final Episode episode,
     @HiveField(7) @Default("") String localPath,
     @JsonKey(includeFromJson: false, includeToJson: false) final MasterPlaylist? masterPlaylist,
     @JsonKey(includeFromJson: false, includeToJson: false) final Variant? variant,
@@ -35,10 +29,6 @@ abstract class DownloadInfos with _$DownloadInfos {
 
   @HiveField(9)
   String get localFolderUrl => "${anime.id}/${season.id}/${episode.id}";
-
-  AnimeEntity get anime => AnimeMapper.modelToEntity(animeModel);
-  SeasonEntity get season => SeasonMapper.modelToEntity(seasonModel);
-  EpisodeEntity get episode => EpisodeMapper.modelToEntity(episodeModel);
 
   factory DownloadInfos.fromJson(Map<String, dynamic> json) => _$DownloadInfosFromJson(json);
 }

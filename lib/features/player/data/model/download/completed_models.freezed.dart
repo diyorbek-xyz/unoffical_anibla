@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DownloadInfos {
 
-@HiveField(0) DateTime? get downloadedAt;@HiveField(1) int get size;@HiveField(2) String get downloadUrl;@HiveField(4) AnimeModel get animeModel;@HiveField(5) SeasonModel get seasonModel;@HiveField(6) EpisodeModel get episodeModel;@HiveField(7) String get localPath;@JsonKey(includeFromJson: false, includeToJson: false) MasterPlaylist? get masterPlaylist;@JsonKey(includeFromJson: false, includeToJson: false) Variant? get variant;
+@HiveField(0) DateTime? get downloadedAt;@HiveField(1) int get size;@HiveField(2) String get downloadUrl;@HiveField(4) Anime get anime;@HiveField(5) Season get season;@HiveField(6) Episode get episode;@HiveField(7) String get localPath;@JsonKey(includeFromJson: false, includeToJson: false) MasterPlaylist? get masterPlaylist;@JsonKey(includeFromJson: false, includeToJson: false) Variant? get variant;
 /// Create a copy of DownloadInfos
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $DownloadInfosCopyWith<DownloadInfos> get copyWith => _$DownloadInfosCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DownloadInfos&&(identical(other.downloadedAt, downloadedAt) || other.downloadedAt == downloadedAt)&&(identical(other.size, size) || other.size == size)&&(identical(other.downloadUrl, downloadUrl) || other.downloadUrl == downloadUrl)&&(identical(other.animeModel, animeModel) || other.animeModel == animeModel)&&(identical(other.seasonModel, seasonModel) || other.seasonModel == seasonModel)&&(identical(other.episodeModel, episodeModel) || other.episodeModel == episodeModel)&&(identical(other.localPath, localPath) || other.localPath == localPath)&&(identical(other.masterPlaylist, masterPlaylist) || other.masterPlaylist == masterPlaylist)&&(identical(other.variant, variant) || other.variant == variant));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DownloadInfos&&(identical(other.downloadedAt, downloadedAt) || other.downloadedAt == downloadedAt)&&(identical(other.size, size) || other.size == size)&&(identical(other.downloadUrl, downloadUrl) || other.downloadUrl == downloadUrl)&&(identical(other.anime, anime) || other.anime == anime)&&(identical(other.season, season) || other.season == season)&&(identical(other.episode, episode) || other.episode == episode)&&(identical(other.localPath, localPath) || other.localPath == localPath)&&(identical(other.masterPlaylist, masterPlaylist) || other.masterPlaylist == masterPlaylist)&&(identical(other.variant, variant) || other.variant == variant));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,downloadedAt,size,downloadUrl,animeModel,seasonModel,episodeModel,localPath,masterPlaylist,variant);
+int get hashCode => Object.hash(runtimeType,downloadedAt,size,downloadUrl,anime,season,episode,localPath,masterPlaylist,variant);
 
 @override
 String toString() {
-  return 'DownloadInfos(downloadedAt: $downloadedAt, size: $size, downloadUrl: $downloadUrl, animeModel: $animeModel, seasonModel: $seasonModel, episodeModel: $episodeModel, localPath: $localPath, masterPlaylist: $masterPlaylist, variant: $variant)';
+  return 'DownloadInfos(downloadedAt: $downloadedAt, size: $size, downloadUrl: $downloadUrl, anime: $anime, season: $season, episode: $episode, localPath: $localPath, masterPlaylist: $masterPlaylist, variant: $variant)';
 }
 
 
@@ -48,11 +48,11 @@ abstract mixin class $DownloadInfosCopyWith<$Res>  {
   factory $DownloadInfosCopyWith(DownloadInfos value, $Res Function(DownloadInfos) _then) = _$DownloadInfosCopyWithImpl;
 @useResult
 $Res call({
-@HiveField(0) DateTime? downloadedAt,@HiveField(1) int size,@HiveField(2) String downloadUrl,@HiveField(4) AnimeModel animeModel,@HiveField(5) SeasonModel seasonModel,@HiveField(6) EpisodeModel episodeModel,@HiveField(7) String localPath,@JsonKey(includeFromJson: false, includeToJson: false) MasterPlaylist? masterPlaylist,@JsonKey(includeFromJson: false, includeToJson: false) Variant? variant
+@HiveField(0) DateTime? downloadedAt,@HiveField(1) int size,@HiveField(2) String downloadUrl,@HiveField(4) Anime anime,@HiveField(5) Season season,@HiveField(6) Episode episode,@HiveField(7) String localPath,@JsonKey(includeFromJson: false, includeToJson: false) MasterPlaylist? masterPlaylist,@JsonKey(includeFromJson: false, includeToJson: false) Variant? variant
 });
 
 
-$AnimeModelCopyWith<$Res> get animeModel;$SeasonModelCopyWith<$Res> get seasonModel;$EpisodeModelCopyWith<$Res> get episodeModel;$MasterPlaylistCopyWith<$Res>? get masterPlaylist;$VariantCopyWith<$Res>? get variant;
+$AnimeCopyWith<$Res> get anime;$SeasonCopyWith<$Res> get season;$EpisodeCopyWith<$Res> get episode;$MasterPlaylistCopyWith<$Res>? get masterPlaylist;$VariantCopyWith<$Res>? get variant;
 
 }
 /// @nodoc
@@ -65,15 +65,15 @@ class _$DownloadInfosCopyWithImpl<$Res>
 
 /// Create a copy of DownloadInfos
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? downloadedAt = freezed,Object? size = null,Object? downloadUrl = null,Object? animeModel = null,Object? seasonModel = null,Object? episodeModel = null,Object? localPath = null,Object? masterPlaylist = freezed,Object? variant = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? downloadedAt = freezed,Object? size = null,Object? downloadUrl = null,Object? anime = null,Object? season = null,Object? episode = null,Object? localPath = null,Object? masterPlaylist = freezed,Object? variant = freezed,}) {
   return _then(_self.copyWith(
 downloadedAt: freezed == downloadedAt ? _self.downloadedAt : downloadedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,size: null == size ? _self.size : size // ignore: cast_nullable_to_non_nullable
 as int,downloadUrl: null == downloadUrl ? _self.downloadUrl : downloadUrl // ignore: cast_nullable_to_non_nullable
-as String,animeModel: null == animeModel ? _self.animeModel : animeModel // ignore: cast_nullable_to_non_nullable
-as AnimeModel,seasonModel: null == seasonModel ? _self.seasonModel : seasonModel // ignore: cast_nullable_to_non_nullable
-as SeasonModel,episodeModel: null == episodeModel ? _self.episodeModel : episodeModel // ignore: cast_nullable_to_non_nullable
-as EpisodeModel,localPath: null == localPath ? _self.localPath : localPath // ignore: cast_nullable_to_non_nullable
+as String,anime: null == anime ? _self.anime : anime // ignore: cast_nullable_to_non_nullable
+as Anime,season: null == season ? _self.season : season // ignore: cast_nullable_to_non_nullable
+as Season,episode: null == episode ? _self.episode : episode // ignore: cast_nullable_to_non_nullable
+as Episode,localPath: null == localPath ? _self.localPath : localPath // ignore: cast_nullable_to_non_nullable
 as String,masterPlaylist: freezed == masterPlaylist ? _self.masterPlaylist : masterPlaylist // ignore: cast_nullable_to_non_nullable
 as MasterPlaylist?,variant: freezed == variant ? _self.variant : variant // ignore: cast_nullable_to_non_nullable
 as Variant?,
@@ -83,28 +83,28 @@ as Variant?,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$AnimeModelCopyWith<$Res> get animeModel {
+$AnimeCopyWith<$Res> get anime {
   
-  return $AnimeModelCopyWith<$Res>(_self.animeModel, (value) {
-    return _then(_self.copyWith(animeModel: value));
+  return $AnimeCopyWith<$Res>(_self.anime, (value) {
+    return _then(_self.copyWith(anime: value));
   });
 }/// Create a copy of DownloadInfos
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$SeasonModelCopyWith<$Res> get seasonModel {
+$SeasonCopyWith<$Res> get season {
   
-  return $SeasonModelCopyWith<$Res>(_self.seasonModel, (value) {
-    return _then(_self.copyWith(seasonModel: value));
+  return $SeasonCopyWith<$Res>(_self.season, (value) {
+    return _then(_self.copyWith(season: value));
   });
 }/// Create a copy of DownloadInfos
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$EpisodeModelCopyWith<$Res> get episodeModel {
+$EpisodeCopyWith<$Res> get episode {
   
-  return $EpisodeModelCopyWith<$Res>(_self.episodeModel, (value) {
-    return _then(_self.copyWith(episodeModel: value));
+  return $EpisodeCopyWith<$Res>(_self.episode, (value) {
+    return _then(_self.copyWith(episode: value));
   });
 }/// Create a copy of DownloadInfos
 /// with the given fields replaced by the non-null parameter values.
@@ -212,10 +212,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@HiveField(0)  DateTime? downloadedAt, @HiveField(1)  int size, @HiveField(2)  String downloadUrl, @HiveField(4)  AnimeModel animeModel, @HiveField(5)  SeasonModel seasonModel, @HiveField(6)  EpisodeModel episodeModel, @HiveField(7)  String localPath, @JsonKey(includeFromJson: false, includeToJson: false)  MasterPlaylist? masterPlaylist, @JsonKey(includeFromJson: false, includeToJson: false)  Variant? variant)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@HiveField(0)  DateTime? downloadedAt, @HiveField(1)  int size, @HiveField(2)  String downloadUrl, @HiveField(4)  Anime anime, @HiveField(5)  Season season, @HiveField(6)  Episode episode, @HiveField(7)  String localPath, @JsonKey(includeFromJson: false, includeToJson: false)  MasterPlaylist? masterPlaylist, @JsonKey(includeFromJson: false, includeToJson: false)  Variant? variant)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DownloadInfos() when $default != null:
-return $default(_that.downloadedAt,_that.size,_that.downloadUrl,_that.animeModel,_that.seasonModel,_that.episodeModel,_that.localPath,_that.masterPlaylist,_that.variant);case _:
+return $default(_that.downloadedAt,_that.size,_that.downloadUrl,_that.anime,_that.season,_that.episode,_that.localPath,_that.masterPlaylist,_that.variant);case _:
   return orElse();
 
 }
@@ -233,10 +233,10 @@ return $default(_that.downloadedAt,_that.size,_that.downloadUrl,_that.animeModel
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@HiveField(0)  DateTime? downloadedAt, @HiveField(1)  int size, @HiveField(2)  String downloadUrl, @HiveField(4)  AnimeModel animeModel, @HiveField(5)  SeasonModel seasonModel, @HiveField(6)  EpisodeModel episodeModel, @HiveField(7)  String localPath, @JsonKey(includeFromJson: false, includeToJson: false)  MasterPlaylist? masterPlaylist, @JsonKey(includeFromJson: false, includeToJson: false)  Variant? variant)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@HiveField(0)  DateTime? downloadedAt, @HiveField(1)  int size, @HiveField(2)  String downloadUrl, @HiveField(4)  Anime anime, @HiveField(5)  Season season, @HiveField(6)  Episode episode, @HiveField(7)  String localPath, @JsonKey(includeFromJson: false, includeToJson: false)  MasterPlaylist? masterPlaylist, @JsonKey(includeFromJson: false, includeToJson: false)  Variant? variant)  $default,) {final _that = this;
 switch (_that) {
 case _DownloadInfos():
-return $default(_that.downloadedAt,_that.size,_that.downloadUrl,_that.animeModel,_that.seasonModel,_that.episodeModel,_that.localPath,_that.masterPlaylist,_that.variant);case _:
+return $default(_that.downloadedAt,_that.size,_that.downloadUrl,_that.anime,_that.season,_that.episode,_that.localPath,_that.masterPlaylist,_that.variant);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -253,10 +253,10 @@ return $default(_that.downloadedAt,_that.size,_that.downloadUrl,_that.animeModel
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@HiveField(0)  DateTime? downloadedAt, @HiveField(1)  int size, @HiveField(2)  String downloadUrl, @HiveField(4)  AnimeModel animeModel, @HiveField(5)  SeasonModel seasonModel, @HiveField(6)  EpisodeModel episodeModel, @HiveField(7)  String localPath, @JsonKey(includeFromJson: false, includeToJson: false)  MasterPlaylist? masterPlaylist, @JsonKey(includeFromJson: false, includeToJson: false)  Variant? variant)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@HiveField(0)  DateTime? downloadedAt, @HiveField(1)  int size, @HiveField(2)  String downloadUrl, @HiveField(4)  Anime anime, @HiveField(5)  Season season, @HiveField(6)  Episode episode, @HiveField(7)  String localPath, @JsonKey(includeFromJson: false, includeToJson: false)  MasterPlaylist? masterPlaylist, @JsonKey(includeFromJson: false, includeToJson: false)  Variant? variant)?  $default,) {final _that = this;
 switch (_that) {
 case _DownloadInfos() when $default != null:
-return $default(_that.downloadedAt,_that.size,_that.downloadUrl,_that.animeModel,_that.seasonModel,_that.episodeModel,_that.localPath,_that.masterPlaylist,_that.variant);case _:
+return $default(_that.downloadedAt,_that.size,_that.downloadUrl,_that.anime,_that.season,_that.episode,_that.localPath,_that.masterPlaylist,_that.variant);case _:
   return null;
 
 }
@@ -268,15 +268,15 @@ return $default(_that.downloadedAt,_that.size,_that.downloadUrl,_that.animeModel
 @JsonSerializable()
 
 class _DownloadInfos extends DownloadInfos {
-   _DownloadInfos({@HiveField(0) this.downloadedAt, @HiveField(1) required this.size, @HiveField(2) required this.downloadUrl, @HiveField(4) required this.animeModel, @HiveField(5) required this.seasonModel, @HiveField(6) required this.episodeModel, @HiveField(7) this.localPath = "", @JsonKey(includeFromJson: false, includeToJson: false) this.masterPlaylist, @JsonKey(includeFromJson: false, includeToJson: false) this.variant}): super._();
+   _DownloadInfos({@HiveField(0) this.downloadedAt, @HiveField(1) required this.size, @HiveField(2) required this.downloadUrl, @HiveField(4) required this.anime, @HiveField(5) required this.season, @HiveField(6) required this.episode, @HiveField(7) this.localPath = "", @JsonKey(includeFromJson: false, includeToJson: false) this.masterPlaylist, @JsonKey(includeFromJson: false, includeToJson: false) this.variant}): super._();
   factory _DownloadInfos.fromJson(Map<String, dynamic> json) => _$DownloadInfosFromJson(json);
 
 @override@HiveField(0) final  DateTime? downloadedAt;
 @override@HiveField(1) final  int size;
 @override@HiveField(2) final  String downloadUrl;
-@override@HiveField(4) final  AnimeModel animeModel;
-@override@HiveField(5) final  SeasonModel seasonModel;
-@override@HiveField(6) final  EpisodeModel episodeModel;
+@override@HiveField(4) final  Anime anime;
+@override@HiveField(5) final  Season season;
+@override@HiveField(6) final  Episode episode;
 @override@JsonKey()@HiveField(7) final  String localPath;
 @override@JsonKey(includeFromJson: false, includeToJson: false) final  MasterPlaylist? masterPlaylist;
 @override@JsonKey(includeFromJson: false, includeToJson: false) final  Variant? variant;
@@ -294,16 +294,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DownloadInfos&&(identical(other.downloadedAt, downloadedAt) || other.downloadedAt == downloadedAt)&&(identical(other.size, size) || other.size == size)&&(identical(other.downloadUrl, downloadUrl) || other.downloadUrl == downloadUrl)&&(identical(other.animeModel, animeModel) || other.animeModel == animeModel)&&(identical(other.seasonModel, seasonModel) || other.seasonModel == seasonModel)&&(identical(other.episodeModel, episodeModel) || other.episodeModel == episodeModel)&&(identical(other.localPath, localPath) || other.localPath == localPath)&&(identical(other.masterPlaylist, masterPlaylist) || other.masterPlaylist == masterPlaylist)&&(identical(other.variant, variant) || other.variant == variant));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DownloadInfos&&(identical(other.downloadedAt, downloadedAt) || other.downloadedAt == downloadedAt)&&(identical(other.size, size) || other.size == size)&&(identical(other.downloadUrl, downloadUrl) || other.downloadUrl == downloadUrl)&&(identical(other.anime, anime) || other.anime == anime)&&(identical(other.season, season) || other.season == season)&&(identical(other.episode, episode) || other.episode == episode)&&(identical(other.localPath, localPath) || other.localPath == localPath)&&(identical(other.masterPlaylist, masterPlaylist) || other.masterPlaylist == masterPlaylist)&&(identical(other.variant, variant) || other.variant == variant));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,downloadedAt,size,downloadUrl,animeModel,seasonModel,episodeModel,localPath,masterPlaylist,variant);
+int get hashCode => Object.hash(runtimeType,downloadedAt,size,downloadUrl,anime,season,episode,localPath,masterPlaylist,variant);
 
 @override
 String toString() {
-  return 'DownloadInfos(downloadedAt: $downloadedAt, size: $size, downloadUrl: $downloadUrl, animeModel: $animeModel, seasonModel: $seasonModel, episodeModel: $episodeModel, localPath: $localPath, masterPlaylist: $masterPlaylist, variant: $variant)';
+  return 'DownloadInfos(downloadedAt: $downloadedAt, size: $size, downloadUrl: $downloadUrl, anime: $anime, season: $season, episode: $episode, localPath: $localPath, masterPlaylist: $masterPlaylist, variant: $variant)';
 }
 
 
@@ -314,11 +314,11 @@ abstract mixin class _$DownloadInfosCopyWith<$Res> implements $DownloadInfosCopy
   factory _$DownloadInfosCopyWith(_DownloadInfos value, $Res Function(_DownloadInfos) _then) = __$DownloadInfosCopyWithImpl;
 @override @useResult
 $Res call({
-@HiveField(0) DateTime? downloadedAt,@HiveField(1) int size,@HiveField(2) String downloadUrl,@HiveField(4) AnimeModel animeModel,@HiveField(5) SeasonModel seasonModel,@HiveField(6) EpisodeModel episodeModel,@HiveField(7) String localPath,@JsonKey(includeFromJson: false, includeToJson: false) MasterPlaylist? masterPlaylist,@JsonKey(includeFromJson: false, includeToJson: false) Variant? variant
+@HiveField(0) DateTime? downloadedAt,@HiveField(1) int size,@HiveField(2) String downloadUrl,@HiveField(4) Anime anime,@HiveField(5) Season season,@HiveField(6) Episode episode,@HiveField(7) String localPath,@JsonKey(includeFromJson: false, includeToJson: false) MasterPlaylist? masterPlaylist,@JsonKey(includeFromJson: false, includeToJson: false) Variant? variant
 });
 
 
-@override $AnimeModelCopyWith<$Res> get animeModel;@override $SeasonModelCopyWith<$Res> get seasonModel;@override $EpisodeModelCopyWith<$Res> get episodeModel;@override $MasterPlaylistCopyWith<$Res>? get masterPlaylist;@override $VariantCopyWith<$Res>? get variant;
+@override $AnimeCopyWith<$Res> get anime;@override $SeasonCopyWith<$Res> get season;@override $EpisodeCopyWith<$Res> get episode;@override $MasterPlaylistCopyWith<$Res>? get masterPlaylist;@override $VariantCopyWith<$Res>? get variant;
 
 }
 /// @nodoc
@@ -331,15 +331,15 @@ class __$DownloadInfosCopyWithImpl<$Res>
 
 /// Create a copy of DownloadInfos
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? downloadedAt = freezed,Object? size = null,Object? downloadUrl = null,Object? animeModel = null,Object? seasonModel = null,Object? episodeModel = null,Object? localPath = null,Object? masterPlaylist = freezed,Object? variant = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? downloadedAt = freezed,Object? size = null,Object? downloadUrl = null,Object? anime = null,Object? season = null,Object? episode = null,Object? localPath = null,Object? masterPlaylist = freezed,Object? variant = freezed,}) {
   return _then(_DownloadInfos(
 downloadedAt: freezed == downloadedAt ? _self.downloadedAt : downloadedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,size: null == size ? _self.size : size // ignore: cast_nullable_to_non_nullable
 as int,downloadUrl: null == downloadUrl ? _self.downloadUrl : downloadUrl // ignore: cast_nullable_to_non_nullable
-as String,animeModel: null == animeModel ? _self.animeModel : animeModel // ignore: cast_nullable_to_non_nullable
-as AnimeModel,seasonModel: null == seasonModel ? _self.seasonModel : seasonModel // ignore: cast_nullable_to_non_nullable
-as SeasonModel,episodeModel: null == episodeModel ? _self.episodeModel : episodeModel // ignore: cast_nullable_to_non_nullable
-as EpisodeModel,localPath: null == localPath ? _self.localPath : localPath // ignore: cast_nullable_to_non_nullable
+as String,anime: null == anime ? _self.anime : anime // ignore: cast_nullable_to_non_nullable
+as Anime,season: null == season ? _self.season : season // ignore: cast_nullable_to_non_nullable
+as Season,episode: null == episode ? _self.episode : episode // ignore: cast_nullable_to_non_nullable
+as Episode,localPath: null == localPath ? _self.localPath : localPath // ignore: cast_nullable_to_non_nullable
 as String,masterPlaylist: freezed == masterPlaylist ? _self.masterPlaylist : masterPlaylist // ignore: cast_nullable_to_non_nullable
 as MasterPlaylist?,variant: freezed == variant ? _self.variant : variant // ignore: cast_nullable_to_non_nullable
 as Variant?,
@@ -350,28 +350,28 @@ as Variant?,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$AnimeModelCopyWith<$Res> get animeModel {
+$AnimeCopyWith<$Res> get anime {
   
-  return $AnimeModelCopyWith<$Res>(_self.animeModel, (value) {
-    return _then(_self.copyWith(animeModel: value));
+  return $AnimeCopyWith<$Res>(_self.anime, (value) {
+    return _then(_self.copyWith(anime: value));
   });
 }/// Create a copy of DownloadInfos
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$SeasonModelCopyWith<$Res> get seasonModel {
+$SeasonCopyWith<$Res> get season {
   
-  return $SeasonModelCopyWith<$Res>(_self.seasonModel, (value) {
-    return _then(_self.copyWith(seasonModel: value));
+  return $SeasonCopyWith<$Res>(_self.season, (value) {
+    return _then(_self.copyWith(season: value));
   });
 }/// Create a copy of DownloadInfos
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$EpisodeModelCopyWith<$Res> get episodeModel {
+$EpisodeCopyWith<$Res> get episode {
   
-  return $EpisodeModelCopyWith<$Res>(_self.episodeModel, (value) {
-    return _then(_self.copyWith(episodeModel: value));
+  return $EpisodeCopyWith<$Res>(_self.episode, (value) {
+    return _then(_self.copyWith(episode: value));
   });
 }/// Create a copy of DownloadInfos
 /// with the given fields replaced by the non-null parameter values.

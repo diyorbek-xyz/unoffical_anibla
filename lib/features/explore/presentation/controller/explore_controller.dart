@@ -1,7 +1,7 @@
 import 'package:application/core/utils/extensions.dart';
-import 'package:application/features/animes/domain/entities/anime_entity.dart';
+import 'package:application/features/anibla/data/models/data/genre.dart';
+import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/features/common/presentation/controller/signal_state.dart';
-import 'package:application/features/explore/data/mapper/genre_mapper.dart';
 import 'package:application/features/explore/data/models/search_query.dart';
 import 'package:application/features/explore/data/source/local/search_history_local.dart';
 import 'package:application/features/explore/domain/repository/explore_repository.dart';
@@ -13,7 +13,7 @@ class ExploreController {
   final SearchHistoryLocal _searchHistoryLocal;
   ExploreController(this.repository, this._searchHistoryLocal);
 
-  final fakeGenres = List.generate(4, (index) => GenreMapper.modelToEntity(null));
+  final fakeGenres = List.generate(4, (index) => Genre());
   late final genresSignal = futureSignal(() async {
     final either = await repository.getGenres();
     return either.getData();
@@ -49,8 +49,8 @@ class ExploreController {
     final series = await repository.searchAnime(.serie, query);
     final movies = await repository.searchAnime(.movie, query);
 
-    List<AnimeEntity> serieAnimes = [];
-    List<AnimeEntity> movieAnimes = [];
+    List<Anime> serieAnimes = [];
+    List<Anime> movieAnimes = [];
     series.fold((f) => error = ExceptionMapper.mapFailureToMessage(f), serieAnimes.addAll);
     movies.fold((f) => error = ExceptionMapper.mapFailureToMessage(f), movieAnimes.addAll);
 
@@ -71,8 +71,8 @@ class ExploreController {
 
 final class Searched {
   final String search;
-  final List<AnimeEntity> series;
-  final List<AnimeEntity> movies;
+  final List<Anime> series;
+  final List<Anime> movies;
   const Searched({required this.search, required this.series, required this.movies});
 
   factory Searched.empty() => Searched(search: "", series: [], movies: []);

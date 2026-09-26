@@ -31,7 +31,7 @@ class AnimeModelAdapter extends TypeAdapter<AnimeModel> {
       categories: fields[9] as dynamic,
       createdAt: fields[18] as DateTime?,
       updatedAt: fields[19] as DateTime?,
-      genres: (fields[8] as List?)?.cast<GenreModel>(),
+      genres: (fields[8] as List?)?.cast<Genre>(),
       creators: (fields[7] as List?)?.cast<ItemModel>(),
       id: fields[1] as String?,
       type: fields[23] as AnimeType?,
@@ -169,7 +169,7 @@ _AnimeModel _$AnimeModelFromJson(Map<String, dynamic> json) => _AnimeModel(
   updatedAt: json['updatedAt'] == null
       ? null
       : DateTime.parse(json['updatedAt'] as String),
-  genres: (json['genres'] as List<dynamic>?)?.map(GenreModel.fromJson).toList(),
+  genres: (json['genres'] as List<dynamic>?)?.map(Genre.fromJson).toList(),
   creators: (json['creators'] as List<dynamic>?)
       ?.map(ItemModel.fromJson)
       .toList(),

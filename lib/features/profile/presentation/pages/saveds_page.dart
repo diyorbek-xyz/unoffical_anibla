@@ -1,9 +1,9 @@
 import 'package:application/core/config/theme/app_theme.dart';
+import 'package:application/features/anibla/data/models/local/saved_anime.dart';
+import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/features/animes/data/models/page_props.dart';
-import 'package:application/features/animes/domain/entities/anime_entity.dart';
-import 'package:application/features/animes/domain/entities/saved_medias.dart';
-import 'package:application/features/animes/presentation/controller/saved_controller.dart';
-import 'package:application/features/animes/presentation/widgets/horizontal_card.dart';
+import 'package:application/features/anibla/presentation/controllers/saved_controller.dart';
+import 'package:application/features/anibla/presentation/widgets/horizontal_card.dart';
 import 'package:application/features/common/domain/entities/tab_item.dart';
 import 'package:application/features/common/presentation/widgets/responsive.dart';
 import 'package:application/features/explore/presentation/controller/explore_controller.dart';
@@ -110,7 +110,7 @@ class _SavedsPageState extends State<SavedsPage> {
   SignalBuilder get savedAnimes => SignalBuilder(
     builder: (context) {
       final state = _savedController.savedMediaSignal.value;
-      final data = state.value ?? SavedMedias();
+      final data = state.value ?? SavedAnimes();
       return Column(
         mainAxisSize: .min,
         children: [
@@ -123,7 +123,7 @@ class _SavedsPageState extends State<SavedsPage> {
     },
   );
 
-  Widget animeBuilder(List<AnimeEntity> animes, [bool hasGenre = true]) => Flexible(
+  Widget animeBuilder(List<Anime> animes, [bool hasGenre = true]) => Flexible(
     child: GridView.builder(
       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 260,

@@ -1,7 +1,7 @@
 import 'package:application/core/config/theme/app_theme.dart';
-import 'package:application/features/animes/domain/entities/anime_entity.dart';
-import 'package:application/features/animes/presentation/controller/anime_controller.dart';
-import 'package:application/features/animes/presentation/widgets/anime_card.dart';
+import 'package:application/features/anibla/data/models/main/anime.dart';
+import 'package:application/features/anibla/presentation/controllers/anime_controller.dart';
+import 'package:application/features/anibla/presentation/widgets/anime_card.dart';
 import 'package:application/features/common/data/models/helpers/paginator.dart';
 import 'package:application/features/common/presentation/widgets/responsive.dart';
 import 'package:application/injection_container.dart';
@@ -46,7 +46,7 @@ class _AnimeRecommendsState extends State<AnimeRecommends> {
               ),
               FocusTraversalGroup(
                 policy: OrderedTraversalPolicy(),
-                child: PagedSliverGrid<int, AnimeEntity>(
+                child: PagedSliverGrid<int, Anime>(
                   state: PagingState(hasNextPage: state.pagination.hasMore, keys: [0], pages: [state.value]),
                   fetchNextPage: animeController.getHomeMore,
                   gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(

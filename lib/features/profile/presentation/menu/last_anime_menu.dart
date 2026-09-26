@@ -1,4 +1,4 @@
-import 'package:application/features/animes/presentation/widgets/anime_card.dart';
+import 'package:application/features/anibla/presentation/widgets/anime_card.dart';
 import 'package:application/features/profile/domain/entities/profile_entity.dart';
 import 'package:flutter/material.dart';
 

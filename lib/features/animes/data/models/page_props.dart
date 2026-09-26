@@ -1,4 +1,4 @@
-import 'package:application/features/animes/data/models/anime_model.dart';
+import 'package:application/features/anibla/data/enums/anime_type.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'page_props.g.dart';

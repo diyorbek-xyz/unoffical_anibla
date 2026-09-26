@@ -1,7 +1,7 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
-import 'package:application/features/animes/domain/entities/anime_entity.dart';
-import 'package:application/features/animes/presentation/widgets/anime_card.dart';
+import 'package:application/features/anibla/data/models/main/anime.dart';
+import 'package:application/features/anibla/presentation/widgets/anime_card.dart';
 import 'package:application/features/common/presentation/widgets/list.dart';
 import 'package:application/features/explore/presentation/controller/explore_controller.dart';
 import 'package:application/injection_container.dart';
@@ -91,7 +91,7 @@ class SearchPage extends StatelessWidget {
     },
   );
 
-  Widget gridView(BuildContext context, String title, List<AnimeEntity> animes, [bool? isFromHistory]) {
+  Widget gridView(BuildContext context, String title, List<Anime> animes, [bool? isFromHistory]) {
     final width = MediaQuery.of(context).size.width;
     return Column(
       crossAxisAlignment: animes.isNotEmpty ? .start : .center,

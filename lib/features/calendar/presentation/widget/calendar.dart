@@ -2,7 +2,7 @@ import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/core/utils/extensions.dart';
 import 'package:application/features/animes/data/models/anime_model.dart';
-import 'package:application/features/animes/presentation/widgets/anime_card.dart';
+import 'package:application/features/anibla/presentation/widgets/anime_card.dart';
 import 'package:application/features/calendar/data/mapper/calendar_mapper.dart';
 import 'package:application/features/calendar/data/models/calendar_model.dart';
 import 'package:application/features/calendar/data/models/timer_model.dart';

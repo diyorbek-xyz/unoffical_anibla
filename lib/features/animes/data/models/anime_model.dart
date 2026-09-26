@@ -1,4 +1,5 @@
 import 'package:application/core/utils/base_url.dart';
+import 'package:application/features/anibla/data/models/data/genre.dart';
 import 'package:application/features/common/data/models/miscs/item_model.dart';
 import 'package:application/features/explore/data/models/genre_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -43,7 +44,7 @@ abstract class AnimeModel with _$AnimeModel {
     @HiveField(9) dynamic categories,
     @HiveField(18) DateTime? createdAt,
     @HiveField(19) DateTime? updatedAt,
-    @HiveField(8) List<GenreModel>? genres,
+    @HiveField(8) List<Genre>? genres,
     @HiveField(7) List<ItemModel>? creators,
     @HiveField(1) @JsonKey(name: "_id") String? id,
     @HiveField(23) @JsonKey(name: "mediaType") AnimeType? type,

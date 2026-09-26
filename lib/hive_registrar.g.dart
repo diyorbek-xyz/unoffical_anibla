@@ -3,6 +3,15 @@
 // Check in to version control
 
 import 'package:hive_ce/hive_ce.dart';
+import 'package:application/features/anibla/data/enums/anime_type.dart';
+import 'package:application/features/anibla/data/enums/episode_type.dart';
+import 'package:application/features/anibla/data/models/data/creator.dart';
+import 'package:application/features/anibla/data/models/data/genre.dart';
+import 'package:application/features/anibla/data/models/helper/localized.dart';
+import 'package:application/features/anibla/data/models/main/anime.dart';
+import 'package:application/features/anibla/data/models/main/episode.dart';
+import 'package:application/features/anibla/data/models/main/season.dart';
+import 'package:application/features/anibla/data/models/misc/timer.dart';
 import 'package:application/features/animes/data/models/anime_model.dart';
 import 'package:application/features/animes/data/models/download_model.dart';
 import 'package:application/features/animes/data/models/episode_model.dart';
@@ -12,7 +21,6 @@ import 'package:application/features/calendar/data/models/timer_model.dart';
 import 'package:application/features/common/data/models/helpers/pagination.dart';
 import 'package:application/features/common/data/models/helpers/translated.dart';
 import 'package:application/features/common/data/models/miscs/item_model.dart';
-import 'package:application/features/explore/data/models/genre_model.dart';
 import 'package:application/features/player/data/model/download/completed_models.dart';
 import 'package:application/features/player/data/model/parser_models.dart';
 import 'package:application/features/player/data/model/service/download_models.dart';
@@ -28,20 +36,26 @@ import 'package:application/features/slider/data/models/slider_model.dart';
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
+    registerAdapter(AnimeAdapter());
     registerAdapter(AnimeModelAdapter());
+    registerAdapter(AnimeTypeAdapter());
     registerAdapter(AnimeTypeAdapter());
     registerAdapter(AvatarModelAdapter());
     registerAdapter(CalendarModelAdapter());
     registerAdapter(ChunkAdapter());
+    registerAdapter(CreatorAdapter());
     registerAdapter(DownloadInfosAdapter());
     registerAdapter(DownloadModelAdapter());
     registerAdapter(DownloadStateAdapter());
     registerAdapter(DownloadTaskAdapter());
+    registerAdapter(EpisodeAdapter());
     registerAdapter(EpisodeModelAdapter());
     registerAdapter(EpisodeNotificationModelAdapter());
+    registerAdapter(EpisodeTypeAdapter());
     registerAdapter(ExtraInfosAdapter());
-    registerAdapter(GenreModelAdapter());
+    registerAdapter(GenreAdapter());
     registerAdapter(ItemModelAdapter());
+    registerAdapter(LocalizedAdapter());
     registerAdapter(MasterPlaylistAdapter());
     registerAdapter(MediaPlaylistAdapter());
     registerAdapter(NotificationModelAdapter());
@@ -49,11 +63,13 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(PaginationAdapter());
     registerAdapter(PrivacyModelAdapter());
     registerAdapter(ProfileModelAdapter());
+    registerAdapter(SeasonAdapter());
     registerAdapter(SeasonModelAdapter());
     registerAdapter(SessionModelAdapter());
     registerAdapter(SessionsModelAdapter());
     registerAdapter(SliderModelAdapter());
     registerAdapter(TimelineModelAdapter());
+    registerAdapter(TimerAdapter());
     registerAdapter(TimerModelAdapter());
     registerAdapter(TranslatedModelAdapter());
     registerAdapter(VariantAdapter());
@@ -62,20 +78,26 @@ extension HiveRegistrar on HiveInterface {
 
 extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
+    registerAdapter(AnimeAdapter());
     registerAdapter(AnimeModelAdapter());
+    registerAdapter(AnimeTypeAdapter());
     registerAdapter(AnimeTypeAdapter());
     registerAdapter(AvatarModelAdapter());
     registerAdapter(CalendarModelAdapter());
     registerAdapter(ChunkAdapter());
+    registerAdapter(CreatorAdapter());
     registerAdapter(DownloadInfosAdapter());
     registerAdapter(DownloadModelAdapter());
     registerAdapter(DownloadStateAdapter());
     registerAdapter(DownloadTaskAdapter());
+    registerAdapter(EpisodeAdapter());
     registerAdapter(EpisodeModelAdapter());
     registerAdapter(EpisodeNotificationModelAdapter());
+    registerAdapter(EpisodeTypeAdapter());
     registerAdapter(ExtraInfosAdapter());
-    registerAdapter(GenreModelAdapter());
+    registerAdapter(GenreAdapter());
     registerAdapter(ItemModelAdapter());
+    registerAdapter(LocalizedAdapter());
     registerAdapter(MasterPlaylistAdapter());
     registerAdapter(MediaPlaylistAdapter());
     registerAdapter(NotificationModelAdapter());
@@ -83,11 +105,13 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
     registerAdapter(PaginationAdapter());
     registerAdapter(PrivacyModelAdapter());
     registerAdapter(ProfileModelAdapter());
+    registerAdapter(SeasonAdapter());
     registerAdapter(SeasonModelAdapter());
     registerAdapter(SessionModelAdapter());
     registerAdapter(SessionsModelAdapter());
     registerAdapter(SliderModelAdapter());
     registerAdapter(TimelineModelAdapter());
+    registerAdapter(TimerAdapter());
     registerAdapter(TimerModelAdapter());
     registerAdapter(TranslatedModelAdapter());
     registerAdapter(VariantAdapter());

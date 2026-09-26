@@ -1,9 +1,9 @@
-import 'package:application/features/animes/domain/entities/anime_entity.dart';
+import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:equatable/equatable.dart';
 
 class SavedMedias extends Equatable {
-  final List<AnimeEntity> movies;
-  final List<AnimeEntity> series;
+  final List<Anime> movies;
+  final List<Anime> series;
   const SavedMedias({this.movies = const [], this.series = const []});
 
   @override

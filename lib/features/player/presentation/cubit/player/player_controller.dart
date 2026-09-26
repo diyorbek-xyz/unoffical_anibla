@@ -3,9 +3,7 @@ import 'dart:io';
 import 'package:application/core/utils/base_url.dart';
 import 'package:application/core/utils/extensions.dart';
 import 'package:application/core/utils/utils.dart';
-import 'package:application/features/animes/data/mapper/video_mapper.dart';
-import 'package:application/features/animes/data/models/video_model.dart';
-import 'package:application/features/animes/data/source/remote/video_api.dart';
+import 'package:application/features/anibla/data/source/network/video_api.dart';
 import 'package:application/features/player/data/model/timeline_model.dart';
 import 'package:application/features/player/data/source/local/timeline.dart';
 import 'package:application/features/player/presentation/cubit/player/player_states.dart';
@@ -17,6 +15,7 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'package:media_kit_video/media_kit_video_controls/src/controls/extensions/duration.dart';
 import 'package:mpris_service/mpris_service.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:application/features/anibla/data/models/data/video.dart' as videoModel;
 
 class PlayerController extends Cubit<PlayerStates> {
   final Timeline timeline;
@@ -34,7 +33,10 @@ class PlayerController extends Cubit<PlayerStates> {
       title: "Anibla.uz",
     ),
   );
-  late final controller = VideoController(player, configuration: VideoControllerConfiguration(enableHardwareAcceleration: true, hwdec: 'auto'));
+  late final controller = VideoController(
+    player,
+    configuration: VideoControllerConfiguration(enableHardwareAcceleration: true, hwdec: 'auto'),
+  );
   final List<StreamSubscription> subscription = [];
   MPRIS? mpris;
 
@@ -91,7 +93,10 @@ class PlayerController extends Cubit<PlayerStates> {
       player.stream.playlist.listen((event) => setOldTimeline()),
       player.stream.error.listen(
         (event) => emit(
-          state.copyWith(status: .error, message: event.contains("https") ? event.replaceRange(event.indexOf("https"), null, "[URL hidden]") : event),
+          state.copyWith(
+            status: .error,
+            message: event.contains("https") ? event.replaceRange(event.indexOf("https"), null, "[URL hidden]") : event,
+          ),
         ),
       ),
       player.stream.duration.distinct().listen((event) {
@@ -117,7 +122,9 @@ class PlayerController extends Cubit<PlayerStates> {
   Future<void> setOldTimeline([String? fileUrl]) async {
     final time = timeline.getTimeline(fileUrl ?? state.stream.url);
     if (time != null) {
-      await player.stream.duration.firstWhere((d) => d.inSeconds > 0).timeout(const Duration(seconds: 10), onTimeout: () => Duration.zero);
+      await player.stream.duration
+          .firstWhere((d) => d.inSeconds > 0)
+          .timeout(const Duration(seconds: 10), onTimeout: () => Duration.zero);
       await seek(time.progress);
     }
   }
@@ -136,7 +143,15 @@ class PlayerController extends Cubit<PlayerStates> {
   Future<void> openUrl(String url, int offset, String title) async {
     if (state.status == .empty) return;
     await openStream(
-      PlayerProps(anime: state.stream.anime, type: state.type, cover: state.stream.cover, title: title, offset: offset, all: state.all, stream: url),
+      PlayerProps(
+        anime: state.stream.anime,
+        type: state.type,
+        cover: state.stream.cover,
+        title: title,
+        offset: offset,
+        all: state.all,
+        stream: url,
+      ),
     );
   }
 
@@ -147,16 +162,32 @@ class PlayerController extends Cubit<PlayerStates> {
     if (streamId == oldStreamId && oldStreamId.isNotEmpty && state.status == .init && !props.hasUrl) return;
     if (state.stream.id.isNotEmpty) await saveTimeline();
 
-    final response = props.hasUrl ? VideoModel(file: props.stream) : (await videoApi.getVideo(streamId)).data;
-    final video = VideoMapper.modelToEntity(response);
+    final video = props.hasUrl ? videoModel.Video(file: props.stream) : (await videoApi.getVideo(streamId)).data;
     final skip = (video.skip as String?)?.split("-").map((e) => e.parseInt()).toList() ?? [];
     final currentVideo = player.state.playlist.medias.firstOrNull?.uri;
 
     if (currentVideo == video.file && !props.hasUrl) return emit(state.copyWith(status: .init));
 
-    final stream = CurrentStream(id: streamId, offset: props.offset, title: props.title, anime: props.anime, cover: props.cover, url: video.file);
+    final stream = CurrentStream(
+      id: streamId,
+      offset: props.offset,
+      title: props.title,
+      anime: props.anime,
+      cover: props.cover,
+      url: video.file,
+    );
 
-    emit(state.copyWith(stream: stream, skip: skip, status: .init, isBuffering: true, type: props.type, all: props.all, isPaused: true));
+    emit(
+      state.copyWith(
+        stream: stream,
+        skip: skip,
+        status: .init,
+        isBuffering: true,
+        type: props.type,
+        all: props.all,
+        isPaused: true,
+      ),
+    );
 
     await player.open(Media(video.file), play: false);
   }

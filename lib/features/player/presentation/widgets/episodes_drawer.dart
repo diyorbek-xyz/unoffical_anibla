@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:application/core/config/theme/app_colors.dart';
-import 'package:application/features/animes/data/models/anime_model.dart';
-import 'package:application/features/animes/domain/entities/episode_entity.dart';
-import 'package:application/features/animes/presentation/controller/anime_controller.dart';
+import 'package:application/features/anibla/data/enums/anime_type.dart';
+import 'package:application/features/anibla/data/models/main/episode.dart';
+import 'package:application/features/anibla/presentation/controllers/anime_controller.dart';
 import 'package:application/features/player/presentation/cubit/player/player_controller.dart';
 import 'package:application/features/player/presentation/cubit/player/player_states.dart';
 import 'package:application/injection_container.dart';
@@ -37,7 +37,7 @@ class _EpisodesDrawerState extends State<EpisodesDrawer> {
     setState(() => search = val);
   }
 
-  bool checkIsContains(EpisodeEntity entity) {
+  bool checkIsContains(Episode entity) {
     if (search == null) return true;
     final hasRusian = entity.title.ru.toLowerCase().contains(search!.toLowerCase());
     final hasUzbek = entity.title.uz.toLowerCase().contains(search!.toLowerCase());
@@ -45,7 +45,7 @@ class _EpisodesDrawerState extends State<EpisodesDrawer> {
     return hasEpisode || hasUzbek || hasRusian;
   }
 
-  List<EpisodeEntity> changeList(List<EpisodeEntity> list) {
+  List<Episode> changeList(List<Episode> list) {
     final searched = list.where(checkIsContains).toList();
     if (isReversedEpisodeList) return searched.reversed.toList();
     return searched;
@@ -81,7 +81,11 @@ class _EpisodesDrawerState extends State<EpisodesDrawer> {
                     mainAxisSize: .min,
                     spacing: 10,
                     children: [
-                      IconButton(padding: EdgeInsets.all(0), onPressed: Scaffold.of(context).closeEndDrawer, icon: Icon(Icons.keyboard_arrow_left)),
+                      IconButton(
+                        padding: EdgeInsets.all(0),
+                        onPressed: Scaffold.of(context).closeEndDrawer,
+                        icon: Icon(Icons.keyboard_arrow_left),
+                      ),
                       IconButton(
                         padding: EdgeInsets.all(0),
                         onPressed: () => setState(() => isReversedEpisodeList = !isReversedEpisodeList),
@@ -92,7 +96,11 @@ class _EpisodesDrawerState extends State<EpisodesDrawer> {
                 ),
                 suffixIcon: Padding(
                   padding: EdgeInsetsGeometry.only(right: 10),
-                  child: IconButton(onPressed: () => searchController.clear(), padding: EdgeInsets.all(0), icon: Icon(Icons.clear)),
+                  child: IconButton(
+                    onPressed: () => searchController.clear(),
+                    padding: EdgeInsets.all(0),
+                    icon: Icon(Icons.clear),
+                  ),
                 ),
               ),
               onChanged: onSearchChange,
@@ -125,8 +133,8 @@ class _EpisodesDrawerState extends State<EpisodesDrawer> {
                       cover: anime.cover,
                       anime: anime.title.uz,
                     );
-                    final timeline = episode.timeline;
-                    final typeColor = episode.type == 'free' ? context.appColors.secondary : context.appColors.primary;
+                    final timeline = null;
+                    final typeColor = episode.type.isFree ? context.appColors.secondary : context.appColors.primary;
                     final currentColor = typeColor.withAlpha(isCurrent ? 255 : 50);
                     return RepaintBoundary(
                       child: Tooltip(

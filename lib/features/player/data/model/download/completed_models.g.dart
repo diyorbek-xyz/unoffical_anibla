@@ -20,9 +20,9 @@ class DownloadInfosAdapter extends TypeAdapter<DownloadInfos> {
       downloadedAt: fields[0] as DateTime?,
       size: (fields[1] as num).toInt(),
       downloadUrl: fields[2] as String,
-      animeModel: fields[4] as AnimeModel,
-      seasonModel: fields[5] as SeasonModel,
-      episodeModel: fields[6] as EpisodeModel,
+      anime: fields[4] as Anime,
+      season: fields[5] as Season,
+      episode: fields[6] as Episode,
       localPath: fields[7] == null ? '' : fields[7] as String,
     );
   }
@@ -38,11 +38,11 @@ class DownloadInfosAdapter extends TypeAdapter<DownloadInfos> {
       ..writeByte(2)
       ..write(obj.downloadUrl)
       ..writeByte(4)
-      ..write(obj.animeModel)
+      ..write(obj.anime)
       ..writeByte(5)
-      ..write(obj.seasonModel)
+      ..write(obj.season)
       ..writeByte(6)
-      ..write(obj.episodeModel)
+      ..write(obj.episode)
       ..writeByte(7)
       ..write(obj.localPath);
   }
@@ -69,13 +69,9 @@ _DownloadInfos _$DownloadInfosFromJson(Map<String, dynamic> json) =>
           : DateTime.parse(json['downloadedAt'] as String),
       size: (json['size'] as num).toInt(),
       downloadUrl: json['downloadUrl'] as String,
-      animeModel: AnimeModel.fromJson(json['animeModel']),
-      seasonModel: SeasonModel.fromJson(
-        json['seasonModel'] as Map<String, dynamic>,
-      ),
-      episodeModel: EpisodeModel.fromJson(
-        json['episodeModel'] as Map<String, dynamic>,
-      ),
+      anime: Anime.fromJson(json['anime']),
+      season: Season.fromJson(json['season'] as Map<String, dynamic>),
+      episode: Episode.fromJson(json['episode'] as Map<String, dynamic>),
       localPath: json['localPath'] as String? ?? "",
     );
 
@@ -84,8 +80,8 @@ Map<String, dynamic> _$DownloadInfosToJson(_DownloadInfos instance) =>
       'downloadedAt': instance.downloadedAt?.toIso8601String(),
       'size': instance.size,
       'downloadUrl': instance.downloadUrl,
-      'animeModel': instance.animeModel,
-      'seasonModel': instance.seasonModel,
-      'episodeModel': instance.episodeModel,
+      'anime': instance.anime,
+      'season': instance.season,
+      'episode': instance.episode,
       'localPath': instance.localPath,
     };

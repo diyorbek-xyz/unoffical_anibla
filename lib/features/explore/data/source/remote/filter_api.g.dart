@@ -20,7 +20,7 @@ class _FilterApi implements FilterApi {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HttpResponse<ApiResponse<List<AnimeModel>>>> searchAnime(
+  Future<HttpResponse<ApiResponse<List<Anime>>>> searchAnime(
     AnimeType type,
     dynamic query,
   ) async {
@@ -29,29 +29,24 @@ class _FilterApi implements FilterApi {
     queryParameters.addAll(query.toJson());
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options =
-        _setStreamType<HttpResponse<ApiResponse<List<AnimeModel>>>>(
-          Options(method: 'GET', headers: _headers, extra: _extra)
-              .compose(
-                _dio.options,
-                '/v1/${type}/mobile',
-                queryParameters: queryParameters,
-                data: _data,
-              )
-              .copyWith(
-                baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl),
-              ),
-        );
+    final _options = _setStreamType<HttpResponse<ApiResponse<List<Anime>>>>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/v1/${type}/mobile',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late ApiResponse<List<AnimeModel>> _value;
+    late ApiResponse<List<Anime>> _value;
     try {
-      _value = ApiResponse<List<AnimeModel>>.fromJson(
+      _value = ApiResponse<List<Anime>>.fromJson(
         _result.data!,
         (json) => json is List<dynamic>
             ? json
-                  .map<AnimeModel>(
-                    (i) => AnimeModel.fromJson(i as Map<String, dynamic>),
-                  )
+                  .map<Anime>((i) => Anime.fromJson(i as Map<String, dynamic>))
                   .toList()
             : List.empty(),
       );

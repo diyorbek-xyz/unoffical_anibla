@@ -1,7 +1,7 @@
 import 'package:application/features/animes/data/models/page_props.dart';
-import 'package:application/features/animes/presentation/pages/anime_page.dart';
-import 'package:application/features/animes/presentation/pages/anime_provider.dart';
-import 'package:application/features/animes/presentation/pages/watch_page.dart';
+import 'package:application/features/anibla/presentation/pages/anime/anime_page.dart';
+import 'package:application/features/anibla/presentation/pages/anime/anime_provider.dart';
+import 'package:application/features/anibla/presentation/pages/anime/watch_page.dart';
 import 'package:application/features/auth/presentation/pages/login_page.dart';
 import 'package:application/features/explore/presentation/pages/explore_page.dart';
 import 'package:application/features/main/presentation/pages/home_page.dart';
