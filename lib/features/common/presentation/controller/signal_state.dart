@@ -1,4 +1,4 @@
-import 'package:application/features/common/data/models/helpers/pagination.dart';
+import 'package:application/features/anibla/data/models/helper/pagination.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'signal_state.freezed.dart';

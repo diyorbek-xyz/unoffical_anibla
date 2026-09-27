@@ -1,24 +1,29 @@
 import 'package:application/core/utils/utils.dart';
+import 'package:application/features/anibla/data/models/data/slider.dart';
+import 'package:application/features/anibla/data/models/main/anime.dart';
+import 'package:application/features/anibla/data/models/main/profile.dart';
+import 'package:application/features/anibla/data/models/misc/calendar.dart';
+import 'package:application/features/anibla/data/repositories/profile_repository_impl.dart';
+import 'package:application/features/anibla/data/source/local/profile_local.dart';
 import 'package:application/features/anibla/data/source/local/saved_ids_local.dart';
 import 'package:application/features/anibla/presentation/controllers/anime_controller.dart';
 import 'package:application/features/anibla/presentation/controllers/saved_controller.dart';
-import 'package:application/features/explore/data/source/local/search_history_local.dart';
-import 'package:application/features/explore/presentation/controller/explore_controller.dart';
+import 'package:application/features/anibla/data/source/local/search_history_local.dart';
+import 'package:application/features/anibla/presentation/controllers/explore_controller.dart';
 import 'package:application/features/player/data/model/service/download_models.dart';
 import 'package:application/features/player/data/model/timeline_model.dart';
 import 'package:application/features/player/data/services/download_service.dart';
 import 'package:application/features/player/data/source/local/downloads.dart';
 import 'package:application/features/player/data/source/local/timeline.dart';
 import 'package:application/features/player/presentation/cubit/player/player_controller.dart';
-import 'package:application/features/profile/data/repository/notification_repository_impl.dart';
-import 'package:application/features/profile/data/source/remote/notifications_api.dart';
-import 'package:application/features/profile/data/source/remote/plans_api.dart';
-import 'package:application/features/profile/domain/repository/notification_repository.dart';
-import 'package:application/features/profile/presentation/controller/profile_controller.dart';
-import 'package:application/features/slider/presentation/controller/slider_controller.dart';
+import 'package:application/features/anibla/data/repositories/notification_repository_impl.dart';
+import 'package:application/features/anibla/data/source/network/notifications_api.dart';
+import 'package:application/features/anibla/data/source/network/plans_api.dart';
+import 'package:application/features/anibla/domain/repositories/notification_repository.dart';
+import 'package:application/features/anibla/presentation/controllers/profile_controller.dart';
+import 'package:application/features/anibla/presentation/controllers/slider_controller.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:application/features/animes/data/models/anime_model.dart';
 import 'package:application/features/anibla/data/repositories/anime_repository_impl.dart';
 import 'package:application/features/anibla/data/repositories/episode_repository_impl.dart';
 import 'package:application/features/anibla/data/repositories/season_repository_impl.dart';
@@ -29,19 +34,16 @@ import 'package:application/features/anibla/data/source/network/video_api.dart';
 import 'package:application/features/anibla/domain/repositories/anime_repository.dart';
 import 'package:application/features/anibla/domain/repositories/episode_repository.dart';
 import 'package:application/features/anibla/domain/repositories/season_repository.dart';
-import 'package:application/features/comment/data/repository/comment_repository_impl.dart';
-import 'package:application/features/comment/data/source/remote/comment_api.dart';
-import 'package:application/features/comment/domain/repository/comment_repository.dart';
-import 'package:application/features/comment/presentation/bloc/comment_bloc.dart';
-import 'package:application/features/explore/data/repository/explore_repository_impl.dart';
-import 'package:application/features/explore/data/source/local/history_local.dart';
-import 'package:application/features/explore/data/source/remote/filter_api.dart';
-import 'package:application/features/explore/data/source/remote/genre_api.dart';
-import 'package:application/features/explore/domain/repository/explore_repository.dart';
-import 'package:application/features/profile/data/models/profile/profile_model.dart';
-import 'package:application/features/profile/data/source/local/profile_local.dart';
-import 'package:application/features/slider/data/models/slider_model.dart';
-import 'package:application/features/slider/data/source/local/slider_local.dart';
+import 'package:application/features/anibla/data/repositories/comment_repository_impl.dart';
+import 'package:application/features/anibla/data/source/network/comment_api.dart';
+import 'package:application/features/anibla/domain/repositories/comment_repository.dart';
+import 'package:application/features/anibla/presentation/bloc/comment/comment_bloc.dart';
+import 'package:application/features/anibla/data/repositories/explore_repository_impl.dart';
+import 'package:application/features/anibla/data/source/local/history_local.dart';
+import 'package:application/features/anibla/data/source/network/filter_api.dart';
+import 'package:application/features/anibla/data/source/network/genre_api.dart';
+import 'package:application/features/anibla/domain/repositories/explore_repository.dart';
+import 'package:application/features/anibla/data/source/local/slider_local.dart';
 import 'package:application/network/interceptors/auth_interceptor.dart';
 import 'package:application/network/interceptors/error_interceptor.dart';
 import 'package:application/features/auth/data/repository/auth_repository_impl.dart';
@@ -49,18 +51,16 @@ import 'package:application/features/auth/data/source/local/auth_storage.dart';
 import 'package:application/features/auth/data/source/remote/auth_api.dart';
 import 'package:application/features/auth/domain/repository/auth_repository.dart';
 import 'package:application/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:application/features/calendar/data/models/calendar_model.dart';
-import 'package:application/features/calendar/data/repository/calendar_repository_impl.dart';
-import 'package:application/features/calendar/data/source/local/calendar_local.dart';
-import 'package:application/features/calendar/data/source/remote/calendar_api.dart';
-import 'package:application/features/calendar/domain/repository/calendar_repository.dart';
-import 'package:application/features/calendar/presentation/bloc/calendar_bloc.dart';
-import 'package:application/features/profile/data/repository/account_repository_impl.dart';
-import 'package:application/features/profile/data/source/remote/profile_api.dart';
-import 'package:application/features/profile/domain/repository/profile_repository.dart';
-import 'package:application/features/slider/data/repository/slider_repository_impl.dart';
-import 'package:application/features/slider/data/source/remote/slider_api.dart';
-import 'package:application/features/slider/domain/repository/slider_repository.dart';
+import 'package:application/features/anibla/data/repositories/calendar_repository_impl.dart';
+import 'package:application/features/anibla/data/source/local/calendar_local.dart';
+import 'package:application/features/anibla/data/source/network/calendar_api.dart';
+import 'package:application/features/anibla/domain/repositories/calendar_repository.dart';
+import 'package:application/features/anibla/presentation/bloc/calendar/calendar_bloc.dart';
+import 'package:application/features/anibla/data/source/network/profile_api.dart';
+import 'package:application/features/anibla/domain/repositories/profile_repository.dart';
+import 'package:application/features/anibla/data/repositories/slider_repository_impl.dart';
+import 'package:application/features/anibla/data/source/network/slider_api.dart';
+import 'package:application/features/anibla/domain/repositories/slider_repository.dart';
 import 'package:application/hive_registrar.g.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -106,10 +106,10 @@ Future<void> initializeDependencies() async {
 
   // Open boxes;
   await Hive.deleteBoxFromDisk("cacheBox");
-  final calendarBox = await Hive.openBox<CalendarModel>("calendarBox");
-  final profileBox = await Hive.openBox<ProfileModel>("profileBox");
-  final sliderBox = await Hive.openBox<SliderModel>("sliderBox");
-  final historyBox = await Hive.openBox<AnimeModel>("historyBox");
+  final calendarBox = await Hive.openBox<Calendar>("calendarBox");
+  final profileBox = await Hive.openBox<Profile>("profileBox");
+  final sliderBox = await Hive.openBox<Slider>("sliderBox");
+  final historyBox = await Hive.openBox<Anime>("historyBox");
   final timelineBox = await Hive.openBox<TimelineModel>("timelineBox");
   final downloadsBox = await Hive.openBox<DownloadTask>("downloadTaskBox");
   final savedMediaIdBox = await Hive.openBox<String>("savedMediaIdBox");
@@ -128,11 +128,11 @@ Future<void> initializeDependencies() async {
 
   sl
     // Register local storages;
-    ..registerSingleton<Box<CalendarModel>>(calendarBox)
-    ..registerSingleton<Box<AnimeModel>>(historyBox, instanceName: "history")
+    ..registerSingleton<Box<Calendar>>(calendarBox)
+    ..registerSingleton<Box<Anime>>(historyBox, instanceName: "history")
     ..registerSingleton<Box<String>>(savedMediaIdBox, instanceName: "saved")
-    ..registerSingleton<Box<ProfileModel>>(profileBox)
-    ..registerSingleton<Box<SliderModel>>(sliderBox)
+    ..registerSingleton<Box<Profile>>(profileBox)
+    ..registerSingleton<Box<Slider>>(sliderBox)
     ..registerSingleton<Box<TimelineModel>>(timelineBox)
     ..registerSingleton<Box<DownloadTask>>(downloadsBox)
     ..registerSingleton<Box<String>>(searchHistory)

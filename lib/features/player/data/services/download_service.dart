@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:application/core/utils/utils.dart';
-import 'package:application/features/animes/data/models/video_model.dart';
+import 'package:application/features/anibla/data/models/data/video.dart';
 import 'package:application/features/player/data/model/download/completed_models.dart';
 import 'package:application/features/player/data/model/parser_models.dart';
 import 'package:application/features/player/data/model/service/download_models.dart';
@@ -26,10 +26,10 @@ class HlsDownloadService {
     return null;
   }
 
-  Future<VideoModel> getUrlFromStream(String stream) async {
+  Future<Video> getUrlFromStream(String stream) async {
     final response = await dio.get(stream, queryParameters: {"format": "api"});
-    final video = VideoModel.fromJson(response.data);
-    if (video.file == null) throw Exception("Invalid stream url");
+    final video = Video.fromJson(response.data);
+    if (video.file.isEmpty) throw Exception("Invalid stream url");
     return video;
   }
 
@@ -42,8 +42,8 @@ class HlsDownloadService {
 
   Future<DownloadTask> downloadFromStream(DownloadInfos info) async {
     final video = await getUrlFromStream(info.streamUrl);
-    if (video.file == null) throw Exception("Invalid stream url");
-    return download(info.copyWith(downloadUrl: video.file!));
+    if (video.file.isEmpty) throw Exception("Invalid stream url");
+    return download(info.copyWith(downloadUrl: video.file));
   }
 
   Future<DownloadTask> download(DownloadInfos info) async {

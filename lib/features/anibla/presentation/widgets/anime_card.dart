@@ -1,7 +1,7 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/utils/base_url.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
-import 'package:application/features/animes/data/models/page_props.dart';
+import 'package:application/features/anibla/data/models/props/anime_page_props.dart';
 import 'package:application/features/anibla/presentation/controllers/saved_controller.dart';
 import 'package:application/features/common/presentation/image_provider/fallback_provider.dart';
 import 'package:application/features/common/presentation/widgets/tv_focuser.dart';

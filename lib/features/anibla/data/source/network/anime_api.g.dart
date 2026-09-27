@@ -54,15 +54,15 @@ class _AnimeApi implements AnimeApi {
   }
 
   @override
-  Future<HttpResponse<BigResponseModel<Anime>>> getHomeAnimes(
-    Paginator query,
+  Future<HttpResponse<BigResponse<Anime>>> getHomeAnimes(
+    Pagination query,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     queryParameters.addAll(query.toJson());
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<BigResponseModel<Anime>>>(
+    final _options = _setStreamType<HttpResponse<BigResponse<Anime>>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -73,9 +73,9 @@ class _AnimeApi implements AnimeApi {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late BigResponseModel<Anime> _value;
+    late BigResponse<Anime> _value;
     try {
-      _value = BigResponseModel<Anime>.fromJson(
+      _value = BigResponse<Anime>.fromJson(
         _result.data!,
         (json) => Anime.fromJson(json as Map<String, dynamic>),
       );

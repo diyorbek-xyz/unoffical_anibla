@@ -3,16 +3,16 @@ import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/core/utils/base_url.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
-import 'package:application/features/animes/data/models/page_props.dart';
+import 'package:application/features/anibla/data/models/props/anime_page_props.dart';
+import 'package:application/features/anibla/data/models/request/comment_request.dart';
 import 'package:application/features/anibla/presentation/controllers/anime_controller.dart';
 import 'package:application/features/anibla/presentation/controllers/saved_controller.dart';
 import 'package:application/features/anibla/presentation/menus/anime/comments_menu.dart';
 import 'package:application/features/anibla/presentation/menus/anime/creators_menu.dart';
 import 'package:application/features/anibla/presentation/menus/anime/episodes_menu.dart';
 import 'package:application/features/anibla/presentation/menus/anime/infos_menu.dart';
-import 'package:application/features/comment/data/models/props.dart';
-import 'package:application/features/comment/presentation/bloc/comment_bloc.dart';
-import 'package:application/features/comment/presentation/bloc/comment_event.dart';
+import 'package:application/features/anibla/presentation/bloc/comment/comment_bloc.dart';
+import 'package:application/features/anibla/presentation/bloc/comment/comment_event.dart';
 import 'package:application/features/common/presentation/image_provider/fallback_provider.dart';
 import 'package:application/features/common/presentation/widgets/error.dart';
 import 'package:application/features/common/presentation/widgets/image.dart';
@@ -50,7 +50,9 @@ class _AnimePageState extends State<AnimePage> {
     _commentsCleanup = effect(() {
       final anime = _animeController.mediaState.value.value;
       if (anime == null) return;
-      context.read<CommentBloc>().add(InitComments(GetCommentsProps(id: anime.id, limit: 20, page: 1, type: widget.props.animeType.toString())));
+      context.read<CommentBloc>().add(
+        InitComments(GetCommentRequest(id: anime.id, limit: 20, page: 1, type: widget.props.animeType.toString())),
+      );
     });
   }
 
@@ -162,7 +164,12 @@ class _AnimePageState extends State<AnimePage> {
   Widget animeInfo(BuildContext context, Anime anime) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        image: DecorationImage(image: imageProviderFallback(anime.cover), opacity: 0.6, alignment: AlignmentGeometry.xy(0, -0.7), fit: BoxFit.cover),
+        image: DecorationImage(
+          image: imageProviderFallback(anime.cover),
+          opacity: 0.6,
+          alignment: AlignmentGeometry.xy(0, -0.7),
+          fit: BoxFit.cover,
+        ),
       ),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
@@ -198,7 +205,7 @@ class _AnimePageState extends State<AnimePage> {
                           child: AspectRatio(
                             aspectRatio: 0.65,
                             child: isUsable(anime.thumbnail)
-                                ? SafeImage(imageUrl: anime.thumbnail, fit: BoxFit.cover,)
+                                ? SafeImage(imageUrl: anime.thumbnail, fit: BoxFit.cover)
                                 : Skeleton.leaf(enabled: true, child: Container(color: context.appColors.error)),
                           ),
                         ),
@@ -249,7 +256,11 @@ class _AnimePageState extends State<AnimePage> {
   Widget itemValue(BuildContext context, String text) {
     return Text(
       text,
-      style: TextStyle(fontSize: context.textTheme.titleLarge?.fontSize, fontWeight: FontWeight.bold, color: context.appColors.primary),
+      style: TextStyle(
+        fontSize: context.textTheme.titleLarge?.fontSize,
+        fontWeight: FontWeight.bold,
+        color: context.appColors.primary,
+      ),
     );
   }
 }

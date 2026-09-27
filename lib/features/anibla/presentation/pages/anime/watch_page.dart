@@ -1,6 +1,6 @@
 import 'package:application/features/anibla/data/enums/anime_type.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
-import 'package:application/features/animes/data/models/page_props.dart';
+import 'package:application/features/anibla/data/models/props/anime_page_props.dart';
 import 'package:application/features/anibla/presentation/controllers/anime_controller.dart';
 import 'package:application/features/player/presentation/cubit/player/player_controller.dart';
 import 'package:application/features/player/presentation/cubit/player/player_states.dart';

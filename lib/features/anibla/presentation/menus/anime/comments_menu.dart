@@ -2,15 +2,13 @@ import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/core/constants/icons.dart';
 import 'package:application/core/utils/extensions.dart';
-import 'package:application/features/comment/data/mapper/comment_mapper.dart';
-import 'package:application/features/comment/data/models/comment_model.dart';
-import 'package:application/features/comment/domain/entities/comment_entity.dart';
-import 'package:application/features/comment/domain/entities/response_entity.dart';
-import 'package:application/features/comment/presentation/bloc/comment_bloc.dart';
-import 'package:application/features/comment/presentation/bloc/comment_event.dart';
-import 'package:application/features/comment/presentation/bloc/comment_state.dart';
+import 'package:application/features/anibla/data/models/data/comment.dart';
+import 'package:application/features/anibla/data/models/main/profile.dart';
+import 'package:application/features/anibla/data/models/response/comment_response.dart';
+import 'package:application/features/anibla/presentation/bloc/comment/comment_bloc.dart';
+import 'package:application/features/anibla/presentation/bloc/comment/comment_event.dart';
+import 'package:application/features/anibla/presentation/bloc/comment/comment_state.dart';
 import 'package:application/features/common/presentation/image_provider/fallback_provider.dart';
-import 'package:application/features/profile/data/models/profile/profile_model.dart';
 import 'package:application/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,11 +38,9 @@ class _CommentsMenuState extends State<CommentsMenu> {
               padding: EdgeInsetsGeometry.only(bottom: 80),
               sliver: BlocBuilder<CommentBloc, CommentState>(
                 builder: (context, state) {
-                  final fakeData = CommentMapper.modelToEntity(
-                    CommentModel(
-                      user: ProfileModel(name: "User Loading..."),
-                      message: "Message loading...",
-                    ),
+                  final fakeData = Comment(
+                    user: Profile(name: "User Loading..."),
+                    message: "Message loading...",
                   );
                   final fake = List.generate(5, (i) => fakeData);
                   final comments = state.response?.comments ?? [];
@@ -53,7 +49,8 @@ class _CommentsMenuState extends State<CommentsMenu> {
                     isLoading: state.state == .loading,
                     hasReachedMax: state.state == .endReached,
                     itemCount: comments.length,
-                    loadingBuilder: (context) => Skeletonizer(enabled: true, child: Column(children: fake.map(commentTile).toList())),
+                    loadingBuilder: (context) =>
+                        Skeletonizer(enabled: true, child: Column(children: fake.map(commentTile).toList())),
                     itemBuilder: (context, index) => desktopCommentItem(comments.elementAt(index)),
                   );
                 },
@@ -65,7 +62,7 @@ class _CommentsMenuState extends State<CommentsMenu> {
     );
   }
 
-  Widget desktopCommentItem(CommentEntity comment) {
+  Widget desktopCommentItem(Comment comment) {
     return BlocSelector<CommentBloc, CommentState, CommentResponse?>(
       selector: (state) => state.replies?[comment.id],
       builder: (context, replies) {
@@ -101,7 +98,7 @@ class _CommentsMenuState extends State<CommentsMenu> {
     );
   }
 
-  Widget commentTile(CommentEntity comment) {
+  Widget commentTile(Comment comment) {
     final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
     return SelectionArea(
       child: ListTile(
@@ -115,7 +112,10 @@ class _CommentsMenuState extends State<CommentsMenu> {
           spacing: 10,
           children: [
             Text(comment.user.name, style: TextStyle(color: context.appColors.primary)),
-            Text(comment.createdAt.formatRemaining(), style: TextStyle(color: context.appColors.onSurface.withAlpha(100))),
+            Text(
+              DateTime.tryParse(comment.createdAt)?.formatRemaining() ?? "",
+              style: TextStyle(color: context.appColors.onSurface.withAlpha(100)),
+            ),
           ],
         ),
         isThreeLine: true,
@@ -131,7 +131,7 @@ class _CommentsMenuState extends State<CommentsMenu> {
     );
   }
 
-  Wrap commentActions(CommentEntity comment) {
+  Wrap commentActions(Comment comment) {
     return Wrap(
       spacing: 5,
       children: [

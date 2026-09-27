@@ -1,13 +1,13 @@
-import 'package:application/features/animes/data/models/page_props.dart';
+import 'package:application/features/anibla/data/models/props/anime_page_props.dart';
 import 'package:application/features/anibla/presentation/pages/anime/anime_page.dart';
-import 'package:application/features/anibla/presentation/pages/anime/anime_provider.dart';
+import 'package:application/features/anibla/presentation/providers/anime_provider.dart';
 import 'package:application/features/anibla/presentation/pages/anime/watch_page.dart';
 import 'package:application/features/auth/presentation/pages/login_page.dart';
-import 'package:application/features/explore/presentation/pages/explore_page.dart';
-import 'package:application/features/main/presentation/pages/home_page.dart';
-import 'package:application/features/main/presentation/pages/main_page.dart';
-import 'package:application/features/profile/presentation/pages/profile_page.dart';
-import 'package:application/features/profile/presentation/pages/saveds_page.dart';
+import 'package:application/features/anibla/presentation/pages/explore_page.dart';
+import 'package:application/features/anibla/presentation/pages/home_page.dart';
+import 'package:application/features/anibla/presentation/pages/main_page.dart';
+import 'package:application/features/anibla/presentation/pages/profile_page.dart';
+import 'package:application/features/anibla/presentation/pages/saveds_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

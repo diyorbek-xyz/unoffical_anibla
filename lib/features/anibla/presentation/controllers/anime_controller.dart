@@ -1,11 +1,11 @@
 import 'package:application/features/anibla/data/enums/anime_type.dart';
+import 'package:application/features/anibla/data/models/helper/pagination.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/features/anibla/data/models/main/episode.dart';
 import 'package:application/features/anibla/data/models/main/season.dart';
 import 'package:application/features/anibla/domain/repositories/anime_repository.dart';
 import 'package:application/features/anibla/domain/repositories/episode_repository.dart';
 import 'package:application/features/anibla/domain/repositories/season_repository.dart';
-import 'package:application/features/common/data/models/helpers/paginator.dart';
 import 'package:application/features/common/presentation/controller/signal_state.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
@@ -17,7 +17,7 @@ class AnimeController {
 
   final homeState = signal(BigSignalState<Anime>());
 
-  Future<void> getHome(Paginator paginator) async {
+  Future<void> getHome(Pagination paginator) async {
     homeState.set(homeState.value.setLoading(true));
     final either = await _animeRepository.getHomeAnimes(paginator);
     final data = either.fold((l) => homeState.value.withError(l.message), (r) => homeState.value.withMore(r.pagination, r.datas));
@@ -27,7 +27,7 @@ class AnimeController {
   Future<void> getHomeMore() async {
     final pagination = homeState.value.pagination;
     if (!pagination.hasMore) return;
-    await getHome(Paginator(limit: pagination.limit, page: pagination.page + 1));
+    await getHome(Pagination(limit: pagination.limit, page: pagination.page + 1));
   }
 
   final mediaState = signal(SignalState<Anime>());

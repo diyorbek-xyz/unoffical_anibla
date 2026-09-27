@@ -1,8 +1,8 @@
 import 'package:application/core/resources/api_response.dart';
+import 'package:application/features/anibla/data/models/helper/pagination.dart';
 import 'package:application/features/anibla/data/models/local/saved_anime.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
-import 'package:application/features/common/data/models/helpers/paginator.dart';
-import 'package:application/features/common/data/models/responses/big_response_model.dart';
+import 'package:application/features/anibla/data/models/response/big_response.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -15,7 +15,7 @@ abstract class AnimeApi {
   @GET("/v1/{type}/{slug}")
   Future<HttpResponse<ApiResponse<Anime>>> getSerie(@Path("type") String type, @Path("slug") String slug);
   @GET("/v1/media/mobile")
-  Future<HttpResponse<BigResponseModel<Anime>>> getHomeAnimes(@Queries() Paginator query);
+  Future<HttpResponse<BigResponse<Anime>>> getHomeAnimes(@Queries() Pagination query);
 
   @GET("/v1/saved-series")
   Future<HttpResponse<ApiResponse<List<SavedAnime>>>> getSavedSeries();

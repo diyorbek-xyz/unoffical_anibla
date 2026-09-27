@@ -1,4 +1,4 @@
-import 'package:application/features/common/data/models/helpers/pagination.dart';
+import 'package:application/features/anibla/data/models/helper/pagination.dart';
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 

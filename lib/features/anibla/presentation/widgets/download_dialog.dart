@@ -43,7 +43,7 @@ class _DownloadMenuState extends State<DownloadMenu> {
   void getVariants() async {
     setState(() => isLoading = true);
     final url = await downloader.getUrlFromStream(widget.episode.video);
-    final master = await downloader.downloadMasterPlaylist(url.file!, "${anime.id}/${season.id}/${widget.episode.id}");
+    final master = await downloader.downloadMasterPlaylist(url.file, "${anime.id}/${season.id}/${widget.episode.id}");
     setState(() => [masterPlaylist = master, isLoading = false]);
   }
 
@@ -64,7 +64,10 @@ class _DownloadMenuState extends State<DownloadMenu> {
   }
 
   void goToWatch([String? url]) {
-    context.pushNamed("watch", queryParameters: {"episode": widget.episode.episodeNumber.toString(), "type": AnimeType.serie.name, "url": url});
+    context.pushNamed(
+      "watch",
+      queryParameters: {"episode": widget.episode.episodeNumber.toString(), "type": AnimeType.serie.name, "url": url},
+    );
     Navigator.pop(context);
   }
 
@@ -72,7 +75,9 @@ class _DownloadMenuState extends State<DownloadMenu> {
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
     return AlertDialog(
-      constraints: !isMobile ? .tightFor(width: 500, height: 500) : BoxConstraints(minWidth: 500, minHeight: 400, maxHeight: 1024, maxWidth: 720),
+      constraints: !isMobile
+          ? .tightFor(width: 500, height: 500)
+          : BoxConstraints(minWidth: 500, minHeight: 400, maxHeight: 1024, maxWidth: 720),
       insetPadding: isMobile ? .all(0) : .all(5),
       shape: RoundedRectangleBorder(borderRadius: .circular(10)),
       contentPadding: EdgeInsets.symmetric(vertical: 30, horizontal: 15),
@@ -80,7 +85,12 @@ class _DownloadMenuState extends State<DownloadMenu> {
       actionsOverflowAlignment: .end,
       title: Row(
         children: [
-          Expanded(child: Text("${widget.episode.episodeNumber}-qism ~ ${widget.episode.title.uz}", style: context.textTheme.headlineMedium)),
+          Expanded(
+            child: Text(
+              "${widget.episode.episodeNumber}-qism ~ ${widget.episode.title.uz}",
+              style: context.textTheme.headlineMedium,
+            ),
+          ),
           IconButton(onPressed: () => Navigator.pop(context), icon: Icon(Icons.close)),
         ],
       ),
@@ -113,7 +123,8 @@ class _DownloadMenuState extends State<DownloadMenu> {
                 final speedKb = state?.speed ?? 0;
                 final totalMb = state?.totalSize ?? dwTask.mediaPlaylist.sizeByte / (1024 * 1024);
                 final downloadedMb = state?.downloadedSize ?? totalMb;
-                final progress = ((state?.progress ?? ((state?.status == .completed) ? 1 : 0)) * (dwTask.sizeByte / (1024 * 1024)));
+                final progress =
+                    ((state?.progress ?? ((state?.status == .completed) ? 1 : 0)) * (dwTask.sizeByte / (1024 * 1024)));
                 final estimatedAny = (totalMb - progress) / (speedKb / 1024);
                 final estimated = Duration(seconds: estimatedAny.isFinite ? estimatedAny.toInt() : 0).toCountdown();
                 final isPaused = state == null || state.status == .paused || state.status == .cancelled;

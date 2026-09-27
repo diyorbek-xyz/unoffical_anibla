@@ -1,8 +1,7 @@
 import 'dart:io';
 
 import 'package:application/core/resources/api_response.dart';
-import 'package:application/features/profile/data/mapper/session_mapper.dart';
-import 'package:application/features/profile/domain/entities/session_entity.dart';
+import 'package:application/features/anibla/data/models/data/session.dart';
 import 'package:application/network/errors.dart';
 import 'package:dio/dio.dart';
 
@@ -25,7 +24,7 @@ final class NetworkFailure extends Failure {
 }
 
 final class SessionLimitedFailure extends Failure {
-  final SessionsEntity sessions;
+  final Sessions sessions;
   SessionLimitedFailure(this.sessions) : super(Errors.tooManySessions);
 }
 
@@ -49,7 +48,7 @@ abstract class ExceptionMapper {
       if (exception.response?.data is! Map<String, dynamic>) return SimpleFailure(exception.response?.data);
       return switch (exception.response?.data?['message']?.toString()) {
         Errors.tooManySessions => SessionLimitedFailure(
-          ApiResponse.fromJson(exception.response?.data, (json) => SessionMapper.modelsToEntities(.fromJson(json as Map<String, dynamic>))).data,
+          ApiResponse.fromJson(exception.response?.data, (json) => Sessions.fromJson(json as Map<String, dynamic>)).data,
         ),
         Errors.userNotFound => SimpleFailure("Foydalanuvchi topilmadi"),
         Errors.seriesAlreadyExist => ServerFailure(HttpStatus.conflict),

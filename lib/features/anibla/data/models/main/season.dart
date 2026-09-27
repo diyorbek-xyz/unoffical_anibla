@@ -10,10 +10,10 @@ part 'season.freezed.dart';
 abstract class Season with _$Season {
   const Season._();
   factory Season({
-    @Default("") @JsonKey(name: "_id") String id,
-    @Default({}) dynamic uz,
-    @Default({}) dynamic ru,
-    @Default("") String slug,
+    @Default("") @HiveField(0) @JsonKey(name: "_id") String id,
+    @Default({}) @HiveField(1) dynamic uz,
+    @Default({}) @HiveField(2) dynamic ru,
+    @Default("") @HiveField(3) String slug,
   }) = _Season;
   Localized get title => Localized(ru: ru['title'], uz: uz['title']);
 

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Season {
 
-@JsonKey(name: "_id") String get id; dynamic get uz; dynamic get ru; String get slug;
+@HiveField(0)@JsonKey(name: "_id") String get id;@HiveField(1) dynamic get uz;@HiveField(2) dynamic get ru;@HiveField(3) String get slug;
 /// Create a copy of Season
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $SeasonCopyWith<$Res>  {
   factory $SeasonCopyWith(Season value, $Res Function(Season) _then) = _$SeasonCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "_id") String id, dynamic uz, dynamic ru, String slug
+@HiveField(0)@JsonKey(name: "_id") String id,@HiveField(1) dynamic uz,@HiveField(2) dynamic ru,@HiveField(3) String slug
 });
 
 
@@ -156,7 +156,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "_id")  String id,  dynamic uz,  dynamic ru,  String slug)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@HiveField(0)@JsonKey(name: "_id")  String id, @HiveField(1)  dynamic uz, @HiveField(2)  dynamic ru, @HiveField(3)  String slug)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Season() when $default != null:
 return $default(_that.id,_that.uz,_that.ru,_that.slug);case _:
@@ -177,7 +177,7 @@ return $default(_that.id,_that.uz,_that.ru,_that.slug);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "_id")  String id,  dynamic uz,  dynamic ru,  String slug)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@HiveField(0)@JsonKey(name: "_id")  String id, @HiveField(1)  dynamic uz, @HiveField(2)  dynamic ru, @HiveField(3)  String slug)  $default,) {final _that = this;
 switch (_that) {
 case _Season():
 return $default(_that.id,_that.uz,_that.ru,_that.slug);case _:
@@ -197,7 +197,7 @@ return $default(_that.id,_that.uz,_that.ru,_that.slug);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "_id")  String id,  dynamic uz,  dynamic ru,  String slug)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@HiveField(0)@JsonKey(name: "_id")  String id, @HiveField(1)  dynamic uz, @HiveField(2)  dynamic ru, @HiveField(3)  String slug)?  $default,) {final _that = this;
 switch (_that) {
 case _Season() when $default != null:
 return $default(_that.id,_that.uz,_that.ru,_that.slug);case _:
@@ -212,13 +212,13 @@ return $default(_that.id,_that.uz,_that.ru,_that.slug);case _:
 @JsonSerializable()
 
 class _Season extends Season {
-   _Season({@JsonKey(name: "_id") this.id = "", this.uz = const {}, this.ru = const {}, this.slug = ""}): super._();
+   _Season({@HiveField(0)@JsonKey(name: "_id") this.id = "", @HiveField(1) this.uz = const {}, @HiveField(2) this.ru = const {}, @HiveField(3) this.slug = ""}): super._();
   factory _Season.fromJson(Map<String, dynamic> json) => _$SeasonFromJson(json);
 
-@override@JsonKey(name: "_id") final  String id;
-@override@JsonKey() final  dynamic uz;
-@override@JsonKey() final  dynamic ru;
-@override@JsonKey() final  String slug;
+@override@HiveField(0)@JsonKey(name: "_id") final  String id;
+@override@JsonKey()@HiveField(1) final  dynamic uz;
+@override@JsonKey()@HiveField(2) final  dynamic ru;
+@override@JsonKey()@HiveField(3) final  String slug;
 
 /// Create a copy of Season
 /// with the given fields replaced by the non-null parameter values.
@@ -253,7 +253,7 @@ abstract mixin class _$SeasonCopyWith<$Res> implements $SeasonCopyWith<$Res> {
   factory _$SeasonCopyWith(_Season value, $Res Function(_Season) _then) = __$SeasonCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "_id") String id, dynamic uz, dynamic ru, String slug
+@HiveField(0)@JsonKey(name: "_id") String id,@HiveField(1) dynamic uz,@HiveField(2) dynamic ru,@HiveField(3) String slug
 });
 
 

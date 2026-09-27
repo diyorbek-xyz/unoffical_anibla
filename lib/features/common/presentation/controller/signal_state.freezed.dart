@@ -318,7 +318,7 @@ $Res call({
 });
 
 
-
+$PaginationCopyWith<$Res> get pagination;
 
 }
 /// @nodoc
@@ -342,7 +342,16 @@ as List<T>,error: freezed == error ? _self.error : error // ignore: cast_nullabl
 as String?,
   ));
 }
-
+/// Create a copy of BigSignalState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$PaginationCopyWith<$Res> get pagination {
+  
+  return $PaginationCopyWith<$Res>(_self.pagination, (value) {
+    return _then(_self.copyWith(pagination: value));
+  });
+}
 }
 
 
@@ -530,7 +539,7 @@ $Res call({
 });
 
 
-
+@override $PaginationCopyWith<$Res> get pagination;
 
 }
 /// @nodoc
@@ -555,7 +564,16 @@ as String?,
   ));
 }
 
-
+/// Create a copy of BigSignalState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$PaginationCopyWith<$Res> get pagination {
+  
+  return $PaginationCopyWith<$Res>(_self.pagination, (value) {
+    return _then(_self.copyWith(pagination: value));
+  });
+}
 }
 
 // dart format on

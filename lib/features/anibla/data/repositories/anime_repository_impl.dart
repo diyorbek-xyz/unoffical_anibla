@@ -1,15 +1,14 @@
 import 'package:application/core/resources/api_response.dart';
 import 'package:application/core/resources/cache_entry.dart';
 import 'package:application/features/anibla/data/enums/anime_type.dart';
+import 'package:application/features/anibla/data/models/helper/pagination.dart';
 import 'package:application/features/anibla/data/models/local/saved_anime.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
+import 'package:application/features/anibla/data/models/response/big_response.dart';
 import 'package:application/features/anibla/data/source/local/saved_ids_local.dart';
 import 'package:application/features/anibla/data/source/network/anime_api.dart';
 import 'package:application/features/anibla/domain/repositories/anime_repository.dart';
-import 'package:application/features/common/data/models/helpers/paginator.dart';
-import 'package:application/features/common/data/models/responses/big_response.dart';
-import 'package:application/features/common/data/models/responses/big_response_mapper.dart';
-import 'package:application/features/explore/data/source/local/history_local.dart';
+import 'package:application/features/anibla/data/source/local/history_local.dart';
 import 'package:application/network/resources/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -44,10 +43,10 @@ class AnimeRepositoryImpl implements AnimeRepository {
   }
 
   @override
-  Future<Either<Failure, BigResponse<Anime>>> getHomeAnimes(Paginator query) async {
+  Future<Either<Failure, BigResponse<Anime>>> getHomeAnimes(Pagination query) async {
     try {
       final animes = await _animeApi.getHomeAnimes(query);
-      return Right(BigResponseMapper.toEntity(animes.data, (p0) => p0!));
+      return Right(animes.data);
     } on DioException catch (e) {
       return Left(ExceptionMapper.mapDioToFailure(e));
     }
