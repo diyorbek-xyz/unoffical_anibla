@@ -1,11 +1,11 @@
-import 'package:application/core/utils/base_url.dart';
+import 'package:application/shared/utils/base_url.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive_ce/hive_ce.dart';
 
 part 'creator.g.dart';
 part 'creator.freezed.dart';
 
-@HiveType(typeId: 141)
+@HiveType(typeId: 101)
 @Freezed(fromJson: true, toJson: true)
 abstract class Creator with _$Creator {
   const factory Creator({

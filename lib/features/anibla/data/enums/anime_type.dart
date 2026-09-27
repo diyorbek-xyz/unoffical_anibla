@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 part 'anime_type.g.dart';
 
-@HiveType(typeId: 5332)
+@HiveType(typeId: 1000)
 enum AnimeType {
   @HiveField(0)
   @JsonValue("Movies")

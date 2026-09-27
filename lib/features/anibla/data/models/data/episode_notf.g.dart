@@ -8,7 +8,7 @@ part of 'episode_notf.dart';
 
 class EpisodeNotificationAdapter extends TypeAdapter<EpisodeNotification> {
   @override
-  final typeId = 1251;
+  final typeId = 102;
 
   @override
   EpisodeNotification read(BinaryReader reader) {

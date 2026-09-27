@@ -1,4 +1,4 @@
-import 'package:application/core/resources/api_response.dart';
+import 'package:application/shared/models/api_response.dart';
 import 'package:application/features/anibla/data/models/helper/pagination.dart';
 import 'package:application/features/anibla/data/models/local/saved_anime.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';

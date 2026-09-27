@@ -1,8 +1,8 @@
-import 'package:application/features/common/presentation/widgets/error.dart';
-import 'package:application/features/common/presentation/widgets/list.dart';
+import 'package:application/shared/widgets/error.dart';
+import 'package:application/shared/widgets/list.dart';
 import 'package:application/features/anibla/presentation/controllers/profile_controller.dart';
 import 'package:application/injection_container.dart';
-import 'package:application/network/resources/failure.dart';
+import 'package:application/core/network/resources/failure.dart';
 import 'package:flutter/material.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 import 'package:skeletonizer/skeletonizer.dart';

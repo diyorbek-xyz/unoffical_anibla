@@ -2,7 +2,7 @@ import 'package:application/features/anibla/data/models/data/slider.dart';
 import 'package:application/features/anibla/data/source/local/slider_local.dart';
 import 'package:application/features/anibla/data/source/network/slider_api.dart';
 import 'package:application/features/anibla/domain/repositories/slider_repository.dart';
-import 'package:application/network/resources/failure.dart';
+import 'package:application/core/network/resources/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 

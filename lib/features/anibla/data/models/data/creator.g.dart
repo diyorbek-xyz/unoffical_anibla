@@ -8,7 +8,7 @@ part of 'creator.dart';
 
 class CreatorAdapter extends TypeAdapter<Creator> {
   @override
-  final typeId = 141;
+  final typeId = 101;
 
   @override
   Creator read(BinaryReader reader) {

@@ -5,7 +5,7 @@ part 'episode_notf.freezed.dart';
 part 'episode_notf.g.dart';
 
 @freezed
-@HiveType(typeId: 1251)
+@HiveType(typeId: 102)
 abstract class EpisodeNotification with _$EpisodeNotification {
   const factory EpisodeNotification({
     @Default("") @HiveField(0) String seriesId,

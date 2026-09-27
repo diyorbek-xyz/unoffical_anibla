@@ -1,4 +1,4 @@
-import 'package:application/core/constants/tabs.dart';
+import 'package:application/shared/constants/tabs.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

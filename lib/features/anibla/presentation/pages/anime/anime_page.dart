@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
-import 'package:application/core/utils/base_url.dart';
+import 'package:application/shared/utils/base_url.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/features/anibla/data/models/props/anime_page_props.dart';
 import 'package:application/features/anibla/data/models/request/comment_request.dart';
@@ -13,9 +13,9 @@ import 'package:application/features/anibla/presentation/menus/anime/episodes_me
 import 'package:application/features/anibla/presentation/menus/anime/infos_menu.dart';
 import 'package:application/features/anibla/presentation/bloc/comment/comment_bloc.dart';
 import 'package:application/features/anibla/presentation/bloc/comment/comment_event.dart';
-import 'package:application/features/common/presentation/image_provider/fallback_provider.dart';
-import 'package:application/features/common/presentation/widgets/error.dart';
-import 'package:application/features/common/presentation/widgets/image.dart';
+import 'package:application/shared/image_provider/fallback_provider.dart';
+import 'package:application/shared/widgets/error.dart';
+import 'package:application/shared/widgets/image.dart';
 import 'package:application/injection_container.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';

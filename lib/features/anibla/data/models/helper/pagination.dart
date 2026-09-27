@@ -4,8 +4,8 @@ import 'package:hive_ce/hive_ce.dart';
 part 'pagination.g.dart';
 part 'pagination.freezed.dart';
 
-@HiveType(typeId: 0)
 @Freezed()
+@HiveType(typeId: 2)
 abstract class Pagination with _$Pagination {
   const Pagination._();
   const factory Pagination({

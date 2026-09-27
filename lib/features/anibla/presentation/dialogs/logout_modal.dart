@@ -2,7 +2,7 @@ import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:application/features/auth/presentation/bloc/auth_event.dart';
 import 'package:application/features/auth/presentation/bloc/auth_state.dart';
-import 'package:application/features/common/presentation/interactions/error_messenger.dart';
+import 'package:application/shared/interactions/error_messenger.dart';
 import 'package:application/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

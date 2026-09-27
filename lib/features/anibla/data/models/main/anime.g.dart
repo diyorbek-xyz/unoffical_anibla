@@ -8,7 +8,7 @@ part of 'anime.dart';
 
 class AnimeAdapter extends TypeAdapter<Anime> {
   @override
-  final typeId = 735;
+  final typeId = 205;
 
   @override
   Anime read(BinaryReader reader) {
@@ -36,7 +36,7 @@ class AnimeAdapter extends TypeAdapter<Anime> {
       id: fields[17] == null ? '' : fields[17] as String,
       type: fields[18] == null ? AnimeType.serie : fields[18] as AnimeType,
       forOnlyMDH: fields[19] == null ? false : fields[19] as bool,
-      publishedYear: fields[20] == null ? 2000 : (fields[20] as num).toInt(),
+      publishedYear: fields[20] == null ? 0 : (fields[20] as num).toInt(),
       totalEpisodes: fields[21] == null ? 0 : (fields[21] as num).toInt(),
       thumbnail: fields[22] == null ? '' : fields[22] as String,
       cover: fields[23] == null ? '' : fields[23] as String,
@@ -139,7 +139,7 @@ _Anime _$AnimeFromJson(Map<String, dynamic> json) => _Anime(
       $enumDecodeNullable(_$AnimeTypeEnumMap, json['mediaType']) ??
       AnimeType.serie,
   forOnlyMDH: json['for_only_mdh'] as bool? ?? false,
-  publishedYear: (json['published_year'] as num?)?.toInt() ?? 2000,
+  publishedYear: (json['published_year'] as num?)?.toInt() ?? 0,
   totalEpisodes: (json['total_episodes'] as num?)?.toInt() ?? 0,
   thumbnail: json['thumbnail'] == null
       ? ""

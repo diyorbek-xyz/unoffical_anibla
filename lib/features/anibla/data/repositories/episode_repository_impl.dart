@@ -1,12 +1,12 @@
 import 'package:application/core/resources/cache_entry.dart';
-import 'package:application/core/utils/base_url.dart';
+import 'package:application/shared/utils/base_url.dart';
 import 'package:application/features/anibla/data/models/main/episode.dart';
 import 'package:application/features/anibla/data/models/data/video.dart';
 import 'package:application/features/anibla/data/source/network/episode_api.dart';
 import 'package:application/features/anibla/data/source/network/video_api.dart';
 import 'package:application/features/anibla/domain/repositories/episode_repository.dart';
 import 'package:application/features/player/data/source/local/downloads.dart';
-import 'package:application/network/resources/failure.dart';
+import 'package:application/core/network/resources/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 

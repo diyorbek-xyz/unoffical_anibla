@@ -1,7 +1,7 @@
 import 'package:application/features/anibla/domain/repositories/comment_repository.dart';
 import 'package:application/features/anibla/presentation/bloc/comment/comment_event.dart';
 import 'package:application/features/anibla/presentation/bloc/comment/comment_state.dart';
-import 'package:application/network/resources/failure.dart';
+import 'package:application/core/network/resources/failure.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CommentBloc extends Bloc<CommentEvent, CommentState> {

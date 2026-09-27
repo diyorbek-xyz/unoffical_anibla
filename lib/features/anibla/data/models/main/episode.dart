@@ -7,7 +7,7 @@ part 'episode.g.dart';
 part 'episode.freezed.dart';
 
 @freezed
-@HiveType(typeId: 531)
+@HiveType(typeId: 202)
 abstract class Episode with _$Episode {
   const Episode._();
   const factory Episode({

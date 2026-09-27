@@ -1,4 +1,4 @@
-import 'package:application/core/utils/extensions.dart';
+import 'package:application/shared/utils/extensions.dart';
 import 'package:application/features/anibla/data/models/misc/calendar.dart';
 import 'package:hive_ce/hive_ce.dart';
 

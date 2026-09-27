@@ -5,7 +5,7 @@ part 'session.g.dart';
 part 'session.freezed.dart';
 
 @freezed
-@HiveType(typeId: 8)
+@HiveType(typeId: 106)
 abstract class Session with _$Session {
   factory Session({
     @Default("") @HiveField(0) @JsonKey(name: "_id") String id,
@@ -22,7 +22,7 @@ abstract class Session with _$Session {
 }
 
 @freezed
-@HiveType(typeId: 9)
+@HiveType(typeId: 107)
 abstract class Sessions with _$Sessions {
   factory Sessions({
     @Default("") @HiveField(0) @JsonKey(name: "token_id") String tokenId,

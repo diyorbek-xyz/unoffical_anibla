@@ -1,7 +1,7 @@
 import 'package:application/features/auth/domain/repository/auth_repository.dart';
 import 'package:application/features/auth/presentation/bloc/auth_event.dart';
 import 'package:application/features/auth/presentation/bloc/auth_state.dart';
-import 'package:application/network/resources/failure.dart';
+import 'package:application/core/network/resources/failure.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {

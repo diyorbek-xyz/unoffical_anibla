@@ -3,7 +3,7 @@ import 'package:hive_ce_flutter/hive_flutter.dart';
 
 part 'episode_type.g.dart';
 
-@HiveType(typeId: 5332)
+@HiveType(typeId: 1001)
 enum EpisodeType {
   @HiveField(0)
   @JsonValue("free")

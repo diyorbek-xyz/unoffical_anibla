@@ -6,7 +6,7 @@ import 'package:application/features/anibla/data/models/main/season.dart';
 import 'package:application/features/anibla/domain/repositories/anime_repository.dart';
 import 'package:application/features/anibla/domain/repositories/episode_repository.dart';
 import 'package:application/features/anibla/domain/repositories/season_repository.dart';
-import 'package:application/features/common/presentation/controller/signal_state.dart';
+import 'package:application/shared/controller/signal_state.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 class AnimeController {

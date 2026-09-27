@@ -1,5 +1,5 @@
 import 'package:application/core/config/theme/app_colors.dart';
-import 'package:application/features/common/presentation/widgets/responsive.dart';
+import 'package:application/shared/widgets/responsive.dart';
 import 'package:flutter/material.dart';
 
 class ListBorderRadius {

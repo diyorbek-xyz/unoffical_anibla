@@ -8,7 +8,7 @@ part of 'timer.dart';
 
 class TimerAdapter extends TypeAdapter<Timer> {
   @override
-  final typeId = 4;
+  final typeId = 303;
 
   @override
   Timer read(BinaryReader reader) {
@@ -22,13 +22,14 @@ class TimerAdapter extends TypeAdapter<Timer> {
       type: fields[4] == null ? AnimeType.serie : fields[4] as AnimeType,
       episode: fields[5] == null ? const Episode() : fields[5] as Episode,
       date: fields[3] == null ? '' : fields[3] as String,
+      totalEpisodes: fields[6] == null ? -1 : (fields[6] as num).toInt(),
     );
   }
 
   @override
   void write(BinaryWriter writer, Timer obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.anime)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class TimerAdapter extends TypeAdapter<Timer> {
       ..writeByte(4)
       ..write(obj.type)
       ..writeByte(5)
-      ..write(obj.episode);
+      ..write(obj.episode)
+      ..writeByte(6)
+      ..write(obj.totalEpisodes);
   }
 
   @override
@@ -65,7 +68,8 @@ _Timer _$TimerFromJson(Map<String, dynamic> json) => _Timer(
   episode: json['episode_id'] == null
       ? const Episode()
       : Episode.fromJson(json['episode_id'] as Map<String, dynamic>),
-  date: json['date'] as String? ?? "",
+  date: json['time'] as String? ?? "",
+  totalEpisodes: (json['total_episodes'] as num?)?.toInt() ?? -1,
 );
 
 Map<String, dynamic> _$TimerToJson(_Timer instance) => <String, dynamic>{
@@ -73,7 +77,8 @@ Map<String, dynamic> _$TimerToJson(_Timer instance) => <String, dynamic>{
   '_id': instance.id,
   'mediaType': _$AnimeTypeEnumMap[instance.type]!,
   'episode_id': instance.episode,
-  'date': instance.date,
+  'time': instance.date,
+  'total_episodes': instance.totalEpisodes,
 };
 
 const _$AnimeTypeEnumMap = {

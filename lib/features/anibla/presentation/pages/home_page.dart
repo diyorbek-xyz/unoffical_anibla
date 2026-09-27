@@ -1,5 +1,5 @@
 import 'package:application/features/anibla/presentation/widgets/calendar.dart';
-import 'package:application/features/common/presentation/widgets/responsive.dart';
+import 'package:application/shared/widgets/responsive.dart';
 import 'package:application/features/anibla/presentation/widgets/recommends.dart';
 import 'package:application/features/anibla/presentation/widgets/slider.dart';
 import 'package:application/main.dart';

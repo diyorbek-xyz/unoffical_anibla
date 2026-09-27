@@ -1,4 +1,4 @@
-import 'package:application/core/utils/utils.dart';
+import 'package:application/shared/utils/utils.dart';
 import 'package:application/features/anibla/data/models/data/slider.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/features/anibla/data/models/main/profile.dart';
@@ -44,8 +44,8 @@ import 'package:application/features/anibla/data/source/network/filter_api.dart'
 import 'package:application/features/anibla/data/source/network/genre_api.dart';
 import 'package:application/features/anibla/domain/repositories/explore_repository.dart';
 import 'package:application/features/anibla/data/source/local/slider_local.dart';
-import 'package:application/network/interceptors/auth_interceptor.dart';
-import 'package:application/network/interceptors/error_interceptor.dart';
+import 'package:application/core/network/interceptors/auth_interceptor.dart';
+import 'package:application/core/network/interceptors/error_interceptor.dart';
 import 'package:application/features/auth/data/repository/auth_repository_impl.dart';
 import 'package:application/features/auth/data/source/local/auth_storage.dart';
 import 'package:application/features/auth/data/source/remote/auth_api.dart';
@@ -99,7 +99,7 @@ Future<void> initializeDependencies() async {
       "x-device": "Arch Linux",
       "x-app-version": "2.4.9",
       "Authorization":
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjZmYjliNzcwYzY1MjcxMGJlNTUxZjRmIiwidG9rZW5faWQiOiJhOTEyOWNkOC1jYjc2LTQ4OWMtYTZjMS0wMGFlZjExNWUyNWEiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzg2MDA4NjYwLCJleHAiOjE3ODcyMTgyNjB9.FoJYa5l0C_ceyVlTXfbnaJ0z4u_QyxtDL0ynupcPj_M",
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNmE2OWFlNzJhODA0YmNkOTZmYjY3N2M2IiwidG9rZW5faWQiOiI1NjI0MDYwNS1kOWE0LTQ4ODAtYWQ4NS0yYTJmNmQxODdjZTMiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzkwNDM0Nzk4LCJleHAiOjE3OTE2NDQzOTh9.FaIVkst2ZuU93CrdvSc6hM2CfmUB9ISakoeHHHvVctQ",
     },
   );
   final dio = Dio(baseOptions);

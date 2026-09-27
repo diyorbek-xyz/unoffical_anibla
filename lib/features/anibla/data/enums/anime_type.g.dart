@@ -8,7 +8,7 @@ part of 'anime_type.dart';
 
 class AnimeTypeAdapter extends TypeAdapter<AnimeType> {
   @override
-  final typeId = 5332;
+  final typeId = 1000;
 
   @override
   AnimeType read(BinaryReader reader) {

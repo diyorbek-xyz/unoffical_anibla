@@ -1,9 +1,9 @@
-import 'package:application/core/utils/extensions.dart';
+import 'package:application/shared/utils/extensions.dart';
 import 'package:application/features/anibla/data/models/misc/calendar.dart';
 import 'package:application/features/anibla/domain/repositories/calendar_repository.dart';
 import 'package:application/features/anibla/presentation/bloc/calendar/calendar_event.dart';
 import 'package:application/features/anibla/presentation/bloc/calendar/calendar_state.dart';
-import 'package:application/network/resources/failure.dart';
+import 'package:application/core/network/resources/failure.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
@@ -39,8 +39,9 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
             return;
           },
           (calendar) {
-            calendar.timers.sort((a, b) => a.time.compareTo(b.time));
-            return calendar;
+            final timers = [...calendar.timers];
+            timers.sort((a, b) => a.time.compareTo(b.time));
+            return calendar.copyWith(timers: timers);
           },
         ),
       );

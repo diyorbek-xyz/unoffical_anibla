@@ -1,14 +1,14 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
-import 'package:application/core/constants/icons.dart';
-import 'package:application/core/utils/extensions.dart';
+import 'package:application/shared/constants/icons.dart';
+import 'package:application/shared/utils/extensions.dart';
 import 'package:application/features/anibla/data/models/data/comment.dart';
 import 'package:application/features/anibla/data/models/main/profile.dart';
 import 'package:application/features/anibla/data/models/response/comment_response.dart';
 import 'package:application/features/anibla/presentation/bloc/comment/comment_bloc.dart';
 import 'package:application/features/anibla/presentation/bloc/comment/comment_event.dart';
 import 'package:application/features/anibla/presentation/bloc/comment/comment_state.dart';
-import 'package:application/features/common/presentation/image_provider/fallback_provider.dart';
+import 'package:application/shared/image_provider/fallback_provider.dart';
 import 'package:application/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

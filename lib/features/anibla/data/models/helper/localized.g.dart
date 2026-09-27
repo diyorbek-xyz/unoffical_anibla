@@ -8,7 +8,7 @@ part of 'localized.dart';
 
 class LocalizedAdapter extends TypeAdapter<Localized> {
   @override
-  final typeId = 5;
+  final typeId = 1;
 
   @override
   Localized read(BinaryReader reader) {

@@ -5,7 +5,7 @@ part 'avatar.g.dart';
 part 'avatar.freezed.dart';
 
 @freezed
-@HiveType(typeId: 9345)
+@HiveType(typeId: 301)
 abstract class Avatar with _$Avatar {
   const factory Avatar({
     @Default("") @HiveField(0) @JsonKey(name: "_id") String id,

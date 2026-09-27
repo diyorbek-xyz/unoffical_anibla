@@ -7,7 +7,7 @@ part 'calendar.g.dart';
 part 'calendar.freezed.dart';
 
 @freezed
-@HiveType(typeId: 3)
+@HiveType(typeId: 302)
 abstract class Calendar with _$Calendar {
   const factory Calendar({
     @Default(Pagination()) @HiveField(0) final Pagination pagination,

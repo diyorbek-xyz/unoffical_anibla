@@ -7,7 +7,7 @@ part 'notification_response.freezed.dart';
 part 'notification_response.g.dart';
 
 @freezed
-@HiveType(typeId: 6143)
+@HiveType(typeId: 901)
 abstract class NotificationResponse with _$NotificationResponse {
   const factory NotificationResponse({
     @Default([]) @HiveField(0) List<Notification> data,

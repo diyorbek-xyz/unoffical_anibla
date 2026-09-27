@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:application/core/utils/utils.dart';
+import 'package:application/shared/utils/utils.dart';
 import 'package:application/main.dart';
 import 'package:flutter/material.dart';
 

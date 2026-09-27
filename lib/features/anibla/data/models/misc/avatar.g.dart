@@ -8,7 +8,7 @@ part of 'avatar.dart';
 
 class AvatarAdapter extends TypeAdapter<Avatar> {
   @override
-  final typeId = 9345;
+  final typeId = 301;
 
   @override
   Avatar read(BinaryReader reader) {

@@ -1,4 +1,4 @@
-import 'package:application/core/utils/base_url.dart';
+import 'package:application/shared/utils/base_url.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/widgets.dart';
 

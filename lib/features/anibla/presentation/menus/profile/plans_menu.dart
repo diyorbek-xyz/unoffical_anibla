@@ -1,6 +1,6 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
-import 'package:application/core/utils/extensions.dart';
+import 'package:application/shared/utils/extensions.dart';
 import 'package:application/features/anibla/presentation/controllers/profile_controller.dart';
 import 'package:application/injection_container.dart';
 import 'package:flutter/material.dart';

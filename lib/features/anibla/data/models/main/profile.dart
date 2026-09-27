@@ -1,4 +1,4 @@
-import 'package:application/core/utils/base_url.dart';
+import 'package:application/shared/utils/base_url.dart';
 import 'package:application/features/anibla/data/models/data/privacy.dart';
 import 'package:application/features/anibla/data/models/data/session.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
@@ -8,7 +8,7 @@ import 'package:hive_ce_flutter/adapters.dart';
 part 'profile.g.dart';
 part 'profile.freezed.dart';
 
-@HiveType(typeId: 7)
+@HiveType(typeId: 203)
 @Freezed(fromJson: true, toJson: true)
 abstract class Profile with _$Profile {
   const factory Profile({

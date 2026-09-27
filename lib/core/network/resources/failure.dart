@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:application/core/resources/api_response.dart';
+import 'package:application/shared/models/api_response.dart';
 import 'package:application/features/anibla/data/models/data/session.dart';
-import 'package:application/network/errors.dart';
+import 'package:application/core/network/resources/errors.dart';
 import 'package:dio/dio.dart';
 
 sealed class Failure implements Exception {

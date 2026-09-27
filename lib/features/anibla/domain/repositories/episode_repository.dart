@@ -1,6 +1,6 @@
 import 'package:application/features/anibla/data/models/main/episode.dart';
 import 'package:application/features/anibla/data/models/data/video.dart';
-import 'package:application/network/resources/failure.dart';
+import 'package:application/core/network/resources/failure.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class EpisodeRepository {

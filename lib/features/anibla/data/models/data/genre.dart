@@ -6,7 +6,7 @@ part 'genre.g.dart';
 part 'genre.freezed.dart';
 
 @Freezed(fromJson: true, toJson: true)
-@HiveType(typeId: 6)
+@HiveType(typeId: 103)
 abstract class Genre with _$Genre {
   const factory Genre({
     @Default("") @HiveField(0) @JsonKey(name: "_id") String id,

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:application/core/utils/utils.dart';
+import 'package:application/shared/utils/utils.dart';
 import 'package:application/features/anibla/data/models/data/video.dart';
 import 'package:application/features/player/data/model/download/completed_models.dart';
 import 'package:application/features/player/data/model/parser_models.dart';

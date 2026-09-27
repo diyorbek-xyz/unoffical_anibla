@@ -1,4 +1,4 @@
-import 'package:application/core/resources/api_response.dart';
+import 'package:application/shared/models/api_response.dart';
 import 'package:application/core/resources/cache_entry.dart';
 import 'package:application/features/anibla/data/enums/anime_type.dart';
 import 'package:application/features/anibla/data/models/helper/pagination.dart';
@@ -9,7 +9,7 @@ import 'package:application/features/anibla/data/source/local/saved_ids_local.da
 import 'package:application/features/anibla/data/source/network/anime_api.dart';
 import 'package:application/features/anibla/domain/repositories/anime_repository.dart';
 import 'package:application/features/anibla/data/source/local/history_local.dart';
-import 'package:application/network/resources/failure.dart';
+import 'package:application/core/network/resources/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';

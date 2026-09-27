@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:application/core/utils/extensions.dart';
+import 'package:application/shared/utils/extensions.dart';
 import 'package:application/features/anibla/data/enums/anime_type.dart';
 import 'package:application/features/anibla/data/source/local/saved_ids_local.dart';
 import 'package:application/features/anibla/domain/repositories/anime_repository.dart';
 import 'package:application/features/player/data/source/local/downloads.dart';
-import 'package:application/network/resources/failure.dart';
+import 'package:application/core/network/resources/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 

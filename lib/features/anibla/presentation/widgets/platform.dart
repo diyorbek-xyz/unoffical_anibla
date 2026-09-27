@@ -1,4 +1,4 @@
-import 'package:application/core/constants/icons.dart';
+import 'package:application/shared/constants/icons.dart';
 import 'package:flutter/material.dart';
 
 class PlatformWidget extends StatelessWidget {

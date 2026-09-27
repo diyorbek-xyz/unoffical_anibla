@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:application/core/utils/base_url.dart';
-import 'package:application/core/utils/extensions.dart';
-import 'package:application/core/utils/utils.dart';
+import 'package:application/shared/utils/base_url.dart';
+import 'package:application/shared/utils/extensions.dart';
+import 'package:application/shared/utils/utils.dart';
 import 'package:application/features/anibla/data/source/network/video_api.dart';
 import 'package:application/features/player/data/model/timeline_model.dart';
 import 'package:application/features/player/data/source/local/timeline.dart';

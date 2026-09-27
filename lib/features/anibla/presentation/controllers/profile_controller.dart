@@ -1,12 +1,12 @@
 import 'dart:io';
-import 'package:application/core/utils/extensions.dart';
+import 'package:application/shared/utils/extensions.dart';
 import 'package:application/features/anibla/data/models/main/profile.dart';
 import 'package:application/features/anibla/data/models/misc/plan.dart';
 import 'package:application/features/anibla/data/models/response/notification_response.dart';
 import 'package:application/features/anibla/domain/repositories/notification_repository.dart';
 import 'package:application/features/anibla/domain/repositories/profile_repository.dart';
 import 'package:application/features/anibla/presentation/controllers/profile_errors.dart';
-import 'package:application/network/resources/failure.dart';
+import 'package:application/core/network/resources/failure.dart';
 import 'package:signals_flutter/signals_core.dart';
 
 class ProfileController {

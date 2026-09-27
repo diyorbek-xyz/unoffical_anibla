@@ -1,10 +1,10 @@
 import 'package:application/core/config/theme/app_colors.dart';
-import 'package:application/core/utils/base_url.dart';
+import 'package:application/shared/utils/base_url.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/features/anibla/data/models/props/anime_page_props.dart';
 import 'package:application/features/anibla/presentation/controllers/saved_controller.dart';
-import 'package:application/features/common/presentation/image_provider/fallback_provider.dart';
-import 'package:application/features/common/presentation/widgets/tv_focuser.dart';
+import 'package:application/shared/image_provider/fallback_provider.dart';
+import 'package:application/shared/widgets/tv_focuser.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/main.dart';
 import 'package:flutter/material.dart';
@@ -88,7 +88,7 @@ class _AnimeCardState extends State<AnimeCard> {
               AspectRatio(
                 aspectRatio: 9 / 12,
                 child: Ink(
-                  decoration: (!widget.anime.thumbnail.endsWith(".avif") && widget.anime.thumbnail.isNotEmpty)
+                  decoration: isUsable(widget.anime.thumbnail)
                       ? BoxDecoration(
                           boxShadow: [
                             BoxShadow(color: context.appColors.surfaceContainerLowest, blurRadius: 4, offset: Offset(0, 2)),
@@ -119,30 +119,32 @@ class _AnimeCardState extends State<AnimeCard> {
         ),
       ),
     );
+    final body = (widget.expand == null || !widget.expand! || widget.aspectRatio != null)
+        ? AspectRatio(aspectRatio: widget.aspectRatio ?? 9 / 15, child: cover)
+        : cover;
     return SizedBox(
       width: (widget.expand != null && widget.expand!) ? double.infinity : (isMobile ? 150 : 180),
-      child: Stack(
-        children: [
-          (widget.expand == null || !widget.expand! || widget.aspectRatio != null)
-              ? AspectRatio(aspectRatio: widget.aspectRatio ?? 9 / 15, child: cover)
-              : cover,
-
-          Positioned(
-            right: 7,
-            top: 5,
-            child: Skeleton.ignore(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-                decoration: BoxDecoration(
-                  color: context.appColors.primaryContainer.withAlpha(200),
-                  borderRadius: BorderRadius.circular(6),
+      child: (widget.anime.publishedYear == 0)
+          ? cover
+          : Stack(
+              children: [
+                body,
+                Positioned(
+                  right: 7,
+                  top: 5,
+                  child: Skeleton.ignore(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                      decoration: BoxDecoration(
+                        color: context.appColors.primaryContainer.withAlpha(200),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text("${widget.anime.publishedYear}-yil", style: TextStyle(color: context.appColors.primary)),
+                    ),
+                  ),
                 ),
-                child: Text("${widget.anime.publishedYear}-yil", style: TextStyle(color: context.appColors.primary)),
-              ),
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
 }

@@ -8,7 +8,7 @@ part of 'privacy.dart';
 
 class PrivacyAdapter extends TypeAdapter<Privacy> {
   @override
-  final typeId = 3642;
+  final typeId = 105;
 
   @override
   Privacy read(BinaryReader reader) {

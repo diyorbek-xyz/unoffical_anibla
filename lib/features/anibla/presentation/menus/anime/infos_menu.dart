@@ -1,9 +1,9 @@
 import 'package:application/core/config/theme/app_theme.dart';
-import 'package:application/core/utils/base_url.dart';
-import 'package:application/core/utils/extensions.dart';
+import 'package:application/shared/utils/base_url.dart';
+import 'package:application/shared/utils/extensions.dart';
 import 'package:application/features/anibla/presentation/controllers/anime_controller.dart';
-import 'package:application/features/common/presentation/image_provider/fallback_provider.dart';
-import 'package:application/features/common/presentation/widgets/responsive.dart';
+import 'package:application/shared/image_provider/fallback_provider.dart';
+import 'package:application/shared/widgets/responsive.dart';
 import 'package:application/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:signals_flutter/signals_flutter.dart';

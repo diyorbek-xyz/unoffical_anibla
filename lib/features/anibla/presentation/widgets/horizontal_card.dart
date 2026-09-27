@@ -1,8 +1,8 @@
 import 'package:application/core/config/theme/app_colors.dart';
-import 'package:application/core/utils/base_url.dart';
-import 'package:application/core/utils/extensions.dart';
+import 'package:application/shared/utils/base_url.dart';
+import 'package:application/shared/utils/extensions.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
-import 'package:application/features/common/presentation/image_provider/fallback_provider.dart';
+import 'package:application/shared/image_provider/fallback_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

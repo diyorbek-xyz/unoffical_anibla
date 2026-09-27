@@ -8,7 +8,7 @@ part of 'pagination.dart';
 
 class PaginationAdapter extends TypeAdapter<Pagination> {
   @override
-  final typeId = 0;
+  final typeId = 2;
 
   @override
   Pagination read(BinaryReader reader) {

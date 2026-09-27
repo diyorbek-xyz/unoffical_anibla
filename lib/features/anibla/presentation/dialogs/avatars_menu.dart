@@ -1,6 +1,6 @@
-import 'package:application/core/utils/base_url.dart';
+import 'package:application/shared/utils/base_url.dart';
 import 'package:application/features/anibla/data/models/misc/avatar.dart';
-import 'package:application/features/common/presentation/image_provider/fallback_provider.dart';
+import 'package:application/shared/image_provider/fallback_provider.dart';
 import 'package:flutter/material.dart';
 
 void showAvatarsMenu(BuildContext context) => showDialog(

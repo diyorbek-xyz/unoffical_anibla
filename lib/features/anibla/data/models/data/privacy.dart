@@ -5,7 +5,7 @@ part 'privacy.g.dart';
 part 'privacy.freezed.dart';
 
 @freezed
-@HiveType(typeId: 3642)
+@HiveType(typeId: 105)
 abstract class Privacy with _$Privacy {
   const factory Privacy({
     @Default(false) @HiveField(0) @JsonKey(name: "show_comments") bool showComments,

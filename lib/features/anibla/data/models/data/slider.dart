@@ -1,4 +1,4 @@
-import 'package:application/core/utils/base_url.dart';
+import 'package:application/shared/utils/base_url.dart';
 import 'package:application/features/anibla/data/enums/anime_type.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -8,7 +8,7 @@ part 'slider.g.dart';
 part 'slider.freezed.dart';
 
 @freezed
-@HiveType(typeId: 10)
+@HiveType(typeId: 108)
 abstract class Slider with _$Slider {
   const factory Slider({
     @Default("") @HiveField(0) @JsonKey(name: "_id") String id,

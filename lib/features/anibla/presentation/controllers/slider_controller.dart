@@ -1,4 +1,4 @@
-import 'package:application/core/utils/extensions.dart';
+import 'package:application/shared/utils/extensions.dart';
 import 'package:application/features/anibla/data/models/data/slider.dart';
 import 'package:application/features/anibla/domain/repositories/slider_repository.dart';
 import 'package:signals_flutter/signals_core.dart';

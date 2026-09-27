@@ -1,5 +1,5 @@
-import 'package:application/core/utils/extensions.dart';
-import 'package:application/features/common/presentation/widgets/list.dart';
+import 'package:application/shared/utils/extensions.dart';
+import 'package:application/shared/widgets/list.dart';
 import 'package:application/features/anibla/presentation/controllers/profile_controller.dart';
 import 'package:application/injection_container.dart';
 import 'package:flutter/material.dart';

@@ -1,4 +1,4 @@
-import 'package:application/core/resources/api_response.dart';
+import 'package:application/shared/models/api_response.dart';
 import 'package:application/features/anibla/data/enums/anime_type.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:dio/dio.dart';

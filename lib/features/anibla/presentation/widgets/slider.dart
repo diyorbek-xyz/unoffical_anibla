@@ -1,15 +1,15 @@
 import 'dart:async';
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
-import 'package:application/core/utils/base_url.dart';
+import 'package:application/shared/utils/base_url.dart';
 import 'package:application/features/anibla/data/models/props/anime_page_props.dart';
-import 'package:application/features/common/presentation/image_provider/fallback_provider.dart';
-import 'package:application/features/common/presentation/widgets/error.dart';
-import 'package:application/features/common/presentation/widgets/image.dart';
+import 'package:application/shared/image_provider/fallback_provider.dart';
+import 'package:application/shared/widgets/error.dart';
+import 'package:application/shared/widgets/image.dart';
 import 'package:application/features/anibla/presentation/controllers/slider_controller.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/main.dart';
-import 'package:application/network/resources/failure.dart';
+import 'package:application/core/network/resources/failure.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -175,7 +175,7 @@ class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin 
                   spacing: 10,
                   children: [
                     Text(
-                      "${e.anime.title.uz} [${e.anime.age}+]",
+                      "${e.anime.title.uz.toString()} [${e.anime.age}+]",
                       style: isMobile ? context.textTheme.titleLarge : context.textTheme.displayMedium,
                     ),
                     SizedBox(

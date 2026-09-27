@@ -3,7 +3,7 @@ import 'package:application/features/anibla/data/models/helper/pagination.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/features/anibla/presentation/controllers/anime_controller.dart';
 import 'package:application/features/anibla/presentation/widgets/anime_card.dart';
-import 'package:application/features/common/presentation/widgets/responsive.dart';
+import 'package:application/shared/widgets/responsive.dart';
 import 'package:application/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';

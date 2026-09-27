@@ -8,7 +8,7 @@ part of 'slider.dart';
 
 class SliderAdapter extends TypeAdapter<Slider> {
   @override
-  final typeId = 10;
+  final typeId = 108;
 
   @override
   Slider read(BinaryReader reader) {

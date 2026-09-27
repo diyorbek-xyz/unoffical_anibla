@@ -1,4 +1,4 @@
-import 'package:application/network/resources/failure.dart';
+import 'package:application/core/network/resources/failure.dart';
 import 'package:dio/dio.dart';
 
 class ErrorInterceptor extends Interceptor {

@@ -8,7 +8,7 @@ part of 'profile.dart';
 
 class ProfileAdapter extends TypeAdapter<Profile> {
   @override
-  final typeId = 7;
+  final typeId = 203;
 
   @override
   Profile read(BinaryReader reader) {

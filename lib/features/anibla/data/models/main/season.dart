@@ -6,7 +6,7 @@ part 'season.g.dart';
 part 'season.freezed.dart';
 
 @freezed
-@HiveType(typeId: 4353)
+@HiveType(typeId: 204)
 abstract class Season with _$Season {
   const Season._();
   factory Season({

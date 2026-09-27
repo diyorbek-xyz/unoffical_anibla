@@ -6,7 +6,7 @@ part 'notification.freezed.dart';
 part 'notification.g.dart';
 
 @freezed
-@HiveType(typeId: 5124)
+@HiveType(typeId: 104)
 abstract class Notification with _$Notification {
   const factory Notification({
     @Default("") @HiveField(0) @JsonKey(name: "_id") String id,

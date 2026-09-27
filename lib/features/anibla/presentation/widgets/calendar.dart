@@ -1,6 +1,6 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
-import 'package:application/core/utils/extensions.dart';
+import 'package:application/shared/utils/extensions.dart';
 import 'package:application/features/anibla/presentation/widgets/anime_card.dart';
 import 'package:application/features/anibla/presentation/bloc/calendar/calendar_bloc.dart';
 import 'package:application/features/anibla/presentation/bloc/calendar/calendar_event.dart';
@@ -144,7 +144,7 @@ class Calendar extends StatelessWidget {
               spacing: 10,
               children: calendar.timers.where((e) => e.anime.slug != "bir-soatli-qizcha-5").toList().asMap().entries.map((e) {
                 final timer = e.value;
-                final episode = timer.episode.episodeNumber;
+                final episode = timer.totalEpisodes;
                 final hasEpisode = episode != 0;
                 final date = DateTime.tryParse(calendar.date) ?? DateTime.now();
                 return Badge(

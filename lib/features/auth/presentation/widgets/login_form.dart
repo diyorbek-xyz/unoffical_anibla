@@ -1,5 +1,5 @@
 import 'package:application/core/config/theme/app_theme.dart';
-import 'package:application/core/utils/extensions.dart';
+import 'package:application/shared/utils/extensions.dart';
 import 'package:application/features/auth/data/models/login_model.dart';
 import 'package:application/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:application/features/auth/presentation/bloc/auth_event.dart';

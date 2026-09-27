@@ -1,6 +1,6 @@
 import 'package:application/features/anibla/data/models/main/profile.dart';
 import 'package:application/features/anibla/data/models/misc/plan.dart';
-import 'package:application/network/resources/failure.dart';
+import 'package:application/core/network/resources/failure.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class ProfileRepository {

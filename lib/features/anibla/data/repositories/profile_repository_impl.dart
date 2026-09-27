@@ -6,7 +6,7 @@ import 'package:application/features/auth/data/source/remote/auth_api.dart';
 import 'package:application/features/anibla/data/source/network/plans_api.dart';
 import 'package:application/features/anibla/data/source/network/profile_api.dart';
 import 'package:application/features/anibla/domain/repositories/profile_repository.dart';
-import 'package:application/network/resources/failure.dart';
+import 'package:application/core/network/resources/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 

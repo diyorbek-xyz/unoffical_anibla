@@ -2,7 +2,7 @@ import 'package:application/features/auth/data/models/login_model.dart';
 import 'package:application/features/auth/data/source/local/auth_storage.dart';
 import 'package:application/features/auth/data/source/remote/auth_api.dart';
 import 'package:application/features/auth/domain/repository/auth_repository.dart';
-import 'package:application/network/resources/failure.dart';
+import 'package:application/core/network/resources/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 

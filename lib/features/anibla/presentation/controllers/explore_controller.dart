@@ -1,11 +1,11 @@
-import 'package:application/core/utils/extensions.dart';
+import 'package:application/shared/utils/extensions.dart';
 import 'package:application/features/anibla/data/models/data/genre.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/features/anibla/data/models/request/search_request.dart';
-import 'package:application/features/common/presentation/controller/signal_state.dart';
+import 'package:application/shared/controller/signal_state.dart';
 import 'package:application/features/anibla/data/source/local/search_history_local.dart';
 import 'package:application/features/anibla/domain/repositories/explore_repository.dart';
-import 'package:application/network/resources/failure.dart';
+import 'package:application/core/network/resources/failure.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 class ExploreController {

@@ -8,7 +8,7 @@ part 'timer.g.dart';
 part 'timer.freezed.dart';
 
 @freezed
-@HiveType(typeId: 4)
+@HiveType(typeId: 303)
 sealed class Timer with _$Timer {
   const Timer._();
   const factory Timer({
@@ -16,7 +16,8 @@ sealed class Timer with _$Timer {
     @Default("") @HiveField(1) @JsonKey(name: "_id") String id,
     @Default(AnimeType.serie) @HiveField(4) @JsonKey(name: "mediaType") AnimeType type,
     @Default(Episode()) @HiveField(5) @JsonKey(name: "episode_id") Episode episode,
-    @Default("") @HiveField(3) String date,
+    @Default("") @HiveField(3) @JsonKey(name: "time") String date,
+    @Default(-1) @HiveField(6) @JsonKey(name: "total_episodes") int totalEpisodes,
   }) = _Timer;
 
   DateTime get time => DateTime.tryParse(date) ?? DateTime(2000);

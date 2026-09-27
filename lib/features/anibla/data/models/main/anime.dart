@@ -1,4 +1,4 @@
-import 'package:application/core/utils/base_url.dart';
+import 'package:application/shared/utils/base_url.dart';
 import 'package:application/features/anibla/data/enums/anime_type.dart';
 import 'package:application/features/anibla/data/models/data/creator.dart';
 import 'package:application/features/anibla/data/models/data/genre.dart';
@@ -9,8 +9,8 @@ import 'package:hive_ce_flutter/adapters.dart';
 part 'anime.g.dart';
 part 'anime.freezed.dart';
 
-@HiveType(typeId: 735)
 @freezed
+@HiveType(typeId: 205)
 abstract class Anime with _$Anime {
   const Anime._();
   const factory Anime({
@@ -33,14 +33,14 @@ abstract class Anime with _$Anime {
     @Default("") @HiveField(17) @JsonKey(name: "_id") String id,
     @Default(AnimeType.serie) @HiveField(18) @JsonKey(name: "mediaType") AnimeType type,
     @Default(false) @HiveField(19) @JsonKey(name: "for_only_mdh") bool forOnlyMDH,
-    @Default(2000) @HiveField(20) @JsonKey(name: "published_year") int publishedYear,
+    @Default(0) @HiveField(20) @JsonKey(name: "published_year") int publishedYear,
     @Default(0) @HiveField(21) @JsonKey(name: "total_episodes") int totalEpisodes,
     @Default("") @HiveField(22) @JsonKey(fromJson: addBaseUrl, includeFromJson: true) String thumbnail,
     @Default("") @HiveField(23) @JsonKey(fromJson: addBaseUrl, includeFromJson: true) String cover,
     @Default([]) @HiveField(24) @JsonKey(fromJson: addBaseUrlAsList, includeFromJson: true) List<String> images,
   }) = _Anime;
-  Localized get title => Localized(ru: ru['title'], uz: uz['title']);
-  Localized get description => Localized(ru: ru['description'], uz: uz['description']);
+  Localized get title => Localized(ru: ru['title'] ?? "", uz: uz['title'] ?? "");
+  Localized get description => Localized(ru: ru['description'] ?? "", uz: uz['description'] ?? "");
   DateTime get createdAt => DateTime.tryParse(createdDate) ?? DateTime.now();
   DateTime get updatedAt => DateTime.tryParse(createdDate) ?? DateTime.now();
 
