@@ -1,5 +1,4 @@
 import 'package:application/shared/models/api_response.dart';
-import 'package:application/features/anibla/data/enums/media_type.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';

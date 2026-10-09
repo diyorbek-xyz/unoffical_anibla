@@ -4,7 +4,6 @@ import 'package:application/shared/widgets/responsive.dart';
 import 'package:application/features/anibla/presentation/widgets/recommends.dart';
 import 'package:application/features/anibla/presentation/widgets/slider.dart';
 import 'package:application/main.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
