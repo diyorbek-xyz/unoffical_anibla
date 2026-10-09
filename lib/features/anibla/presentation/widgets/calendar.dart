@@ -147,15 +147,12 @@ class Calendar extends StatelessWidget {
                 final episode = timer.totalEpisodes;
                 final hasEpisode = episode != 0;
                 final date = DateTime.tryParse(calendar.date) ?? DateTime.now();
-                return Badge(
-                  label: Skeleton.ignore(child: Text("${timer.time.formatTime()}${hasEpisode ? "\t/\t$episode-qism" : ""} ")),
-                  alignment: AlignmentGeometry.topLeft,
-                  offset: Offset(6, 12),
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  textStyle: TextStyle(fontSize: 16),
-                  child: FocusTraversalOrder(
-                    order: NumericFocusOrder(date.year * 100 + date.month * 10 + date.day + (e.key * 0.1)),
-                    child: AnimeCard(anime: timer.anime, expand: false),
+                return FocusTraversalOrder(
+                  order: NumericFocusOrder(date.year * 100 + date.month * 10 + date.day + (e.key * 0.1)),
+                  child: MediaCard.fromAnime(
+                    timer.anime,
+                    expand: false,
+                    badges: ["${timer.time.formatTime()}${hasEpisode ? "\t/\t$episode-qism" : ""}"],
                   ),
                 );
               }).toList(),

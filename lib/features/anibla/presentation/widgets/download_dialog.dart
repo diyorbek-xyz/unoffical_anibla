@@ -1,11 +1,11 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
+import 'package:application/features/anibla/data/enums/media_type.dart';
+import 'package:application/features/anibla/presentation/controllers/media_controller.dart';
 import 'package:application/shared/utils/extensions.dart';
-import 'package:application/features/anibla/data/enums/anime_type.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/features/anibla/data/models/main/episode.dart';
 import 'package:application/features/anibla/data/models/main/season.dart';
-import 'package:application/features/anibla/presentation/controllers/anime_controller.dart';
 import 'package:application/features/player/data/model/download/completed_models.dart';
 import 'package:application/features/player/data/model/parser_models.dart';
 import 'package:application/features/player/data/model/service/download_models.dart';
@@ -25,8 +25,8 @@ class DownloadMenu extends StatefulWidget {
 
 class _DownloadMenuState extends State<DownloadMenu> {
   final downloader = sl<HlsDownloadService>();
-  final _animeController = sl<AnimeController>();
-  Anime get anime => _animeController.mediaState.value.value!;
+  final _animeController = sl<MediaController>();
+  Anime get anime => _animeController.animeState.value.value!;
   Season get season => _animeController.seasonsState.value.value!.first;
 
   DownloadTask? task;
@@ -66,7 +66,7 @@ class _DownloadMenuState extends State<DownloadMenu> {
   void goToWatch([String? url]) {
     context.pushNamed(
       "watch",
-      queryParameters: {"episode": widget.episode.episodeNumber.toString(), "type": AnimeType.serie.name, "url": url},
+      queryParameters: {"episode": widget.episode.episodeNumber.toString(), "type": MediaType.serie.name, "url": url},
     );
     Navigator.pop(context);
   }

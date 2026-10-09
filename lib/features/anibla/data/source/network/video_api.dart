@@ -4,10 +4,10 @@ import 'package:retrofit/retrofit.dart';
 
 part 'video_api.g.dart';
 
-@RestApi(baseUrl: "https://anibla.uz/", headers: {})
+@RestApi(baseUrl: "", headers: {})
 abstract class VideoApi {
   factory VideoApi(Dio dio) => _VideoApi(dio);
 
-  @GET("/stream/{id}?format=api")
-  Future<HttpResponse<Video>> getVideo(@Path('id') String id);
+  @GET("{url}?format=api")
+  Future<HttpResponse<Video>> getVideo(@Path('url') String url);
 }

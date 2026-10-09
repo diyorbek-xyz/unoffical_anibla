@@ -21,7 +21,7 @@ class SliderAdapter extends TypeAdapter<Slider> {
       image: fields[1] == null ? '' : fields[1] as String,
       mobileImage: fields[2] == null ? '' : fields[2] as String,
       anime: fields[3] == null ? const Anime() : fields[3] as Anime,
-      type: fields[4] == null ? AnimeType.movie : fields[4] as AnimeType,
+      type: fields[4] == null ? MediaType.movie : fields[4] as MediaType,
     );
   }
 
@@ -64,8 +64,8 @@ _Slider _$SliderFromJson(Map<String, dynamic> json) => _Slider(
       : addBaseUrl(json['mobile_image'] as String?),
   anime: json['media'] == null ? const Anime() : Anime.fromJson(json['media']),
   type:
-      $enumDecodeNullable(_$AnimeTypeEnumMap, json['mediaType']) ??
-      AnimeType.movie,
+      $enumDecodeNullable(_$MediaTypeEnumMap, json['mediaType']) ??
+      MediaType.movie,
 );
 
 Map<String, dynamic> _$SliderToJson(_Slider instance) => <String, dynamic>{
@@ -73,10 +73,14 @@ Map<String, dynamic> _$SliderToJson(_Slider instance) => <String, dynamic>{
   'image': instance.image,
   'mobile_image': instance.mobileImage,
   'media': instance.anime,
-  'mediaType': _$AnimeTypeEnumMap[instance.type]!,
+  'mediaType': _$MediaTypeEnumMap[instance.type]!,
 };
 
-const _$AnimeTypeEnumMap = {
-  AnimeType.movie: 'Movies',
-  AnimeType.serie: 'Series',
+const _$MediaTypeEnumMap = {
+  MediaType.movie: 'Movies',
+  MediaType.serie: 'Series',
+  MediaType.manga: 'manga',
+  MediaType.manxva: 'manhwa',
+  MediaType.novel: 'novella',
+  MediaType.comics: 'komiks',
 };

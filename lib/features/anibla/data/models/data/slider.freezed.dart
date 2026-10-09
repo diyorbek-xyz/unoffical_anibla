@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Slider {
 
-@HiveField(0)@JsonKey(name: "_id") String get id;@HiveField(1)@JsonKey(includeFromJson: true, fromJson: addBaseUrl) String get image;@HiveField(2)@JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl) String get mobileImage;@HiveField(3)@JsonKey(name: "media") Anime get anime;@HiveField(4)@JsonKey(name: "mediaType") AnimeType get type;
+@HiveField(0)@JsonKey(name: "_id") String get id;@HiveField(1)@JsonKey(includeFromJson: true, fromJson: addBaseUrl) String get image;@HiveField(2)@JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl) String get mobileImage;@HiveField(3)@JsonKey(name: "media") Anime get anime;@HiveField(4)@JsonKey(name: "mediaType") MediaType get type;
 /// Create a copy of Slider
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $SliderCopyWith<$Res>  {
   factory $SliderCopyWith(Slider value, $Res Function(Slider) _then) = _$SliderCopyWithImpl;
 @useResult
 $Res call({
-@HiveField(0)@JsonKey(name: "_id") String id,@HiveField(1)@JsonKey(includeFromJson: true, fromJson: addBaseUrl) String image,@HiveField(2)@JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl) String mobileImage,@HiveField(3)@JsonKey(name: "media") Anime anime,@HiveField(4)@JsonKey(name: "mediaType") AnimeType type
+@HiveField(0)@JsonKey(name: "_id") String id,@HiveField(1)@JsonKey(includeFromJson: true, fromJson: addBaseUrl) String image,@HiveField(2)@JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl) String mobileImage,@HiveField(3)@JsonKey(name: "media") Anime anime,@HiveField(4)@JsonKey(name: "mediaType") MediaType type
 });
 
 
@@ -72,7 +72,7 @@ as String,image: null == image ? _self.image : image // ignore: cast_nullable_to
 as String,mobileImage: null == mobileImage ? _self.mobileImage : mobileImage // ignore: cast_nullable_to_non_nullable
 as String,anime: null == anime ? _self.anime : anime // ignore: cast_nullable_to_non_nullable
 as Anime,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as AnimeType,
+as MediaType,
   ));
 }
 /// Create a copy of Slider
@@ -166,7 +166,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@HiveField(0)@JsonKey(name: "_id")  String id, @HiveField(1)@JsonKey(includeFromJson: true, fromJson: addBaseUrl)  String image, @HiveField(2)@JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl)  String mobileImage, @HiveField(3)@JsonKey(name: "media")  Anime anime, @HiveField(4)@JsonKey(name: "mediaType")  AnimeType type)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@HiveField(0)@JsonKey(name: "_id")  String id, @HiveField(1)@JsonKey(includeFromJson: true, fromJson: addBaseUrl)  String image, @HiveField(2)@JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl)  String mobileImage, @HiveField(3)@JsonKey(name: "media")  Anime anime, @HiveField(4)@JsonKey(name: "mediaType")  MediaType type)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Slider() when $default != null:
 return $default(_that.id,_that.image,_that.mobileImage,_that.anime,_that.type);case _:
@@ -187,7 +187,7 @@ return $default(_that.id,_that.image,_that.mobileImage,_that.anime,_that.type);c
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@HiveField(0)@JsonKey(name: "_id")  String id, @HiveField(1)@JsonKey(includeFromJson: true, fromJson: addBaseUrl)  String image, @HiveField(2)@JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl)  String mobileImage, @HiveField(3)@JsonKey(name: "media")  Anime anime, @HiveField(4)@JsonKey(name: "mediaType")  AnimeType type)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@HiveField(0)@JsonKey(name: "_id")  String id, @HiveField(1)@JsonKey(includeFromJson: true, fromJson: addBaseUrl)  String image, @HiveField(2)@JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl)  String mobileImage, @HiveField(3)@JsonKey(name: "media")  Anime anime, @HiveField(4)@JsonKey(name: "mediaType")  MediaType type)  $default,) {final _that = this;
 switch (_that) {
 case _Slider():
 return $default(_that.id,_that.image,_that.mobileImage,_that.anime,_that.type);case _:
@@ -207,7 +207,7 @@ return $default(_that.id,_that.image,_that.mobileImage,_that.anime,_that.type);c
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@HiveField(0)@JsonKey(name: "_id")  String id, @HiveField(1)@JsonKey(includeFromJson: true, fromJson: addBaseUrl)  String image, @HiveField(2)@JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl)  String mobileImage, @HiveField(3)@JsonKey(name: "media")  Anime anime, @HiveField(4)@JsonKey(name: "mediaType")  AnimeType type)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@HiveField(0)@JsonKey(name: "_id")  String id, @HiveField(1)@JsonKey(includeFromJson: true, fromJson: addBaseUrl)  String image, @HiveField(2)@JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl)  String mobileImage, @HiveField(3)@JsonKey(name: "media")  Anime anime, @HiveField(4)@JsonKey(name: "mediaType")  MediaType type)?  $default,) {final _that = this;
 switch (_that) {
 case _Slider() when $default != null:
 return $default(_that.id,_that.image,_that.mobileImage,_that.anime,_that.type);case _:
@@ -222,14 +222,14 @@ return $default(_that.id,_that.image,_that.mobileImage,_that.anime,_that.type);c
 @JsonSerializable()
 
 class _Slider implements Slider {
-  const _Slider({@HiveField(0)@JsonKey(name: "_id") this.id = "", @HiveField(1)@JsonKey(includeFromJson: true, fromJson: addBaseUrl) this.image = "", @HiveField(2)@JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl) this.mobileImage = "", @HiveField(3)@JsonKey(name: "media") this.anime = const Anime(), @HiveField(4)@JsonKey(name: "mediaType") this.type = AnimeType.movie});
+  const _Slider({@HiveField(0)@JsonKey(name: "_id") this.id = "", @HiveField(1)@JsonKey(includeFromJson: true, fromJson: addBaseUrl) this.image = "", @HiveField(2)@JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl) this.mobileImage = "", @HiveField(3)@JsonKey(name: "media") this.anime = const Anime(), @HiveField(4)@JsonKey(name: "mediaType") this.type = MediaType.movie});
   factory _Slider.fromJson(Map<String, dynamic> json) => _$SliderFromJson(json);
 
 @override@HiveField(0)@JsonKey(name: "_id") final  String id;
 @override@HiveField(1)@JsonKey(includeFromJson: true, fromJson: addBaseUrl) final  String image;
 @override@HiveField(2)@JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl) final  String mobileImage;
 @override@HiveField(3)@JsonKey(name: "media") final  Anime anime;
-@override@HiveField(4)@JsonKey(name: "mediaType") final  AnimeType type;
+@override@HiveField(4)@JsonKey(name: "mediaType") final  MediaType type;
 
 /// Create a copy of Slider
 /// with the given fields replaced by the non-null parameter values.
@@ -264,7 +264,7 @@ abstract mixin class _$SliderCopyWith<$Res> implements $SliderCopyWith<$Res> {
   factory _$SliderCopyWith(_Slider value, $Res Function(_Slider) _then) = __$SliderCopyWithImpl;
 @override @useResult
 $Res call({
-@HiveField(0)@JsonKey(name: "_id") String id,@HiveField(1)@JsonKey(includeFromJson: true, fromJson: addBaseUrl) String image,@HiveField(2)@JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl) String mobileImage,@HiveField(3)@JsonKey(name: "media") Anime anime,@HiveField(4)@JsonKey(name: "mediaType") AnimeType type
+@HiveField(0)@JsonKey(name: "_id") String id,@HiveField(1)@JsonKey(includeFromJson: true, fromJson: addBaseUrl) String image,@HiveField(2)@JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl) String mobileImage,@HiveField(3)@JsonKey(name: "media") Anime anime,@HiveField(4)@JsonKey(name: "mediaType") MediaType type
 });
 
 
@@ -288,7 +288,7 @@ as String,image: null == image ? _self.image : image // ignore: cast_nullable_to
 as String,mobileImage: null == mobileImage ? _self.mobileImage : mobileImage // ignore: cast_nullable_to_non_nullable
 as String,anime: null == anime ? _self.anime : anime // ignore: cast_nullable_to_non_nullable
 as Anime,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as AnimeType,
+as MediaType,
   ));
 }
 

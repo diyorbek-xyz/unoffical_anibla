@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GetCommentRequest {
 
- String get id; int get limit; int get page; String get type;
+ String get id; int get limit; int get page; MediaType get type;
 /// Create a copy of GetCommentRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,7 +45,7 @@ abstract mixin class $GetCommentRequestCopyWith<$Res>  {
   factory $GetCommentRequestCopyWith(GetCommentRequest value, $Res Function(GetCommentRequest) _then) = _$GetCommentRequestCopyWithImpl;
 @useResult
 $Res call({
- String id, int limit, int page, String type
+ String id, int limit, int page, MediaType type
 });
 
 
@@ -68,7 +68,7 @@ id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,limit: null == limit ? _self.limit : limit // ignore: cast_nullable_to_non_nullable
 as int,page: null == page ? _self.page : page // ignore: cast_nullable_to_non_nullable
 as int,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as String,
+as MediaType,
   ));
 }
 
@@ -153,7 +153,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  int limit,  int page,  String type)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  int limit,  int page,  MediaType type)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GetCommentRequest() when $default != null:
 return $default(_that.id,_that.limit,_that.page,_that.type);case _:
@@ -174,7 +174,7 @@ return $default(_that.id,_that.limit,_that.page,_that.type);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  int limit,  int page,  String type)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  int limit,  int page,  MediaType type)  $default,) {final _that = this;
 switch (_that) {
 case _GetCommentRequest():
 return $default(_that.id,_that.limit,_that.page,_that.type);case _:
@@ -194,7 +194,7 @@ return $default(_that.id,_that.limit,_that.page,_that.type);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  int limit,  int page,  String type)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  int limit,  int page,  MediaType type)?  $default,) {final _that = this;
 switch (_that) {
 case _GetCommentRequest() when $default != null:
 return $default(_that.id,_that.limit,_that.page,_that.type);case _:
@@ -215,7 +215,7 @@ class _GetCommentRequest extends GetCommentRequest {
 @override final  String id;
 @override final  int limit;
 @override final  int page;
-@override final  String type;
+@override final  MediaType type;
 
 /// Create a copy of GetCommentRequest
 /// with the given fields replaced by the non-null parameter values.
@@ -247,7 +247,7 @@ abstract mixin class _$GetCommentRequestCopyWith<$Res> implements $GetCommentReq
   factory _$GetCommentRequestCopyWith(_GetCommentRequest value, $Res Function(_GetCommentRequest) _then) = __$GetCommentRequestCopyWithImpl;
 @override @useResult
 $Res call({
- String id, int limit, int page, String type
+ String id, int limit, int page, MediaType type
 });
 
 
@@ -270,7 +270,7 @@ id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,limit: null == limit ? _self.limit : limit // ignore: cast_nullable_to_non_nullable
 as int,page: null == page ? _self.page : page // ignore: cast_nullable_to_non_nullable
 as int,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as String,
+as MediaType,
   ));
 }
 

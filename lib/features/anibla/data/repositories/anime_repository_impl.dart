@@ -1,6 +1,6 @@
 import 'package:application/shared/models/api_response.dart';
 import 'package:application/core/resources/cache_entry.dart';
-import 'package:application/features/anibla/data/enums/anime_type.dart';
+import 'package:application/features/anibla/data/enums/media_type.dart';
 import 'package:application/features/anibla/data/models/helper/pagination.dart';
 import 'package:application/features/anibla/data/models/local/saved_anime.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
@@ -24,11 +24,11 @@ class AnimeRepositoryImpl implements AnimeRepository {
   final Map<String, CacheEntry<Anime>> _cache = {};
 
   @override
-  Future<Either<Failure, Anime>> getSerie(AnimeType type, String slug) async {
+  Future<Either<Failure, Anime>> getSerie(MediaType type, String slug) async {
     try {
       final cached = _cache[slug];
       if (cached != null && !cached.isExpired) return Right(cached.data);
-      final serie = await _animeApi.getSerie(toBeginningOfSentenceCase("${type.name}s"), slug);
+      final serie = await _animeApi.getSerie(toBeginningOfSentenceCase(type.jsonValue), slug);
       if (serie.data.success) {
         final data = serie.data.data;
         _cache[slug] = CacheEntry(data);
@@ -53,7 +53,7 @@ class AnimeRepositoryImpl implements AnimeRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> saveMedia(String id, AnimeType type) async {
+  Future<Either<Failure, bool>> saveMedia(String id, MediaType type) async {
     try {
       late HttpResponse<ApiResponse> response;
       if (type.isSerie) response = await _animeApi.saveSeries({"media": id});
@@ -69,7 +69,7 @@ class AnimeRepositoryImpl implements AnimeRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> unsaveMedia(String id, AnimeType type) async {
+  Future<Either<Failure, bool>> unsaveMedia(String id, MediaType type) async {
     try {
       late HttpResponse<ApiResponse> response;
       if (type.isSerie) response = await _animeApi.unsaveSeries(id);

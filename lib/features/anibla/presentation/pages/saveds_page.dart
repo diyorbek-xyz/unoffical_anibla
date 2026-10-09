@@ -84,7 +84,7 @@ class _SavedsPageState extends State<SavedsPage> {
                   onTap: () => context.pushNamed(
                     "watch",
                     queryParameters: AnimePageProps(
-                      animeType: infos.anime.type,
+                      mediaType: infos.anime.type,
                       animeSlug: infos.anime.slug,
                       localPath: data[index].masterPlaylist.localUrl,
                     ).toJson(),
@@ -103,7 +103,10 @@ class _SavedsPageState extends State<SavedsPage> {
     builder: (context) {
       final state = _exploreController.historySignal.value;
       final data = state.value ?? [];
-      return Column(mainAxisSize: .min, children: [title("Ko'rilgan animelar", Icons.history), if (data.isNotEmpty) animeBuilder(data)]);
+      return Column(
+        mainAxisSize: .min,
+        children: [title("Ko'rilgan animelar", Icons.history), if (data.isNotEmpty) animeBuilder(data)],
+      );
     },
   );
 

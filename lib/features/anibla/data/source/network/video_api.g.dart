@@ -11,9 +11,7 @@ part of 'video_api.dart';
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter,avoid_unused_constructor_parameters,unreachable_from_main,avoid_redundant_argument_values
 
 class _VideoApi implements VideoApi {
-  _VideoApi(this._dio, {this.baseUrl, this.errorLogger}) {
-    baseUrl ??= 'https://anibla.uz/';
-  }
+  _VideoApi(this._dio, {this.baseUrl, this.errorLogger});
 
   final Dio _dio;
 
@@ -22,7 +20,7 @@ class _VideoApi implements VideoApi {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HttpResponse<Video>> getVideo(String id) async {
+  Future<HttpResponse<Video>> getVideo(String url) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -31,13 +29,13 @@ class _VideoApi implements VideoApi {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/stream/${id}?format=api',
+            '${url}?format=api',
             queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    final _result = await _dio.fetch<dynamic>(_options);
     late Video _value;
     try {
       _value = Video.fromJson(_result.data!);

@@ -18,17 +18,16 @@ class PaginationAdapter extends TypeAdapter<Pagination> {
     };
     return Pagination(
       limit: fields[0] == null ? 0 : (fields[0] as num).toInt(),
-      page: fields[1] == null ? 0 : (fields[1] as num).toInt(),
+      page: fields[1] == null ? 1 : (fields[1] as num).toInt(),
       pages: fields[2] == null ? 0 : (fields[2] as num).toInt(),
       total: fields[3] == null ? 0 : (fields[3] as num).toInt(),
-      next: fields[4] == null ? 0 : (fields[4] as num).toInt(),
     );
   }
 
   @override
   void write(BinaryWriter writer, Pagination obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.limit)
       ..writeByte(1)
@@ -36,9 +35,7 @@ class PaginationAdapter extends TypeAdapter<Pagination> {
       ..writeByte(2)
       ..write(obj.pages)
       ..writeByte(3)
-      ..write(obj.total)
-      ..writeByte(4)
-      ..write(obj.next);
+      ..write(obj.total);
   }
 
   @override
@@ -58,10 +55,9 @@ class PaginationAdapter extends TypeAdapter<Pagination> {
 
 _Pagination _$PaginationFromJson(Map<String, dynamic> json) => _Pagination(
   limit: (json['limit'] as num?)?.toInt() ?? 0,
-  page: (json['page'] as num?)?.toInt() ?? 0,
+  page: (json['page'] as num?)?.toInt() ?? 1,
   pages: (json['pages'] as num?)?.toInt() ?? 0,
   total: (json['total'] as num?)?.toInt() ?? 0,
-  next: (json['next'] as num?)?.toInt() ?? 0,
 );
 
 Map<String, dynamic> _$PaginationToJson(_Pagination instance) =>
@@ -70,5 +66,4 @@ Map<String, dynamic> _$PaginationToJson(_Pagination instance) =>
       'page': instance.page,
       'pages': instance.pages,
       'total': instance.total,
-      'next': instance.next,
     };

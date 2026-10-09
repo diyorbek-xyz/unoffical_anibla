@@ -12,7 +12,7 @@ class AuthInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     final token = await storage.getAccessToken();
-    final newOptions = await setHeaders(options, token ?? "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNmE2OWFlNzJhODA0YmNkOTZmYjY3N2M2IiwidG9rZW5faWQiOiI1NjI0MDYwNS1kOWE0LTQ4ODAtYWQ4NS0yYTJmNmQxODdjZTMiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzkwNDM0Nzk4LCJleHAiOjE3OTE2NDQzOTh9.FaIVkst2ZuU93CrdvSc6hM2CfmUB9ISakoeHHHvVctQ");
+    final newOptions = await setHeaders(options, token ?? "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNmE2OWFlNzJhODA0YmNkOTZmYjY3N2M2IiwidG9rZW5faWQiOiJhMjA2NTA2Yy1iMjgzLTQzMmMtYTdkNi1hMWVhZTk3ZmI0YjUiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzkxMzgxMjIwLCJleHAiOjE3OTI1OTA4MjB9.D2VvOwz7K7rESKuCSX9uoJEGApwk1Epwv7oQP4pMcDY");
     handler.next(newOptions);
   }
 

@@ -20,7 +20,7 @@ String addBaseUrl(String? path) {
 }
 
 bool hasBaseUrl(String? path) {
-  return path?.contains(dotenv.env['BASE_URL']!) ?? false;
+  return (path?.contains(dotenv.env['BASE_URL']!) ?? false) || (path?.startsWith("https:") ?? false);
 }
 
 bool isUsable(String? path) {

@@ -42,7 +42,7 @@ class ExploreController {
       searchSignal.set(SignalState<Searched>());
       return;
     }
-    searchSignal.set(searchSignal.value.setLoading(true));
+    searchSignal.setLoading(true);
 
     String? error;
     if (query.search != null && query.search!.isNotEmpty) await _searchHistoryLocal.saveToHistory(query.search!);
@@ -55,9 +55,9 @@ class ExploreController {
     movies.fold((f) => error = ExceptionMapper.mapFailureToMessage(f), movieAnimes.addAll);
 
     if (error != null) {
-      searchSignal.set(searchSignal.value.withError(error!));
+      searchSignal.setError(error!);
     } else {
-      searchSignal.set(searchSignal.value.withValue(Searched(search: query.search ?? "", series: serieAnimes, movies: movieAnimes)));
+      searchSignal.setValue(Searched(search: query.search ?? "", series: serieAnimes, movies: movieAnimes));
     }
     await searchHistorySignal.refresh();
   }

@@ -34,10 +34,11 @@ class AnimeAdapter extends TypeAdapter<Anime> {
       genres: fields[15] == null ? [] : (fields[15] as List).cast<Genre>(),
       creators: fields[16] == null ? [] : (fields[16] as List).cast<Creator>(),
       id: fields[17] == null ? '' : fields[17] as String,
-      type: fields[18] == null ? AnimeType.serie : fields[18] as AnimeType,
+      type: fields[18] == null ? MediaType.serie : fields[18] as MediaType,
       forOnlyMDH: fields[19] == null ? false : fields[19] as bool,
       publishedYear: fields[20] == null ? 0 : (fields[20] as num).toInt(),
       totalEpisodes: fields[21] == null ? 0 : (fields[21] as num).toInt(),
+      availableEpisodes: fields[25] == null ? 0 : (fields[25] as num).toInt(),
       thumbnail: fields[22] == null ? '' : fields[22] as String,
       cover: fields[23] == null ? '' : fields[23] as String,
       images: fields[24] == null ? [] : (fields[24] as List).cast<String>(),
@@ -47,7 +48,7 @@ class AnimeAdapter extends TypeAdapter<Anime> {
   @override
   void write(BinaryWriter writer, Anime obj) {
     writer
-      ..writeByte(24)
+      ..writeByte(25)
       ..writeByte(1)
       ..write(obj.age)
       ..writeByte(2)
@@ -95,7 +96,9 @@ class AnimeAdapter extends TypeAdapter<Anime> {
       ..writeByte(23)
       ..write(obj.cover)
       ..writeByte(24)
-      ..write(obj.images);
+      ..write(obj.images)
+      ..writeByte(25)
+      ..write(obj.availableEpisodes);
   }
 
   @override
@@ -136,11 +139,12 @@ _Anime _$AnimeFromJson(Map<String, dynamic> json) => _Anime(
       const [],
   id: json['_id'] as String? ?? "",
   type:
-      $enumDecodeNullable(_$AnimeTypeEnumMap, json['mediaType']) ??
-      AnimeType.serie,
+      $enumDecodeNullable(_$MediaTypeEnumMap, json['mediaType']) ??
+      MediaType.serie,
   forOnlyMDH: json['for_only_mdh'] as bool? ?? false,
   publishedYear: (json['published_year'] as num?)?.toInt() ?? 0,
   totalEpisodes: (json['total_episodes'] as num?)?.toInt() ?? 0,
+  availableEpisodes: (json['available_episodes'] as num?)?.toInt() ?? 0,
   thumbnail: json['thumbnail'] == null
       ? ""
       : addBaseUrl(json['thumbnail'] as String?),
@@ -168,16 +172,21 @@ Map<String, dynamic> _$AnimeToJson(_Anime instance) => <String, dynamic>{
   'genres': instance.genres,
   'creators': instance.creators,
   '_id': instance.id,
-  'mediaType': _$AnimeTypeEnumMap[instance.type]!,
+  'mediaType': _$MediaTypeEnumMap[instance.type]!,
   'for_only_mdh': instance.forOnlyMDH,
   'published_year': instance.publishedYear,
   'total_episodes': instance.totalEpisodes,
+  'available_episodes': instance.availableEpisodes,
   'thumbnail': instance.thumbnail,
   'cover': instance.cover,
   'images': instance.images,
 };
 
-const _$AnimeTypeEnumMap = {
-  AnimeType.movie: 'Movies',
-  AnimeType.serie: 'Series',
+const _$MediaTypeEnumMap = {
+  MediaType.movie: 'Movies',
+  MediaType.serie: 'Series',
+  MediaType.manga: 'manga',
+  MediaType.manxva: 'manhwa',
+  MediaType.novel: 'novella',
+  MediaType.comics: 'komiks',
 };

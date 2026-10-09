@@ -10,13 +10,13 @@ abstract class Pagination with _$Pagination {
   const Pagination._();
   const factory Pagination({
     @Default(0) @HiveField(0) int limit,
-    @Default(0) @HiveField(1) int page,
+    @Default(1) @HiveField(1) int page,
     @Default(0) @HiveField(2) int pages,
     @Default(0) @HiveField(3) int total,
-    @Default(0) @HiveField(4) int next,
   }) = _Pagination;
 
   bool get hasMore => (page < pages) && pages > 0;
+  int get next => pages == 0 ? page : (page + 1).clamp(page, pages);
 
   factory Pagination.fromJson(Map<String, dynamic> json) => _$PaginationFromJson(json);
 }

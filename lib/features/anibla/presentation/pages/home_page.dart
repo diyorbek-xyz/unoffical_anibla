@@ -1,8 +1,10 @@
+import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/features/anibla/presentation/widgets/calendar.dart';
 import 'package:application/shared/widgets/responsive.dart';
 import 'package:application/features/anibla/presentation/widgets/recommends.dart';
 import 'package:application/features/anibla/presentation/widgets/slider.dart';
 import 'package:application/main.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -24,13 +26,27 @@ class _HomePageState extends State<HomePage> {
           child: CustomScrollView(
             physics: BouncingScrollPhysics(),
             scrollBehavior: ScrollBehavior().copyWith(scrollbars: false),
-            slivers: [
-              isMobile
-                  ? SliverToBoxAdapter(child: SizedBox(height: 400, child: Carousel()))
-                  : SliverFillViewport(delegate: SliverChildListDelegate([Carousel()])),
-              SliverToBoxAdapter(child: Calendar()),
-              AnimeRecommends(),
-            ],
+            slivers: true
+                ? [
+                    isMobile
+                        ? SliverToBoxAdapter(child: SizedBox(height: 400, child: Carousel()))
+                        : SliverFillViewport(delegate: SliverChildListDelegate([Carousel()])),
+                    SliverToBoxAdapter(child: Calendar()),
+                    AnimeRecommends(),
+                  ]
+                : [
+                    SliverFillRemaining(
+                      child: Column(
+                        crossAxisAlignment: .center,
+                        mainAxisAlignment: .center,
+                        spacing: 10,
+                        children: [
+                          Icon(Icons.network_check, size: context.textTheme.displayLarge!.fontSize),
+                          Text("Internet tarmoqni tekshiring", style: context.textTheme.titleMedium),
+                        ],
+                      ),
+                    ),
+                  ],
           ),
         );
       },

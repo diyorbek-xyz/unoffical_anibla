@@ -1,3 +1,5 @@
+import 'package:application/features/anibla/presentation/controllers/comment_controller.dart';
+import 'package:application/features/player/presentation/controller/player_controller.dart';
 import 'package:application/shared/utils/utils.dart';
 import 'package:application/features/anibla/data/models/data/slider.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
@@ -6,7 +8,7 @@ import 'package:application/features/anibla/data/models/misc/calendar.dart';
 import 'package:application/features/anibla/data/repositories/profile_repository_impl.dart';
 import 'package:application/features/anibla/data/source/local/profile_local.dart';
 import 'package:application/features/anibla/data/source/local/saved_ids_local.dart';
-import 'package:application/features/anibla/presentation/controllers/anime_controller.dart';
+import 'package:application/features/anibla/presentation/controllers/media_controller.dart';
 import 'package:application/features/anibla/presentation/controllers/saved_controller.dart';
 import 'package:application/features/anibla/data/source/local/search_history_local.dart';
 import 'package:application/features/anibla/presentation/controllers/explore_controller.dart';
@@ -15,7 +17,6 @@ import 'package:application/features/player/data/model/timeline_model.dart';
 import 'package:application/features/player/data/services/download_service.dart';
 import 'package:application/features/player/data/source/local/downloads.dart';
 import 'package:application/features/player/data/source/local/timeline.dart';
-import 'package:application/features/player/presentation/cubit/player/player_controller.dart';
 import 'package:application/features/anibla/data/repositories/notification_repository_impl.dart';
 import 'package:application/features/anibla/data/source/network/notifications_api.dart';
 import 'package:application/features/anibla/data/source/network/plans_api.dart';
@@ -23,6 +24,7 @@ import 'package:application/features/anibla/domain/repositories/notification_rep
 import 'package:application/features/anibla/presentation/controllers/profile_controller.dart';
 import 'package:application/features/anibla/presentation/controllers/slider_controller.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_video_caching/flutter_video_caching.dart' as video_caching;
 import 'package:path_provider/path_provider.dart';
 import 'package:application/features/anibla/data/repositories/anime_repository_impl.dart';
 import 'package:application/features/anibla/data/repositories/episode_repository_impl.dart';
@@ -76,8 +78,10 @@ final secureStorage = FlutterSecureStorage();
 Future<void> initializeDependencies() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Setup local Storage;
+  await video_caching.VideoProxy.init();
   MediaKit.ensureInitialized();
+
+  // Setup local Storage;
   final cacheDir = await getApplicationCacheDirectory();
   await Hive.initFlutter("${cacheDir.path}/boxes/");
   Hive.registerAdapters();
@@ -179,11 +183,12 @@ Future<void> initializeDependencies() async {
     ..registerFactory<AuthBloc>(() => AuthBloc(sl()))
     ..registerFactory<CalendarBloc>(() => CalendarBloc(sl()))
     ..registerFactory<CommentBloc>(() => CommentBloc(sl()))
-    ..registerFactory<PlayerController>(() => PlayerController(sl(), sl()))
     // Register Signal controllers;
     ..registerLazySingleton<ProfileController>(() => ProfileController(sl(), sl()))
     ..registerLazySingleton<LocalAnimesController>(() => LocalAnimesController(sl(), sl(), sl()))
-    ..registerLazySingleton<AnimeController>(() => AnimeController(sl(), sl(), sl()))
+    ..registerLazySingleton<CommentController>(() => CommentController(sl(), sl()))
+    ..registerLazySingleton<MediaController>(() => MediaController(sl(), sl(), sl()))
     ..registerLazySingleton<ExploreController>(() => ExploreController(sl(), sl()))
-    ..registerLazySingleton<SliderController>(() => SliderController(sl()));
+    ..registerLazySingleton<SliderController>(() => SliderController(sl()))
+    ..registerLazySingleton<PlayerController>(() => PlayerController(sl(), sl()));
 }

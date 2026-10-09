@@ -1,7 +1,7 @@
 import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/features/anibla/data/models/helper/pagination.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
-import 'package:application/features/anibla/presentation/controllers/anime_controller.dart';
+import 'package:application/features/anibla/presentation/controllers/media_controller.dart';
 import 'package:application/features/anibla/presentation/widgets/anime_card.dart';
 import 'package:application/shared/widgets/responsive.dart';
 import 'package:application/injection_container.dart';
@@ -17,7 +17,7 @@ class AnimeRecommends extends StatefulWidget {
 }
 
 class _AnimeRecommendsState extends State<AnimeRecommends> {
-  final animeController = sl<AnimeController>()..getHome(Pagination(limit: 30, page: 1));
+  final animeController = sl<MediaController>()..getHome(Pagination(limit: 30, page: 1));
 
   @override
   Widget build(BuildContext context) {
@@ -56,9 +56,22 @@ class _AnimeRecommendsState extends State<AnimeRecommends> {
                     crossAxisSpacing: 10,
                   ),
                   builderDelegate: PagedChildBuilderDelegate(
+                    noItemsFoundIndicatorBuilder: (context) => SizedBox(
+                      height: 300,
+                      child: Column(
+                        crossAxisAlignment: .center,
+                        mainAxisAlignment: .center,
+                        spacing: 20,
+                        children: [
+                          Icon(Icons.network_check, size: 50),
+                          Text("Internet tarmoqni tekshiring"),
+                          FilledButton.icon(onPressed: ()=>animeController.getHome(.new(limit: 20)), icon: Icon(Icons.refresh),label: Text("Yangilash"),),
+                        ],
+                      ),
+                    ),
                     itemBuilder: (context, item, index) => FocusTraversalOrder(
                       order: NumericFocusOrder(index + 0.0),
-                      child: AnimeCard(aspectRatio: 9 / 15, anime: state.value[index]),
+                      child: MediaCard.fromAnime(state.value[index], aspectRatio: 9 / 15),
                     ),
                   ),
                 ),

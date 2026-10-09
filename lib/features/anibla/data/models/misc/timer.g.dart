@@ -19,7 +19,7 @@ class TimerAdapter extends TypeAdapter<Timer> {
     return Timer(
       anime: fields[0] == null ? const Anime() : fields[0] as Anime,
       id: fields[1] == null ? '' : fields[1] as String,
-      type: fields[4] == null ? AnimeType.serie : fields[4] as AnimeType,
+      type: fields[4] == null ? MediaType.serie : fields[4] as MediaType,
       episode: fields[5] == null ? const Episode() : fields[5] as Episode,
       date: fields[3] == null ? '' : fields[3] as String,
       totalEpisodes: fields[6] == null ? -1 : (fields[6] as num).toInt(),
@@ -63,8 +63,8 @@ _Timer _$TimerFromJson(Map<String, dynamic> json) => _Timer(
   anime: json['media'] == null ? const Anime() : Anime.fromJson(json['media']),
   id: json['_id'] as String? ?? "",
   type:
-      $enumDecodeNullable(_$AnimeTypeEnumMap, json['mediaType']) ??
-      AnimeType.serie,
+      $enumDecodeNullable(_$MediaTypeEnumMap, json['mediaType']) ??
+      MediaType.serie,
   episode: json['episode_id'] == null
       ? const Episode()
       : Episode.fromJson(json['episode_id'] as Map<String, dynamic>),
@@ -75,13 +75,17 @@ _Timer _$TimerFromJson(Map<String, dynamic> json) => _Timer(
 Map<String, dynamic> _$TimerToJson(_Timer instance) => <String, dynamic>{
   'media': instance.anime,
   '_id': instance.id,
-  'mediaType': _$AnimeTypeEnumMap[instance.type]!,
+  'mediaType': _$MediaTypeEnumMap[instance.type]!,
   'episode_id': instance.episode,
   'time': instance.date,
   'total_episodes': instance.totalEpisodes,
 };
 
-const _$AnimeTypeEnumMap = {
-  AnimeType.movie: 'Movies',
-  AnimeType.serie: 'Series',
+const _$MediaTypeEnumMap = {
+  MediaType.movie: 'Movies',
+  MediaType.serie: 'Series',
+  MediaType.manga: 'manga',
+  MediaType.manxva: 'manhwa',
+  MediaType.novel: 'novella',
+  MediaType.comics: 'komiks',
 };

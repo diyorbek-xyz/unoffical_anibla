@@ -13,7 +13,7 @@ class CommentRepositoryImpl implements CommentRepository {
   @override
   Future<Either<Failure, CommentResponse>> getAnimeComments(GetCommentRequest req) async {
     try {
-      final httpResponse = await _apiService.getAnimeComments(req.type.toLowerCase(), req.id, req.query);
+      final httpResponse = await _apiService.getAnimeComments(req.type.jsonValue, req.id, req.query);
       return Right(httpResponse.data.data);
     } on DioException catch (e) {
       return Left(ExceptionMapper.mapDioToFailure(e));

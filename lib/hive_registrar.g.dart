@@ -3,8 +3,8 @@
 // Check in to version control
 
 import 'package:hive_ce/hive_ce.dart';
-import 'package:application/features/anibla/data/enums/anime_type.dart';
 import 'package:application/features/anibla/data/enums/episode_type.dart';
+import 'package:application/features/anibla/data/enums/media_type.dart';
 import 'package:application/features/anibla/data/models/data/creator.dart';
 import 'package:application/features/anibla/data/models/data/episode_notf.dart';
 import 'package:application/features/anibla/data/models/data/genre.dart';
@@ -30,7 +30,6 @@ import 'package:application/features/player/data/model/timeline_model.dart';
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
     registerAdapter(AnimeAdapter());
-    registerAdapter(AnimeTypeAdapter());
     registerAdapter(AvatarAdapter());
     registerAdapter(CalendarAdapter());
     registerAdapter(ChunkAdapter());
@@ -46,6 +45,7 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(LocalizedAdapter());
     registerAdapter(MasterPlaylistAdapter());
     registerAdapter(MediaPlaylistAdapter());
+    registerAdapter(MediaTypeAdapter());
     registerAdapter(NotificationAdapter());
     registerAdapter(NotificationResponseAdapter());
     registerAdapter(PaginationAdapter());
@@ -64,7 +64,6 @@ extension HiveRegistrar on HiveInterface {
 extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
     registerAdapter(AnimeAdapter());
-    registerAdapter(AnimeTypeAdapter());
     registerAdapter(AvatarAdapter());
     registerAdapter(CalendarAdapter());
     registerAdapter(ChunkAdapter());
@@ -80,6 +79,7 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
     registerAdapter(LocalizedAdapter());
     registerAdapter(MasterPlaylistAdapter());
     registerAdapter(MediaPlaylistAdapter());
+    registerAdapter(MediaTypeAdapter());
     registerAdapter(NotificationAdapter());
     registerAdapter(NotificationResponseAdapter());
     registerAdapter(PaginationAdapter());

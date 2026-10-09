@@ -1,4 +1,4 @@
-import 'package:application/features/anibla/data/enums/anime_type.dart';
+import 'package:application/features/anibla/data/enums/media_type.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/features/anibla/data/models/main/episode.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -14,7 +14,7 @@ sealed class Timer with _$Timer {
   const factory Timer({
     @Default(Anime()) @HiveField(0) @JsonKey(name: "media") Anime anime,
     @Default("") @HiveField(1) @JsonKey(name: "_id") String id,
-    @Default(AnimeType.serie) @HiveField(4) @JsonKey(name: "mediaType") AnimeType type,
+    @Default(MediaType.serie) @HiveField(4) @JsonKey(name: "mediaType") MediaType type,
     @Default(Episode()) @HiveField(5) @JsonKey(name: "episode_id") Episode episode,
     @Default("") @HiveField(3) @JsonKey(name: "time") String date,
     @Default(-1) @HiveField(6) @JsonKey(name: "total_episodes") int totalEpisodes,

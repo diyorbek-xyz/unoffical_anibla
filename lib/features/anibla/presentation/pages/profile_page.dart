@@ -94,7 +94,6 @@ class _ProfilePageState extends State<ProfilePage> {
               )
             : SingleChildScrollView(
                 padding: .only(bottom: resp.isMobile ? 50 : 0),
-                physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
                 child: Column(
                   children: [
                     resp.isMobile ? Padding(padding: .symmetric(vertical: 30, horizontal: 15), child: basicInfo) : basicInfo,

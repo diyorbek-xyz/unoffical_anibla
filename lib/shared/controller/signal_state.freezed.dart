@@ -576,4 +576,267 @@ $PaginationCopyWith<$Res> get pagination {
 }
 }
 
+/// @nodoc
+mixin _$NamedSignalState<T> {
+
+ Map<String, BigSignalState<T>> get entries;
+/// Create a copy of NamedSignalState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$NamedSignalStateCopyWith<T, NamedSignalState<T>> get copyWith => _$NamedSignalStateCopyWithImpl<T, NamedSignalState<T>>(this as NamedSignalState<T>, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NamedSignalState<T>&&const DeepCollectionEquality().equals(other.entries, entries));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(entries));
+
+@override
+String toString() {
+  return 'NamedSignalState<$T>(entries: $entries)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $NamedSignalStateCopyWith<T,$Res>  {
+  factory $NamedSignalStateCopyWith(NamedSignalState<T> value, $Res Function(NamedSignalState<T>) _then) = _$NamedSignalStateCopyWithImpl;
+@useResult
+$Res call({
+ Map<String, BigSignalState<T>> entries
+});
+
+
+
+
+}
+/// @nodoc
+class _$NamedSignalStateCopyWithImpl<T,$Res>
+    implements $NamedSignalStateCopyWith<T, $Res> {
+  _$NamedSignalStateCopyWithImpl(this._self, this._then);
+
+  final NamedSignalState<T> _self;
+  final $Res Function(NamedSignalState<T>) _then;
+
+/// Create a copy of NamedSignalState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? entries = null,}) {
+  return _then(_self.copyWith(
+entries: null == entries ? _self.entries : entries // ignore: cast_nullable_to_non_nullable
+as Map<String, BigSignalState<T>>,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [NamedSignalState].
+extension NamedSignalStatePatterns<T> on NamedSignalState<T> {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _NamedSignalState<T> value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _NamedSignalState() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _NamedSignalState<T> value)  $default,){
+final _that = this;
+switch (_that) {
+case _NamedSignalState():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _NamedSignalState<T> value)?  $default,){
+final _that = this;
+switch (_that) {
+case _NamedSignalState() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Map<String, BigSignalState<T>> entries)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _NamedSignalState() when $default != null:
+return $default(_that.entries);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Map<String, BigSignalState<T>> entries)  $default,) {final _that = this;
+switch (_that) {
+case _NamedSignalState():
+return $default(_that.entries);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Map<String, BigSignalState<T>> entries)?  $default,) {final _that = this;
+switch (_that) {
+case _NamedSignalState() when $default != null:
+return $default(_that.entries);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+
+
+class _NamedSignalState<T> extends NamedSignalState<T> {
+   _NamedSignalState([final  Map<String, BigSignalState<T>> entries = const {}]): _entries = entries,super._();
+  
+
+ final  Map<String, BigSignalState<T>> _entries;
+@override@JsonKey() Map<String, BigSignalState<T>> get entries {
+  if (_entries is EqualUnmodifiableMapView) return _entries;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_entries);
+}
+
+
+/// Create a copy of NamedSignalState
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$NamedSignalStateCopyWith<T, _NamedSignalState<T>> get copyWith => __$NamedSignalStateCopyWithImpl<T, _NamedSignalState<T>>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NamedSignalState<T>&&const DeepCollectionEquality().equals(other._entries, _entries));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_entries));
+
+@override
+String toString() {
+  return 'NamedSignalState<$T>(entries: $entries)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$NamedSignalStateCopyWith<T,$Res> implements $NamedSignalStateCopyWith<T, $Res> {
+  factory _$NamedSignalStateCopyWith(_NamedSignalState<T> value, $Res Function(_NamedSignalState<T>) _then) = __$NamedSignalStateCopyWithImpl;
+@override @useResult
+$Res call({
+ Map<String, BigSignalState<T>> entries
+});
+
+
+
+
+}
+/// @nodoc
+class __$NamedSignalStateCopyWithImpl<T,$Res>
+    implements _$NamedSignalStateCopyWith<T, $Res> {
+  __$NamedSignalStateCopyWithImpl(this._self, this._then);
+
+  final _NamedSignalState<T> _self;
+  final $Res Function(_NamedSignalState<T>) _then;
+
+/// Create a copy of NamedSignalState
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? entries = null,}) {
+  return _then(_NamedSignalState<T>(
+null == entries ? _self._entries : entries // ignore: cast_nullable_to_non_nullable
+as Map<String, BigSignalState<T>>,
+  ));
+}
+
+
+}
+
 // dart format on

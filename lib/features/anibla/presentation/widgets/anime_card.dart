@@ -1,7 +1,10 @@
 import 'package:application/core/config/theme/app_colors.dart';
-import 'package:application/shared/utils/base_url.dart';
+import 'package:application/core/config/theme/app_theme.dart';
+import 'package:application/features/anibla/data/enums/media_type.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
-import 'package:application/features/anibla/data/models/props/anime_page_props.dart';
+import 'package:application/features/anibla/data/models/props/media_props.dart';
+import 'package:application/features/ma-no/data/models/manga.dart';
+import 'package:application/shared/utils/base_url.dart';
 import 'package:application/features/anibla/presentation/controllers/saved_controller.dart';
 import 'package:application/shared/image_provider/fallback_provider.dart';
 import 'package:application/shared/widgets/tv_focuser.dart';
@@ -10,30 +13,68 @@ import 'package:application/main.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
-class AnimeCard extends StatefulWidget {
-  final Anime anime;
+class MediaCard extends StatefulWidget {
+  final String id;
+  final String title;
+  final String thumbnail;
+  final MediaType type;
+  final void Function(BuildContext context) navigate;
   final bool? expand;
   final double? aspectRatio;
-  const AnimeCard({required this.anime, super.key, this.expand, this.aspectRatio});
-
+  final List<String>? badges;
+  final String? progress;
+  const MediaCard({
+    required this.id,
+    required this.navigate,
+    required this.thumbnail,
+    required this.title,
+    required this.type,
+    super.key,
+    this.expand,
+    this.aspectRatio,
+    this.progress,
+    this.badges = const [],
+  });
   static double width = 150;
 
   @override
-  State<AnimeCard> createState() => _AnimeCardState();
+  State<MediaCard> createState() => _MediaCardState();
+
+  factory MediaCard.fromAnime(Anime anime, {bool? expand, double? aspectRatio, List<String>? badges}) => MediaCard(
+    id: anime.id,
+    thumbnail: anime.thumbnail,
+    title: anime.title.uz,
+    type: anime.type,
+    navigate: (c) => c.pushNamed("media", queryParameters: MediaProps.fromAnime(anime).toJson()),
+    badges: badges,
+    progress: (anime.type.isMovie || anime.totalEpisodes == 0)
+        ? null
+        : anime.availableEpisodes >= anime.totalEpisodes
+        ? "Barcha qismlar"
+        : "${anime.availableEpisodes} - ${anime.totalEpisodes}",
+  );
+  factory MediaCard.fromManga(Manga manga, {bool? expand, double? aspectRatio, List<String>? badges}) => MediaCard(
+    id: manga.id,
+    thumbnail: manga.thumbnail,
+    title: manga.title,
+    type: manga.type,
+    navigate: (c) => c.pushNamed("media", queryParameters: MediaProps.fromManga(manga).toJson()),
+    badges: badges,
+    progress: "${manga.chaptersCount} Bob",
+  );
 }
 
-class _AnimeCardState extends State<AnimeCard> {
+class _MediaCardState extends State<MediaCard> {
   late final LocalAnimesController savedController;
   bool isSaved = false;
   void save() {
     setState(() => isSaved = !isSaved);
-    savedController.saveMedia(widget.anime.id, widget.anime.type);
+    savedController.saveMedia(widget.id, widget.type);
   }
 
   void handleClick(BuildContext context, Offset position, double space) {
-    setState(() => isSaved = savedController.isThisSaved(widget.anime.id));
+    setState(() => isSaved = savedController.isThisSaved(widget.id));
     final overlay = (Overlay.of(context).context.findRenderObject() as RenderBox).size;
     final screen = MediaQuery.sizeOf(context);
     showMenu<String>(
@@ -68,6 +109,11 @@ class _AnimeCardState extends State<AnimeCard> {
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
+    final badges = [
+      if (widget.badges != null) ...widget.badges!,
+      widget.type.toString(),
+      if (widget.progress != null) widget.progress,
+    ].cast<String>().toList();
     final cover = GestureDetector(
       onSecondaryTapDown: (details) => handleClick(context, details.globalPosition, 10),
       onLongPressStart: (details) => handleClick(context, details.globalPosition, 10),
@@ -76,10 +122,7 @@ class _AnimeCardState extends State<AnimeCard> {
           focusNode: node,
           mouseCursor: SystemMouseCursors.click,
           borderRadius: BorderRadius.circular(15),
-          onTap: () => context.pushNamed(
-            "anime",
-            queryParameters: AnimePageProps(animeType: widget.anime.type, animeSlug: widget.anime.slug).toJson(),
-          ),
+          onTap: () => widget.navigate(context),
           radius: 350,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,26 +131,33 @@ class _AnimeCardState extends State<AnimeCard> {
               AspectRatio(
                 aspectRatio: 9 / 12,
                 child: Ink(
-                  decoration: isUsable(widget.anime.thumbnail)
+                  decoration: isUsable(widget.thumbnail)
                       ? BoxDecoration(
                           boxShadow: [
                             BoxShadow(color: context.appColors.surfaceContainerLowest, blurRadius: 4, offset: Offset(0, 2)),
                           ],
                           image: DecorationImage(
                             isAntiAlias: true,
-                            image: imageProviderFallback(addBaseUrl(widget.anime.thumbnail)),
+                            image: imageProviderFallback(addBaseUrl(widget.thumbnail)),
                             fit: BoxFit.cover,
                             alignment: AlignmentGeometry.center,
                           ),
                           borderRadius: BorderRadius.circular(14),
                         )
-                      : BoxDecoration(color: context.appColors.primaryContainer, borderRadius: BorderRadius.circular(14)),
+                      : BoxDecoration(color: context.appColors.errorContainer, borderRadius: BorderRadius.circular(14)),
+                  padding: .all(3),
+                  child: Column(
+                    crossAxisAlignment: .end,
+                    mainAxisAlignment: .end,
+                    spacing: 2,
+                    children: badges.asMap().entries.map((e) => badge(e.value, e.key + 1, badges.length)).toList(),
+                  ),
                 ),
               ),
               Padding(
                 padding: EdgeInsetsGeometry.symmetric(horizontal: 5),
                 child: Text(
-                  toBeginningOfSentenceCase(widget.anime.title.uz),
+                  toBeginningOfSentenceCase(widget.title),
                   maxLines: isMobile ? 1 : 2,
                   textAlign: TextAlign.start,
                   overflow: TextOverflow.ellipsis,
@@ -119,32 +169,40 @@ class _AnimeCardState extends State<AnimeCard> {
         ),
       ),
     );
-    final body = (widget.expand == null || !widget.expand! || widget.aspectRatio != null)
-        ? AspectRatio(aspectRatio: widget.aspectRatio ?? 9 / 15, child: cover)
-        : cover;
     return SizedBox(
       width: (widget.expand != null && widget.expand!) ? double.infinity : (isMobile ? 150 : 180),
-      child: (widget.anime.publishedYear == 0)
-          ? cover
-          : Stack(
-              children: [
-                body,
-                Positioned(
-                  right: 7,
-                  top: 5,
-                  child: Skeleton.ignore(
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-                      decoration: BoxDecoration(
-                        color: context.appColors.primaryContainer.withAlpha(200),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text("${widget.anime.publishedYear}-yil", style: TextStyle(color: context.appColors.primary)),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+      child: (widget.expand == null || !widget.expand! || widget.aspectRatio != null)
+          ? AspectRatio(aspectRatio: widget.aspectRatio ?? 9 / 15, child: cover)
+          : cover,
+    );
+  }
+
+  Ink badge(String text, int index, int total) {
+    final inner = Radius.circular(0);
+    final outer = Radius.circular(100);
+    final isFirst = index == 1 && total != 1;
+    final isMiddle = index > 1 && index < total;
+    final isLast = index == total && total != 1;
+    final bFirst = isFirst ? inner : null;
+    final bMiddle = isMiddle ? inner : null;
+    final bLast = isLast ? outer : null;
+    final tFirst = isFirst ? outer : null;
+    final tMiddle = isMiddle ? inner : null;
+    final tLast = isLast ? inner : null;
+    return Ink(
+      decoration: ShapeDecoration(
+        shape: RoundedRectangleBorder(
+          borderRadius: .only(
+            bottomLeft: outer,
+            topLeft: outer,
+            bottomRight: bFirst ?? bMiddle ?? bLast ?? outer,
+            topRight: tFirst ?? tMiddle ?? tLast ?? outer,
+          ),
+        ),
+        color: context.appColors.primaryContainer.withAlpha(220),
+      ),
+      padding: .symmetric(vertical: 1.5, horizontal: 10),
+      child: Text(text, style: context.textTheme.labelLarge?.copyWith(color: context.appColors.onPrimaryContainer)),
     );
   }
 }

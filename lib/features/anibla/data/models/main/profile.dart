@@ -30,7 +30,7 @@ abstract class Profile with _$Profile {
     @Default(false) @HiveField(16) @JsonKey(name: "created_by_admin") bool createdByAdmin,
     @Default("") @HiveField(17) @JsonKey(name: "telegram_token") String telegramToken,
     @Default("") @HiveField(18) @JsonKey(name: "email_lc") String emailLC,
-    @Default("") @HiveField(19) @JsonKey(name: "last_anime_type") String lastAnimeType,
+    @Default("") @HiveField(19) @JsonKey(name: "last_anime_type") String lastMediaType,
     @Default("") @HiveField(20) @JsonKey(name: "name_lc") String nameLC,
     @Default("") @HiveField(21) @JsonKey(name: "phone_str") String phoneStr,
     @Default("") @HiveField(22) @JsonKey(name: "unique_id_str") String paymentIdStr,

@@ -37,7 +37,7 @@ class ProfileAdapter extends TypeAdapter<Profile> {
       createdByAdmin: fields[16] == null ? false : fields[16] as bool,
       telegramToken: fields[17] == null ? '' : fields[17] as String,
       emailLC: fields[18] == null ? '' : fields[18] as String,
-      lastAnimeType: fields[19] == null ? '' : fields[19] as String,
+      lastMediaType: fields[19] == null ? '' : fields[19] as String,
       nameLC: fields[20] == null ? '' : fields[20] as String,
       phoneStr: fields[21] == null ? '' : fields[21] as String,
       paymentIdStr: fields[22] == null ? '' : fields[22] as String,
@@ -97,7 +97,7 @@ class ProfileAdapter extends TypeAdapter<Profile> {
       ..writeByte(18)
       ..write(obj.emailLC)
       ..writeByte(19)
-      ..write(obj.lastAnimeType)
+      ..write(obj.lastMediaType)
       ..writeByte(20)
       ..write(obj.nameLC)
       ..writeByte(21)
@@ -156,7 +156,7 @@ _Profile _$ProfileFromJson(Map<String, dynamic> json) => _Profile(
   createdByAdmin: json['created_by_admin'] as bool? ?? false,
   telegramToken: json['telegram_token'] as String? ?? "",
   emailLC: json['email_lc'] as String? ?? "",
-  lastAnimeType: json['last_anime_type'] as String? ?? "",
+  lastMediaType: json['last_anime_type'] as String? ?? "",
   nameLC: json['name_lc'] as String? ?? "",
   phoneStr: json['phone_str'] as String? ?? "",
   paymentIdStr: json['unique_id_str'] as String? ?? "",
@@ -191,7 +191,7 @@ Map<String, dynamic> _$ProfileToJson(_Profile instance) => <String, dynamic>{
   'created_by_admin': instance.createdByAdmin,
   'telegram_token': instance.telegramToken,
   'email_lc': instance.emailLC,
-  'last_anime_type': instance.lastAnimeType,
+  'last_anime_type': instance.lastMediaType,
   'name_lc': instance.nameLC,
   'phone_str': instance.phoneStr,
   'unique_id_str': instance.paymentIdStr,

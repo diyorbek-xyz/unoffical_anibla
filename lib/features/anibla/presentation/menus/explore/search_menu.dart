@@ -79,7 +79,10 @@ class SearchPage extends StatelessWidget {
                   title: Text(state.value![index]),
                   leading: Icon(Icons.youtube_searched_for),
                   onTap: () => submit(state.value![index], context),
-                  trailing: IconButton(onPressed: () => _exploreController.deleteFromSearch(state.value![index]), icon: Icon(Icons.close)),
+                  trailing: IconButton(
+                    onPressed: () => _exploreController.deleteFromSearch(state.value![index]),
+                    icon: Icon(Icons.close),
+                  ),
                 ),
                 itemCount: state.value!.length,
               ),
@@ -109,11 +112,11 @@ class SearchPage extends StatelessWidget {
             childAspectRatio: 9 / 15,
           ),
           itemBuilder: (context, index) {
-            if (isFromHistory == null || !isFromHistory) return AnimeCard(expand: true, anime: animes.elementAt(index));
+            if (isFromHistory == null || !isFromHistory) return MediaCard.fromAnime(animes.elementAt(index), expand: true);
             return Stack(
               alignment: AlignmentGeometry.topLeft,
               children: [
-                AnimeCard(expand: true, aspectRatio: 9 / 15, anime: animes.elementAt(index)),
+                MediaCard.fromAnime(animes.elementAt(index), expand: true, aspectRatio: 9 / 15),
                 Positioned(
                   top: 4,
                   left: 4,

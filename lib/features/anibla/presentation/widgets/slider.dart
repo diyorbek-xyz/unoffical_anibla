@@ -55,9 +55,7 @@ class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin 
     autoPlay();
   }
 
-  void nextPage() {
-    setPage((currentPage + 1) % (sliders.isNotEmpty ? sliders.length : 1));
-  }
+  void nextPage() => setPage((currentPage + 1) % (sliders.isNotEmpty ? sliders.length : 1));
 
   void slide(DragEndDetails det) {
     if (det.primaryVelocity == null) return;
@@ -196,7 +194,7 @@ class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin 
                           FilledButton.icon(
                             onPressed: () => context.pushNamed(
                               "anime",
-                              queryParameters: AnimePageProps(animeType: e.anime.type, animeSlug: e.anime.slug).toJson(),
+                              queryParameters: AnimePageProps(mediaType: e.anime.type, animeSlug: e.anime.slug).toJson(),
                             ),
                             icon: Icon(Icons.play_arrow),
                             style: ButtonStyle(

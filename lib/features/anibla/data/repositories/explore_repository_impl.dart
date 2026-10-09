@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:application/features/anibla/data/enums/anime_type.dart';
+import 'package:application/features/anibla/data/enums/media_type.dart';
 import 'package:application/features/anibla/data/models/data/genre.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/features/anibla/data/models/request/search_request.dart';
@@ -29,9 +29,9 @@ class ExploreRepositoryImpl implements ExploreRepository {
   }
 
   @override
-  Future<Either<Failure, List<Anime>>> searchAnime(AnimeType type, SearchRequest query) async {
+  Future<Either<Failure, List<Anime>>> searchAnime(MediaType type, SearchRequest query) async {
     try {
-      final httpResponse = await _filterApi.searchAnime(type, query);
+      final httpResponse = await _filterApi.searchAnime(type.jsonValue, query);
       if (httpResponse.response.statusCode == HttpStatus.ok) {
         return Right(httpResponse.data.data);
       }

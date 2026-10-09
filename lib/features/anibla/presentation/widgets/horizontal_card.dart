@@ -36,7 +36,7 @@ class _HorizontalCardState extends State<HorizontalCard> {
       onTap: () {},
       //  => context.pushNamed(
       //   "anime",
-      //   queryParameters: AnimePageProps(animeType: widget.anime.type, animeSlug: widget.anime.slug).toJson(),
+      //   queryParameters: AnimePageProps(MediaType: widget.anime.type, animeSlug: widget.anime.slug).toJson(),
       // ),
       radius: 350,
       child: Column(

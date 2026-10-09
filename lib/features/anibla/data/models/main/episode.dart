@@ -20,7 +20,7 @@ abstract class Episode with _$Episode {
     @Default("") @HiveField(6) String video,
   }) = _Episode;
 
-  Localized get title => Localized(ru: ru['title'], uz: uz['title']);
+  Localized get title => Localized(ru: ru?['title'] ?? "", uz: uz?['title'] ?? "");
 
   factory Episode.fromJson(Map<String, dynamic> json) => _$EpisodeFromJson(json);
 }

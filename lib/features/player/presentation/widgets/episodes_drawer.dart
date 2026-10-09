@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'package:application/core/config/theme/app_colors.dart';
-import 'package:application/features/anibla/data/enums/anime_type.dart';
+import 'package:application/features/anibla/data/enums/media_type.dart';
 import 'package:application/features/anibla/data/models/main/episode.dart';
-import 'package:application/features/anibla/presentation/controllers/anime_controller.dart';
-import 'package:application/features/player/presentation/cubit/player/player_controller.dart';
-import 'package:application/features/player/presentation/cubit/player/player_states.dart';
+import 'package:application/features/anibla/presentation/controllers/media_controller.dart';
+import 'package:application/features/player/data/model/player_props.dart';
+import 'package:application/features/player/presentation/controller/player_controller.dart';
 import 'package:application/injection_container.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 class EpisodesDrawer extends StatefulWidget {
@@ -19,7 +18,7 @@ class EpisodesDrawer extends StatefulWidget {
 
 class _EpisodesDrawerState extends State<EpisodesDrawer> {
   late final PlayerController _playerController;
-  late final AnimeController _animeController;
+  late final MediaController _animeController;
 
   final searchController = TextEditingController();
   bool isReversedEpisodeList = false;
@@ -53,8 +52,8 @@ class _EpisodesDrawerState extends State<EpisodesDrawer> {
 
   @override
   void initState() {
-    _animeController = sl<AnimeController>();
-    _playerController = context.read<PlayerController>();
+    _animeController = sl<MediaController>();
+    _playerController = sl<PlayerController>();
     super.initState();
   }
 
@@ -64,7 +63,8 @@ class _EpisodesDrawerState extends State<EpisodesDrawer> {
       builder: (context) {
         final state = _animeController.episodesState.value;
         final episodes = state.value ?? _animeController.fakeEpisodes;
-        final current = _playerController.state.stream.offset;
+        final current = _playerController.stream?.episode;
+        final entries = changeList(episodes).asMap().entries;
         return Column(
           children: [
             TextField(
@@ -118,20 +118,22 @@ class _EpisodesDrawerState extends State<EpisodesDrawer> {
                   crossAxisSpacing: 10,
                   addRepaintBoundaries: true,
                   physics: BouncingScrollPhysics(),
-                  children: changeList(episodes).asMap().entries.map((entry) {
+                  children: entries.map((entry) {
                     final episode = entry.value;
                     final isCurrent = current == entry.value.episodeNumber;
                     final title = "${episode.episodeNumber}-qism: ${episode.title.uz}";
-                    final animeState = _animeController.mediaState.value;
-                    final anime = animeState.value ?? _animeController.fakeMedia;
-                    final props = PlayerProps(
-                      all: episodes.length,
-                      offset: episode.episodeNumber,
-                      type: AnimeType.serie,
-                      title: episode.title.uz,
-                      stream: episode.video,
+                    final animeState = _animeController.animeState.value;
+                    final anime = animeState.value ?? _animeController.fakeAnime;
+                    final next = entries.where((element) => element.key == entry.key + 1).singleOrNull?.value;
+                    final props = MediaStream(
+                      totalEpisodes: episodes.length,
+                      episode: episode.episodeNumber,
+                      type: MediaType.serie,
+                      episodeTitle: episode.title.uz,
                       cover: anime.cover,
-                      anime: anime.title.uz,
+                      animeTitle: anime.title.uz,
+                      url: episode.video,
+                      forCache: next?.video,
                     );
                     final timeline = null;
                     final typeColor = episode.type.isFree ? context.appColors.secondary : context.appColors.primary;
@@ -145,7 +147,7 @@ class _EpisodesDrawerState extends State<EpisodesDrawer> {
                         textStyle: TextStyle(color: context.appColors.onPrimaryContainer),
                         message: title,
                         child: InkWell(
-                          onTap: () => _playerController.openStream(props),
+                          onTap: () => _playerController.init(props),
                           borderRadius: BorderRadius.circular(10),
                           mouseCursor: SystemMouseCursors.click,
                           child: Stack(

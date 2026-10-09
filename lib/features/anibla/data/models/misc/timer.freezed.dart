@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Timer {
 
-@HiveField(0)@JsonKey(name: "media") Anime get anime;@HiveField(1)@JsonKey(name: "_id") String get id;@HiveField(4)@JsonKey(name: "mediaType") AnimeType get type;@HiveField(5)@JsonKey(name: "episode_id") Episode get episode;@HiveField(3)@JsonKey(name: "time") String get date;@HiveField(6)@JsonKey(name: "total_episodes") int get totalEpisodes;
+@HiveField(0)@JsonKey(name: "media") Anime get anime;@HiveField(1)@JsonKey(name: "_id") String get id;@HiveField(4)@JsonKey(name: "mediaType") MediaType get type;@HiveField(5)@JsonKey(name: "episode_id") Episode get episode;@HiveField(3)@JsonKey(name: "time") String get date;@HiveField(6)@JsonKey(name: "total_episodes") int get totalEpisodes;
 /// Create a copy of Timer
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $TimerCopyWith<$Res>  {
   factory $TimerCopyWith(Timer value, $Res Function(Timer) _then) = _$TimerCopyWithImpl;
 @useResult
 $Res call({
-@HiveField(0)@JsonKey(name: "media") Anime anime,@HiveField(1)@JsonKey(name: "_id") String id,@HiveField(4)@JsonKey(name: "mediaType") AnimeType type,@HiveField(5)@JsonKey(name: "episode_id") Episode episode,@HiveField(3)@JsonKey(name: "time") String date,@HiveField(6)@JsonKey(name: "total_episodes") int totalEpisodes
+@HiveField(0)@JsonKey(name: "media") Anime anime,@HiveField(1)@JsonKey(name: "_id") String id,@HiveField(4)@JsonKey(name: "mediaType") MediaType type,@HiveField(5)@JsonKey(name: "episode_id") Episode episode,@HiveField(3)@JsonKey(name: "time") String date,@HiveField(6)@JsonKey(name: "total_episodes") int totalEpisodes
 });
 
 
@@ -70,7 +70,7 @@ class _$TimerCopyWithImpl<$Res>
 anime: null == anime ? _self.anime : anime // ignore: cast_nullable_to_non_nullable
 as Anime,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as AnimeType,episode: null == episode ? _self.episode : episode // ignore: cast_nullable_to_non_nullable
+as MediaType,episode: null == episode ? _self.episode : episode // ignore: cast_nullable_to_non_nullable
 as Episode,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as String,totalEpisodes: null == totalEpisodes ? _self.totalEpisodes : totalEpisodes // ignore: cast_nullable_to_non_nullable
 as int,
@@ -173,7 +173,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@HiveField(0)@JsonKey(name: "media")  Anime anime, @HiveField(1)@JsonKey(name: "_id")  String id, @HiveField(4)@JsonKey(name: "mediaType")  AnimeType type, @HiveField(5)@JsonKey(name: "episode_id")  Episode episode, @HiveField(3)@JsonKey(name: "time")  String date, @HiveField(6)@JsonKey(name: "total_episodes")  int totalEpisodes)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@HiveField(0)@JsonKey(name: "media")  Anime anime, @HiveField(1)@JsonKey(name: "_id")  String id, @HiveField(4)@JsonKey(name: "mediaType")  MediaType type, @HiveField(5)@JsonKey(name: "episode_id")  Episode episode, @HiveField(3)@JsonKey(name: "time")  String date, @HiveField(6)@JsonKey(name: "total_episodes")  int totalEpisodes)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Timer() when $default != null:
 return $default(_that.anime,_that.id,_that.type,_that.episode,_that.date,_that.totalEpisodes);case _:
@@ -194,7 +194,7 @@ return $default(_that.anime,_that.id,_that.type,_that.episode,_that.date,_that.t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@HiveField(0)@JsonKey(name: "media")  Anime anime, @HiveField(1)@JsonKey(name: "_id")  String id, @HiveField(4)@JsonKey(name: "mediaType")  AnimeType type, @HiveField(5)@JsonKey(name: "episode_id")  Episode episode, @HiveField(3)@JsonKey(name: "time")  String date, @HiveField(6)@JsonKey(name: "total_episodes")  int totalEpisodes)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@HiveField(0)@JsonKey(name: "media")  Anime anime, @HiveField(1)@JsonKey(name: "_id")  String id, @HiveField(4)@JsonKey(name: "mediaType")  MediaType type, @HiveField(5)@JsonKey(name: "episode_id")  Episode episode, @HiveField(3)@JsonKey(name: "time")  String date, @HiveField(6)@JsonKey(name: "total_episodes")  int totalEpisodes)  $default,) {final _that = this;
 switch (_that) {
 case _Timer():
 return $default(_that.anime,_that.id,_that.type,_that.episode,_that.date,_that.totalEpisodes);}
@@ -211,7 +211,7 @@ return $default(_that.anime,_that.id,_that.type,_that.episode,_that.date,_that.t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@HiveField(0)@JsonKey(name: "media")  Anime anime, @HiveField(1)@JsonKey(name: "_id")  String id, @HiveField(4)@JsonKey(name: "mediaType")  AnimeType type, @HiveField(5)@JsonKey(name: "episode_id")  Episode episode, @HiveField(3)@JsonKey(name: "time")  String date, @HiveField(6)@JsonKey(name: "total_episodes")  int totalEpisodes)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@HiveField(0)@JsonKey(name: "media")  Anime anime, @HiveField(1)@JsonKey(name: "_id")  String id, @HiveField(4)@JsonKey(name: "mediaType")  MediaType type, @HiveField(5)@JsonKey(name: "episode_id")  Episode episode, @HiveField(3)@JsonKey(name: "time")  String date, @HiveField(6)@JsonKey(name: "total_episodes")  int totalEpisodes)?  $default,) {final _that = this;
 switch (_that) {
 case _Timer() when $default != null:
 return $default(_that.anime,_that.id,_that.type,_that.episode,_that.date,_that.totalEpisodes);case _:
@@ -226,12 +226,12 @@ return $default(_that.anime,_that.id,_that.type,_that.episode,_that.date,_that.t
 @JsonSerializable()
 
 class _Timer extends Timer {
-  const _Timer({@HiveField(0)@JsonKey(name: "media") this.anime = const Anime(), @HiveField(1)@JsonKey(name: "_id") this.id = "", @HiveField(4)@JsonKey(name: "mediaType") this.type = AnimeType.serie, @HiveField(5)@JsonKey(name: "episode_id") this.episode = const Episode(), @HiveField(3)@JsonKey(name: "time") this.date = "", @HiveField(6)@JsonKey(name: "total_episodes") this.totalEpisodes = -1}): super._();
+  const _Timer({@HiveField(0)@JsonKey(name: "media") this.anime = const Anime(), @HiveField(1)@JsonKey(name: "_id") this.id = "", @HiveField(4)@JsonKey(name: "mediaType") this.type = MediaType.serie, @HiveField(5)@JsonKey(name: "episode_id") this.episode = const Episode(), @HiveField(3)@JsonKey(name: "time") this.date = "", @HiveField(6)@JsonKey(name: "total_episodes") this.totalEpisodes = -1}): super._();
   factory _Timer.fromJson(Map<String, dynamic> json) => _$TimerFromJson(json);
 
 @override@HiveField(0)@JsonKey(name: "media") final  Anime anime;
 @override@HiveField(1)@JsonKey(name: "_id") final  String id;
-@override@HiveField(4)@JsonKey(name: "mediaType") final  AnimeType type;
+@override@HiveField(4)@JsonKey(name: "mediaType") final  MediaType type;
 @override@HiveField(5)@JsonKey(name: "episode_id") final  Episode episode;
 @override@HiveField(3)@JsonKey(name: "time") final  String date;
 @override@HiveField(6)@JsonKey(name: "total_episodes") final  int totalEpisodes;
@@ -269,7 +269,7 @@ abstract mixin class _$TimerCopyWith<$Res> implements $TimerCopyWith<$Res> {
   factory _$TimerCopyWith(_Timer value, $Res Function(_Timer) _then) = __$TimerCopyWithImpl;
 @override @useResult
 $Res call({
-@HiveField(0)@JsonKey(name: "media") Anime anime,@HiveField(1)@JsonKey(name: "_id") String id,@HiveField(4)@JsonKey(name: "mediaType") AnimeType type,@HiveField(5)@JsonKey(name: "episode_id") Episode episode,@HiveField(3)@JsonKey(name: "time") String date,@HiveField(6)@JsonKey(name: "total_episodes") int totalEpisodes
+@HiveField(0)@JsonKey(name: "media") Anime anime,@HiveField(1)@JsonKey(name: "_id") String id,@HiveField(4)@JsonKey(name: "mediaType") MediaType type,@HiveField(5)@JsonKey(name: "episode_id") Episode episode,@HiveField(3)@JsonKey(name: "time") String date,@HiveField(6)@JsonKey(name: "total_episodes") int totalEpisodes
 });
 
 
@@ -291,7 +291,7 @@ class __$TimerCopyWithImpl<$Res>
 anime: null == anime ? _self.anime : anime // ignore: cast_nullable_to_non_nullable
 as Anime,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
-as AnimeType,episode: null == episode ? _self.episode : episode // ignore: cast_nullable_to_non_nullable
+as MediaType,episode: null == episode ? _self.episode : episode // ignore: cast_nullable_to_non_nullable
 as Episode,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as String,totalEpisodes: null == totalEpisodes ? _self.totalEpisodes : totalEpisodes // ignore: cast_nullable_to_non_nullable
 as int,

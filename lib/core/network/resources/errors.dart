@@ -4,6 +4,7 @@ abstract class Errors {
   static const String tooManySessions = "too_many_sessions";
   static const String userNotFound = "user_not_found";
   static const String seriesAlreadyExist = "series_already_exist";
+  static const String connectionTimeout = "connection_timeout";
 }
 
 class ErrorMessages {
@@ -16,6 +17,7 @@ class ErrorMessages {
   static final String loopDetected = "Serverda nosozlik";
   static final String noContent = "Malumot yoq";
   static final String requestTimeout = "Sorov yuborish vaqti o'tdi";
+  static final String tooManySessions = "Juda ko'p qurilmalar ulangan";
   static final String unknown = "Nimadur xato ketti:";
 
   static String fromStatus(int status) => switch (status) {
@@ -29,5 +31,12 @@ class ErrorMessages {
     HttpStatus.noContent => ErrorMessages.noContent,
     HttpStatus.requestTimeout => ErrorMessages.requestTimeout,
     _ => "${ErrorMessages.unknown} $status",
+  };
+  static String fromMessage(String message) => switch (message) {
+    Errors.connectionTimeout => ErrorMessages.requestTimeout,
+    Errors.seriesAlreadyExist => ErrorMessages.conflict,
+    Errors.userNotFound => ErrorMessages.notFound,
+    Errors.tooManySessions => ErrorMessages.tooManySessions,
+    _ => "${ErrorMessages.unknown} $message",
   };
 }

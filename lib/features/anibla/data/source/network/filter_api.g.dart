@@ -21,7 +21,7 @@ class _FilterApi implements FilterApi {
 
   @override
   Future<HttpResponse<ApiResponse<List<Anime>>>> searchAnime(
-    AnimeType type,
+    String type,
     dynamic query,
   ) async {
     final _extra = <String, dynamic>{};

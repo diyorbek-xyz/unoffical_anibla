@@ -1,5 +1,5 @@
 import 'package:application/shared/utils/base_url.dart';
-import 'package:application/features/anibla/data/enums/anime_type.dart';
+import 'package:application/features/anibla/data/enums/media_type.dart';
 import 'package:application/features/anibla/data/models/data/creator.dart';
 import 'package:application/features/anibla/data/models/data/genre.dart';
 import 'package:application/features/anibla/data/models/helper/localized.dart';
@@ -31,10 +31,11 @@ abstract class Anime with _$Anime {
     @Default([]) @HiveField(15) List<Genre> genres,
     @Default([]) @HiveField(16) List<Creator> creators,
     @Default("") @HiveField(17) @JsonKey(name: "_id") String id,
-    @Default(AnimeType.serie) @HiveField(18) @JsonKey(name: "mediaType") AnimeType type,
+    @Default(MediaType.serie) @HiveField(18) @JsonKey(name: "mediaType") MediaType type,
     @Default(false) @HiveField(19) @JsonKey(name: "for_only_mdh") bool forOnlyMDH,
     @Default(0) @HiveField(20) @JsonKey(name: "published_year") int publishedYear,
     @Default(0) @HiveField(21) @JsonKey(name: "total_episodes") int totalEpisodes,
+    @Default(0) @HiveField(25) @JsonKey(name: "available_episodes") int availableEpisodes,
     @Default("") @HiveField(22) @JsonKey(fromJson: addBaseUrl, includeFromJson: true) String thumbnail,
     @Default("") @HiveField(23) @JsonKey(fromJson: addBaseUrl, includeFromJson: true) String cover,
     @Default([]) @HiveField(24) @JsonKey(fromJson: addBaseUrlAsList, includeFromJson: true) List<String> images,

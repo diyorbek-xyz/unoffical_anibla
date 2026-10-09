@@ -1,18 +1,15 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
+import 'package:application/features/anibla/presentation/controllers/comment_controller.dart';
+import 'package:application/injection_container.dart';
 import 'package:application/shared/constants/icons.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:application/features/anibla/data/models/data/comment.dart';
-import 'package:application/features/anibla/data/models/main/profile.dart';
-import 'package:application/features/anibla/data/models/response/comment_response.dart';
-import 'package:application/features/anibla/presentation/bloc/comment/comment_bloc.dart';
-import 'package:application/features/anibla/presentation/bloc/comment/comment_event.dart';
-import 'package:application/features/anibla/presentation/bloc/comment/comment_state.dart';
 import 'package:application/shared/image_provider/fallback_provider.dart';
 import 'package:application/main.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:very_good_infinite_list/very_good_infinite_list.dart';
 
@@ -24,6 +21,14 @@ class CommentsMenu extends StatefulWidget {
 }
 
 class _CommentsMenuState extends State<CommentsMenu> {
+  late final CommentController _commentController;
+
+  @override
+  void initState() {
+    super.initState();
+    _commentController = sl<CommentController>();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -36,22 +41,21 @@ class _CommentsMenuState extends State<CommentsMenu> {
             SliverOverlapInjector(handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context)),
             SliverPadding(
               padding: EdgeInsetsGeometry.only(bottom: 80),
-              sliver: BlocBuilder<CommentBloc, CommentState>(
-                builder: (context, state) {
-                  final fakeData = Comment(
-                    user: Profile(name: "User Loading..."),
-                    message: "Message loading...",
-                  );
-                  final fake = List.generate(5, (i) => fakeData);
-                  final comments = state.response?.comments ?? [];
+              sliver: SignalBuilder(
+                builder: (context) {
+                  final state = _commentController.animeCommentsState;
+                  final comments = state.data ?? [];
                   return SliverInfiniteList(
-                    onFetchData: () => context.read<CommentBloc>().add(GetComments()),
-                    isLoading: state.state == .loading,
-                    hasReachedMax: state.state == .endReached,
+                    onFetchData: _commentController.getAnimeComments,
+                    hasError: state.hasError,
+                    isLoading: state.isLoading,
+                    hasReachedMax: !state.value.pagination.hasMore,
                     itemCount: comments.length,
-                    loadingBuilder: (context) =>
-                        Skeletonizer(enabled: true, child: Column(children: fake.map(commentTile).toList())),
-                    itemBuilder: (context, index) => desktopCommentItem(comments.elementAt(index)),
+                    loadingBuilder: (context) => Skeletonizer(
+                      enabled: true,
+                      child: Column(children: _commentController.fakeComments.map(commentTile).toList()),
+                    ),
+                    itemBuilder: (context, index) => desktopCommentItem(comments[index]),
                   );
                 },
               ),
@@ -63,16 +67,17 @@ class _CommentsMenuState extends State<CommentsMenu> {
   }
 
   Widget desktopCommentItem(Comment comment) {
-    return BlocSelector<CommentBloc, CommentState, CommentResponse?>(
-      selector: (state) => state.replies?[comment.id],
-      builder: (context, replies) {
-        if (replies == null || replies.comments.isEmpty) return commentTile(comment);
+    return SignalBuilder(
+      builder: (context) {
+        final state = _commentController.animeRepliesState;
+        final replies = state.getEntry(comment.id);
+        if (replies == null || !replies.hasValue) return commentTile(comment);
         return Column(
           children: [
             commentTile(comment),
             Padding(
               padding: EdgeInsetsGeometry.only(left: 50),
-              child: Column(children: replies.comments.map(commentTile).toList()),
+              child: Column(children: replies.value.map(commentTile).toList()),
             ),
           ],
         );
@@ -80,23 +85,21 @@ class _CommentsMenuState extends State<CommentsMenu> {
     );
   }
 
-  Positioned repliesLine() {
-    return Positioned(
-      left: 45,
-      top: 50,
-      bottom: 70,
-      child: Container(
-        width: 50,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(bottomLeft: .circular(20)),
-          border: Border(
-            left: BorderSide(width: 1, color: context.appColors.primary),
-            bottom: BorderSide(width: 1, color: context.appColors.primary),
-          ),
+  Positioned repliesLine() => Positioned(
+    left: 45,
+    top: 50,
+    bottom: 70,
+    child: Container(
+      width: 50,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(bottomLeft: .circular(20)),
+        border: Border(
+          left: BorderSide(width: 1, color: context.appColors.primary),
+          bottom: BorderSide(width: 1, color: context.appColors.primary),
         ),
       ),
-    );
-  }
+    ),
+  );
 
   Widget commentTile(Comment comment) {
     final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
@@ -131,54 +134,53 @@ class _CommentsMenuState extends State<CommentsMenu> {
     );
   }
 
-  Wrap commentActions(Comment comment) {
-    return Wrap(
-      spacing: 5,
-      children: [
-        InkWell(
-          onTap: () {},
-          mouseCursor: SystemMouseCursors.click,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2),
-            child: Row(
-              mainAxisSize: .min,
-              spacing: 5,
-              children: [
-                Icon(MyIcons.like, size: 18),
-                Text(NumberFormat.compact(locale: "uz").format(comment.likesCount), style: context.textTheme.labelLarge),
-              ],
-            ),
+  Wrap commentActions(Comment comment) => Wrap(
+    spacing: 5,
+    children: [
+      InkWell(
+        onTap: () {},
+        mouseCursor: SystemMouseCursors.click,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2),
+          child: Row(
+            mainAxisSize: .min,
+            spacing: 5,
+            children: [
+              Icon(MyIcons.like, size: 18),
+              Text(NumberFormat.compact(locale: "uz").format(comment.likesCount), style: context.textTheme.labelLarge),
+            ],
           ),
         ),
-        InkWell(
-          onTap: () {},
-          mouseCursor: SystemMouseCursors.click,
-          child: Padding(padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2), child: Icon(Icons.reply, size: 18)),
-        ),
-        if (comment.repliesCount != 0)
-          BlocSelector<CommentBloc, CommentState, bool>(
-            selector: (state) => state.replies?.containsKey(comment.id) ?? false,
-            builder: (context, state) {
-              if (state) return SizedBox.shrink();
-              return InkWell(
-                mouseCursor: SystemMouseCursors.click,
-                onTap: () => context.read<CommentBloc>().add(GetReplies(comment.id)),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2),
-                  child: Row(
-                    mainAxisAlignment: .start,
-                    crossAxisAlignment: .center,
-                    mainAxisSize: .min,
-                    children: [
-                      Text("${comment.repliesCount}ta javoblarni ochish", style: TextStyle(color: context.appColors.primary)),
-                      Icon(Icons.keyboard_arrow_down, color: context.appColors.primary, size: 18),
-                    ],
-                  ),
+      ),
+      InkWell(
+        onTap: () {},
+        mouseCursor: SystemMouseCursors.click,
+        child: Padding(padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2), child: Icon(Icons.reply, size: 18)),
+      ),
+      if (comment.repliesCount != 0)
+        SignalBuilder(
+          builder: (context) {
+            final state = _commentController.animeRepliesState;
+            final entry = state.getEntry(comment.id);
+            if (entry == null || !entry.hasValue) return SizedBox.shrink();
+            return InkWell(
+              mouseCursor: SystemMouseCursors.click,
+              onTap: () => _commentController.getAnimeReplies(comment.id),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2),
+                child: Row(
+                  mainAxisAlignment: .start,
+                  crossAxisAlignment: .center,
+                  mainAxisSize: .min,
+                  children: [
+                    Text("${comment.repliesCount}ta javoblarni ochish", style: TextStyle(color: context.appColors.primary)),
+                    Icon(Icons.keyboard_arrow_down, color: context.appColors.primary, size: 18),
+                  ],
                 ),
-              );
-            },
-          ),
-      ],
-    );
-  }
+              ),
+            );
+          },
+        ),
+    ],
+  );
 }

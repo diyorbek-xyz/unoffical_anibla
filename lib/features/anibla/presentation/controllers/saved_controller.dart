@@ -1,12 +1,8 @@
-import 'dart:io';
-
+import 'package:application/features/anibla/data/enums/media_type.dart';
 import 'package:application/shared/utils/extensions.dart';
-import 'package:application/features/anibla/data/enums/anime_type.dart';
 import 'package:application/features/anibla/data/source/local/saved_ids_local.dart';
 import 'package:application/features/anibla/domain/repositories/anime_repository.dart';
 import 'package:application/features/player/data/source/local/downloads.dart';
-import 'package:application/core/network/resources/failure.dart';
-import 'package:dartz/dartz.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 class LocalAnimesController {
@@ -24,21 +20,21 @@ class LocalAnimesController {
 
   bool isThisSaved(String id) => _savedLocal.isThisSaved(id);
 
-  void saveMedia(String id, AnimeType type, [bool? exist]) async {
-    try {
-      final isSaved = exist ?? isThisSaved(id);
-      late Either<Failure, bool> either;
-      if (isSaved) {
-        either = await _animeRepository.unsaveMedia(id, type);
-      } else {
-        either = await _animeRepository.saveMedia(id, type);
-      }
-      final success = either.getData();
-      if (success) await savedMediaSignal.refresh();
-    } on Failure catch (e) {
-      if (e is ServerFailure && e.status == HttpStatus.conflict) return saveMedia(id, type, true);
-      // Handle errors
-    }
+  void saveMedia(String id, MediaType type, [bool? exist]) async {
+    // try {
+    //   final isSaved = exist ?? isThisSaved(id);
+    //   late Either<Failure, bool> either;
+    //   if (isSaved) {
+    //     either = await _animeRepository.unsaveMedia(id, type);
+    //   } else {
+    //     either = await _animeRepository.saveMedia(id, type);
+    //   }
+    //   final success = either.getData();
+    //   if (success) await savedMediaSignal.refresh();
+    // } on Failure catch (e) {
+    //   if (e is ServerFailure && e.status == HttpStatus.conflict) return saveMedia(id, type, true);
+    //   // Handle errors
+    // }
   }
 
   Future<void> refreshSaveds() => savedMediaSignal.refresh();

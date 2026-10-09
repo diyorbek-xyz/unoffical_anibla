@@ -1,5 +1,5 @@
 import 'package:application/shared/utils/base_url.dart';
-import 'package:application/features/anibla/data/enums/anime_type.dart';
+import 'package:application/features/anibla/data/enums/media_type.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive_ce_flutter/adapters.dart';
@@ -15,7 +15,7 @@ abstract class Slider with _$Slider {
     @Default("") @HiveField(1) @JsonKey(includeFromJson: true, fromJson: addBaseUrl) String image,
     @Default("") @HiveField(2) @JsonKey(name: "mobile_image", includeFromJson: true, fromJson: addBaseUrl) String mobileImage,
     @Default(Anime()) @HiveField(3) @JsonKey(name: "media") Anime anime,
-    @Default(AnimeType.movie) @HiveField(4) @JsonKey(name: "mediaType") AnimeType type,
+    @Default(MediaType.movie) @HiveField(4) @JsonKey(name: "mediaType") MediaType type,
   }) = _Slider;
 
   factory Slider.fromJson(Map<String, dynamic> json) => _$SliderFromJson(json);

@@ -8,7 +8,7 @@ part of 'anime_page_props.dart';
 
 _AnimePageProps _$AnimePagePropsFromJson(Map<String, dynamic> json) =>
     _AnimePageProps(
-      animeType: $enumDecode(_$AnimeTypeEnumMap, json['type']),
+      mediaType: $enumDecode(_$MediaTypeEnumMap, json['type']),
       animeSlug: json['anime'] as String,
       seasonSlug: json['season'] as String?,
       episodeSlug: json['episode'] as String?,
@@ -17,14 +17,18 @@ _AnimePageProps _$AnimePagePropsFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$AnimePagePropsToJson(_AnimePageProps instance) =>
     <String, dynamic>{
-      'type': _$AnimeTypeEnumMap[instance.animeType]!,
+      'type': _$MediaTypeEnumMap[instance.mediaType]!,
       'anime': instance.animeSlug,
       'season': instance.seasonSlug,
       'episode': instance.episodeSlug,
       'video': instance.localPath,
     };
 
-const _$AnimeTypeEnumMap = {
-  AnimeType.movie: 'Movies',
-  AnimeType.serie: 'Series',
+const _$MediaTypeEnumMap = {
+  MediaType.movie: 'Movies',
+  MediaType.serie: 'Series',
+  MediaType.manga: 'manga',
+  MediaType.manxva: 'manhwa',
+  MediaType.novel: 'novella',
+  MediaType.comics: 'komiks',
 };

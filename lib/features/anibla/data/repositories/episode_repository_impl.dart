@@ -1,5 +1,4 @@
 import 'package:application/core/resources/cache_entry.dart';
-import 'package:application/shared/utils/base_url.dart';
 import 'package:application/features/anibla/data/models/main/episode.dart';
 import 'package:application/features/anibla/data/models/data/video.dart';
 import 'package:application/features/anibla/data/source/network/episode_api.dart';
@@ -36,7 +35,7 @@ class EpisodeRepositoryImpl implements EpisodeRepository {
   @override
   Future<Either<Failure, Video>> getVideo(String path) async {
     try {
-      final httpResponse = await videoApi.getVideo(getStreamId(path));
+      final httpResponse = await videoApi.getVideo(path);
       return Right(httpResponse.data);
     } on DioException catch (e) {
       return Left(SimpleFailure(e.toString()));

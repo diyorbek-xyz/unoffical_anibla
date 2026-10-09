@@ -1,3 +1,4 @@
+import 'package:application/features/anibla/data/enums/media_type.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'comment_request.freezed.dart';
@@ -5,7 +6,7 @@ part 'comment_request.freezed.dart';
 @freezed
 abstract class GetCommentRequest with _$GetCommentRequest {
   const GetCommentRequest._();
-  const factory GetCommentRequest({required String id, required int limit, required int page, required String type}) =
+  const factory GetCommentRequest({required String id, required int limit, required int page, required MediaType type}) =
       _GetCommentRequest;
 
   Map<String, dynamic> get query => {"limit": limit, "page": page};
