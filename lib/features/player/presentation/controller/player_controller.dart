@@ -41,10 +41,12 @@ class PlayerController {
   final _mediaType = signal(MediaType.serie);
   final _tracks = signal<Tracks?>(null);
   final _videoTrack = signal<VideoTrack?>(null);
+  final _audioTracks = signal<List<Rendition>>([]);
   final _currentStream = signal<MediaStream?>(null);
   final _offset = signal(0);
   final _totalEpisodes = signal(0);
 
+  List<Rendition> get audioTracks => _audioTracks.value;
   bool get isBuffering => _isBuffering.value;
   bool get isFullscreen => _isFullscreen.value;
   bool get isMuted => _isMuted.value;
@@ -65,17 +67,13 @@ class PlayerController {
   Tracks? get tracks => _tracks.value;
   VideoTrack? get videoTrack => _videoTrack.value;
 
+  bool get hasVariants => false;
+  bool get hasAudios => audioTracks.isNotEmpty;
+
   // end of states;
 
-  final controllerConfig = const VideoControllerConfiguration(enableHardwareAcceleration: true, hwdec: 'auto');
-  final playerConfig = const PlayerConfiguration(
-    async: true,
-    bufferSize: 64 * 1024 * 1024,
-    osc: false,
-    pitch: false,
-    libass: false,
-    title: "Anibla.uz",
-  );
+  final controllerConfig = const VideoControllerConfiguration();
+  final playerConfig = const PlayerConfiguration(title: "Anibla.uz");
   late final player = Player(configuration: playerConfig);
   late final controller = VideoController(player, configuration: controllerConfig);
   final List<StreamSubscription> subscriptions = [];
@@ -96,19 +94,21 @@ class PlayerController {
     _loadingUrl = streamUrl;
 
     try {
+      print("start");
       await _notify();
       _subscribeStreams();
       if (current != null) await saveTimeline();
 
       final video = (await videoApi.getVideo(streamUrl.replaceFirst("/anibla.uz/", "/media.anibla.uz/"))).data;
-      final master = await DownloadHlsPlaylist.downloadMasterPlaylist(
+      final master = await DownloadHlsPlaylist.getProxyMasterPlaylist(
         video.file.replaceFirst("/anibla.uz/", "/media.anibla.uz/"),
-        streamUrl.trim(),
       );
       final skip = video.skip.split("-").map((i) => i.tryParseInt() ?? 0).toList();
       final oldPath = player.state.playlist.medias.firstOrNull?.uri.toOriginUrl();
-      final path = master.variants[2].downloadUrl;
-      if (path == oldPath) return;
+      final variantPath = master.mediaPlaylistUrls.elementAtOrNull(2)?.toString();
+      final audio = master.audios.firstOrNull;
+      if (variantPath == oldPath || variantPath == null) return;
+      final time = timeline.getTimeline(stream.url);
 
       _isBuffering.set(true);
       _skipPosition.set(skip);
@@ -116,13 +116,16 @@ class PlayerController {
       _mediaType.set(stream.type);
       _totalEpisodes.set(stream.totalEpisodes);
       _offset.set(stream.episode);
-
-      await player.open(Media(path.toLocalUrl()), play: false);
+      _audioTracks.set(master.audios);
+      await player.open(Media(audio != null ? variantPath : variantPath.toLocalUrl(), start: time?.progress), play: false);
+      _currentStream.set(stream);
+      if (audio != null) await setAudio(audio);
     } catch (e) {
+      print(e);
       _errorMessage.set(e.toString());
     } finally {
-      _currentStream.set(stream); // listener re-enters here, guard blocks it
-      _loadingUrl = null; // clear AFTER set
+      print("end");
+      _loadingUrl = null;
     }
   }
 
@@ -184,7 +187,7 @@ class PlayerController {
       player.stream.buffering.distinct().listen((event) => _isBuffering.set(event)),
       player.stream.playing.distinct().listen((event) => _isPaused.set(!event)),
       player.stream.volume.distinct().listen((event) => (_isMuted.set(event == 0), _volume.set(event))),
-      player.stream.playlist.distinct().listen((event) => setOldTimeline()),
+      // player.stream.playlist.distinct().listen((event) => setOldTimeline()),
       player.stream.error.distinct().listen((event) => (_playerStatus.set(.error), _errorMessage.set(event))),
       player.stream.duration.distinct().listen((event) {
         if (event > Duration.zero && Platform.isLinux) _pushMprisMetadata(event);
@@ -208,6 +211,7 @@ class PlayerController {
     _progress.value = time;
     _buffer.value = buffer;
     _hasIntro.value = hasIntro;
+    if (time.inSeconds % 5 == 0) saveTimeline(time);
   }
 
   Future<void> setOldTimeline([String? fileUrl]) async {
@@ -225,6 +229,7 @@ class PlayerController {
   Future<void> saveTimeline([Duration? time]) async {
     final adjusted = (time ?? player.state.position) - const Duration(seconds: 3);
     final safeProgress = adjusted.isNegative ? Duration.zero : adjusted;
+    print(_currentStream.value?.url);
     await timeline.saveTimeline(_currentStream.value!.url, TimelineModel(progress: safeProgress, duration: _duration.value));
   }
 
@@ -272,8 +277,10 @@ class PlayerController {
 
   void closeError() => _playerStatus.set(.init);
   Future<void> togglePlay() async => player.state.playing ? await pause() : await play();
+
   Future<void> setResolution(VideoTrack track) async => await player.setVideoTrack(track);
-  Future<void> setAudio(AudioTrack track) async => await player.setAudioTrack(track);
+  Future<void> setAudio(Rendition track) async =>
+      await player.setAudioTrack(AudioTrack.uri(track.url.toString(), title: track.name, language: track.format.language));
   void setFit(BoxFit fit) => _playerFit.set(fit);
   void toggleFit() => switch (_playerFit.value) {
     BoxFit.contain => setFit(BoxFit.cover),

@@ -7,6 +7,7 @@ import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/features/player/presentation/controller/player_controller.dart';
 import 'package:application/features/player/presentation/widgets/player_scope.dart';
 import 'package:application/injection_container.dart';
+import 'package:application/shared/utils/extensions.dart';
 import 'package:application/shared/widgets/responsive.dart';
 import 'package:application/features/player/presentation/widgets/episodes_drawer.dart';
 import 'package:application/features/player/presentation/widgets/player_components.dart';
@@ -313,7 +314,8 @@ class _VideoPlayerState extends State<VideoPlayer> {
               icon: Icon(Icons.list_sharp),
             ),
           IconButton(onPressed: controller.toggleFit, iconSize: 25, padding: EdgeInsets.zero, icon: Icon(Icons.fit_screen_sharp)),
-          IconButton(onPressed: openSettings, iconSize: 25, padding: EdgeInsets.zero, icon: Icon(Icons.settings_sharp)),
+          if (controller.hasAudios && controller.hasVariants)
+            IconButton(onPressed: openSettings, iconSize: 25, padding: EdgeInsets.zero, icon: Icon(Icons.settings_sharp)),
           IconButton(
             onPressed: () => controller.toggleFullscreen(context),
             iconSize: 25,
@@ -429,10 +431,10 @@ class _VideoPlayerState extends State<VideoPlayer> {
   Widget get episodesDrawer => Drawer(width: 600, shape: Border(), child: EpisodesDrawer());
 
   Widget settingsDialog(BuildContext dialogcontext) {
-    final videoTracks = controller.tracks!.video.toList();
-    final audioTracks = controller.tracks!.audio.skip(2);
+    final videoTracks = [];
+    final audioTracks = controller.audioTracks;
     return DefaultTabController(
-      length: 2,
+      length: dialogcontext.player.hasVariants ? 2 : 1,
       child: AlertDialog(
         insetPadding: EdgeInsets.zero,
         contentPadding: EdgeInsets.zero,
@@ -440,7 +442,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
         title: TabBar(
           indicatorSize: .tab,
           tabs: [
-            Tab(text: "Sifatlar", icon: Icon(Icons.video_settings_sharp)),
+            if (dialogcontext.player.hasVariants) Tab(text: "Sifatlar", icon: Icon(Icons.video_settings_sharp)),
             Tab(text: "Ovozlar", icon: Icon(Icons.multitrack_audio_sharp)),
           ],
         ),
@@ -451,24 +453,24 @@ class _VideoPlayerState extends State<VideoPlayer> {
         content: TabBarView(
           physics: BouncingScrollPhysics(),
           children: [
-            ListView.builder(
-              physics: BouncingScrollPhysics(),
-              itemCount: videoTracks.length,
-              itemBuilder: (context, index) {
-                final track = videoTracks.elementAt(index);
-                final isCurrent = track.id == controller.videoTrack!.id;
-                final title = track.h?.toString() ?? track.w?.toString() ?? track.id;
-                final isId = title == track.id;
-                return ListTile(
-                  leading: Icon(isCurrent ? Icons.check : Icons.hd),
-                  onTap: () {
-                    controller.setResolution(track);
-                    Navigator.pop(dialogcontext);
-                  },
-                  title: Text(!isId ? "${title}p" : title),
-                );
-              },
-            ),
+            if (dialogcontext.player.hasVariants)
+              ListView.builder(
+                physics: BouncingScrollPhysics(),
+                itemCount: videoTracks.length,
+                itemBuilder: (context, index) {
+                  final track = videoTracks.elementAt(index);
+                  final isCurrent = track.videoGroupId == controller.videoTrack!.id;
+                  final title = track.format.height?.toString() ?? track.format.width?.toString() ?? track.videoGroupId ?? "";
+                  final isId = title == track.videoGroupId;
+                  return ListTile(
+                    leading: Icon(isCurrent ? Icons.check : Icons.hd),
+                    onTap: () {
+                      Navigator.pop(dialogcontext);
+                    },
+                    title: Text(!isId ? "${title}p" : title),
+                  );
+                },
+              ),
             ListView.builder(
               physics: BouncingScrollPhysics(),
               itemCount: audioTracks.length,
@@ -480,7 +482,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
                     controller.setAudio(track);
                     Navigator.pop(dialogcontext);
                   },
-                  title: Text(track.title ?? track.language ?? track.id),
+                  title: Text(track.name ?? track.groupId ?? "audio"),
                 );
               },
             ),

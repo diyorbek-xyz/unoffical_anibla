@@ -5,6 +5,8 @@ import 'package:application/features/player/data/model/download/completed_models
 import 'package:application/features/player/data/model/parser_models.dart';
 import 'package:application/features/player/data/services/parse_hls.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_video_caching/flutter_video_caching.dart' as proxy;
+import 'package:flutter_video_caching/proxy/video_proxy.dart';
 import 'package:path_provider/path_provider.dart';
 
 class DownloadHlsPlaylist {
@@ -19,7 +21,15 @@ class DownloadHlsPlaylist {
     await createFolder(master.localUrl);
     final masterFile = File(master.localUrl);
     await masterFile.writeAsString(master.hls);
+
     return master;
+  }
+
+  static Future<proxy.HlsMasterPlaylist> getProxyMasterPlaylist(String masterPath) async {
+    final masterDataResponse = await dio.get(masterPath);
+    final masterData = masterDataResponse.data;
+    final master = await VideoProxy.hlsPlaylistParser.parseString(Uri.parse(masterPath), masterData);
+    return master as proxy.HlsMasterPlaylist;
   }
 
   static Future<MediaPlaylist> downloadMediaPlaylist(Variant variant) async {

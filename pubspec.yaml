@@ -16,8 +16,8 @@ dependencies:
     go_router: ^17.0.1
     intl: ^0.20.2
     path_provider: ^2.1.5
-    hive_ce:
-    hive_ce_flutter:
+    hive_ce: ^2.20.2
+    hive_ce_flutter: ^2.4.0
     media_kit: ^1.2.6
     media_kit_video: ^2.0.1
     media_kit_libs_video: ^1.0.7
@@ -32,9 +32,9 @@ dependencies:
     dartz: ^0.10.1
     device_info_plus:
     url_launcher: ^6.3.2
-    window_manager:
-    audio_video_progress_bar:
-    rxdart:
+    window_manager: ^0.5.2
+    audio_video_progress_bar: ^2.0.3
+    rxdart: ^0.28.0
     native_splash_screen:
     very_good_infinite_list: ^0.9.0
     mpris_service:
