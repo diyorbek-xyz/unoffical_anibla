@@ -1,7 +1,7 @@
 import 'package:application/features/anibla/presentation/controllers/comment_controller.dart';
 import 'package:application/features/player/presentation/controller/player_controller.dart';
 import 'package:application/shared/utils/utils.dart';
-import 'package:application/features/anibla/data/models/data/slider.dart';
+import 'package:application/features/anibla/data/models/data/carousel_item.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/features/anibla/data/models/main/profile.dart';
 import 'package:application/features/anibla/data/models/misc/calendar.dart';
@@ -112,7 +112,7 @@ Future<void> initializeDependencies() async {
   await Hive.deleteBoxFromDisk("cacheBox");
   final calendarBox = await Hive.openBox<Calendar>("calendarBox");
   final profileBox = await Hive.openBox<Profile>("profileBox");
-  final sliderBox = await Hive.openBox<Slider>("sliderBox");
+  final sliderBox = await Hive.openBox<CarouselItem>("sliderBox");
   final historyBox = await Hive.openBox<Anime>("historyBox");
   final timelineBox = await Hive.openBox<TimelineModel>("timelineBox");
   final downloadsBox = await Hive.openBox<DownloadTask>("downloadTaskBox");
@@ -136,7 +136,7 @@ Future<void> initializeDependencies() async {
     ..registerSingleton<Box<Anime>>(historyBox, instanceName: "history")
     ..registerSingleton<Box<String>>(savedMediaIdBox, instanceName: "saved")
     ..registerSingleton<Box<Profile>>(profileBox)
-    ..registerSingleton<Box<Slider>>(sliderBox)
+    ..registerSingleton<Box<CarouselItem>>(sliderBox)
     ..registerSingleton<Box<TimelineModel>>(timelineBox)
     ..registerSingleton<Box<DownloadTask>>(downloadsBox)
     ..registerSingleton<Box<String>>(searchHistory)

@@ -1,3 +1,4 @@
+import 'package:application/features/anibla/presentation/dialogs/edit_name.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:application/shared/widgets/list.dart';
 import 'package:application/features/anibla/presentation/controllers/profile_controller.dart';
@@ -17,7 +18,12 @@ class ProfileInfosMenu extends StatelessWidget {
         final state = profileController.profileSignal.value;
         final data = state.value ?? profileController.fakeProfile;
         final items = [
-          ListModel(label: "Ismi", value: data.name, icon: Icons.person_pin_sharp),
+          ListModel(
+            label: "Ismi",
+            value: data.name,
+            icon: Icons.person_pin_sharp,
+            actions: [IconButton(onPressed: () => showEditProfileName(context), icon: Icon(Icons.edit))],
+          ),
           ListModel(
             label: "Telefon raqam",
             value: data.phoneNumber == 0 ? "Mavjud emas" : data.phoneNumber.toString(),

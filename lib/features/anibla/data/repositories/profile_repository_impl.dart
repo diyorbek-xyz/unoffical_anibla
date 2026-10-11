@@ -7,6 +7,7 @@ import 'package:application/features/anibla/data/source/network/plans_api.dart';
 import 'package:application/features/anibla/data/source/network/profile_api.dart';
 import 'package:application/features/anibla/domain/repositories/profile_repository.dart';
 import 'package:application/core/network/resources/failure.dart';
+import 'package:application/shared/utils/extensions.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 
@@ -55,6 +56,27 @@ class ProfileRepositoryImpl implements ProfileRepository {
       final httpResponse = await _plansApi.getPlans();
       return Right(httpResponse.data.toList());
     } on DioException catch (e) {
+      return Left(ExceptionMapper.mapDioToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Profile>> updateProfile(Profile profile) async {
+    try {
+      final avatar = profile.image.toNullable();
+      final name = profile.name.toNullable();
+      final body = <String, dynamic>{"image": avatar, "name": name};
+      final httpResponse = await _profileApi.updateProfile(body);
+      final model = httpResponse.data.data;
+      await _localService.saveProfile(model);
+      return Right(model);
+    } on DioException catch (e) {
+      final statusCode = e.response?.statusCode;
+      if (statusCode != HttpStatus.unauthorized) {
+        final profile = await _localService.getProfile();
+        if (profile != null) return Right(profile);
+      }
+      if (statusCode == HttpStatus.unauthorized) await _localService.removeProfile();
       return Left(ExceptionMapper.mapDioToFailure(e));
     }
   }

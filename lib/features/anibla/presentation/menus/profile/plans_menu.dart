@@ -17,7 +17,13 @@ class PlansMenu extends StatelessWidget {
         final state = controller.plansSignal.value;
         final data = state.isLoading ? controller.fakePlans : state.value ?? [];
         return GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 2.5, mainAxisSpacing: 5, crossAxisSpacing: 5),
+          padding: .all(context.isMobile ? 10 : 0),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: context.isMobile ? 1 : 2,
+            mainAxisExtent: 200,
+            mainAxisSpacing: 5,
+            crossAxisSpacing: 5,
+          ),
           physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemCount: data.length,
@@ -30,15 +36,18 @@ class PlansMenu extends StatelessWidget {
                 onTap: () {},
                 child: Ink(
                   color: context.appColors.primaryContainer,
-                  padding: .all(20),
+                  padding: .all(10),
                   child: Column(
-                    crossAxisAlignment: .start,
+                    crossAxisAlignment: .center,
                     mainAxisAlignment: .center,
                     spacing: 3,
                     children: [
                       Text(
                         "${data[index].title.uz} - ${data[index].price} so'm",
-                        style: TextStyle(color: context.appColors.onPrimaryContainer, fontSize: context.textTheme.headlineMedium!.fontSize),
+                        style: TextStyle(
+                          color: context.appColors.onPrimaryContainer,
+                          fontSize: context.textTheme.headlineMedium!.fontSize,
+                        ),
                       ),
                       Text(
                         "Muddat: ${DateTime.now().add(Duration(days: (data[index].time * 30.5).floor())).formatFull()} gacha",
@@ -53,11 +62,6 @@ class PlansMenu extends StatelessWidget {
                           color: context.appColors.onPrimaryContainer.withAlpha(200),
                           fontSize: context.textTheme.titleMedium!.fontSize,
                         ),
-                      ),
-                      Expanded(child: SizedBox.shrink()),
-                      Align(
-                        alignment: .bottomEnd,
-                        child: FilledButton(onPressed: () {}, child: Text('Obuna bo\'lish')),
                       ),
                     ],
                   ),

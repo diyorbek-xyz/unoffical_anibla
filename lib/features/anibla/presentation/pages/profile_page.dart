@@ -57,11 +57,6 @@ class _ProfilePageState extends State<ProfilePage> {
               ProfileFailed(:final message) => ErrorBuilder(message: message, refresh: profileController.refreshAll),
             };
           }
-          // print("IsLoading :${state.isLoading}");
-          // print("IsRefreshing :${state.isRefreshing}");
-          // print("IsReloading :${state.isReloading}");
-          // print("IsHasError :${state.hasError}");
-          // print("Error :${state.error}");
           return Skeletonizer(
             justifyMultiLineText: true,
             effect: PulseEffect(duration: Duration(seconds: 1), from: context.appColors.primary, to: context.appColors.onPrimary),

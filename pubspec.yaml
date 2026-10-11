@@ -47,6 +47,7 @@ dependencies:
     signals_flutter: ^7.1.0
     flutter_video_caching: ^1.1.6
     animations: ^3.0.0
+    cross_fade_carousel: ^1.0.4
 
 dev_dependencies:
     flutter_test:
@@ -61,6 +62,7 @@ dev_dependencies:
     signals_lint: ^7.1.0
 
 flutter:
+
     uses-material-design: true
     assets:
         - assets/images/

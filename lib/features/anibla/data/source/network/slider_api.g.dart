@@ -20,30 +20,33 @@ class _SliderApi implements SliderApi {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HttpResponse<ApiResponse<List<Slider>>>> getCarousel() async {
+  Future<HttpResponse<ApiResponse<List<CarouselItem>>>> getCarousel() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<ApiResponse<List<Slider>>>>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/v1/sliders',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
+    final _options =
+        _setStreamType<HttpResponse<ApiResponse<List<CarouselItem>>>>(
+          Options(method: 'GET', headers: _headers, extra: _extra)
+              .compose(
+                _dio.options,
+                '/v1/sliders',
+                queryParameters: queryParameters,
+                data: _data,
+              )
+              .copyWith(
+                baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl),
+              ),
+        );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late ApiResponse<List<Slider>> _value;
+    late ApiResponse<List<CarouselItem>> _value;
     try {
-      _value = ApiResponse<List<Slider>>.fromJson(
+      _value = ApiResponse<List<CarouselItem>>.fromJson(
         _result.data!,
         (json) => json is List<dynamic>
             ? json
-                  .map<Slider>(
-                    (i) => Slider.fromJson(i as Map<String, dynamic>),
+                  .map<CarouselItem>(
+                    (i) => CarouselItem.fromJson(i as Map<String, dynamic>),
                   )
                   .toList()
             : List.empty(),

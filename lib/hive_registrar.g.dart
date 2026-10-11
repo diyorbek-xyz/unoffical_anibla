@@ -5,20 +5,19 @@
 import 'package:hive_ce/hive_ce.dart';
 import 'package:application/features/anibla/data/enums/episode_type.dart';
 import 'package:application/features/anibla/data/enums/media_type.dart';
+import 'package:application/features/anibla/data/models/data/carousel_item.dart';
 import 'package:application/features/anibla/data/models/data/creator.dart';
 import 'package:application/features/anibla/data/models/data/episode_notf.dart';
 import 'package:application/features/anibla/data/models/data/genre.dart';
 import 'package:application/features/anibla/data/models/data/notification.dart';
 import 'package:application/features/anibla/data/models/data/privacy.dart';
 import 'package:application/features/anibla/data/models/data/session.dart';
-import 'package:application/features/anibla/data/models/data/slider.dart';
 import 'package:application/features/anibla/data/models/helper/localized.dart';
 import 'package:application/features/anibla/data/models/helper/pagination.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/features/anibla/data/models/main/episode.dart';
 import 'package:application/features/anibla/data/models/main/profile.dart';
 import 'package:application/features/anibla/data/models/main/season.dart';
-import 'package:application/features/anibla/data/models/misc/avatar.dart';
 import 'package:application/features/anibla/data/models/misc/calendar.dart';
 import 'package:application/features/anibla/data/models/misc/timer.dart';
 import 'package:application/features/anibla/data/models/response/notification_response.dart';
@@ -30,8 +29,8 @@ import 'package:application/features/player/data/model/timeline_model.dart';
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
     registerAdapter(AnimeAdapter());
-    registerAdapter(AvatarAdapter());
     registerAdapter(CalendarAdapter());
+    registerAdapter(CarouselItemAdapter());
     registerAdapter(ChunkAdapter());
     registerAdapter(CreatorAdapter());
     registerAdapter(DownloadInfosAdapter());
@@ -54,7 +53,6 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(SeasonAdapter());
     registerAdapter(SessionAdapter());
     registerAdapter(SessionsAdapter());
-    registerAdapter(SliderAdapter());
     registerAdapter(TimelineModelAdapter());
     registerAdapter(TimerAdapter());
     registerAdapter(VariantAdapter());
@@ -64,8 +62,8 @@ extension HiveRegistrar on HiveInterface {
 extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
     registerAdapter(AnimeAdapter());
-    registerAdapter(AvatarAdapter());
     registerAdapter(CalendarAdapter());
+    registerAdapter(CarouselItemAdapter());
     registerAdapter(ChunkAdapter());
     registerAdapter(CreatorAdapter());
     registerAdapter(DownloadInfosAdapter());
@@ -88,7 +86,6 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
     registerAdapter(SeasonAdapter());
     registerAdapter(SessionAdapter());
     registerAdapter(SessionsAdapter());
-    registerAdapter(SliderAdapter());
     registerAdapter(TimelineModelAdapter());
     registerAdapter(TimerAdapter());
     registerAdapter(VariantAdapter());

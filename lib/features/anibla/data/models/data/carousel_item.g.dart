@@ -1,22 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'slider.dart';
+part of 'carousel_item.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class SliderAdapter extends TypeAdapter<Slider> {
+class CarouselItemAdapter extends TypeAdapter<CarouselItem> {
   @override
   final typeId = 108;
 
   @override
-  Slider read(BinaryReader reader) {
+  CarouselItem read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Slider(
+    return CarouselItem(
       id: fields[0] == null ? '' : fields[0] as String,
       image: fields[1] == null ? '' : fields[1] as String,
       mobileImage: fields[2] == null ? '' : fields[2] as String,
@@ -26,7 +26,7 @@ class SliderAdapter extends TypeAdapter<Slider> {
   }
 
   @override
-  void write(BinaryWriter writer, Slider obj) {
+  void write(BinaryWriter writer, CarouselItem obj) {
     writer
       ..writeByte(5)
       ..writeByte(0)
@@ -47,7 +47,7 @@ class SliderAdapter extends TypeAdapter<Slider> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is SliderAdapter &&
+      other is CarouselItemAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
@@ -56,25 +56,29 @@ class SliderAdapter extends TypeAdapter<Slider> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-_Slider _$SliderFromJson(Map<String, dynamic> json) => _Slider(
-  id: json['_id'] as String? ?? "",
-  image: json['image'] == null ? "" : addBaseUrl(json['image'] as String?),
-  mobileImage: json['mobile_image'] == null
-      ? ""
-      : addBaseUrl(json['mobile_image'] as String?),
-  anime: json['media'] == null ? const Anime() : Anime.fromJson(json['media']),
-  type:
-      $enumDecodeNullable(_$MediaTypeEnumMap, json['mediaType']) ??
-      MediaType.movie,
-);
+_CarouselItem _$CarouselItemFromJson(Map<String, dynamic> json) =>
+    _CarouselItem(
+      id: json['_id'] as String? ?? "",
+      image: json['image'] == null ? "" : addBaseUrl(json['image'] as String?),
+      mobileImage: json['mobile_image'] == null
+          ? ""
+          : addBaseUrl(json['mobile_image'] as String?),
+      anime: json['media'] == null
+          ? const Anime()
+          : Anime.fromJson(json['media']),
+      type:
+          $enumDecodeNullable(_$MediaTypeEnumMap, json['mediaType']) ??
+          MediaType.movie,
+    );
 
-Map<String, dynamic> _$SliderToJson(_Slider instance) => <String, dynamic>{
-  '_id': instance.id,
-  'image': instance.image,
-  'mobile_image': instance.mobileImage,
-  'media': instance.anime,
-  'mediaType': _$MediaTypeEnumMap[instance.type]!,
-};
+Map<String, dynamic> _$CarouselItemToJson(_CarouselItem instance) =>
+    <String, dynamic>{
+      '_id': instance.id,
+      'image': instance.image,
+      'mobile_image': instance.mobileImage,
+      'media': instance.anime,
+      'mediaType': _$MediaTypeEnumMap[instance.type]!,
+    };
 
 const _$MediaTypeEnumMap = {
   MediaType.movie: 'Movies',

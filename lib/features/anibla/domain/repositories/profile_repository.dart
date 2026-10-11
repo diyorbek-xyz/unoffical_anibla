@@ -7,4 +7,5 @@ abstract class ProfileRepository {
   Future<Either<Failure, Profile>> getProfile();
   Future<Either<Failure, bool>> exitSession(String tokenId);
   Future<Either<Failure, List<Plan>>> getPlans();
+  Future<Either<Failure, Profile>> updateProfile(Profile profile);
 }

@@ -1,5 +1,5 @@
 import 'package:application/shared/models/api_response.dart';
-import 'package:application/features/anibla/data/models/data/slider.dart';
+import 'package:application/features/anibla/data/models/data/carousel_item.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -10,5 +10,5 @@ abstract class SliderApi {
   factory SliderApi(Dio dio) = _SliderApi;
 
   @GET('/v1/sliders')
-  Future<HttpResponse<ApiResponse<List<Slider>>>> getCarousel();
+  Future<HttpResponse<ApiResponse<List<CarouselItem>>>> getCarousel();
 }

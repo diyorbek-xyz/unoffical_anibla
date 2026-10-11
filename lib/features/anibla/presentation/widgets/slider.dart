@@ -1,20 +1,20 @@
 import 'dart:async';
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
-import 'package:application/shared/utils/base_url.dart';
 import 'package:application/features/anibla/data/models/props/anime_page_props.dart';
 import 'package:application/shared/image_provider/fallback_provider.dart';
+import 'package:application/shared/utils/base_url.dart';
 import 'package:application/shared/widgets/error.dart';
-import 'package:application/shared/widgets/image.dart';
 import 'package:application/features/anibla/presentation/controllers/slider_controller.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/main.dart';
 import 'package:application/core/network/resources/failure.dart';
+import 'package:application/shared/widgets/image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import 'package:application/features/anibla/data/models/data/slider.dart' as model;
+import 'package:application/features/anibla/data/models/data/carousel_item.dart';
 
 class Carousel extends StatefulWidget {
   const Carousel({super.key});
@@ -24,137 +24,123 @@ class Carousel extends StatefulWidget {
 }
 
 class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin {
+  static const _interval = Duration(seconds: 10);
+  static const _fade = Duration(milliseconds: 600);
+
   @override
   bool get wantKeepAlive => true;
 
-  final _sliderController = sl<SliderController>();
-  late final EffectCleanup _effectCleanup;
-  final pageController = PageController(initialPage: 0);
-  int currentPage = 0;
-  double progress = 0;
-  Duration duration = Duration(seconds: 10);
-  Timer? timer;
-  List<model.Slider> sliders = [];
+  final _controller = sl<SliderController>();
+  Timer? _timer;
+  int _current = 0;
+  int _previous = 0;
 
-  void autoPlay() {
-    timer = Timer.periodic(duration, (timer) {
-      if (!mounted) return;
-      setState(() {
-        if (currentPage == sliders.length - 1) {
-          currentPage = 0;
-        } else {
-          currentPage++;
-        }
-      });
-    });
-  }
-
-  void setPage(int page) {
-    timer?.cancel();
-    setState(() => currentPage = page);
-    autoPlay();
-  }
-
-  void nextPage() => setPage((currentPage + 1) % (sliders.isNotEmpty ? sliders.length : 1));
-
-  void slide(DragEndDetails det) {
-    if (det.primaryVelocity == null) return;
-    if (det.primaryVelocity! < -50) nextPage();
-    if (det.primaryVelocity! > 50) previousPage();
-  }
-
-  void previousPage() {
-    if (currentPage == 0) {
-      setPage(sliders.length - 1);
-    } else {
-      setPage(currentPage - 1);
-    }
-  }
+  int get _length => _controller.sliderSignal.value.value?.length ?? 0;
 
   @override
   void initState() {
     super.initState();
-    autoPlay();
-    _effectCleanup = effect(() {
-      final slider = _sliderController.sliderSignal.value;
-      if (slider.value == null || slider.value!.isEmpty) return;
-      setState(() => sliders = slider.value!);
-    });
+    _startTimer();
   }
 
   @override
   void dispose() {
-    _effectCleanup();
+    _timer?.cancel();
     super.dispose();
+  }
+
+  void _startTimer() {
+    _timer?.cancel();
+    _timer = Timer.periodic(_interval, (_) => _next());
+  }
+
+  void _goTo(int page) {
+    if (_length <= 1) return;
+    setState(() => (_previous = _current, _current = page));
+    _startTimer();
+  }
+
+  void _next() => _goTo((_current + 1) % _length);
+  void _prev() => _goTo((_current - 1 + _length) % _length);
+
+  void _onDrag(DragEndDetails d) {
+    final v = d.primaryVelocity ?? 0;
+    if (v < -50) _next();
+    if (v > 50) _prev();
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
+    final isMobile = MediaQuery.sizeOf(context).width < MOBILE_WIDTH;
+
     return SignalBuilder(
       builder: (context) {
-        final state = _sliderController.sliderSignal.value;
-        if (state.hasError) {
-          return ErrorBuilder(message: (state.error as Failure).message, refresh: _sliderController.refresh);
-        }
-        final h = MediaQuery.of(context).size.height;
-        return Skeletonizer(
-          enableSwitchAnimation: true,
-          enabled: state.isLoading,
-          child: sliderBuilder(isMobile, h, state.value ?? _sliderController.fakeSlider, context),
-        );
+        final state = _controller.sliderSignal.value;
+        if (state.hasError) return ErrorBuilder(message: (state.error as Failure).message, refresh: _controller.refresh);
+        final data = state.value ?? _controller.fakeSlider;
+        return Skeletonizer(enableSwitchAnimation: true, enabled: state.isLoading, child: _slides(data, isMobile));
       },
     );
   }
 
-  Widget sliderBuilder(bool isMobile, double h, List<dynamic> data, BuildContext context) => GestureDetector(
-    onHorizontalDragEnd: slide,
-    child: Stack(
-      fit: StackFit.expand,
+  Widget _slides(List<CarouselItem> data, bool isMobile) {
+    if (data.isEmpty) return const SizedBox.shrink();
+    final cur = _current.clamp(0, data.length - 1);
+    final prev = _previous.clamp(0, data.length - 1);
+
+    return GestureDetector(
+      onHorizontalDragEnd: _onDrag,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          if (prev != cur) IgnorePointer(child: carouselItem(data[prev], context)),
+
+          TweenAnimationBuilder<double>(
+            key: ValueKey(cur),
+            tween: Tween(begin: 0, end: 1),
+            duration: _fade,
+            curve: Curves.easeInOut,
+            builder: (_, v, child) => Opacity(opacity: v, child: child),
+            child: carouselItem(data[cur], context),
+          ),
+
+          if (!isMobile) _arrows(),
+        ],
+      ),
+    );
+  }
+
+  Widget _arrows() => Material(
+    type: MaterialType.transparency,
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        ...data.asMap().entries.map(
-          (e) => AnimatedOpacity(
-            opacity: e.key == currentPage ? 1 : 0,
-            curve: Easing.legacy,
-            duration: const Duration(milliseconds: 500),
-            child: IgnorePointer(ignoring: e.key != currentPage, child: carouselItem(e.value, context)),
-          ),
+        InkWell(
+          mouseCursor: SystemMouseCursors.click,
+          onTap: _prev,
+          child: const SizedBox(width: 100, child: Icon(Icons.keyboard_arrow_left)),
         ),
-        if (!isMobile)
-          Material(
-            type: MaterialType.transparency,
-            child: Row(
-              mainAxisAlignment: .spaceBetween,
-              crossAxisAlignment: .stretch,
-              children: [
-                InkWell(
-                  mouseCursor: SystemMouseCursors.click,
-                  onTap: previousPage,
-                  child: SizedBox(width: 100, child: Icon(Icons.keyboard_arrow_left)),
-                ),
-                InkWell(
-                  mouseCursor: SystemMouseCursors.click,
-                  onTap: nextPage,
-                  child: SizedBox(width: 100, child: Icon(Icons.keyboard_arrow_right)),
-                ),
-              ],
-            ),
-          ),
+        InkWell(
+          mouseCursor: SystemMouseCursors.click,
+          onTap: _next,
+          child: const SizedBox(width: 100, child: Icon(Icons.keyboard_arrow_right)),
+        ),
       ],
     ),
   );
 
-  Widget carouselItem(model.Slider e, BuildContext context) => LayoutBuilder(
+  Widget carouselItem(CarouselItem item, BuildContext context) => LayoutBuilder(
     builder: (context, consts) {
       final isMobile = consts.maxWidth < MOBILE_WIDTH;
       return DecoratedBox(
         decoration: BoxDecoration(
-          image: e.image.isEmpty ? null : DecorationImage(image: imageProviderFallback(e.image), fit: BoxFit.cover),
-          color: e.image.isEmpty ? context.appColors.surface : null,
+          image: item.image.isEmpty ? null : DecorationImage(image: imageProviderFallback(item.image), fit: BoxFit.cover),
+          color: item.image.isEmpty ? context.appColors.surface : null,
         ),
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: isMobile ? 30 : 100, vertical: isMobile ? 10 : 90),
+          padding: EdgeInsets.symmetric(horizontal: isMobile ? 10 : 100, vertical: isMobile ? 10 : 90),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [context.appColors.surface, Colors.transparent],
@@ -173,13 +159,13 @@ class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin 
                   spacing: 10,
                   children: [
                     Text(
-                      "${e.anime.title.uz.toString()} [${e.anime.age}+]",
+                      "${item.anime.title.uz.toString()} [${item.anime.age}+]",
                       style: isMobile ? context.textTheme.titleLarge : context.textTheme.displayMedium,
                     ),
                     SizedBox(
                       width: 500,
                       child: Text(
-                        e.anime.description.uz,
+                        item.anime.description.uz,
                         maxLines: isMobile ? 2 : 4,
                         overflow: TextOverflow.ellipsis,
                         style: isMobile ? context.textTheme.bodyMedium : context.textTheme.bodyLarge,
@@ -194,7 +180,7 @@ class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin 
                           FilledButton.icon(
                             onPressed: () => context.pushNamed(
                               "anime",
-                              queryParameters: AnimePageProps(mediaType: e.anime.type, animeSlug: e.anime.slug).toJson(),
+                              queryParameters: AnimePageProps(mediaType: item.anime.type, animeSlug: item.anime.slug).toJson(),
                             ),
                             icon: Icon(Icons.play_arrow),
                             style: ButtonStyle(
@@ -238,66 +224,13 @@ class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin 
                   ],
                 ),
               ),
-              if (!(consts.maxWidth < 1000) && e.mobileImage.isNotEmpty && !isMobile)
-                SafeImage(imageUrl: addBaseUrl(e.mobileImage), height: 500, width: 300, fit: .cover),
-              if (e.mobileImage.isEmpty && !isMobile) Container(height: 500, width: 300, color: context.appColors.primary),
+              if (!(consts.maxWidth < 1000) && item.mobileImage.isNotEmpty && !isMobile)
+                SafeImage(imageUrl: addBaseUrl(item.mobileImage), height: 500, width: 300, fit: .cover),
+              if (item.mobileImage.isEmpty && !isMobile) Container(height: 500, width: 300, color: context.appColors.primary),
             ],
           ),
         ),
       );
     },
   );
-}
-
-class _DotIndicator extends StatefulWidget {
-  const _DotIndicator({required this.isCurrent, required this.radius, required this.onTap});
-
-  final bool isCurrent;
-  final double radius;
-  final VoidCallback onTap;
-
-  @override
-  State<_DotIndicator> createState() => _DotIndicatorState();
-}
-
-class _DotIndicatorState extends State<_DotIndicator> {
-  bool _hasFocus = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: widget.onTap,
-      mouseCursor: SystemMouseCursors.click,
-      focusColor: Colors.transparent,
-      hoverColor: Colors.transparent,
-      highlightColor: Colors.transparent,
-      onFocusChange: (focused) => setState(() => _hasFocus = focused),
-      canRequestFocus: true,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100),
-          border: _hasFocus ? Border.all(width: 1, color: context.appColors.surface) : null,
-        ),
-        child: AnimatedContainer(
-          curve: Easing.legacy,
-          duration: const Duration(milliseconds: 500),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(100),
-            color: widget.isCurrent ? context.appColors.primaryContainer : context.appColors.primary,
-          ),
-          width: widget.isCurrent ? widget.radius * 8 : widget.radius * 2,
-          height: widget.radius,
-          clipBehavior: Clip.antiAlias,
-          alignment: AlignmentGeometry.centerStart,
-          child: AnimatedContainer(
-            curve: Curves.linear,
-            duration: widget.isCurrent ? (const Duration(seconds: 10) + Durations.medium1) : Duration.zero,
-            width: widget.isCurrent ? widget.radius * 8 : 0,
-            height: double.infinity,
-            child: Container(color: context.appColors.primary),
-          ),
-        ),
-      ),
-    );
-  }
 }

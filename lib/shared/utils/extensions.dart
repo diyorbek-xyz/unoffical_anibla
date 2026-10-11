@@ -3,6 +3,8 @@ import 'package:application/features/anibla/data/models/helper/pagination.dart';
 import 'package:application/features/anibla/data/models/main/episode.dart';
 import 'package:application/features/player/presentation/controller/player_controller.dart';
 import 'package:application/features/player/presentation/widgets/player_scope.dart';
+import 'package:application/injection_container.dart';
+import 'package:application/main.dart';
 import 'package:application/shared/controller/signal_state.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
@@ -23,9 +25,8 @@ extension StringExt on String {
   int? tryParseInt() => int.tryParse(this);
   double parseDouble() => double.parse(this);
   double? tryParseDouble() => double.tryParse(this);
-  String extractYTId() {
-    return split("/").last.split("=").last;
-  }
+  String extractYTId() => split("/").last.split("=").last;
+  String? toNullable() => trim().isEmpty ? null : this;
 }
 
 extension DateFormatting on DateTime {
@@ -137,6 +138,9 @@ extension NamedSignalExt<T> on FlutterSignal<NamedSignalState<T>> {
 
 extension ContextExt on BuildContext {
   PlayerController get player => PlayerScope.of(this);
+  Size get screen => MediaQuery.of(this).size;
+  bool get isMobile => screen.width <= MOBILE_WIDTH;
+  T controller<T extends Object>() => sl<T>();
 }
 
 extension EpisodeExt on List<Episode> {

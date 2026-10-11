@@ -22,8 +22,8 @@ class AnimeInfosMenu extends StatelessWidget {
         final mangaState = mediaController.mangaState.value;
         final mangaLoading = mangaState.isLoading;
         final manga = mangaState.value ?? mediaController.fakeManga;
-        final titleStyle = isMobile ? context.textTheme.titleMedium : context.textTheme.titleLarge;
-        final bodyStyle = isMobile ? context.textTheme.bodySmall : context.textTheme.bodyLarge;
+        final titleStyle = context.textTheme.titleLarge;
+        final bodyStyle = context.textTheme.bodyLarge;
         return CustomScrollView(
           scrollBehavior: ScrollBehavior().copyWith(scrollbars: false),
           key: const PageStorageKey("infos"),

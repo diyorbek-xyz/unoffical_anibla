@@ -1,4 +1,4 @@
-import 'package:application/features/anibla/data/models/data/slider.dart';
+import 'package:application/features/anibla/data/models/data/carousel_item.dart';
 import 'package:application/features/anibla/data/source/local/slider_local.dart';
 import 'package:application/features/anibla/data/source/network/slider_api.dart';
 import 'package:application/features/anibla/domain/repositories/slider_repository.dart';
@@ -12,7 +12,7 @@ class SliderRepositoryImpl implements SliderRepository {
   SliderRepositoryImpl(this._apiService, this._localService);
 
   @override
-  Future<Either<Failure, List<Slider>>> getSlider() async {
+  Future<Either<Failure, List<CarouselItem>>> getSlider() async {
     try {
       try {
         final httpResponse = await _apiService.getCarousel();

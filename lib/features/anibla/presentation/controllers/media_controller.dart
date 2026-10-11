@@ -50,6 +50,7 @@ class MediaController {
 
   Future<void> getAnime([MediaType? mediatype, String? animeSlug]) async {
     if (animeState.isLoading) return;
+    if (mediatype != null) _mediaType = mediatype;
     final type = mediatype ?? _mediaType;
     final slug = animeSlug ?? _animeSlug;
     if (type == null || slug == null) return animeState.setError("Slug yo'q: $slug");
@@ -100,6 +101,7 @@ class MediaController {
 
   Future<void> getManga([MediaType? mediaType, String? mangaSlug]) async {
     if (mangaState.isLoading) return;
+    if (mediaType != null) _mediaType = mediaType;
     final slug = mangaSlug ?? _mangaSlug;
     final type = mediaType ?? _mediaType;
     prints([slug, type]);

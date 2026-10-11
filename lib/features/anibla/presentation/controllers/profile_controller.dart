@@ -42,6 +42,7 @@ class ProfileController {
   final fakePlans = List.generate(4, (index) => Plan());
 
   late final sessionExitSignal = signal(const SessionState());
+
   void exitSession(String tokenId) async {
     sessionExitSignal.set(SessionState(isLoading: true));
     try {
@@ -55,6 +56,16 @@ class ProfileController {
     } catch (e) {
       sessionExitSignal.set(const SessionState(hasError: true, error: "Nimadur xato ketti"));
     }
+  }
+
+  void changeAvatar(String url) async {
+    final newProfile = await _profileRepository.updateProfile(Profile(image: url));
+    newProfile.fold((l) => l, profileSignal.setValue);
+  }
+
+  void changeName(String name) async {
+    final newProfile = await _profileRepository.updateProfile(Profile(name: name));
+    newProfile.fold((l) => l, profileSignal.setValue);
   }
 
   Future<void> refreshAll() async {

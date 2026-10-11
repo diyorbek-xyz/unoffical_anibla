@@ -11,4 +11,7 @@ abstract class ProfileApi {
 
   @GET('/v1/users/me')
   Future<HttpResponse<ApiResponse<Profile>>> getProfile();
+
+  @PATCH('/v1/users/me')
+  Future<HttpResponse<ApiResponse<Profile>>> updateProfile(@Body(nullToAbsent: true) Map<String, dynamic> data);
 }

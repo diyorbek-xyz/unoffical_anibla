@@ -1,23 +1,23 @@
-import 'package:application/features/anibla/data/models/data/slider.dart';
+import 'package:application/features/anibla/data/models/data/carousel_item.dart';
 import 'package:hive_ce/hive_ce.dart';
 
 abstract class SliderLocal {
-  Future<List<Slider>?> getSlider();
-  Future<void> saveSlider(List<Slider> slider);
+  Future<List<CarouselItem>?> getSlider();
+  Future<void> saveSlider(List<CarouselItem> slider);
   Future<void> clearSlider();
 }
 
 class SliderLocalImpl implements SliderLocal {
-  final Box<Slider> box;
+  final Box<CarouselItem> box;
   const SliderLocalImpl(this.box);
 
   @override
-  Future<void> saveSlider(List<Slider> slider) async {
+  Future<void> saveSlider(List<CarouselItem> slider) async {
     await box.putAll(slider.asMap());
   }
 
   @override
-  Future<List<Slider>?> getSlider() async {
+  Future<List<CarouselItem>?> getSlider() async {
     return box.values.toList();
   }
 

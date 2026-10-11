@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Avatar {
 
-@HiveField(0)@JsonKey(name: "_id") String get id;@HiveField(1) String get avatar;@HiveField(2) String get createdAt;@HiveField(3) String get updatedAt;
+ String get id; String get title;
 /// Create a copy of Avatar
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $AvatarCopyWith<Avatar> get copyWith => _$AvatarCopyWithImpl<Avatar>(this as Ava
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Avatar&&(identical(other.id, id) || other.id == id)&&(identical(other.avatar, avatar) || other.avatar == avatar)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Avatar&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,avatar,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,title);
 
 @override
 String toString() {
-  return 'Avatar(id: $id, avatar: $avatar, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'Avatar(id: $id, title: $title)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $AvatarCopyWith<$Res>  {
   factory $AvatarCopyWith(Avatar value, $Res Function(Avatar) _then) = _$AvatarCopyWithImpl;
 @useResult
 $Res call({
-@HiveField(0)@JsonKey(name: "_id") String id,@HiveField(1) String avatar,@HiveField(2) String createdAt,@HiveField(3) String updatedAt
+ String id, String title
 });
 
 
@@ -65,12 +65,10 @@ class _$AvatarCopyWithImpl<$Res>
 
 /// Create a copy of Avatar
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? avatar = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,avatar: null == avatar ? _self.avatar : avatar // ignore: cast_nullable_to_non_nullable
-as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as String,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -156,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@HiveField(0)@JsonKey(name: "_id")  String id, @HiveField(1)  String avatar, @HiveField(2)  String createdAt, @HiveField(3)  String updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Avatar() when $default != null:
-return $default(_that.id,_that.avatar,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.title);case _:
   return orElse();
 
 }
@@ -177,10 +175,10 @@ return $default(_that.id,_that.avatar,_that.createdAt,_that.updatedAt);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@HiveField(0)@JsonKey(name: "_id")  String id, @HiveField(1)  String avatar, @HiveField(2)  String createdAt, @HiveField(3)  String updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title)  $default,) {final _that = this;
 switch (_that) {
 case _Avatar():
-return $default(_that.id,_that.avatar,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.title);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +195,10 @@ return $default(_that.id,_that.avatar,_that.createdAt,_that.updatedAt);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@HiveField(0)@JsonKey(name: "_id")  String id, @HiveField(1)  String avatar, @HiveField(2)  String createdAt, @HiveField(3)  String updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title)?  $default,) {final _that = this;
 switch (_that) {
 case _Avatar() when $default != null:
-return $default(_that.id,_that.avatar,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.title);case _:
   return null;
 
 }
@@ -212,13 +210,11 @@ return $default(_that.id,_that.avatar,_that.createdAt,_that.updatedAt);case _:
 @JsonSerializable()
 
 class _Avatar implements Avatar {
-  const _Avatar({@HiveField(0)@JsonKey(name: "_id") this.id = "", @HiveField(1) this.avatar = "", @HiveField(2) this.createdAt = "", @HiveField(3) this.updatedAt = ""});
+  const _Avatar({this.id = "", this.title = ""});
   factory _Avatar.fromJson(Map<String, dynamic> json) => _$AvatarFromJson(json);
 
-@override@HiveField(0)@JsonKey(name: "_id") final  String id;
-@override@JsonKey()@HiveField(1) final  String avatar;
-@override@JsonKey()@HiveField(2) final  String createdAt;
-@override@JsonKey()@HiveField(3) final  String updatedAt;
+@override@JsonKey() final  String id;
+@override@JsonKey() final  String title;
 
 /// Create a copy of Avatar
 /// with the given fields replaced by the non-null parameter values.
@@ -233,16 +229,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Avatar&&(identical(other.id, id) || other.id == id)&&(identical(other.avatar, avatar) || other.avatar == avatar)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Avatar&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,avatar,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,title);
 
 @override
 String toString() {
-  return 'Avatar(id: $id, avatar: $avatar, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'Avatar(id: $id, title: $title)';
 }
 
 
@@ -253,7 +249,7 @@ abstract mixin class _$AvatarCopyWith<$Res> implements $AvatarCopyWith<$Res> {
   factory _$AvatarCopyWith(_Avatar value, $Res Function(_Avatar) _then) = __$AvatarCopyWithImpl;
 @override @useResult
 $Res call({
-@HiveField(0)@JsonKey(name: "_id") String id,@HiveField(1) String avatar,@HiveField(2) String createdAt,@HiveField(3) String updatedAt
+ String id, String title
 });
 
 
@@ -270,13 +266,283 @@ class __$AvatarCopyWithImpl<$Res>
 
 /// Create a copy of Avatar
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? avatar = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,}) {
   return _then(_Avatar(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,avatar: null == avatar ? _self.avatar : avatar // ignore: cast_nullable_to_non_nullable
-as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as String,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$AvatarGroup {
+
+ String get title; List<Avatar> get assets;
+/// Create a copy of AvatarGroup
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$AvatarGroupCopyWith<AvatarGroup> get copyWith => _$AvatarGroupCopyWithImpl<AvatarGroup>(this as AvatarGroup, _$identity);
+
+  /// Serializes this AvatarGroup to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AvatarGroup&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other.assets, assets));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,title,const DeepCollectionEquality().hash(assets));
+
+@override
+String toString() {
+  return 'AvatarGroup(title: $title, assets: $assets)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $AvatarGroupCopyWith<$Res>  {
+  factory $AvatarGroupCopyWith(AvatarGroup value, $Res Function(AvatarGroup) _then) = _$AvatarGroupCopyWithImpl;
+@useResult
+$Res call({
+ String title, List<Avatar> assets
+});
+
+
+
+
+}
+/// @nodoc
+class _$AvatarGroupCopyWithImpl<$Res>
+    implements $AvatarGroupCopyWith<$Res> {
+  _$AvatarGroupCopyWithImpl(this._self, this._then);
+
+  final AvatarGroup _self;
+  final $Res Function(AvatarGroup) _then;
+
+/// Create a copy of AvatarGroup
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? title = null,Object? assets = null,}) {
+  return _then(_self.copyWith(
+title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,assets: null == assets ? _self.assets : assets // ignore: cast_nullable_to_non_nullable
+as List<Avatar>,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [AvatarGroup].
+extension AvatarGroupPatterns on AvatarGroup {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _AvatarGroup value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _AvatarGroup() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _AvatarGroup value)  $default,){
+final _that = this;
+switch (_that) {
+case _AvatarGroup():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _AvatarGroup value)?  $default,){
+final _that = this;
+switch (_that) {
+case _AvatarGroup() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String title,  List<Avatar> assets)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _AvatarGroup() when $default != null:
+return $default(_that.title,_that.assets);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String title,  List<Avatar> assets)  $default,) {final _that = this;
+switch (_that) {
+case _AvatarGroup():
+return $default(_that.title,_that.assets);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String title,  List<Avatar> assets)?  $default,) {final _that = this;
+switch (_that) {
+case _AvatarGroup() when $default != null:
+return $default(_that.title,_that.assets);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _AvatarGroup implements AvatarGroup {
+  const _AvatarGroup({this.title = "", final  List<Avatar> assets = const []}): _assets = assets;
+  factory _AvatarGroup.fromJson(Map<String, dynamic> json) => _$AvatarGroupFromJson(json);
+
+@override@JsonKey() final  String title;
+ final  List<Avatar> _assets;
+@override@JsonKey() List<Avatar> get assets {
+  if (_assets is EqualUnmodifiableListView) return _assets;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_assets);
+}
+
+
+/// Create a copy of AvatarGroup
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$AvatarGroupCopyWith<_AvatarGroup> get copyWith => __$AvatarGroupCopyWithImpl<_AvatarGroup>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$AvatarGroupToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AvatarGroup&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other._assets, _assets));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,title,const DeepCollectionEquality().hash(_assets));
+
+@override
+String toString() {
+  return 'AvatarGroup(title: $title, assets: $assets)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$AvatarGroupCopyWith<$Res> implements $AvatarGroupCopyWith<$Res> {
+  factory _$AvatarGroupCopyWith(_AvatarGroup value, $Res Function(_AvatarGroup) _then) = __$AvatarGroupCopyWithImpl;
+@override @useResult
+$Res call({
+ String title, List<Avatar> assets
+});
+
+
+
+
+}
+/// @nodoc
+class __$AvatarGroupCopyWithImpl<$Res>
+    implements _$AvatarGroupCopyWith<$Res> {
+  __$AvatarGroupCopyWithImpl(this._self, this._then);
+
+  final _AvatarGroup _self;
+  final $Res Function(_AvatarGroup) _then;
+
+/// Create a copy of AvatarGroup
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? title = null,Object? assets = null,}) {
+  return _then(_AvatarGroup(
+title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,assets: null == assets ? _self._assets : assets // ignore: cast_nullable_to_non_nullable
+as List<Avatar>,
   ));
 }
 

@@ -1,4 +1,3 @@
-import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/shared/constants/tabs.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -15,33 +14,22 @@ class Sidebar extends StatefulWidget {
 
 class _SidebarState extends State<Sidebar> {
   @override
-  Widget build(BuildContext context) {
-    return NavigationRail(
-      leading: FloatingActionButton(
-        onPressed: () {},
-        child: Ink(
-          decoration: BoxDecoration(
-            border: Border.all(width: 1,color: context.appColors.onSurface.withAlpha(60)),
-            borderRadius: .circular(16),
-            image: DecorationImage(fit: .cover, image: AssetImage("assets/images/avatar.png")),
+  Widget build(BuildContext context) => NavigationRail(
+    leading: FloatingActionButton(onPressed: () {}, child: Icon(Icons.notifications)),
+    extended: false,
+    leadingAtTop: true,
+    selectedIndex: widget.shell.currentIndex,
+    onDestinationSelected: (index) => widget.shell.goBranch(index, initialLocation: index == widget.shell.currentIndex),
+    labelType: .selected,
+    mainAxisAlignment: .end,
+    destinations: desktopTabs
+        .map(
+          (e) => NavigationRailDestination(
+            icon: Icon(e.icon),
+            label: Text(e.label, textAlign: .center),
+            selectedIcon: Icon(e.activeIcon),
           ),
-        ),
-      ),
-      extended: false,
-      leadingAtTop: true,
-      selectedIndex: widget.shell.currentIndex,
-      onDestinationSelected: (index) => widget.shell.goBranch(index, initialLocation: index == widget.shell.currentIndex),
-      labelType: .selected,
-      mainAxisAlignment: .end,
-      destinations: desktopTabs
-          .map(
-            (e) => NavigationRailDestination(
-              icon: Icon(e.icon),
-              label: Text(e.label, textAlign: .center),
-              selectedIcon: Icon(e.activeIcon),
-            ),
-          )
-          .toList(),
-    );
-  }
+        )
+        .toList(),
+  );
 }
