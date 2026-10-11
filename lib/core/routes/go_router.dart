@@ -1,11 +1,11 @@
 import 'package:application/features/anibla/data/models/props/media_props.dart';
 import 'package:application/features/anibla/presentation/pages/media_page.dart';
+import 'package:application/features/anibla/presentation/pages/profile_wrapper.dart';
 import 'package:application/features/anibla/presentation/pages/watch_page.dart';
 import 'package:application/features/auth/presentation/pages/login_page.dart';
 import 'package:application/features/anibla/presentation/pages/explore_page.dart';
 import 'package:application/features/anibla/presentation/pages/home_page.dart';
 import 'package:application/features/anibla/presentation/pages/main_page.dart';
-import 'package:application/features/anibla/presentation/pages/profile_page.dart';
 import 'package:application/features/anibla/presentation/pages/saveds_page.dart';
 import 'package:application/features/ma-no/presentation/pages/manga_page.dart';
 import 'package:application/features/ma-no/presentation/pages/novel_page.dart';
@@ -40,7 +40,10 @@ GoRouter routerConfig(String initial) => GoRouter(
           routes: [GoRoute(path: '/saved', name: "saved", builder: (context, state) => const SavedsPage())],
         ),
         StatefulShellBranch(
-          routes: [GoRoute(path: "/profile", name: "profile", builder: (context, state) => const ProfilePage())],
+          routes: [
+            GoRoute(path: "/profile/anibla", name: "anibla", builder: (context, state) => const ProfileWrapper(false)),
+            GoRoute(path: "/profile/mano", name: "mano", builder: (context, state) => const ProfileWrapper(true)),
+          ],
         ),
       ],
     ),

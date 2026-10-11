@@ -8,7 +8,6 @@ import 'package:application/features/player/presentation/controller/player_contr
 import 'package:application/features/player/presentation/widgets/player_scope.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/shared/utils/extensions.dart';
-import 'package:application/shared/widgets/responsive.dart';
 import 'package:application/features/player/presentation/widgets/episodes_drawer.dart';
 import 'package:application/features/player/presentation/widgets/player_components.dart';
 import 'package:flutter/material.dart';
@@ -137,14 +136,12 @@ class _VideoPlayerState extends State<VideoPlayer> {
         type: MaterialType.transparency,
         child: LayoutBuilder(
           builder: (_, constraints) {
-            final main = Responsive(constraints: constraints, child: controls);
-
-            if (main.isMobile) {
+            if (context.isMobile) {
               return GestureDetector(
                 excludeFromSemantics: true,
                 behavior: HitTestBehavior.opaque,
                 onTap: toggleControls,
-                child: main,
+                child: controls,
               );
             }
             return MouseRegion(
@@ -156,7 +153,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
                 onPointerMove: (event) => autoHideControls(),
                 onPointerDown: (event) => autoHideControls(),
                 onPointerUp: (event) => autoHideControls(),
-                child: main,
+                child: controls,
               ),
             );
           },
@@ -168,10 +165,10 @@ class _VideoPlayerState extends State<VideoPlayer> {
   Widget get controls => SignalBuilder(
     builder: (context) {
       final state = PlayerScope.of(context);
-      final responsive = Responsive.of(context);
+      final isMobile = context.isMobile;
       return GestureDetector(
-        onTap: responsive.isMobile ? null : controller.togglePlay,
-        behavior: responsive.isMobile ? HitTestBehavior.translucent : HitTestBehavior.opaque,
+        onTap: isMobile ? null : controller.togglePlay,
+        behavior: isMobile ? HitTestBehavior.translucent : HitTestBehavior.opaque,
         child: Focus(
           autofocus: true,
           child: Stack(
@@ -188,7 +185,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
                     backgroundColor: Colors.transparent,
                     endDrawer: episodesDrawer,
                     endDrawerEnableOpenDragGesture: true,
-                    appBar: appBar(responsive),
+                    appBar: appBar,
                     extendBody: true,
                     extendBodyBehindAppBar: true,
                     bottomNavigationBar: bottomControls,
@@ -204,7 +201,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
     },
   );
 
-  AppBar appBar(Responsive responsive) => AppBar(
+  AppBar get appBar => AppBar(
     backgroundColor: Colors.transparent,
     automaticallyImplyLeading: false,
     automaticallyImplyActions: false,
@@ -214,7 +211,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
     title: Padding(
       padding: .only(top: 30, left: 30),
       child: widget.isPage
-          ? responsive.isMobileWidth
+          ? context.isMobile
                 ? IconButton(onPressed: context.pop, icon: Icon(Icons.keyboard_arrow_left))
                 : Row(
                     crossAxisAlignment: .center,
@@ -259,7 +256,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
   );
 
   Widget get skippers {
-    Widget skipper(int step, bool isMobile) {
+    Widget skipper(int step) {
       final skipping = (step < 0 && backwardSkipSteps != 0) || (step > 0 && forwardSkipSteps != 0);
       final child = AnimatedOpacity(
         duration: Duration(milliseconds: skipping ? 200 : 0),
@@ -272,7 +269,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
           ),
         ),
       );
-      if (!isMobile) return child;
+      if (!context.isMobile) return child;
       return GestureDetector(
         behavior: HitTestBehavior.translucent,
         onDoubleTap: () => skip(step),
@@ -282,17 +279,14 @@ class _VideoPlayerState extends State<VideoPlayer> {
     }
 
     return Builder(
-      builder: (local) {
-        final responsive = Responsive.of(local);
-        return Row(
-          mainAxisAlignment: .spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(child: skipper(-5, responsive.isMobile)),
-            Expanded(child: skipper(5, responsive.isMobile)),
-          ],
-        );
-      },
+      builder: (local) => Row(
+        mainAxisAlignment: .spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(child: skipper(-5)),
+          Expanded(child: skipper(5)),
+        ],
+      ),
     );
   }
 
@@ -300,11 +294,10 @@ class _VideoPlayerState extends State<VideoPlayer> {
     builder: (context) {
       final isFullscreen = controller.isFullscreen;
       final mediaType = controller.mediaType;
-      final isMobile = Responsive.of(context).isMobileWidth;
       return Row(
         crossAxisAlignment: .center,
         spacing: 7,
-        mainAxisAlignment: isMobile ? .end : .start,
+        mainAxisAlignment: context.isMobile ? .end : .start,
         children: [
           if (mediaType.isSerie)
             IconButton(
@@ -373,7 +366,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
       final status = controller.status;
       final stream = controller.stream;
       if (status == .empty) return SizedBox.shrink();
-      final isMobile = Responsive.of(context).isMobileWidth;
+      final isMobile = context.isMobile;
       final type = stream?.type ?? .serie;
       return Container(
         constraints: BoxConstraints.tightFor(height: 200),

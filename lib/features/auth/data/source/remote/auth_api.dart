@@ -1,3 +1,4 @@
+import 'package:application/core/network/clients/anibla_client.dart';
 import 'package:application/shared/models/api_response.dart';
 import 'package:application/features/auth/data/models/login_model.dart';
 import 'package:dio/dio.dart';
@@ -7,7 +8,7 @@ part 'auth_api.g.dart';
 
 @RestApi()
 abstract class AuthApi {
-  factory AuthApi(Dio dio) = _AuthApi;
+  factory AuthApi(AniblaClient dio) = _AuthApi;
 
   @POST("/v1/auth/login")
   Future<HttpResponse<LoginResponseModel>> getConfirm(@Body() LoginRequestModel body);

@@ -1,39 +1,6 @@
-import 'dart:io';
 import 'package:application/shared/utils/utils.dart';
 import 'package:application/main.dart';
 import 'package:flutter/material.dart';
-
-class Responsive extends InheritedWidget {
-  final BoxConstraints constraints;
-  final num? mobileWidth;
-  const Responsive({super.key, required this.constraints, required super.child, this.mobileWidth});
-
-  factory Responsive.of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<Responsive>()!;
-  }
-  static Widget provider(Widget Function(BuildContext context, Responsive responsive) builder) {
-    return LayoutBuilder(
-      builder: (context, constraints) => Responsive(
-        constraints: constraints,
-        child: Builder(builder: (context) => builder(context, Responsive.of(context))),
-      ),
-    );
-  }
-
-  bool get isMobileWidth => constraints.maxWidth < (mobileWidth ?? MOBILE_WIDTH);
-  bool get isMobilePlatform => Platform.isAndroid || Platform.isIOS;
-  bool get isDesktopPlatform => Platform.isLinux || Platform.isMacOS || Platform.isWindows;
-  bool get isMobile => isMobileWidth || isMobilePlatform;
-  bool get isDesktop => !isMobileWidth || isDesktopPlatform;
-
-  @override
-  bool updateShouldNotify(covariant Responsive oldWidget) {
-    return constraints.maxWidth != oldWidget.constraints.maxWidth ||
-        constraints.minWidth != oldWidget.constraints.minWidth ||
-        constraints.maxHeight != oldWidget.constraints.maxHeight ||
-        constraints.minHeight != oldWidget.constraints.minHeight;
-  }
-}
 
 class PlatformBuilder extends StatelessWidget {
   final Widget Function(BuildContext context, BoxConstraints constraints, bool isMobile, Widget child)? containerBuilder;

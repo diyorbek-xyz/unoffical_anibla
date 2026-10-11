@@ -108,7 +108,7 @@ class _CommentsMenuState extends State<CommentsMenu> {
         minTileHeight: 100,
         leading: CircleAvatar(
           radius: isMobile ? 20 : 30,
-          backgroundImage: imageProviderFallback(comment.user.image),
+          backgroundImage: imageProviderFallback(comment.user.avatar),
           onBackgroundImageError: (exception, stackTrace) => exception.toString(),
         ),
         title: Row(

@@ -229,7 +229,7 @@ return $default(_that.id,_that.isActive,_that.likesCount,_that.message,_that.isC
 @JsonSerializable()
 
 class _Comment implements Comment {
-  const _Comment({@JsonKey(name: "_id") this.id = "", @JsonKey(name: "is_active") this.isActive = false, this.likesCount = 0, this.message = "", this.isCurrentUser = 0, @JsonKey(name: "replies_count") this.repliesCount = 0, this.createdAt = "", this.user = const Profile(), @JsonKey(name: "user_id") this.userId = const Profile()});
+  const _Comment({@JsonKey(name: "_id") this.id = "", @JsonKey(name: "is_active") this.isActive = false, this.likesCount = 0, this.message = "", this.isCurrentUser = 0, @JsonKey(name: "replies_count") this.repliesCount = 0, this.createdAt = "", this.user = const Profile.anibla(), @JsonKey(name: "user_id") this.userId = const Profile.anibla()});
   factory _Comment.fromJson(Map<String, dynamic> json) => _$CommentFromJson(json);
 
 @override@JsonKey(name: "_id") final  String id;

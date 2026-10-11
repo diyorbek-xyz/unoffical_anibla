@@ -1,5 +1,5 @@
 import 'package:application/core/config/theme/app_colors.dart';
-import 'package:application/shared/widgets/responsive.dart';
+import 'package:application/shared/utils/extensions.dart';
 import 'package:flutter/material.dart';
 
 class ListBorderRadius {
@@ -67,8 +67,7 @@ class ListsWidget extends StatelessWidget {
       separatorBuilder: (context, index) => const SizedBox(height: 1.5),
       itemBuilder: (context, index) {
         final list = items[index];
-        final responsive = Responsive.of(context);
-        if (responsive.isMobile) {
+        if (context.isMobile) {
           return ListTile(
             textColor: context.appColors.primaryFixed,
             iconColor: context.appColors.primaryFixed,

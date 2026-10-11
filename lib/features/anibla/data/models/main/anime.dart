@@ -40,6 +40,7 @@ abstract class Anime with _$Anime {
     @Default("") @HiveField(23) @JsonKey(fromJson: addBaseUrl, includeFromJson: true) String cover,
     @Default([]) @HiveField(24) @JsonKey(fromJson: addBaseUrlAsList, includeFromJson: true) List<String> images,
   }) = _Anime;
+
   Localized get title => Localized(ru: ru['title'] ?? "", uz: uz['title'] ?? "");
   Localized get description => Localized(ru: ru['description'] ?? "", uz: uz['description'] ?? "");
   DateTime get createdAt => DateTime.tryParse(createdDate) ?? DateTime.now();

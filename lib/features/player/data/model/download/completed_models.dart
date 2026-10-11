@@ -13,15 +13,15 @@ part 'completed_models.freezed.dart';
 abstract class DownloadInfos with _$DownloadInfos {
   const DownloadInfos._();
   factory DownloadInfos({
-    @HiveField(0) final DateTime? downloadedAt,
-    @HiveField(1) required final int size,
-    @HiveField(2) required final String downloadUrl,
-    @HiveField(4) required final Anime anime,
-    @HiveField(5) required final Season season,
-    @HiveField(6) required final Episode episode,
+    @HiveField(0) DateTime? downloadedAt,
+    @HiveField(1) required int size,
+    @HiveField(2) required String downloadUrl,
+    @HiveField(4) required Anime anime,
+    @HiveField(5) required Season season,
+    @HiveField(6) required Episode episode,
     @HiveField(7) @Default("") String localPath,
-    @JsonKey(includeFromJson: false, includeToJson: false) final MasterPlaylist? masterPlaylist,
-    @JsonKey(includeFromJson: false, includeToJson: false) final Variant? variant,
+    @JsonKey(includeFromJson: false, includeToJson: false) MasterPlaylist? masterPlaylist,
+    @JsonKey(includeFromJson: false, includeToJson: false) Variant? variant,
   }) = _DownloadInfos;
 
   @HiveField(8)

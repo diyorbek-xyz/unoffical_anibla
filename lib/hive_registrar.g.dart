@@ -16,7 +16,6 @@ import 'package:application/features/anibla/data/models/helper/localized.dart';
 import 'package:application/features/anibla/data/models/helper/pagination.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/features/anibla/data/models/main/episode.dart';
-import 'package:application/features/anibla/data/models/main/profile.dart';
 import 'package:application/features/anibla/data/models/main/season.dart';
 import 'package:application/features/anibla/data/models/misc/calendar.dart';
 import 'package:application/features/anibla/data/models/misc/timer.dart';
@@ -49,7 +48,6 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(NotificationResponseAdapter());
     registerAdapter(PaginationAdapter());
     registerAdapter(PrivacyAdapter());
-    registerAdapter(ProfileAdapter());
     registerAdapter(SeasonAdapter());
     registerAdapter(SessionAdapter());
     registerAdapter(SessionsAdapter());
@@ -82,7 +80,6 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
     registerAdapter(NotificationResponseAdapter());
     registerAdapter(PaginationAdapter());
     registerAdapter(PrivacyAdapter());
-    registerAdapter(ProfileAdapter());
     registerAdapter(SeasonAdapter());
     registerAdapter(SessionAdapter());
     registerAdapter(SessionsAdapter());

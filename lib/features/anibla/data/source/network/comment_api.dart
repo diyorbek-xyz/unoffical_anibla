@@ -1,3 +1,4 @@
+import 'package:application/core/network/clients/anibla_client.dart';
 import 'package:application/shared/models/api_response.dart';
 import 'package:application/features/anibla/data/models/response/comment_response.dart';
 import 'package:dio/dio.dart';
@@ -7,7 +8,7 @@ part 'comment_api.g.dart';
 
 @RestApi()
 abstract class CommentApi {
-  factory CommentApi(Dio dio) = _CommentApi;
+  factory CommentApi(AniblaClient dio) = _CommentApi;
 
   @GET('/v1/comments/{type}/{id}')
   Future<HttpResponse<ApiResponse<CommentResponse>>> getAnimeComments(

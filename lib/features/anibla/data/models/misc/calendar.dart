@@ -10,9 +10,9 @@ part 'calendar.freezed.dart';
 @HiveType(typeId: 302)
 abstract class Calendar with _$Calendar {
   const factory Calendar({
-    @Default(Pagination()) @HiveField(0) final Pagination pagination,
-    @Default([]) @HiveField(1) final List<Timer> timers,
-    @Default("") @HiveField(2) final String date,
+    @Default(Pagination()) @HiveField(0) Pagination pagination,
+    @Default([]) @HiveField(1) List<Timer> timers,
+    @Default("") @HiveField(2) String date,
   }) = _Calendar;
 
   factory Calendar.fromJson(Map<String, dynamic> json) => _$CalendarFromJson(json);

@@ -32,6 +32,7 @@ class ErrorMessages {
     HttpStatus.requestTimeout => ErrorMessages.requestTimeout,
     _ => "${ErrorMessages.unknown} $status",
   };
+
   static String fromMessage(String message) => switch (message) {
     Errors.connectionTimeout => ErrorMessages.requestTimeout,
     Errors.seriesAlreadyExist => ErrorMessages.conflict,

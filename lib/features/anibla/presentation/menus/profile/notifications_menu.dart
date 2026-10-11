@@ -1,3 +1,4 @@
+import 'package:application/features/anibla/data/models/main/profile.dart';
 import 'package:application/shared/widgets/error.dart';
 import 'package:application/shared/widgets/list.dart';
 import 'package:application/features/anibla/presentation/controllers/profile_controller.dart';
@@ -7,14 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
-class NotificationsMenu extends StatefulWidget {
-  const NotificationsMenu({super.key});
+class NotificationsMenu extends StatelessWidget {
+  final Profile profile;
+  NotificationsMenu(this.profile, {super.key});
 
-  @override
-  State<NotificationsMenu> createState() => _NotificationsMenuState();
-}
-
-class _NotificationsMenuState extends State<NotificationsMenu> {
   final ProfileController profileController = sl<ProfileController>();
 
   @override

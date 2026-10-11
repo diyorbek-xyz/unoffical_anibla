@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
-class BackIntent() extends Intent{}
+class BackIntent extends Intent {
+  const BackIntent();
+}
 
 class KeyboardShortcuts extends StatelessWidget {
   final Widget child;

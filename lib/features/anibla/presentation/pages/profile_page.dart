@@ -1,40 +1,46 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/features/anibla/data/models/misc/tab_item.dart';
-import 'package:application/shared/widgets/error.dart';
+import 'package:application/features/anibla/data/models/main/profile.dart';
+import 'package:application/shared/utils/extensions.dart';
 import 'package:application/features/anibla/presentation/controllers/profile_controller.dart';
-import 'package:application/features/anibla/presentation/controllers/profile_errors.dart';
 import 'package:application/features/anibla/presentation/menus/profile/devices_menu.dart';
 import 'package:application/features/anibla/presentation/menus/profile/infos_menu.dart';
 import 'package:application/features/anibla/presentation/menus/profile/notifications_menu.dart';
 import 'package:application/features/anibla/presentation/menus/profile/plans_menu.dart';
 import 'package:application/features/anibla/presentation/menus/profile/privacy_settings.dart';
 import 'package:application/features/anibla/presentation/widgets/avatar_selector.dart';
-import 'package:application/features/anibla/presentation/widgets/sessions.dart';
 import 'package:application/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:signals_flutter/signals_flutter.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 import 'package:application/shared/widgets/responsive.dart';
 import 'package:application/features/anibla/presentation/dialogs/logout_modal.dart';
 
-final List<TabItem> tabs = [
+const tabs = <TabItem>[
   TabItem(path: "infos", activeIcon: Icons.info, icon: Icons.info_outline, label: "Profil ma'lumotlari"),
   TabItem(path: "notifications", activeIcon: Icons.notifications, icon: Icons.notifications_outlined, label: "Bildirishnomalar"),
   TabItem(path: "plans", activeIcon: Icons.verified, icon: Icons.verified_outlined, label: "Obunalar"),
   TabItem(path: "devices", activeIcon: Icons.devices, icon: Icons.devices_outlined, label: "Qurilmalar"),
   TabItem(path: "privacy", activeIcon: Icons.privacy_tip, icon: Icons.privacy_tip_outlined, label: "Xavfsizlik sozlamalari"),
 ];
-final List<Widget> views = [ProfileInfosMenu(), NotificationsMenu(), PlansMenu(), ProfileDevicesMenu(), PrivacySettings()];
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  final Profile profile;
+  const ProfilePage(this.profile, {super.key});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  late final views = <Widget>[
+    ProfileInfosMenu(widget.profile),
+    NotificationsMenu(widget.profile),
+    PlansMenu(widget.profile),
+    ProfileDevicesMenu(widget.profile),
+    PrivacySettings(widget.profile),
+  ];
+
   final ProfileController profileController = sl<ProfileController>();
 
   int currentIndex = 0;
@@ -44,77 +50,62 @@ class _ProfilePageState extends State<ProfilePage> {
   void goToTabs() => setState(() => inTabs = true);
 
   @override
-  Widget build(BuildContext context) {
-    return Responsive.provider(
-      (context, resp) => SignalAnimatedBuilder(
-        child: sliverMethod(),
-        builder: (context, child) {
-          final state = profileController.profileSignal.value;
-          if (state.hasError) {
-            return switch (state.error as ProfileFailure) {
-              ProfileLimitSession(:final sessions) => SessionsFailureWidget(sessions: sessions),
-              ProfileUnauthorized() => unauthorizedBuilder(context),
-              ProfileFailed(:final message) => ErrorBuilder(message: message, refresh: profileController.refreshAll),
-            };
-          }
-          return Skeletonizer(
-            justifyMultiLineText: true,
-            effect: PulseEffect(duration: Duration(seconds: 1), from: context.appColors.primary, to: context.appColors.onPrimary),
-            enabled: state.value == null || state.isLoading,
-            child: child!,
-          );
-        },
-      ),
-    );
-  }
-
-  Widget sliverMethod() => SignalBuilder(
+  Widget build(BuildContext context) => SignalBuilder(
     builder: (context) {
-      final state = profileController.profileSignal.value;
-      final resp = Responsive.of(context);
-      return Skeletonizer(
-        justifyMultiLineText: true,
-        effect: PulseEffect(duration: Duration(seconds: 1), from: context.appColors.primary, to: context.appColors.onPrimary),
-        enabled: state.isLoading,
-        child: (resp.isMobile && !inTabs)
-            ? Column(
-                children: [
-                  ListTile(
-                    leading: IconButton(onPressed: goToTabs, icon: Icon(Icons.keyboard_arrow_left)),
-                    title: Text(tabs[currentIndex].label),
-                    minTileHeight: 70,
-                  ),
-                  Expanded(child: views[currentIndex]),
-                ],
-              )
-            : SingleChildScrollView(
-                padding: .only(bottom: resp.isMobile ? 50 : 0),
-                child: Column(
-                  children: [
-                    resp.isMobile ? Padding(padding: .symmetric(vertical: 30, horizontal: 15), child: basicInfo) : basicInfo,
-                    Padding(
-                      padding: resp.isMobile ? .symmetric(horizontal: 5) : .only(right: 15),
-                      child: resp.isMobile ? mobileBody() : desktopBody(),
-                    ),
-                  ],
-                ),
+      final isMobile = context.isMobile;
+      if (isMobile && !inTabs) {
+        return Column(
+          children: [
+            ListTile(
+              leading: IconButton(onPressed: goToTabs, icon: Icon(Icons.keyboard_arrow_left)),
+              title: Text(tabs[currentIndex].label),
+              minTileHeight: 70,
+            ),
+            Expanded(child: views[currentIndex]),
+          ],
+        );
+      }
+      return SingleChildScrollView(
+        padding: .only(bottom: isMobile ? 50 : 0),
+        child: Column(
+          children: [
+            widget.profile.map(
+              anibla: (value) => basicInfo(
+                balance: value.balance,
+                image: value.avatar,
+                name: value.name,
+                tokenId: value.tokenId,
+                isSubscribed: value.subscription != null,
+                isLoading: true,
               ),
+              mano: (value) => basicInfo(
+                balance: value.balance,
+                image: value.avatar,
+                isLoading: true,
+                isSubscribed: false,
+                name: value.name,
+                tokenId: "",
+              ),
+            ),
+            Padding(padding: isMobile ? .symmetric(horizontal: 5) : .only(right: 15), child: isMobile ? mobileBody : desktopBody),
+          ],
+        ),
       );
     },
   );
 
-  Widget mobileBody() => navTabs();
+  Widget get mobileBody => navTabs;
 
-  Widget desktopBody() => Row(
+  Widget get desktopBody => Row(
     spacing: 10,
     crossAxisAlignment: .start,
     children: [
-      SizedBox(width: 350, child: navTabs()),
+      SizedBox(width: 350, child: navTabs),
       Expanded(child: views[currentIndex]),
     ],
   );
 
-  Widget navTabs() => ListView.separated(
+  Widget get navTabs => ListView.separated(
     physics: NeverScrollableScrollPhysics(),
     shrinkWrap: true,
     addRepaintBoundaries: true,
@@ -147,43 +138,50 @@ class _ProfilePageState extends State<ProfilePage> {
     },
   );
 
-  Widget get basicInfo => SignalBuilder(
+  Widget basicInfo({
+    required String image,
+    required double balance,
+    required String name,
+    required bool isLoading,
+    required bool isSubscribed,
+    String? tokenId,
+  }) => SignalBuilder(
     builder: (context) {
-      final state = profileController.profileSignal.value;
-      final isLoading = !state.hasValue;
-      final data = state.value ?? profileController.fakeProfile;
       return PlatformBuilder(
         containerBuilder: (context, _, isMobile, child) => Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20).add(.only(top: isMobile ? 0 : 40)),
           child: child,
         ),
-        mobileBuilder: (_, _) => Column(
-          crossAxisAlignment: .center,
-          mainAxisAlignment: .start,
-          children: [
-            AvatarSelector(url: data.image, isLoading: isLoading),
+        mobileBuilder: (_, _) => Padding(
+          padding: .symmetric(vertical: 30, horizontal: 15),
+          child: Column(
+            crossAxisAlignment: .center,
+            mainAxisAlignment: .start,
+            children: [
+              AvatarSelector(url: image, isLoading: isLoading),
 
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(text: data.name, style: TextStyle(fontSize: 24)),
-                  if (data.subscription != null) WidgetSpan(child: Icon(Icons.verified, color: context.appColors.onSurface)),
-                ],
+              RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(text: name, style: TextStyle(fontSize: 24)),
+                    if (isSubscribed) WidgetSpan(child: Icon(Icons.verified, color: context.appColors.onSurface)),
+                  ],
+                ),
               ),
-            ),
-            RichText(
-              text: TextSpan(
-                style: TextStyle(fontSize: 16, color: Colors.white70),
-                children: [TextSpan(text: "Balans: ${data.balance} so'm")],
+              RichText(
+                text: TextSpan(
+                  style: TextStyle(fontSize: 16, color: Colors.white70),
+                  children: [TextSpan(text: "Balans: $balance so'm")],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         desktopBuilder: (_, _) => Row(
           crossAxisAlignment: .center,
           spacing: 10,
           children: [
-            AvatarSelector(url: data.image, isLoading: isLoading),
+            AvatarSelector(url: image, isLoading: isLoading),
             Column(
               mainAxisAlignment: .center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,18 +190,18 @@ class _ProfilePageState extends State<ProfilePage> {
                 RichText(
                   text: TextSpan(
                     children: [
-                      TextSpan(text: data.name, style: TextStyle(fontSize: 24)),
-                      if (data.subscription != null) WidgetSpan(child: Icon(Icons.verified, color: context.appColors.onSurface)),
+                      TextSpan(text: name, style: TextStyle(fontSize: 24)),
+                      if (isSubscribed) WidgetSpan(child: Icon(Icons.verified, color: context.appColors.onSurface)),
                     ],
                   ),
                 ),
-                Text("Balans: ${data.balance} so'm", style: TextStyle(fontSize: 16, color: Colors.white70)),
+                Text("Balans: $balance so'm", style: TextStyle(fontSize: 16, color: Colors.white70)),
               ],
             ),
             Expanded(child: Container()),
             IconButton(onPressed: () => profileController.refreshAll(), icon: Icon(Icons.refresh)),
             IconButton(
-              onPressed: () => showLogoutModal(context, tokenId: data.tokenId, isCurrent: true),
+              onPressed: () => tokenId != null ? showLogoutModal(context, tokenId: tokenId, isCurrent: true) : null,
               icon: Icon(Icons.exit_to_app),
             ),
             SizedBox(width: 30),

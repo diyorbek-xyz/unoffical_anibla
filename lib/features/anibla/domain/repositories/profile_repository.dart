@@ -4,8 +4,9 @@ import 'package:application/core/network/resources/failure.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class ProfileRepository {
-  Future<Either<Failure, Profile>> getProfile();
   Future<Either<Failure, bool>> exitSession(String tokenId);
   Future<Either<Failure, List<Plan>>> getPlans();
+  Future<Either<Failure, Profile>> getManoProfile();
+  Future<Either<Failure, Profile>> getAniblaProfile();
   Future<Either<Failure, Profile>> updateProfile(Profile profile);
 }

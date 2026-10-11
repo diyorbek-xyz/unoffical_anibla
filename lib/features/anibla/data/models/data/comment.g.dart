@@ -14,9 +14,11 @@ _Comment _$CommentFromJson(Map<String, dynamic> json) => _Comment(
   isCurrentUser: (json['isCurrentUser'] as num?)?.toInt() ?? 0,
   repliesCount: (json['replies_count'] as num?)?.toInt() ?? 0,
   createdAt: json['createdAt'] as String? ?? "",
-  user: json['user'] == null ? const Profile() : Profile.fromJson(json['user']),
+  user: json['user'] == null
+      ? const Profile.anibla()
+      : Profile.fromJson(json['user']),
   userId: json['user_id'] == null
-      ? const Profile()
+      ? const Profile.anibla()
       : Profile.fromJson(json['user_id']),
 );
 

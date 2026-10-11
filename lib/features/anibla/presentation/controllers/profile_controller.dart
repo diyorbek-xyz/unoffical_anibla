@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:application/shared/utils/extensions.dart';
 import 'package:application/features/anibla/data/models/main/profile.dart';
+import 'package:application/shared/utils/extensions.dart';
 import 'package:application/features/anibla/data/models/misc/plan.dart';
 import 'package:application/features/anibla/data/models/response/notification_response.dart';
 import 'package:application/features/anibla/domain/repositories/notification_repository.dart';
@@ -14,9 +14,9 @@ class ProfileController {
   final NotificationRepository _notificationRepository;
   ProfileController(this._profileRepository, this._notificationRepository);
 
-  late final profileSignal = futureSignal(() async {
+  late final aniblaProfile = futureSignal(() async {
     try {
-      final either = await _profileRepository.getProfile();
+      final either = await _profileRepository.getAniblaProfile();
       return either.getData();
     } on Failure catch (e) {
       throw switch (e) {
@@ -27,7 +27,13 @@ class ProfileController {
       };
     }
   });
-  final fakeProfile = Profile();
+  late final manoProfile = futureSignal(() async {
+    final either = await _profileRepository.getManoProfile();
+    return either.getData();
+  });
+
+  final fakeAnibla = Profile.anibla();
+  final fakeMano = Profile.mano();
 
   late final notificationSignal = futureSignal(() async {
     final either = await _notificationRepository.getNotifications();
@@ -49,7 +55,7 @@ class ProfileController {
       final either = await _profileRepository.exitSession(tokenId);
       final success = either.getData();
 
-      if (success) await profileSignal.refresh();
+      if (success) await aniblaProfile.refresh();
       sessionExitSignal.set(const SessionState());
     } on Failure catch (e) {
       sessionExitSignal.set(SessionState(hasError: true, error: e.message));
@@ -59,17 +65,17 @@ class ProfileController {
   }
 
   void changeAvatar(String url) async {
-    final newProfile = await _profileRepository.updateProfile(Profile(image: url));
-    newProfile.fold((l) => l, profileSignal.setValue);
+    final newProfile = await _profileRepository.updateProfile(Profile.anibla(avatar: url));
+    newProfile.fold((l) => l, aniblaProfile.setValue);
   }
 
   void changeName(String name) async {
-    final newProfile = await _profileRepository.updateProfile(Profile(name: name));
-    newProfile.fold((l) => l, profileSignal.setValue);
+    final newProfile = await _profileRepository.updateProfile(Profile.anibla(name: name));
+    newProfile.fold((l) => l, aniblaProfile.setValue);
   }
 
   Future<void> refreshAll() async {
-    profileSignal.refresh();
+    aniblaProfile.refresh();
     plansSignal.refresh();
     notificationSignal.refresh();
   }

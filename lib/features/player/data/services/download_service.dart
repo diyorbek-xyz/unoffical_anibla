@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:application/core/network/clients/anibla_client.dart';
 import 'package:application/shared/utils/utils.dart';
 import 'package:application/features/anibla/data/models/data/video.dart';
 import 'package:application/features/player/data/model/download/completed_models.dart';
@@ -8,12 +9,11 @@ import 'package:application/features/player/data/model/parser_models.dart';
 import 'package:application/features/player/data/model/service/download_models.dart';
 import 'package:application/features/player/data/services/dowload_hls.dart';
 import 'package:application/features/player/data/source/local/downloads.dart';
-import 'package:dio/dio.dart';
 import 'package:rxdart/rxdart.dart';
 
 class HlsDownloadService {
   final DownloadsLocal storage;
-  final Dio dio;
+  final AniblaClient dio;
   HlsDownloadService(this.storage, this.dio);
 
   Map<String, DownloadState> states = {};

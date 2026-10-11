@@ -1,3 +1,4 @@
+import 'package:application/core/network/clients/anibla_client.dart';
 import 'package:application/shared/models/api_response.dart';
 import 'package:application/features/anibla/data/models/helper/pagination.dart';
 import 'package:application/features/anibla/data/models/local/saved_anime.dart';
@@ -10,7 +11,7 @@ part 'anime_api.g.dart';
 
 @RestApi()
 abstract class AnimeApi {
-  factory AnimeApi(Dio dio) => _AnimeApi(dio);
+  factory AnimeApi(AniblaClient dio) = _AnimeApi;
 
   @GET("/v1/{type}/{slug}")
   Future<HttpResponse<ApiResponse<Anime>>> getSerie(@Path("type") String type, @Path("slug") String slug);
@@ -31,5 +32,4 @@ abstract class AnimeApi {
   Future<HttpResponse<ApiResponse<dynamic>>> unsaveSeries(@Path("id") String body);
   @DELETE("/v1/saved-movies/{id}")
   Future<HttpResponse<ApiResponse<dynamic>>> unsaveMovies(@Path("id") String body);
-
 }

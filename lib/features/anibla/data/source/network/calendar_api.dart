@@ -1,3 +1,4 @@
+import 'package:application/core/network/clients/anibla_client.dart';
 import 'package:application/shared/models/api_response.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
@@ -6,11 +7,8 @@ part 'calendar_api.g.dart';
 
 @RestApi()
 abstract class CalendarApi {
-  factory CalendarApi(Dio dio) = _CalendarApi;
+  factory CalendarApi(AniblaClient dio) = _CalendarApi;
 
   @GET('/v1/timer/time/{date}')
-  Future<HttpResponse<ApiResponse<dynamic>>> getCalendar(
-    @Path("date") String date, {
-    @Query("limit") int limit = 10,
-  });
+  Future<HttpResponse<ApiResponse<dynamic>>> getCalendar(@Path("date") String date, {@Query("limit") int limit = 10});
 }

@@ -14,13 +14,13 @@ enum DownloadStatus { downloading, paused, completed, cancelled }
 sealed class DownloadState with _$DownloadState {
   const DownloadState._();
   factory DownloadState({
-    @HiveField(0) required final String id,
-    @HiveField(1) required final int downloaded,
-    @HiveField(2) required final int total,
-    @HiveField(3) required final double speed,
-    @HiveField(4) required final DownloadStatus status,
-    @HiveField(5) required final int bandwidth,
-    @HiveField(6) required final double duration,
+    @HiveField(0) required String id,
+    @HiveField(1) required int downloaded,
+    @HiveField(2) required int total,
+    @HiveField(3) required double speed,
+    @HiveField(4) required DownloadStatus status,
+    @HiveField(5) required int bandwidth,
+    @HiveField(6) required double duration,
   }) = _DownloadState;
 
   double get progress => total == 0 ? 0 : downloaded / total;
@@ -33,11 +33,11 @@ sealed class DownloadState with _$DownloadState {
 sealed class DownloadTask with _$DownloadTask {
   const DownloadTask._();
   factory DownloadTask({
-    @HiveField(0) required final MasterPlaylist masterPlaylist,
-    @HiveField(1) required final MediaPlaylist mediaPlaylist,
-    @HiveField(2) required final DownloadInfos infos,
+    @HiveField(0) required MasterPlaylist masterPlaylist,
+    @HiveField(1) required MediaPlaylist mediaPlaylist,
+    @HiveField(2) required DownloadInfos infos,
     @HiveField(4) @Default(false) bool isCompleted,
-    final BehaviorSubject<DownloadState>? streamController,
+    BehaviorSubject<DownloadState>? streamController,
   }) = _DownloadTask;
 
   int get total => mediaPlaylist.chunks.length;

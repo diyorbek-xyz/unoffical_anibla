@@ -1,3 +1,4 @@
+import 'package:application/core/network/clients/anibla_client.dart';
 import 'package:application/shared/models/api_response.dart';
 import 'package:application/features/anibla/data/models/main/episode.dart';
 import 'package:dio/dio.dart';
@@ -7,7 +8,7 @@ part 'episode_api.g.dart';
 
 @RestApi()
 abstract class EpisodeApi {
-  factory EpisodeApi(Dio dio) => _EpisodeApi(dio);
+  factory EpisodeApi(AniblaClient dio) = _EpisodeApi;
 
   @GET("/v1/episodes/{animeSlug}/{seasonSlug}")
   Future<HttpResponse<ApiResponse<List<Episode>>>> getEpisodes(

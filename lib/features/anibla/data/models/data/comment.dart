@@ -14,8 +14,8 @@ sealed class Comment with _$Comment {
     @Default(0) int isCurrentUser,
     @Default(0) @JsonKey(name: "replies_count") int repliesCount,
     @Default("") String createdAt,
-    @Default(Profile()) Profile user,
-    @Default(Profile()) @JsonKey(name: "user_id") Profile userId,
+    @Default(Profile.anibla()) Profile user,
+    @Default(Profile.anibla()) @JsonKey(name: "user_id") Profile userId,
   }) = _Comment;
 
   factory Comment.fromJson(Map<String, dynamic> json) => _$CommentFromJson(json);

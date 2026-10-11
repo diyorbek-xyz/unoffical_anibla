@@ -1,9 +1,12 @@
+import 'package:application/core/network/clients/anibla_client.dart';
+import 'package:application/core/network/clients/mano_client.dart';
+import 'package:application/features/anibla/data/adapters/profile_adapter.dart';
+import 'package:application/features/anibla/data/models/main/profile.dart';
 import 'package:application/features/anibla/presentation/controllers/comment_controller.dart';
 import 'package:application/features/player/presentation/controller/player_controller.dart';
 import 'package:application/shared/utils/utils.dart';
 import 'package:application/features/anibla/data/models/data/carousel_item.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
-import 'package:application/features/anibla/data/models/main/profile.dart';
 import 'package:application/features/anibla/data/models/misc/calendar.dart';
 import 'package:application/features/anibla/data/repositories/profile_repository_impl.dart';
 import 'package:application/features/anibla/data/source/local/profile_local.dart';
@@ -64,7 +67,6 @@ import 'package:application/features/anibla/data/repositories/slider_repository_
 import 'package:application/features/anibla/data/source/network/slider_api.dart';
 import 'package:application/features/anibla/domain/repositories/slider_repository.dart';
 import 'package:application/hive_registrar.g.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -73,43 +75,30 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:media_kit/media_kit.dart';
 
 final sl = GetIt.instance;
-final secureStorage = FlutterSecureStorage();
+
+Future<void> setupHive() async {
+  final cacheDir = await getApplicationCacheDirectory();
+  await Hive.initFlutter("${cacheDir.path}/boxes/");
+  Hive.registerAdapters();
+  Hive.registerAdapter(ProfileAdapter());
+  await Hive.deleteBoxFromDisk("cacheBox");
+}
+
+Future<void> setupMiscs() async {
+  MediaKit.ensureInitialized();
+  await video_caching.VideoProxy.init();
+  await Utils.initFullscreen();
+  await dotenv.load(fileName: '.env');
+  await initializeDateFormatting('uz');
+}
 
 Future<void> initializeDependencies() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await video_caching.VideoProxy.init();
-  MediaKit.ensureInitialized();
-
-  // Setup local Storage;
-  final cacheDir = await getApplicationCacheDirectory();
-  await Hive.initFlutter("${cacheDir.path}/boxes/");
-  Hive.registerAdapters();
-
-  // Setup miscs;
-  await Utils.initFullscreen();
-  await dotenv.load(fileName: '.env');
-  await initializeDateFormatting('uz');
-
-  final baseOptions = BaseOptions(
-    baseUrl: "${dotenv.env['BASE_URL']}/api",
-    headers: {
-      "User-Agent": "okhttp/4.12.0",
-      "Accept-Encoding": "gzip",
-      "accept": "application/json",
-      "Connection": "Keep-Alive",
-      "x-platform": "desktop",
-      "x-platform-os": "arch",
-      "x-device": "Arch Linux",
-      "x-app-version": "2.4.9",
-      "Authorization":
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNmE2OWFlNzJhODA0YmNkOTZmYjY3N2M2IiwidG9rZW5faWQiOiI1NjI0MDYwNS1kOWE0LTQ4ODAtYWQ4NS0yYTJmNmQxODdjZTMiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzkwNDM0Nzk4LCJleHAiOjE3OTE2NDQzOTh9.FaIVkst2ZuU93CrdvSc6hM2CfmUB9ISakoeHHHvVctQ",
-    },
-  );
-  final dio = Dio(baseOptions);
+  await setupHive();
+  await setupMiscs();
 
   // Open boxes;
-  await Hive.deleteBoxFromDisk("cacheBox");
   final calendarBox = await Hive.openBox<Calendar>("calendarBox");
   final profileBox = await Hive.openBox<Profile>("profileBox");
   final sliderBox = await Hive.openBox<CarouselItem>("sliderBox");
@@ -123,12 +112,21 @@ Future<void> initializeDependencies() async {
 
   // Register / Setup network logic;
   sl
-    ..registerSingleton<FlutterSecureStorage>(secureStorage)
+    ..registerSingleton<FlutterSecureStorage>(FlutterSecureStorage())
     ..registerSingleton<AuthStorage>(AuthStorageImpl(sl()))
     ..registerLazySingleton<ErrorInterceptor>(() => ErrorInterceptor())
     ..registerLazySingleton<AuthInterceptor>(() => AuthInterceptor(sl()));
-  dio.interceptors.add(sl<ErrorInterceptor>());
-  dio.interceptors.add(sl<AuthInterceptor>());
+
+  final aniblaClient = AniblaClient();
+  final manoClient = ManoClient();
+
+  aniblaClient.interceptors
+    ..add(sl<ErrorInterceptor>())
+    ..add(sl<AuthInterceptor>());
+
+  manoClient.interceptors
+    ..add(sl<ErrorInterceptor>())
+    ..add(sl<AuthInterceptor>());
 
   sl
     // Register local storages;
@@ -141,9 +139,9 @@ Future<void> initializeDependencies() async {
     ..registerSingleton<Box<DownloadTask>>(downloadsBox)
     ..registerSingleton<Box<String>>(searchHistory)
     // Register miscs;
-    ..registerSingleton<Dio>(dio)
+    ..registerSingleton<AniblaClient>(aniblaClient)
+    ..registerSingleton<ManoClient>(manoClient)
     ..registerSingleton<DotEnv>(dotenv)
-    ..registerSingleton<BaseOptions>(baseOptions)
     // Register remote Api Services;
     ..registerSingleton<SliderApi>(SliderApi(sl()))
     ..registerSingleton<CalendarApi>(CalendarApi(sl()))
@@ -174,7 +172,7 @@ Future<void> initializeDependencies() async {
     ..registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl(), sl()))
     ..registerLazySingleton<EpisodeRepository>(() => EpisodeRepositoryImpl(sl(), sl(), sl()))
     ..registerLazySingleton<CommentRepository>(() => CommentRepositoryImpl(sl()))
-    ..registerLazySingleton<ProfileRepository>(() => ProfileRepositoryImpl(sl(), sl(), sl(), sl()))
+    ..registerLazySingleton<ProfileRepository>(() => ProfileRepositoryImpl(sl(), sl(), sl(), sl(), sl()))
     ..registerLazySingleton<AnimeRepository>(() => AnimeRepositoryImpl(sl(), sl(), sl()))
     ..registerLazySingleton<SeasonRepository>(() => SeasonRepositoryImpl(sl()))
     ..registerLazySingleton<ExploreRepository>(() => ExploreRepositoryImpl(sl(), sl(), sl()))
