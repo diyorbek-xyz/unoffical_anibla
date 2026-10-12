@@ -8,8 +8,8 @@ part of 'mano_authback.dart';
 
 _ManoAuthed _$ManoAuthedFromJson(Map<String, dynamic> json) => _ManoAuthed(
   user: json['user'] == null
-      ? const Profile.mano()
-      : Profile.fromJson(json['user']),
+      ? const ManoProfile()
+      : ManoProfile.fromJson(json['user'] as Map<String, dynamic>),
   accessToken: json['access_token'] as String? ?? "",
   refreshToken: json['refresh_token'] as String? ?? "",
   expiresIn: (json['expires_in'] as num?)?.toInt() ?? 0,

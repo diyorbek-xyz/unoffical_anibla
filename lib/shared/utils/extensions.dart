@@ -29,6 +29,10 @@ extension StringExt on String {
   String? toNullable() => trim().isEmpty ? null : this;
 }
 
+extension IntExt on int {
+  int? toNullable(int minInt) => this < minInt ? null : this;
+}
+
 extension DateFormatting on DateTime {
   String formatCompact({String divider = "-"}) => DateFormat("d${divider}MM${divider}y", 'uz-UZ').format(this);
   String formatDay() => toBeginningOfSentenceCase(DateFormat(DateFormat.MONTH_DAY, 'uz-UZ').format(this));

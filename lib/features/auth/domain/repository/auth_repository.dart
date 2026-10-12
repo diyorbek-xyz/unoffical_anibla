@@ -1,4 +1,4 @@
-import 'package:application/features/anibla/data/models/main/profile.dart';
+import 'package:application/features/anibla/data/models/main/mano_profile.dart';
 import 'package:application/features/auth/data/models/login_model.dart';
 import 'package:application/core/network/resources/failure.dart';
 import 'package:application/features/auth/data/models/mano_callback.dart';
@@ -10,7 +10,6 @@ abstract class AuthRepository {
   Future<Either<Failure, ConfirmedModel>> confirmCode(ConfirmModel body);
   Future<Either<Failure, bool>> logOut(String tokenId, bool isCurrent);
 
-  Future<Either<Failure, ManoCallback>> manoCallback(ManoCallfront request);
-  Future<Either<Failure, Profile>> manoAuth(String userId);
-  Future<Either<Failure, Profile>> manoRefreshToken();
+  Future<Either<Failure, ManoCallback>> manoCallback([ManoCallfront request]);
+  Future<Either<Failure, ManoProfile>> manoAuth(String userId);
 }

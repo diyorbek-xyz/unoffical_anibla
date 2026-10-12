@@ -1,4 +1,4 @@
-import 'package:application/features/anibla/data/models/main/profile.dart';
+import 'package:application/features/anibla/data/models/main/anibla_profile.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'comment.g.dart';
@@ -14,8 +14,8 @@ sealed class Comment with _$Comment {
     @Default(0) int isCurrentUser,
     @Default(0) @JsonKey(name: "replies_count") int repliesCount,
     @Default("") String createdAt,
-    @Default(Profile.anibla()) Profile user,
-    @Default(Profile.anibla()) @JsonKey(name: "user_id") Profile userId,
+    @Default(AniblaProfile()) AniblaProfile user,
+    @Default(AniblaProfile()) @JsonKey(name: "user_id") AniblaProfile userId,
   }) = _Comment;
 
   factory Comment.fromJson(Map<String, dynamic> json) => _$CommentFromJson(json);

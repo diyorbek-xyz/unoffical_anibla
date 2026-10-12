@@ -1,18 +1,18 @@
-import 'package:application/features/anibla/data/models/main/profile.dart';
+import 'package:application/features/anibla/data/models/main/anibla_profile.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 
 abstract class ProfileLocal {
-  Future<void> saveProfile(Profile profile);
-  Future<Profile?> getProfile();
+  Future<void> saveProfile(AniblaProfile profile);
+  Future<AniblaProfile?> getProfile();
   Future<void> removeProfile();
 }
 
 class ProfileLocalImpl implements ProfileLocal {
-  final Box<Profile> profileBox;
+  final Box<AniblaProfile> profileBox;
   const ProfileLocalImpl(this.profileBox);
 
   @override
-  Future<Profile?> getProfile() async {
+  Future<AniblaProfile?> getProfile() async {
     return profileBox.get("profile");
   }
 
@@ -22,7 +22,7 @@ class ProfileLocalImpl implements ProfileLocal {
   }
 
   @override
-  Future<void> saveProfile(Profile profile) async {
+  Future<void> saveProfile(AniblaProfile profile) async {
     await profileBox.put("profile", profile);
   }
 }

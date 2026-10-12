@@ -1,4 +1,5 @@
 import 'package:application/core/config/theme/app_colors.dart';
+import 'package:application/features/anibla/data/view_model/profile_view.dart';
 import 'package:application/features/anibla/presentation/pages/profile_page.dart';
 import 'package:application/shared/widgets/error.dart';
 import 'package:application/features/anibla/presentation/controllers/profile_controller.dart';
@@ -30,38 +31,68 @@ class _ProfileWrapperState extends State<ProfileWrapper> {
   @override
   Widget build(BuildContext context) => Scaffold(
     floatingActionButtonLocation: .startFloat,
-    floatingActionButton: FloatingActionButton(
+    floatingActionButton: FloatingActionButton.extended(
+      icon: Icon(Icons.book),
+      label: Text("Manoga kirish"),
       onPressed: () => context.goNamed(widget.isMano ? "anibla" : "mano"),
-      child: Icon(Icons.book),
     ),
     body: SignalAnimatedBuilder(
       builder: (context, child) {
         final aniblaState = profileController.aniblaProfile.value;
         final manoState = profileController.manoProfile.value;
-        if (manoState.hasError) {
-          return ErrorBuilder(message: manoState.error.toString(), refresh: profileController.refreshAll);
+        final notfState = profileController.notificationSignal.value;
+        final plansState = profileController.plansSignal.value;
+        if (manoState.hasError && widget.isMano) {
+          print(manoState.error.runtimeType);
+          return switch (manoState.error as ProfileFailure) {
+            ProfileUnauthorized() => manoUnauthorizedBuilder(),
+            ProfileFailed(:final message) => ErrorBuilder(message: message, refresh: profileController.refreshAll),
+            _ => Text("data"),
+          };
         }
-        if (aniblaState.hasError) {
+        if (aniblaState.hasError && !widget.isMano) {
           return switch (aniblaState.error as ProfileFailure) {
             ProfileLimitSession(:final sessions) => SessionsFailureWidget(sessions: sessions),
-            ProfileUnauthorized() => unauthorizedBuilder(context),
+            ProfileUnauthorized() => aniblaUnauthorizedBuilder(),
             ProfileFailed(:final message) => ErrorBuilder(message: message, refresh: profileController.refreshAll),
           };
         }
-        final profile = widget.isMano ? manoState.value : aniblaState.value;
-        final fakeProfile = widget.isMano ? profileController.fakeMano : profileController.fakeAnibla;
-        final isLoading = aniblaState.isLoading || manoState.isLoading;
+        final mano = manoState.value ?? profileController.fakeMano;
+        final anibla = aniblaState.value ?? profileController.fakeAnibla;
+        final isLoading = aniblaState.isLoading || manoState.isLoading || notfState.isLoading || plansState.isLoading;
+        final profile = widget.isMano ? ProfileView.fromMano(mano) : ProfileView.fromAnibla(anibla);
+        final notifications = notfState.value ?? profileController.fakeNotification;
+        final plans = plansState.value ?? profileController.fakePlans;
         return Skeletonizer(
+          enabled: isLoading,
           justifyMultiLineText: true,
           effect: PulseEffect(duration: Duration(seconds: 1), from: context.appColors.primary, to: context.appColors.onPrimary),
-          enabled: isLoading,
-          child: ProfilePage(profile ?? fakeProfile),
+          child: ProfilePage(
+            notifications: notifications,
+            profile: profile,
+            plans: plans,
+            sessions: anibla.sessions,
+            privacy: anibla.privacySettings,
+          ),
         );
       },
     ),
   );
 
-  SizedBox unauthorizedBuilder(BuildContext context) => SizedBox.expand(
+  SizedBox manoUnauthorizedBuilder() => SizedBox.expand(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
+      spacing: 10,
+      children: [
+        Text("Royxatdan otish", style: TextStyle(fontSize: 28)),
+        ElevatedButton(onPressed: profileController.loginManoWithAnibla, child: Text("Anibla orqali kirish")),
+      ],
+    ),
+  );
+
+  SizedBox aniblaUnauthorizedBuilder() => SizedBox.expand(
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,

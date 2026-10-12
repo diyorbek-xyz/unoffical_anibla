@@ -1,5 +1,5 @@
 import 'package:application/core/network/clients/mano_client.dart';
-import 'package:application/features/anibla/data/models/main/profile.dart';
+import 'package:application/features/anibla/data/models/main/mano_profile.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 
@@ -10,8 +10,8 @@ abstract class ManoProfileApi {
   factory ManoProfileApi(ManoClient dio) = _ManoProfileApi;
 
   @GET("/v2/user/{id}")
-  Future<HttpResponse<Profile>> getProfile(@Path("id") String id);
+  Future<HttpResponse<ManoProfile>> getProfile(@Path("id") String id);
 
   @PUT("/v2/user/{id}")
-  Future<HttpResponse<Profile>> updateProfile(@Path("id") String id, @Body() Map<String, dynamic> body);
+  Future<HttpResponse<ManoProfile>> updateProfile(@Path("id") String id, @Body() Map<String, dynamic> body);
 }

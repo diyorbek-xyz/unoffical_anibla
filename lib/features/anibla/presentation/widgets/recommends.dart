@@ -2,7 +2,7 @@ import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/features/anibla/data/models/helper/pagination.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/features/anibla/presentation/controllers/media_controller.dart';
-import 'package:application/features/anibla/presentation/widgets/anime_card.dart';
+import 'package:application/features/anibla/presentation/widgets/haptic_card.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:application/injection_container.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +67,7 @@ class AnimeRecommends extends StatelessWidget {
                   ),
                   itemBuilder: (context, item, index) => FocusTraversalOrder(
                     order: NumericFocusOrder(index + 0.0),
-                    child: MediaCard.fromAnime(state.value[index], aspectRatio: 9 / 15),
+                    child: HapticCard.fromAnime(state.value[index], aspectRatio: 9 / 15),
                   ),
                 ),
               ),

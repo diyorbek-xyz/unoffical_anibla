@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Comment {
 
-@JsonKey(name: "_id") String get id;@JsonKey(name: "is_active") bool get isActive; int get likesCount; String get message; int get isCurrentUser;@JsonKey(name: "replies_count") int get repliesCount; String get createdAt; Profile get user;@JsonKey(name: "user_id") Profile get userId;
+@JsonKey(name: "_id") String get id;@JsonKey(name: "is_active") bool get isActive; int get likesCount; String get message; int get isCurrentUser;@JsonKey(name: "replies_count") int get repliesCount; String get createdAt; AniblaProfile get user;@JsonKey(name: "user_id") AniblaProfile get userId;
 /// Create a copy of Comment
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,11 +48,11 @@ abstract mixin class $CommentCopyWith<$Res>  {
   factory $CommentCopyWith(Comment value, $Res Function(Comment) _then) = _$CommentCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "_id") String id,@JsonKey(name: "is_active") bool isActive, int likesCount, String message, int isCurrentUser,@JsonKey(name: "replies_count") int repliesCount, String createdAt, Profile user,@JsonKey(name: "user_id") Profile userId
+@JsonKey(name: "_id") String id,@JsonKey(name: "is_active") bool isActive, int likesCount, String message, int isCurrentUser,@JsonKey(name: "replies_count") int repliesCount, String createdAt, AniblaProfile user,@JsonKey(name: "user_id") AniblaProfile userId
 });
 
 
-$ProfileCopyWith<$Res> get user;$ProfileCopyWith<$Res> get userId;
+$AniblaProfileCopyWith<$Res> get user;$AniblaProfileCopyWith<$Res> get userId;
 
 }
 /// @nodoc
@@ -75,26 +75,26 @@ as String,isCurrentUser: null == isCurrentUser ? _self.isCurrentUser : isCurrent
 as int,repliesCount: null == repliesCount ? _self.repliesCount : repliesCount // ignore: cast_nullable_to_non_nullable
 as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String,user: null == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
-as Profile,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as Profile,
+as AniblaProfile,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as AniblaProfile,
   ));
 }
 /// Create a copy of Comment
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$ProfileCopyWith<$Res> get user {
+$AniblaProfileCopyWith<$Res> get user {
   
-  return $ProfileCopyWith<$Res>(_self.user, (value) {
+  return $AniblaProfileCopyWith<$Res>(_self.user, (value) {
     return _then(_self.copyWith(user: value));
   });
 }/// Create a copy of Comment
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$ProfileCopyWith<$Res> get userId {
+$AniblaProfileCopyWith<$Res> get userId {
   
-  return $ProfileCopyWith<$Res>(_self.userId, (value) {
+  return $AniblaProfileCopyWith<$Res>(_self.userId, (value) {
     return _then(_self.copyWith(userId: value));
   });
 }
@@ -176,7 +176,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "_id")  String id, @JsonKey(name: "is_active")  bool isActive,  int likesCount,  String message,  int isCurrentUser, @JsonKey(name: "replies_count")  int repliesCount,  String createdAt,  Profile user, @JsonKey(name: "user_id")  Profile userId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "_id")  String id, @JsonKey(name: "is_active")  bool isActive,  int likesCount,  String message,  int isCurrentUser, @JsonKey(name: "replies_count")  int repliesCount,  String createdAt,  AniblaProfile user, @JsonKey(name: "user_id")  AniblaProfile userId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Comment() when $default != null:
 return $default(_that.id,_that.isActive,_that.likesCount,_that.message,_that.isCurrentUser,_that.repliesCount,_that.createdAt,_that.user,_that.userId);case _:
@@ -197,7 +197,7 @@ return $default(_that.id,_that.isActive,_that.likesCount,_that.message,_that.isC
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "_id")  String id, @JsonKey(name: "is_active")  bool isActive,  int likesCount,  String message,  int isCurrentUser, @JsonKey(name: "replies_count")  int repliesCount,  String createdAt,  Profile user, @JsonKey(name: "user_id")  Profile userId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "_id")  String id, @JsonKey(name: "is_active")  bool isActive,  int likesCount,  String message,  int isCurrentUser, @JsonKey(name: "replies_count")  int repliesCount,  String createdAt,  AniblaProfile user, @JsonKey(name: "user_id")  AniblaProfile userId)  $default,) {final _that = this;
 switch (_that) {
 case _Comment():
 return $default(_that.id,_that.isActive,_that.likesCount,_that.message,_that.isCurrentUser,_that.repliesCount,_that.createdAt,_that.user,_that.userId);}
@@ -214,7 +214,7 @@ return $default(_that.id,_that.isActive,_that.likesCount,_that.message,_that.isC
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "_id")  String id, @JsonKey(name: "is_active")  bool isActive,  int likesCount,  String message,  int isCurrentUser, @JsonKey(name: "replies_count")  int repliesCount,  String createdAt,  Profile user, @JsonKey(name: "user_id")  Profile userId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "_id")  String id, @JsonKey(name: "is_active")  bool isActive,  int likesCount,  String message,  int isCurrentUser, @JsonKey(name: "replies_count")  int repliesCount,  String createdAt,  AniblaProfile user, @JsonKey(name: "user_id")  AniblaProfile userId)?  $default,) {final _that = this;
 switch (_that) {
 case _Comment() when $default != null:
 return $default(_that.id,_that.isActive,_that.likesCount,_that.message,_that.isCurrentUser,_that.repliesCount,_that.createdAt,_that.user,_that.userId);case _:
@@ -229,7 +229,7 @@ return $default(_that.id,_that.isActive,_that.likesCount,_that.message,_that.isC
 @JsonSerializable()
 
 class _Comment implements Comment {
-  const _Comment({@JsonKey(name: "_id") this.id = "", @JsonKey(name: "is_active") this.isActive = false, this.likesCount = 0, this.message = "", this.isCurrentUser = 0, @JsonKey(name: "replies_count") this.repliesCount = 0, this.createdAt = "", this.user = const Profile.anibla(), @JsonKey(name: "user_id") this.userId = const Profile.anibla()});
+  const _Comment({@JsonKey(name: "_id") this.id = "", @JsonKey(name: "is_active") this.isActive = false, this.likesCount = 0, this.message = "", this.isCurrentUser = 0, @JsonKey(name: "replies_count") this.repliesCount = 0, this.createdAt = "", this.user = const AniblaProfile(), @JsonKey(name: "user_id") this.userId = const AniblaProfile()});
   factory _Comment.fromJson(Map<String, dynamic> json) => _$CommentFromJson(json);
 
 @override@JsonKey(name: "_id") final  String id;
@@ -239,8 +239,8 @@ class _Comment implements Comment {
 @override@JsonKey() final  int isCurrentUser;
 @override@JsonKey(name: "replies_count") final  int repliesCount;
 @override@JsonKey() final  String createdAt;
-@override@JsonKey() final  Profile user;
-@override@JsonKey(name: "user_id") final  Profile userId;
+@override@JsonKey() final  AniblaProfile user;
+@override@JsonKey(name: "user_id") final  AniblaProfile userId;
 
 /// Create a copy of Comment
 /// with the given fields replaced by the non-null parameter values.
@@ -275,11 +275,11 @@ abstract mixin class _$CommentCopyWith<$Res> implements $CommentCopyWith<$Res> {
   factory _$CommentCopyWith(_Comment value, $Res Function(_Comment) _then) = __$CommentCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "_id") String id,@JsonKey(name: "is_active") bool isActive, int likesCount, String message, int isCurrentUser,@JsonKey(name: "replies_count") int repliesCount, String createdAt, Profile user,@JsonKey(name: "user_id") Profile userId
+@JsonKey(name: "_id") String id,@JsonKey(name: "is_active") bool isActive, int likesCount, String message, int isCurrentUser,@JsonKey(name: "replies_count") int repliesCount, String createdAt, AniblaProfile user,@JsonKey(name: "user_id") AniblaProfile userId
 });
 
 
-@override $ProfileCopyWith<$Res> get user;@override $ProfileCopyWith<$Res> get userId;
+@override $AniblaProfileCopyWith<$Res> get user;@override $AniblaProfileCopyWith<$Res> get userId;
 
 }
 /// @nodoc
@@ -302,8 +302,8 @@ as String,isCurrentUser: null == isCurrentUser ? _self.isCurrentUser : isCurrent
 as int,repliesCount: null == repliesCount ? _self.repliesCount : repliesCount // ignore: cast_nullable_to_non_nullable
 as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String,user: null == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
-as Profile,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as Profile,
+as AniblaProfile,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as AniblaProfile,
   ));
 }
 
@@ -311,18 +311,18 @@ as Profile,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$ProfileCopyWith<$Res> get user {
+$AniblaProfileCopyWith<$Res> get user {
   
-  return $ProfileCopyWith<$Res>(_self.user, (value) {
+  return $AniblaProfileCopyWith<$Res>(_self.user, (value) {
     return _then(_self.copyWith(user: value));
   });
 }/// Create a copy of Comment
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$ProfileCopyWith<$Res> get userId {
+$AniblaProfileCopyWith<$Res> get userId {
   
-  return $ProfileCopyWith<$Res>(_self.userId, (value) {
+  return $AniblaProfileCopyWith<$Res>(_self.userId, (value) {
     return _then(_self.copyWith(userId: value));
   });
 }

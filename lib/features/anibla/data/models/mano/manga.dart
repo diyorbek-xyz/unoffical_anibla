@@ -1,9 +1,9 @@
 import 'package:application/features/anibla/data/enums/media_type.dart';
-import 'package:application/features/ma-no/data/enums/manga_status.dart';
-import 'package:application/features/ma-no/data/models/chapter.dart';
-import 'package:application/features/ma-no/data/models/mano_category.dart';
-import 'package:application/features/ma-no/data/models/mano_genre.dart';
-import 'package:application/features/ma-no/data/models/mano_translator.dart';
+import 'package:application/features/anibla/data/enums/manga_status.dart';
+import 'package:application/features/anibla/data/models/mano/chapter.dart';
+import 'package:application/features/anibla/data/models/mano/mano_category.dart';
+import 'package:application/features/anibla/data/models/mano/mano_genre.dart';
+import 'package:application/features/anibla/data/models/mano/mano_translator.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part "manga.g.dart";

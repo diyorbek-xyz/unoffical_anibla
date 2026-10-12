@@ -8,11 +8,17 @@ import 'package:dio/dio.dart';
 sealed class Failure implements Exception {
   final String message;
   const Failure(this.message);
+
+  @override
+  String toString() => message;
 }
 
 final class ServerFailure extends Failure {
   final int status;
   const ServerFailure(this.status) : super("$status");
+
+  @override
+  String toString() => ErrorMessages.fromStatus(status);
 }
 
 final class SimpleFailure extends Failure {
@@ -21,16 +27,25 @@ final class SimpleFailure extends Failure {
 
 final class NetworkFailure extends Failure {
   const NetworkFailure() : super("connection_timeout");
+
+  @override
+  String toString() => Errors.connectionTimeout;
 }
 
 final class SessionLimitedFailure extends Failure {
   final Sessions sessions;
   SessionLimitedFailure(this.sessions) : super(Errors.tooManySessions);
+
+  @override
+  String toString() => Errors.tooManySessions;
 }
 
 final class UnknownFailure extends Failure {
   final dynamic exception;
   UnknownFailure(this.exception) : super(exception.message);
+
+  @override
+  String toString() => exception.toString();
 }
 
 abstract class ExceptionMapper {

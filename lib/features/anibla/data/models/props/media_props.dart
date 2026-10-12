@@ -1,6 +1,6 @@
 import 'package:application/features/anibla/data/enums/media_type.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
-import 'package:application/features/ma-no/data/models/manga.dart';
+import 'package:application/features/anibla/data/models/mano/manga.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'media_props.g.dart';

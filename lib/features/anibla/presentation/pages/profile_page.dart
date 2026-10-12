@@ -1,6 +1,10 @@
 import 'package:application/core/config/theme/app_colors.dart';
+import 'package:application/features/anibla/data/models/data/privacy.dart';
+import 'package:application/features/anibla/data/models/data/session.dart';
+import 'package:application/features/anibla/data/models/misc/plan.dart';
 import 'package:application/features/anibla/data/models/misc/tab_item.dart';
-import 'package:application/features/anibla/data/models/main/profile.dart';
+import 'package:application/features/anibla/data/models/response/notification_response.dart';
+import 'package:application/features/anibla/data/view_model/profile_view.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:application/features/anibla/presentation/controllers/profile_controller.dart';
 import 'package:application/features/anibla/presentation/menus/profile/devices_menu.dart';
@@ -17,16 +21,25 @@ import 'package:application/shared/widgets/responsive.dart';
 import 'package:application/features/anibla/presentation/dialogs/logout_modal.dart';
 
 class ProfilePage extends StatefulWidget {
-  final Profile profile;
-  const ProfilePage(this.profile, {super.key});
+  final ProfileView profile;
+  final NotificationResponse notifications;
+  final List<Plan> plans;
+  final List<Session> sessions;
+  final Privacy privacy;
+  const ProfilePage({
+    super.key,
+    required this.profile,
+    required this.plans,
+    required this.sessions,
+    required this.notifications,
+    required this.privacy,
+  });
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  bool get isAnibla => widget.profile.isAnibla;
-
   final ProfileController profileController = sl<ProfileController>();
 
   int currentIndex = 0;
@@ -55,21 +68,12 @@ class _ProfilePageState extends State<ProfilePage> {
         padding: .only(bottom: isMobile ? 50 : 0),
         child: Column(
           children: [
-            widget.profile.map(
-              anibla: (value) => basicInfo(
-                balance: value.balance,
-                image: value.avatar,
-                name: value.name,
-                tokenId: value.tokenId,
-                isSubscribed: value.subscription != null,
-              ),
-              mano: (value) => basicInfo(
-                balance: value.balance.tryParseDouble() ?? 0,
-                image: value.avatar,
-                isSubscribed: false,
-                name: value.name,
-                tokenId: "",
-              ),
+            basicInfo(
+              balance: widget.profile.balance,
+              image: widget.profile.avatar,
+              name: widget.profile.name,
+              tokenId: widget.profile.tokenId,
+              isSubscribed: widget.profile.hasSubscription,
             ),
             Padding(padding: isMobile ? .symmetric(horizontal: 5) : .only(right: 15), child: isMobile ? mobileBody : desktopBody),
           ],
@@ -124,7 +128,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget basicInfo({
     required String image,
-    required double balance,
+    required String balance,
     required String name,
     required bool isSubscribed,
     String? tokenId,
@@ -148,12 +152,9 @@ class _ProfilePageState extends State<ProfilePage> {
                 WidgetSpan(
                   child: Container(
                     margin: .symmetric(horizontal: 10),
-                    padding: .symmetric(horizontal: 6,vertical: 2),
+                    padding: .symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(color: context.appColors.primary, borderRadius: .circular(10)),
-                    child: Text(
-                      widget.profile.isAnibla ? "Anibla" : "Mano",
-                      style: TextStyle(color: context.appColors.onPrimary),
-                    ),
+                    child: Text(widget.profile.type.toString(), style: TextStyle(color: context.appColors.onPrimary)),
                   ),
                 ),
               ],
@@ -186,12 +187,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   WidgetSpan(
                     child: Container(
                       margin: .symmetric(horizontal: 10),
-                      padding: .symmetric(horizontal: 6,vertical: 2),
+                      padding: .symmetric(horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(color: context.appColors.primary, borderRadius: .circular(10)),
-                      child: Text(
-                        widget.profile.isAnibla ? "Anibla" : "Mano",
-                        style: TextStyle(color: context.appColors.onPrimary),
-                      ),
+                      child: Text(widget.profile.type.toString(), style: TextStyle(color: context.appColors.onPrimary)),
                     ),
                   ),
                 ],
@@ -224,12 +222,14 @@ class _ProfilePageState extends State<ProfilePage> {
     ),
   );
 
+  bool get isAnibla => widget.profile.type.isAnibla;
+
   late final views = <Widget>[
     ProfileInfosMenu(widget.profile),
-    NotificationsMenu(widget.profile),
-    if (isAnibla) PlansMenu(widget.profile),
-    if (isAnibla) ProfileDevicesMenu(widget.profile),
-    if (isAnibla) PrivacySettings(widget.profile),
+    NotificationsMenu(widget.notifications),
+    if (isAnibla) PlansMenu(widget.plans),
+    if (isAnibla) ProfileDevicesMenu(widget.sessions, widget.profile.tokenId),
+    if (isAnibla) PrivacySettings(widget.privacy),
   ];
 
   late final tabs = <TabItem>[

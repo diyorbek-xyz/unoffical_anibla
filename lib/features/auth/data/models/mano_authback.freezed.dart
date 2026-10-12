@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ManoAuthed {
 
- Profile get user;@JsonKey(name: "access_token") String get accessToken;@JsonKey(name: "refresh_token") String get refreshToken;@JsonKey(name: "expires_in") int get expiresIn;@JsonKey(name: "refresh_expires_in") int get refreshExpiresIn;
+ ManoProfile get user;@JsonKey(name: "access_token") String get accessToken;@JsonKey(name: "refresh_token") String get refreshToken;@JsonKey(name: "expires_in") int get expiresIn;@JsonKey(name: "refresh_expires_in") int get refreshExpiresIn;
 /// Create a copy of ManoAuthed
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,11 +48,11 @@ abstract mixin class $ManoAuthedCopyWith<$Res>  {
   factory $ManoAuthedCopyWith(ManoAuthed value, $Res Function(ManoAuthed) _then) = _$ManoAuthedCopyWithImpl;
 @useResult
 $Res call({
- Profile user,@JsonKey(name: "access_token") String accessToken,@JsonKey(name: "refresh_token") String refreshToken,@JsonKey(name: "expires_in") int expiresIn,@JsonKey(name: "refresh_expires_in") int refreshExpiresIn
+ ManoProfile user,@JsonKey(name: "access_token") String accessToken,@JsonKey(name: "refresh_token") String refreshToken,@JsonKey(name: "expires_in") int expiresIn,@JsonKey(name: "refresh_expires_in") int refreshExpiresIn
 });
 
 
-$ProfileCopyWith<$Res> get user;
+$ManoProfileCopyWith<$Res> get user;
 
 }
 /// @nodoc
@@ -68,7 +68,7 @@ class _$ManoAuthedCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? user = null,Object? accessToken = null,Object? refreshToken = null,Object? expiresIn = null,Object? refreshExpiresIn = null,}) {
   return _then(_self.copyWith(
 user: null == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
-as Profile,accessToken: null == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
+as ManoProfile,accessToken: null == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
 as String,refreshToken: null == refreshToken ? _self.refreshToken : refreshToken // ignore: cast_nullable_to_non_nullable
 as String,expiresIn: null == expiresIn ? _self.expiresIn : expiresIn // ignore: cast_nullable_to_non_nullable
 as int,refreshExpiresIn: null == refreshExpiresIn ? _self.refreshExpiresIn : refreshExpiresIn // ignore: cast_nullable_to_non_nullable
@@ -79,9 +79,9 @@ as int,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$ProfileCopyWith<$Res> get user {
+$ManoProfileCopyWith<$Res> get user {
   
-  return $ProfileCopyWith<$Res>(_self.user, (value) {
+  return $ManoProfileCopyWith<$Res>(_self.user, (value) {
     return _then(_self.copyWith(user: value));
   });
 }
@@ -166,7 +166,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Profile user, @JsonKey(name: "access_token")  String accessToken, @JsonKey(name: "refresh_token")  String refreshToken, @JsonKey(name: "expires_in")  int expiresIn, @JsonKey(name: "refresh_expires_in")  int refreshExpiresIn)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( ManoProfile user, @JsonKey(name: "access_token")  String accessToken, @JsonKey(name: "refresh_token")  String refreshToken, @JsonKey(name: "expires_in")  int expiresIn, @JsonKey(name: "refresh_expires_in")  int refreshExpiresIn)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ManoAuthed() when $default != null:
 return $default(_that.user,_that.accessToken,_that.refreshToken,_that.expiresIn,_that.refreshExpiresIn);case _:
@@ -187,7 +187,7 @@ return $default(_that.user,_that.accessToken,_that.refreshToken,_that.expiresIn,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Profile user, @JsonKey(name: "access_token")  String accessToken, @JsonKey(name: "refresh_token")  String refreshToken, @JsonKey(name: "expires_in")  int expiresIn, @JsonKey(name: "refresh_expires_in")  int refreshExpiresIn)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( ManoProfile user, @JsonKey(name: "access_token")  String accessToken, @JsonKey(name: "refresh_token")  String refreshToken, @JsonKey(name: "expires_in")  int expiresIn, @JsonKey(name: "refresh_expires_in")  int refreshExpiresIn)  $default,) {final _that = this;
 switch (_that) {
 case _ManoAuthed():
 return $default(_that.user,_that.accessToken,_that.refreshToken,_that.expiresIn,_that.refreshExpiresIn);case _:
@@ -207,7 +207,7 @@ return $default(_that.user,_that.accessToken,_that.refreshToken,_that.expiresIn,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Profile user, @JsonKey(name: "access_token")  String accessToken, @JsonKey(name: "refresh_token")  String refreshToken, @JsonKey(name: "expires_in")  int expiresIn, @JsonKey(name: "refresh_expires_in")  int refreshExpiresIn)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( ManoProfile user, @JsonKey(name: "access_token")  String accessToken, @JsonKey(name: "refresh_token")  String refreshToken, @JsonKey(name: "expires_in")  int expiresIn, @JsonKey(name: "refresh_expires_in")  int refreshExpiresIn)?  $default,) {final _that = this;
 switch (_that) {
 case _ManoAuthed() when $default != null:
 return $default(_that.user,_that.accessToken,_that.refreshToken,_that.expiresIn,_that.refreshExpiresIn);case _:
@@ -222,10 +222,10 @@ return $default(_that.user,_that.accessToken,_that.refreshToken,_that.expiresIn,
 @JsonSerializable()
 
 class _ManoAuthed implements ManoAuthed {
-  const _ManoAuthed({this.user = const Profile.mano(), @JsonKey(name: "access_token") this.accessToken = "", @JsonKey(name: "refresh_token") this.refreshToken = "", @JsonKey(name: "expires_in") this.expiresIn = 0, @JsonKey(name: "refresh_expires_in") this.refreshExpiresIn = 0});
+  const _ManoAuthed({this.user = const ManoProfile(), @JsonKey(name: "access_token") this.accessToken = "", @JsonKey(name: "refresh_token") this.refreshToken = "", @JsonKey(name: "expires_in") this.expiresIn = 0, @JsonKey(name: "refresh_expires_in") this.refreshExpiresIn = 0});
   factory _ManoAuthed.fromJson(Map<String, dynamic> json) => _$ManoAuthedFromJson(json);
 
-@override@JsonKey() final  Profile user;
+@override@JsonKey() final  ManoProfile user;
 @override@JsonKey(name: "access_token") final  String accessToken;
 @override@JsonKey(name: "refresh_token") final  String refreshToken;
 @override@JsonKey(name: "expires_in") final  int expiresIn;
@@ -264,11 +264,11 @@ abstract mixin class _$ManoAuthedCopyWith<$Res> implements $ManoAuthedCopyWith<$
   factory _$ManoAuthedCopyWith(_ManoAuthed value, $Res Function(_ManoAuthed) _then) = __$ManoAuthedCopyWithImpl;
 @override @useResult
 $Res call({
- Profile user,@JsonKey(name: "access_token") String accessToken,@JsonKey(name: "refresh_token") String refreshToken,@JsonKey(name: "expires_in") int expiresIn,@JsonKey(name: "refresh_expires_in") int refreshExpiresIn
+ ManoProfile user,@JsonKey(name: "access_token") String accessToken,@JsonKey(name: "refresh_token") String refreshToken,@JsonKey(name: "expires_in") int expiresIn,@JsonKey(name: "refresh_expires_in") int refreshExpiresIn
 });
 
 
-@override $ProfileCopyWith<$Res> get user;
+@override $ManoProfileCopyWith<$Res> get user;
 
 }
 /// @nodoc
@@ -284,7 +284,7 @@ class __$ManoAuthedCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? user = null,Object? accessToken = null,Object? refreshToken = null,Object? expiresIn = null,Object? refreshExpiresIn = null,}) {
   return _then(_ManoAuthed(
 user: null == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
-as Profile,accessToken: null == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
+as ManoProfile,accessToken: null == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
 as String,refreshToken: null == refreshToken ? _self.refreshToken : refreshToken // ignore: cast_nullable_to_non_nullable
 as String,expiresIn: null == expiresIn ? _self.expiresIn : expiresIn // ignore: cast_nullable_to_non_nullable
 as int,refreshExpiresIn: null == refreshExpiresIn ? _self.refreshExpiresIn : refreshExpiresIn // ignore: cast_nullable_to_non_nullable
@@ -296,9 +296,9 @@ as int,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$ProfileCopyWith<$Res> get user {
+$ManoProfileCopyWith<$Res> get user {
   
-  return $ProfileCopyWith<$Res>(_self.user, (value) {
+  return $ManoProfileCopyWith<$Res>(_self.user, (value) {
     return _then(_self.copyWith(user: value));
   });
 }

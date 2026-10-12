@@ -20,12 +20,12 @@ class _ProfileApi implements ProfileApi {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HttpResponse<ApiResponse<Profile>>> getProfile() async {
+  Future<HttpResponse<ApiResponse<AniblaProfile>>> getProfile() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<ApiResponse<Profile>>>(
+    final _options = _setStreamType<HttpResponse<ApiResponse<AniblaProfile>>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -36,11 +36,11 @@ class _ProfileApi implements ProfileApi {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late ApiResponse<Profile> _value;
+    late ApiResponse<AniblaProfile> _value;
     try {
-      _value = ApiResponse<Profile>.fromJson(
+      _value = ApiResponse<AniblaProfile>.fromJson(
         _result.data!,
-        (json) => Profile.fromJson(json as Map<String, dynamic>),
+        (json) => AniblaProfile.fromJson(json as Map<String, dynamic>),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
@@ -51,7 +51,7 @@ class _ProfileApi implements ProfileApi {
   }
 
   @override
-  Future<HttpResponse<ApiResponse<Profile>>> updateProfile(
+  Future<HttpResponse<ApiResponse<AniblaProfile>>> updateProfile(
     Map<String, dynamic> data,
   ) async {
     final _extra = <String, dynamic>{};
@@ -60,7 +60,7 @@ class _ProfileApi implements ProfileApi {
     final _data = <String, dynamic>{};
     _data.addAll(data);
     _data.removeWhere((k, v) => v == null);
-    final _options = _setStreamType<HttpResponse<ApiResponse<Profile>>>(
+    final _options = _setStreamType<HttpResponse<ApiResponse<AniblaProfile>>>(
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -71,11 +71,11 @@ class _ProfileApi implements ProfileApi {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late ApiResponse<Profile> _value;
+    late ApiResponse<AniblaProfile> _value;
     try {
-      _value = ApiResponse<Profile>.fromJson(
+      _value = ApiResponse<AniblaProfile>.fromJson(
         _result.data!,
-        (json) => Profile.fromJson(json as Map<String, dynamic>),
+        (json) => AniblaProfile.fromJson(json as Map<String, dynamic>),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);

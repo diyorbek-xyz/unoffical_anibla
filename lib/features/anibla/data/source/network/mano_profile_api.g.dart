@@ -20,12 +20,12 @@ class _ManoProfileApi implements ManoProfileApi {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HttpResponse<Profile>> getProfile(String id) async {
+  Future<HttpResponse<ManoProfile>> getProfile(String id) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<Profile>>(
+    final _options = _setStreamType<HttpResponse<ManoProfile>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -35,10 +35,10 @@ class _ManoProfileApi implements ManoProfileApi {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<dynamic>(_options);
-    late Profile _value;
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ManoProfile _value;
     try {
-      _value = Profile.fromJson(_result.data!);
+      _value = ManoProfile.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -48,7 +48,7 @@ class _ManoProfileApi implements ManoProfileApi {
   }
 
   @override
-  Future<HttpResponse<Profile>> updateProfile(
+  Future<HttpResponse<ManoProfile>> updateProfile(
     String id,
     Map<String, dynamic> body,
   ) async {
@@ -57,7 +57,7 @@ class _ManoProfileApi implements ManoProfileApi {
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(body);
-    final _options = _setStreamType<HttpResponse<Profile>>(
+    final _options = _setStreamType<HttpResponse<ManoProfile>>(
       Options(method: 'PUT', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -67,10 +67,10 @@ class _ManoProfileApi implements ManoProfileApi {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<dynamic>(_options);
-    late Profile _value;
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late ManoProfile _value;
     try {
-      _value = Profile.fromJson(_result.data!);
+      _value = ManoProfile.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;

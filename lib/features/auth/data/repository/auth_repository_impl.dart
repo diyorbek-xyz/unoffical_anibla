@@ -1,6 +1,4 @@
-import 'dart:io';
-
-import 'package:application/features/anibla/data/models/main/profile.dart';
+import 'package:application/features/anibla/data/models/main/mano_profile.dart';
 import 'package:application/features/auth/data/models/login_model.dart';
 import 'package:application/features/auth/data/models/mano_callback.dart';
 import 'package:application/features/auth/data/models/mano_callfront.dart';
@@ -68,24 +66,9 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, Profile>> manoAuth(String userId) async {
+  Future<Either<Failure, ManoProfile>> manoAuth(String userId) async {
     try {
       final httpResponse = await _manoAuthApi.authAnibla({"code": userId});
-      await _authStorage.saveManoTokens(
-        TokensModel(accessToken: httpResponse.data.accessToken, refreshToken: httpResponse.data.refreshToken),
-      );
-      return Right(httpResponse.data.user);
-    } on DioException catch (e) {
-      return Left(ExceptionMapper.mapDioToFailure(e));
-    }
-  }
-
-  @override
-  Future<Either<Failure, Profile>> manoRefreshToken() async {
-    try {
-      final tokens = await _authStorage.getManoTokens();
-      if (tokens == null) return Left(ServerFailure(HttpStatus.unauthorized));
-      final httpResponse = await _manoAuthApi.refreshToken({"refresh_token": tokens.refreshToken});
       await _authStorage.saveManoTokens(
         TokensModel(accessToken: httpResponse.data.accessToken, refreshToken: httpResponse.data.refreshToken),
       );

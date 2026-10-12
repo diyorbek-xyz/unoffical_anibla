@@ -1,4 +1,5 @@
 import 'package:application/shared/constants/tabs.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -15,7 +16,9 @@ class BottomBar extends StatelessWidget {
       selectedIndex: shell.currentIndex,
       maintainBottomViewPadding: false,
       destinations: mobileTabs
-          .map((e) => NavigationDestination(tooltip: e.label, icon: Icon(e.icon), label: e.label, selectedIcon: Icon(e.activeIcon)))
+          .map(
+            (e) => NavigationDestination(tooltip: e.label, icon: Icon(e.icon), label: e.label, selectedIcon: Icon(e.activeIcon)),
+          )
           .toList(),
     );
   }

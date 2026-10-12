@@ -2,10 +2,10 @@ import 'package:application/core/network/clients/anibla_client.dart';
 import 'package:application/core/network/clients/mano_client.dart';
 import 'package:application/core/network/clients/neutral_client.dart';
 import 'package:application/core/network/interceptors/mano_interceptor.dart';
-import 'package:application/features/anibla/data/adapters/profile_adapter.dart';
-import 'package:application/features/anibla/data/models/main/profile.dart';
+import 'package:application/features/anibla/data/models/main/anibla_profile.dart';
 import 'package:application/features/anibla/presentation/controllers/comment_controller.dart';
-import 'package:application/features/ma-no/data/source/network/mano_profile_api.dart';
+import 'package:application/features/anibla/data/source/network/mano_profile_api.dart';
+import 'package:application/features/auth/data/source/remote/mano_auth_api.dart';
 import 'package:application/features/player/presentation/controller/player_controller.dart';
 import 'package:application/shared/utils/utils.dart';
 import 'package:application/features/anibla/data/models/data/carousel_item.dart';
@@ -83,7 +83,6 @@ Future<void> setupHive() async {
   final cacheDir = await getApplicationCacheDirectory();
   await Hive.initFlutter("${cacheDir.path}/boxes/");
   Hive.registerAdapters();
-  Hive.registerAdapter(ProfileAdapter());
   await Hive.deleteBoxFromDisk("cacheBox");
 }
 
@@ -103,7 +102,7 @@ Future<void> initializeDependencies() async {
 
   // Open boxes;
   final calendarBox = await Hive.openBox<Calendar>("calendarBox");
-  final profileBox = await Hive.openBox<Profile>("profileBox");
+  final profileBox = await Hive.openBox<AniblaProfile>("profileBox");
   final sliderBox = await Hive.openBox<CarouselItem>("sliderBox");
   final historyBox = await Hive.openBox<Anime>("historyBox");
   final timelineBox = await Hive.openBox<TimelineModel>("timelineBox");
@@ -116,37 +115,30 @@ Future<void> initializeDependencies() async {
   // Register / Setup network logic;
   sl
     ..registerSingleton<FlutterSecureStorage>(FlutterSecureStorage())
-    ..registerSingleton<AuthStorage>(AuthStorageImpl(sl()))
-    ..registerLazySingleton<ErrorInterceptor>(() => ErrorInterceptor())
-    ..registerLazySingleton<AuthInterceptor>(() => AuthInterceptor(sl()))
-    ..registerLazySingleton<ManoInterceptor>(() => ManoInterceptor(sl(), sl(), sl()));
+    ..registerSingleton<AuthStorage>(AuthStorageImpl(sl()));
 
+  final errorInterceptor = ErrorInterceptor();
+  final neutralClient = NeutralClient()..interceptors.add(errorInterceptor);
+  sl.registerSingleton<NeutralClient>(neutralClient);
+
+  final authInterceptor = AuthInterceptor();
+  final manoInterceptor = ManoInterceptor(sl(), sl());
   final aniblaClient = AniblaClient();
   final manoClient = ManoClient();
-  final neutralClient = NeutralClient();
-
-  neutralClient.interceptors.add(sl<ErrorInterceptor>());
-
-  aniblaClient.interceptors
-    ..add(sl<ErrorInterceptor>())
-    ..add(sl<AuthInterceptor>());
-
-  manoClient.interceptors
-    ..add(sl<ErrorInterceptor>())
-    ..add(sl<ManoInterceptor>());
+  aniblaClient.interceptors.addAll([errorInterceptor, authInterceptor]);
+  manoClient.interceptors.addAll([errorInterceptor, manoInterceptor]);
 
   sl
     // Register local storages;
     ..registerSingleton<Box<Calendar>>(calendarBox)
     ..registerSingleton<Box<Anime>>(historyBox, instanceName: "history")
     ..registerSingleton<Box<String>>(savedMediaIdBox, instanceName: "saved")
-    ..registerSingleton<Box<Profile>>(profileBox)
+    ..registerSingleton<Box<AniblaProfile>>(profileBox)
     ..registerSingleton<Box<CarouselItem>>(sliderBox)
     ..registerSingleton<Box<TimelineModel>>(timelineBox)
     ..registerSingleton<Box<DownloadTask>>(downloadsBox)
     ..registerSingleton<Box<String>>(searchHistory)
     // Register miscs;
-    ..registerSingleton<NeutralClient>(neutralClient)
     ..registerSingleton<AniblaClient>(aniblaClient)
     ..registerSingleton<ManoClient>(manoClient)
     ..registerSingleton<DotEnv>(dotenv)
@@ -167,6 +159,7 @@ Future<void> initializeDependencies() async {
     ..registerSingleton<NotificationsApi>(NotificationsApi(sl()))
     ..registerSingleton<PlansApi>(PlansApi(sl()))
     ..registerSingleton<ManoProfileApi>(ManoProfileApi(sl()))
+    ..registerSingleton<ManoAuthApi>(ManoAuthApi(sl()))
     // Register Local Storage Services;
     ..registerSingleton<CalendarLocal>(CalendarLocalImpl(sl()))
     ..registerSingleton<ProfileLocal>(ProfileLocalImpl(sl()))
@@ -191,7 +184,7 @@ Future<void> initializeDependencies() async {
     ..registerFactory<CalendarBloc>(() => CalendarBloc(sl()))
     ..registerFactory<CommentBloc>(() => CommentBloc(sl()))
     // Register Signal controllers;
-    ..registerLazySingleton<ProfileController>(() => ProfileController(sl(), sl()))
+    ..registerLazySingleton<ProfileController>(() => ProfileController(sl(), sl(), sl()))
     ..registerLazySingleton<LocalAnimesController>(() => LocalAnimesController(sl(), sl(), sl()))
     ..registerLazySingleton<CommentController>(() => CommentController(sl(), sl()))
     ..registerLazySingleton<MediaController>(() => MediaController(sl(), sl(), sl()))

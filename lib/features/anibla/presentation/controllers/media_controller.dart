@@ -7,7 +7,7 @@ import 'package:application/features/anibla/domain/repositories/anime_repository
 import 'package:application/features/anibla/domain/repositories/episode_repository.dart';
 import 'package:application/features/anibla/domain/repositories/season_repository.dart';
 import 'package:application/features/anibla/presentation/controllers/comment_controller.dart';
-import 'package:application/features/ma-no/data/models/manga.dart';
+import 'package:application/features/anibla/data/models/mano/manga.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/shared/controller/signal_state.dart';
 import 'package:application/shared/utils/extensions.dart';

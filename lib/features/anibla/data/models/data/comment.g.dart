@@ -15,11 +15,11 @@ _Comment _$CommentFromJson(Map<String, dynamic> json) => _Comment(
   repliesCount: (json['replies_count'] as num?)?.toInt() ?? 0,
   createdAt: json['createdAt'] as String? ?? "",
   user: json['user'] == null
-      ? const Profile.anibla()
-      : Profile.fromJson(json['user']),
+      ? const AniblaProfile()
+      : AniblaProfile.fromJson(json['user']),
   userId: json['user_id'] == null
-      ? const Profile.anibla()
-      : Profile.fromJson(json['user_id']),
+      ? const AniblaProfile()
+      : AniblaProfile.fromJson(json['user_id']),
 );
 
 Map<String, dynamic> _$CommentToJson(_Comment instance) => <String, dynamic>{

@@ -1,32 +1,28 @@
 import 'dart:io';
 import 'package:application/core/network/clients/neutral_client.dart';
+import 'package:application/core/network/paths/mano_paths.dart';
 import 'package:application/core/network/resources/failure.dart';
+import 'package:application/features/auth/data/models/login_model.dart';
+import 'package:application/features/auth/data/models/mano_authback.dart';
 import 'package:application/features/auth/data/source/local/auth_storage.dart';
-import 'package:application/features/auth/domain/repository/auth_repository.dart';
 import 'package:application/shared/utils/device_info.dart';
-import 'package:application/shared/utils/extensions.dart';
 import 'package:dio/dio.dart';
 
 class ManoInterceptor extends Interceptor {
-  final AuthRepository _repository;
-  final AuthStorage _storage;
-  final NeutralClient _client;
-  const ManoInterceptor(this._client, this._repository, this._storage);
+  final AuthStorage storage;
+  final NeutralClient client;
+  const ManoInterceptor(this.client, this.storage);
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.type != DioExceptionType.badResponse || err.response?.statusCode != HttpStatus.unauthorized) return;
-
     try {
-      final either = await _repository.manoRefreshToken();
-      either.getData();
-      final token = await _storage.getManoTokens();
-      if (token == null) return handler.next(err);
-      final options = await setHeaders(err.requestOptions, token.accessToken);
-      final response = await _client.fetch(options);
+      final isRefreshed = await _refreshToken();
+      if (!isRefreshed) return handler.next(err);
+      final response = await _reRequest(err.requestOptions);
       return handler.resolve(response);
     } on DioException catch (err) {
-      await _storage.clearManoTokens();
+      await storage.clearManoTokens();
       return handler.next(err);
     } on Failure catch (failure) {
       return handler.next(
@@ -35,7 +31,30 @@ class ManoInterceptor extends Interceptor {
     }
   }
 
-  Future<RequestOptions> setHeaders(RequestOptions options, String token) async {
+  Future<bool> _refreshToken() async {
+    try {
+      final tokens = await storage.getManoTokens();
+      if (tokens == null) throw SimpleFailure("no tokens");
+      final body = {"refresh_token": tokens.refreshToken};
+      final response = await client.fetch(RequestOptions(baseUrl: ManoPaths.baseUrl, path: ManoPaths.refreshToken, data: body));
+      final data = ManoAuthed.fromJson(response.data);
+      final newTokens = TokensModel(accessToken: data.accessToken, refreshToken: data.refreshToken);
+      await storage.saveManoTokens(newTokens);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<Response> _reRequest(RequestOptions options) async {
+    final tokens = await storage.getManoTokens();
+    if (tokens == null) throw SimpleFailure("no tokens");
+    final newOptions = await _setHeaders(options, tokens.accessToken);
+    final response = await client.fetch(newOptions);
+    return response;
+  }
+
+  Future<RequestOptions> _setHeaders(RequestOptions options, String token) async {
     final device = await DeviceInfo.getDeviceInfo();
     options.headers['x-device'] = device.name;
     options.headers['x-platform-os'] = device.platformOS;

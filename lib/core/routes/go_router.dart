@@ -7,8 +7,8 @@ import 'package:application/features/anibla/presentation/pages/explore_page.dart
 import 'package:application/features/anibla/presentation/pages/home_page.dart';
 import 'package:application/features/anibla/presentation/pages/main_page.dart';
 import 'package:application/features/anibla/presentation/pages/saveds_page.dart';
-import 'package:application/features/ma-no/presentation/pages/manga_page.dart';
-import 'package:application/features/ma-no/presentation/pages/novel_page.dart';
+import 'package:application/features/anibla/presentation/pages/manga_page.dart';
+import 'package:application/features/anibla/presentation/pages/novel_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

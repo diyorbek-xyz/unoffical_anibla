@@ -1,5 +1,7 @@
 import 'dart:io';
-import 'package:application/features/anibla/data/models/main/profile.dart';
+import 'package:application/features/anibla/data/models/main/anibla_profile.dart';
+import 'package:application/features/anibla/data/models/main/mano_profile.dart';
+import 'package:application/features/auth/domain/repository/auth_repository.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:application/features/anibla/data/models/misc/plan.dart';
 import 'package:application/features/anibla/data/models/response/notification_response.dart';
@@ -11,29 +13,29 @@ import 'package:signals_flutter/signals_core.dart';
 
 class ProfileController {
   final ProfileRepository _profileRepository;
+  final AuthRepository _authRepository;
   final NotificationRepository _notificationRepository;
-  ProfileController(this._profileRepository, this._notificationRepository);
+  ProfileController(this._profileRepository, this._notificationRepository, this._authRepository);
 
   late final aniblaProfile = futureSignal(() async {
     try {
       final either = await _profileRepository.getAniblaProfile();
       return either.getData();
     } on Failure catch (e) {
-      throw switch (e) {
-        SessionLimitedFailure(:final sessions) => ProfileLimitSession(sessions),
-        ServerFailure(:final status) =>
-          (status == HttpStatus.unauthorized) ? ProfileUnauthorized() : ProfileFailed(ExceptionMapper.mapStatusToMessage(status)),
-        _ => ProfileFailed(ExceptionMapper.mapFailureToMessage(e)),
-      };
+      throw toProfileFailure(e);
     }
   });
   late final manoProfile = futureSignal(() async {
-    final either = await _profileRepository.getManoProfile();
-    return either.getData();
+    try {
+      final either = await _profileRepository.getManoProfile();
+      return either.getData();
+    } on Failure catch (e) {
+      throw toProfileFailure(e);
+    }
   });
 
-  final fakeAnibla = Profile.anibla();
-  final fakeMano = Profile.mano();
+  final fakeAnibla = AniblaProfile();
+  final fakeMano = ManoProfile();
 
   late final notificationSignal = futureSignal(() async {
     final either = await _notificationRepository.getNotifications();
@@ -48,6 +50,20 @@ class ProfileController {
   final fakePlans = List.generate(4, (index) => Plan());
 
   late final sessionExitSignal = signal(const SessionState());
+
+  ProfileFailure toProfileFailure(Failure fail) => switch (fail) {
+    SessionLimitedFailure(:final sessions) => ProfileLimitSession(sessions),
+    ServerFailure(:final status) =>
+      (status == HttpStatus.unauthorized) ? ProfileUnauthorized() : ProfileFailed(ExceptionMapper.mapStatusToMessage(status)),
+    _ => ProfileFailed(ExceptionMapper.mapFailureToMessage(fail)),
+  };
+
+  Future<void> loginManoWithAnibla() async {
+    final callbackEither = await _authRepository.manoCallback();
+    final data = callbackEither.getData();
+    final profileEither = await _authRepository.manoAuth(data.code);
+    profileEither.fold((l) => null, manoProfile.setValue);
+  }
 
   void exitSession(String tokenId) async {
     sessionExitSignal.set(SessionState(isLoading: true));
@@ -67,7 +83,7 @@ class ProfileController {
   void changeProfile({String? url, String? name}) async {
     final oldName = name ?? aniblaProfile.value.value?.name ?? manoProfile.value.value!.name;
     final oldAvatar = url ?? aniblaProfile.value.value?.avatar ?? manoProfile.value.value!.avatar;
-    final newProfile = await _profileRepository.updateBothProfile(Profile.anibla(avatar: oldAvatar, name: oldName));
+    final newProfile = await _profileRepository.updateAniblaProfile(AniblaProfile(avatar: oldAvatar, name: oldName));
     final success = newProfile.fold((l) => null, (r) => r);
     if (success!) refreshProfile();
   }

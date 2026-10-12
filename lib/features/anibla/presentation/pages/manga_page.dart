@@ -1,5 +1,5 @@
 import 'package:application/features/anibla/presentation/widgets/anime_card.dart';
-import 'package:application/features/ma-no/data/models/manga.dart';
+import 'package:application/features/anibla/data/models/mano/manga.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:application/shared/utils/url_launcher.dart';
 import 'package:application/shared/widgets/recommend.dart';

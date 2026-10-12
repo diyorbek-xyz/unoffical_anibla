@@ -14,8 +14,10 @@ import 'package:application/features/anibla/data/models/data/privacy.dart';
 import 'package:application/features/anibla/data/models/data/session.dart';
 import 'package:application/features/anibla/data/models/helper/localized.dart';
 import 'package:application/features/anibla/data/models/helper/pagination.dart';
+import 'package:application/features/anibla/data/models/main/anibla_profile.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/features/anibla/data/models/main/episode.dart';
+import 'package:application/features/anibla/data/models/main/mano_profile.dart';
 import 'package:application/features/anibla/data/models/main/season.dart';
 import 'package:application/features/anibla/data/models/misc/calendar.dart';
 import 'package:application/features/anibla/data/models/misc/timer.dart';
@@ -27,6 +29,7 @@ import 'package:application/features/player/data/model/timeline_model.dart';
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
+    registerAdapter(AniblaProfileAdapter());
     registerAdapter(AnimeAdapter());
     registerAdapter(CalendarAdapter());
     registerAdapter(CarouselItemAdapter());
@@ -41,6 +44,7 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(ExtraInfosAdapter());
     registerAdapter(GenreAdapter());
     registerAdapter(LocalizedAdapter());
+    registerAdapter(ManoProfileAdapter());
     registerAdapter(MasterPlaylistAdapter());
     registerAdapter(MediaPlaylistAdapter());
     registerAdapter(MediaTypeAdapter());
@@ -59,6 +63,7 @@ extension HiveRegistrar on HiveInterface {
 
 extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
+    registerAdapter(AniblaProfileAdapter());
     registerAdapter(AnimeAdapter());
     registerAdapter(CalendarAdapter());
     registerAdapter(CarouselItemAdapter());
@@ -73,6 +78,7 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
     registerAdapter(ExtraInfosAdapter());
     registerAdapter(GenreAdapter());
     registerAdapter(LocalizedAdapter());
+    registerAdapter(ManoProfileAdapter());
     registerAdapter(MasterPlaylistAdapter());
     registerAdapter(MediaPlaylistAdapter());
     registerAdapter(MediaTypeAdapter());
