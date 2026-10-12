@@ -16,14 +16,6 @@ import 'package:signals_flutter/signals_flutter.dart';
 import 'package:application/shared/widgets/responsive.dart';
 import 'package:application/features/anibla/presentation/dialogs/logout_modal.dart';
 
-const tabs = <TabItem>[
-  TabItem(path: "infos", activeIcon: Icons.info, icon: Icons.info_outline, label: "Profil ma'lumotlari"),
-  TabItem(path: "notifications", activeIcon: Icons.notifications, icon: Icons.notifications_outlined, label: "Bildirishnomalar"),
-  TabItem(path: "plans", activeIcon: Icons.verified, icon: Icons.verified_outlined, label: "Obunalar"),
-  TabItem(path: "devices", activeIcon: Icons.devices, icon: Icons.devices_outlined, label: "Qurilmalar"),
-  TabItem(path: "privacy", activeIcon: Icons.privacy_tip, icon: Icons.privacy_tip_outlined, label: "Xavfsizlik sozlamalari"),
-];
-
 class ProfilePage extends StatefulWidget {
   final Profile profile;
   const ProfilePage(this.profile, {super.key});
@@ -33,13 +25,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  late final views = <Widget>[
-    ProfileInfosMenu(widget.profile),
-    NotificationsMenu(widget.profile),
-    PlansMenu(widget.profile),
-    ProfileDevicesMenu(widget.profile),
-    PrivacySettings(widget.profile),
-  ];
+  bool get isAnibla => widget.profile.isAnibla;
 
   final ProfileController profileController = sl<ProfileController>();
 
@@ -76,12 +62,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 name: value.name,
                 tokenId: value.tokenId,
                 isSubscribed: value.subscription != null,
-                isLoading: true,
               ),
               mano: (value) => basicInfo(
-                balance: value.balance,
+                balance: value.balance.tryParseDouble() ?? 0,
                 image: value.avatar,
-                isLoading: true,
                 isSubscribed: false,
                 name: value.name,
                 tokenId: "",
@@ -142,73 +126,89 @@ class _ProfilePageState extends State<ProfilePage> {
     required String image,
     required double balance,
     required String name,
-    required bool isLoading,
     required bool isSubscribed,
     String? tokenId,
-  }) => SignalBuilder(
-    builder: (context) {
-      return PlatformBuilder(
-        containerBuilder: (context, _, isMobile, child) => Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20).add(.only(top: isMobile ? 0 : 40)),
-          child: child,
-        ),
-        mobileBuilder: (_, _) => Padding(
-          padding: .symmetric(vertical: 30, horizontal: 15),
-          child: Column(
-            crossAxisAlignment: .center,
-            mainAxisAlignment: .start,
-            children: [
-              AvatarSelector(url: image, isLoading: isLoading),
-
-              RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(text: name, style: TextStyle(fontSize: 24)),
-                    if (isSubscribed) WidgetSpan(child: Icon(Icons.verified, color: context.appColors.onSurface)),
-                  ],
-                ),
-              ),
-              RichText(
-                text: TextSpan(
-                  style: TextStyle(fontSize: 16, color: Colors.white70),
-                  children: [TextSpan(text: "Balans: $balance so'm")],
-                ),
-              ),
-            ],
-          ),
-        ),
-        desktopBuilder: (_, _) => Row(
-          crossAxisAlignment: .center,
-          spacing: 10,
-          children: [
-            AvatarSelector(url: image, isLoading: isLoading),
-            Column(
-              mainAxisAlignment: .center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 2,
+  }) => PlatformBuilder(
+    containerBuilder: (context, _, isMobile, child) => Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20).add(.only(top: isMobile ? 0 : 40)),
+      child: child,
+    ),
+    mobileBuilder: (_, _) => Padding(
+      padding: .symmetric(vertical: 30, horizontal: 15),
+      child: Column(
+        crossAxisAlignment: .center,
+        mainAxisAlignment: .start,
+        children: [
+          AvatarSelector(url: image),
+          RichText(
+            text: TextSpan(
               children: [
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(text: name, style: TextStyle(fontSize: 24)),
-                      if (isSubscribed) WidgetSpan(child: Icon(Icons.verified, color: context.appColors.onSurface)),
-                    ],
+                TextSpan(text: name, style: TextStyle(fontSize: 24)),
+                if (isSubscribed) WidgetSpan(child: Icon(Icons.verified, color: context.appColors.onSurface)),
+                WidgetSpan(
+                  child: Container(
+                    margin: .symmetric(horizontal: 10),
+                    padding: .symmetric(horizontal: 6,vertical: 2),
+                    decoration: BoxDecoration(color: context.appColors.primary, borderRadius: .circular(10)),
+                    child: Text(
+                      widget.profile.isAnibla ? "Anibla" : "Mano",
+                      style: TextStyle(color: context.appColors.onPrimary),
+                    ),
                   ),
                 ),
-                Text("Balans: $balance so'm", style: TextStyle(fontSize: 16, color: Colors.white70)),
               ],
             ),
-            Expanded(child: Container()),
-            IconButton(onPressed: () => profileController.refreshAll(), icon: Icon(Icons.refresh)),
-            IconButton(
-              onPressed: () => tokenId != null ? showLogoutModal(context, tokenId: tokenId, isCurrent: true) : null,
-              icon: Icon(Icons.exit_to_app),
+          ),
+          RichText(
+            text: TextSpan(
+              style: TextStyle(fontSize: 16, color: Colors.white70),
+              children: [TextSpan(text: "Balans: $balance so'm")],
             ),
-            SizedBox(width: 30),
+          ),
+        ],
+      ),
+    ),
+    desktopBuilder: (_, _) => Row(
+      crossAxisAlignment: .center,
+      spacing: 10,
+      children: [
+        AvatarSelector(url: image),
+        Column(
+          mainAxisAlignment: .center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 2,
+          children: [
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(text: name, style: TextStyle(fontSize: 24)),
+                  if (isSubscribed) WidgetSpan(child: Icon(Icons.verified, color: context.appColors.onSurface)),
+                  WidgetSpan(
+                    child: Container(
+                      margin: .symmetric(horizontal: 10),
+                      padding: .symmetric(horizontal: 6,vertical: 2),
+                      decoration: BoxDecoration(color: context.appColors.primary, borderRadius: .circular(10)),
+                      child: Text(
+                        widget.profile.isAnibla ? "Anibla" : "Mano",
+                        style: TextStyle(color: context.appColors.onPrimary),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Text("Balans: $balance so'm", style: TextStyle(fontSize: 16, color: Colors.white70)),
           ],
         ),
-      );
-    },
+        Expanded(child: Container()),
+        IconButton(onPressed: () => profileController.refreshAll(), icon: Icon(Icons.refresh)),
+        IconButton(
+          onPressed: () => tokenId != null ? showLogoutModal(context, tokenId: tokenId, isCurrent: true) : null,
+          icon: Icon(Icons.exit_to_app),
+        ),
+        SizedBox(width: 30),
+      ],
+    ),
   );
 
   SizedBox unauthorizedBuilder(BuildContext context) => SizedBox.expand(
@@ -223,4 +223,26 @@ class _ProfilePageState extends State<ProfilePage> {
       ],
     ),
   );
+
+  late final views = <Widget>[
+    ProfileInfosMenu(widget.profile),
+    NotificationsMenu(widget.profile),
+    if (isAnibla) PlansMenu(widget.profile),
+    if (isAnibla) ProfileDevicesMenu(widget.profile),
+    if (isAnibla) PrivacySettings(widget.profile),
+  ];
+
+  late final tabs = <TabItem>[
+    TabItem(path: "infos", activeIcon: Icons.info, icon: Icons.info_outline, label: "Profil ma'lumotlari"),
+    TabItem(
+      path: "notifications",
+      activeIcon: Icons.notifications,
+      icon: Icons.notifications_outlined,
+      label: "Bildirishnomalar",
+    ),
+    if (isAnibla) TabItem(path: "plans", activeIcon: Icons.verified, icon: Icons.verified_outlined, label: "Obunalar"),
+    if (isAnibla) TabItem(path: "devices", activeIcon: Icons.devices, icon: Icons.devices_outlined, label: "Qurilmalar"),
+    if (isAnibla)
+      TabItem(path: "privacy", activeIcon: Icons.privacy_tip, icon: Icons.privacy_tip_outlined, label: "Xavfsizlik sozlamalari"),
+  ];
 }

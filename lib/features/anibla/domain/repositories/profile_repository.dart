@@ -8,5 +8,5 @@ abstract class ProfileRepository {
   Future<Either<Failure, List<Plan>>> getPlans();
   Future<Either<Failure, Profile>> getManoProfile();
   Future<Either<Failure, Profile>> getAniblaProfile();
-  Future<Either<Failure, Profile>> updateProfile(Profile profile);
+  Future<Either<Failure, bool>> updateBothProfile(Profile profile);
 }

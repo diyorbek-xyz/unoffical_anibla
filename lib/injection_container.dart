@@ -1,8 +1,11 @@
 import 'package:application/core/network/clients/anibla_client.dart';
 import 'package:application/core/network/clients/mano_client.dart';
+import 'package:application/core/network/clients/neutral_client.dart';
+import 'package:application/core/network/interceptors/mano_interceptor.dart';
 import 'package:application/features/anibla/data/adapters/profile_adapter.dart';
 import 'package:application/features/anibla/data/models/main/profile.dart';
 import 'package:application/features/anibla/presentation/controllers/comment_controller.dart';
+import 'package:application/features/ma-no/data/source/network/mano_profile_api.dart';
 import 'package:application/features/player/presentation/controller/player_controller.dart';
 import 'package:application/shared/utils/utils.dart';
 import 'package:application/features/anibla/data/models/data/carousel_item.dart';
@@ -115,10 +118,14 @@ Future<void> initializeDependencies() async {
     ..registerSingleton<FlutterSecureStorage>(FlutterSecureStorage())
     ..registerSingleton<AuthStorage>(AuthStorageImpl(sl()))
     ..registerLazySingleton<ErrorInterceptor>(() => ErrorInterceptor())
-    ..registerLazySingleton<AuthInterceptor>(() => AuthInterceptor(sl()));
+    ..registerLazySingleton<AuthInterceptor>(() => AuthInterceptor(sl()))
+    ..registerLazySingleton<ManoInterceptor>(() => ManoInterceptor(sl(), sl(), sl()));
 
   final aniblaClient = AniblaClient();
   final manoClient = ManoClient();
+  final neutralClient = NeutralClient();
+
+  neutralClient.interceptors.add(sl<ErrorInterceptor>());
 
   aniblaClient.interceptors
     ..add(sl<ErrorInterceptor>())
@@ -126,7 +133,7 @@ Future<void> initializeDependencies() async {
 
   manoClient.interceptors
     ..add(sl<ErrorInterceptor>())
-    ..add(sl<AuthInterceptor>());
+    ..add(sl<ManoInterceptor>());
 
   sl
     // Register local storages;
@@ -139,6 +146,7 @@ Future<void> initializeDependencies() async {
     ..registerSingleton<Box<DownloadTask>>(downloadsBox)
     ..registerSingleton<Box<String>>(searchHistory)
     // Register miscs;
+    ..registerSingleton<NeutralClient>(neutralClient)
     ..registerSingleton<AniblaClient>(aniblaClient)
     ..registerSingleton<ManoClient>(manoClient)
     ..registerSingleton<DotEnv>(dotenv)
@@ -158,6 +166,7 @@ Future<void> initializeDependencies() async {
     ..registerSingleton<HlsDownloadService>(HlsDownloadService(sl(), sl()))
     ..registerSingleton<NotificationsApi>(NotificationsApi(sl()))
     ..registerSingleton<PlansApi>(PlansApi(sl()))
+    ..registerSingleton<ManoProfileApi>(ManoProfileApi(sl()))
     // Register Local Storage Services;
     ..registerSingleton<CalendarLocal>(CalendarLocalImpl(sl()))
     ..registerSingleton<ProfileLocal>(ProfileLocalImpl(sl()))
@@ -169,7 +178,7 @@ Future<void> initializeDependencies() async {
     // Register Repositories;
     ..registerLazySingleton<SliderRepository>(() => SliderRepositoryImpl(sl(), sl()))
     ..registerLazySingleton<CalendarRepository>(() => CalendarRepositoryImpl(sl(), sl()))
-    ..registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl(), sl()))
+    ..registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl(), sl(), sl()))
     ..registerLazySingleton<EpisodeRepository>(() => EpisodeRepositoryImpl(sl(), sl(), sl()))
     ..registerLazySingleton<CommentRepository>(() => CommentRepositoryImpl(sl()))
     ..registerLazySingleton<ProfileRepository>(() => ProfileRepositoryImpl(sl(), sl(), sl(), sl(), sl()))

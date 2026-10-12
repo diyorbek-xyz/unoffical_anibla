@@ -64,14 +64,17 @@ class ProfileController {
     }
   }
 
-  void changeAvatar(String url) async {
-    final newProfile = await _profileRepository.updateProfile(Profile.anibla(avatar: url));
-    newProfile.fold((l) => l, aniblaProfile.setValue);
+  void changeProfile({String? url, String? name}) async {
+    final oldName = name ?? aniblaProfile.value.value?.name ?? manoProfile.value.value!.name;
+    final oldAvatar = url ?? aniblaProfile.value.value?.avatar ?? manoProfile.value.value!.avatar;
+    final newProfile = await _profileRepository.updateBothProfile(Profile.anibla(avatar: oldAvatar, name: oldName));
+    final success = newProfile.fold((l) => null, (r) => r);
+    if (success!) refreshProfile();
   }
 
-  void changeName(String name) async {
-    final newProfile = await _profileRepository.updateProfile(Profile.anibla(name: name));
-    newProfile.fold((l) => l, aniblaProfile.setValue);
+  Future<void> refreshProfile() async {
+    aniblaProfile.refresh();
+    manoProfile.refresh();
   }
 
   Future<void> refreshAll() async {

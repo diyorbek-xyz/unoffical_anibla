@@ -1,4 +1,11 @@
 class StorageKeys {
-  static const accessToken = "accessToken";
-  static const refreshToken = "refreshToken";
+  static const aniblaAccess = "aniblaAccess";
+  static const aniblaRefresh = "aniblaRefresh";
+  static const manoAccess = "manoAccess";
+  static const manoRefresh = "manoRefresh";
+}
+
+class StorageType {
+  static const anibla = "anibla";
+  static const mano = "mano";
 }

@@ -38,7 +38,7 @@ Profile _$ProfileFromJson(
 /// @nodoc
 mixin _$Profile {
 
-@JsonKey(name: "first_name") String get name; double get balance; String get role;@JsonKey(name: "_id") String get id;@JsonKey(name: "unique_id")@JsonKey(name: "external_user_id") int get paymentId;@JsonKey(name: "phone_number") Object get phoneNumber;@JsonKey(fromJson: addBaseUrl, includeFromJson: true)@JsonKey(name: "picture_link") String get avatar;
+@JsonKey(name: "first_name") String get name; Object get balance; String get role;@JsonKey(name: "_id") String get id;@JsonKey(name: "unique_id")@JsonKey(name: "external_user_id") int get paymentId;@JsonKey(name: "phone_number") Object get phoneNumber;@JsonKey(name: "image")@JsonKey(fromJson: addBaseUrl, includeFromJson: true)@JsonKey(name: "picture_link") String get avatar;
 /// Create a copy of Profile
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -51,12 +51,12 @@ $ProfileCopyWith<Profile> get copyWith => _$ProfileCopyWithImpl<Profile>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Profile&&(identical(other.name, name) || other.name == name)&&(identical(other.balance, balance) || other.balance == balance)&&(identical(other.role, role) || other.role == role)&&(identical(other.id, id) || other.id == id)&&(identical(other.paymentId, paymentId) || other.paymentId == paymentId)&&const DeepCollectionEquality().equals(other.phoneNumber, phoneNumber)&&(identical(other.avatar, avatar) || other.avatar == avatar));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Profile&&(identical(other.name, name) || other.name == name)&&const DeepCollectionEquality().equals(other.balance, balance)&&(identical(other.role, role) || other.role == role)&&(identical(other.id, id) || other.id == id)&&(identical(other.paymentId, paymentId) || other.paymentId == paymentId)&&const DeepCollectionEquality().equals(other.phoneNumber, phoneNumber)&&(identical(other.avatar, avatar) || other.avatar == avatar));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,balance,role,id,paymentId,const DeepCollectionEquality().hash(phoneNumber),avatar);
+int get hashCode => Object.hash(runtimeType,name,const DeepCollectionEquality().hash(balance),role,id,paymentId,const DeepCollectionEquality().hash(phoneNumber),avatar);
 
 @override
 String toString() {
@@ -71,7 +71,7 @@ abstract mixin class $ProfileCopyWith<$Res>  {
   factory $ProfileCopyWith(Profile value, $Res Function(Profile) _then) = _$ProfileCopyWithImpl;
 @useResult
 $Res call({
- String name, double balance, String role,@JsonKey(name: "_id") String id,@JsonKey(name: "unique_id") int paymentId,@JsonKey(fromJson: addBaseUrl, includeFromJson: true) String avatar
+ String name, String role,@JsonKey(name: "_id") String id,@JsonKey(name: "unique_id") int paymentId,@JsonKey(name: "image")@JsonKey(fromJson: addBaseUrl, includeFromJson: true) String avatar
 });
 
 
@@ -88,11 +88,10 @@ class _$ProfileCopyWithImpl<$Res>
 
 /// Create a copy of Profile
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? balance = null,Object? role = null,Object? id = null,Object? paymentId = null,Object? avatar = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? role = null,Object? id = null,Object? paymentId = null,Object? avatar = null,}) {
   return _then(_self.copyWith(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,balance: null == balance ? _self.balance : balance // ignore: cast_nullable_to_non_nullable
-as double,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
+as String,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as String,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,paymentId: null == paymentId ? _self.paymentId : paymentId // ignore: cast_nullable_to_non_nullable
 as int,avatar: null == avatar ? _self.avatar : avatar // ignore: cast_nullable_to_non_nullable
@@ -181,7 +180,7 @@ return mano(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String createdAt,  String name,  String email,  double balance,  dynamic subscription,  String role,  bool activated,  List transactions,  String updatedAt,  List<Session> sessions,  int total, @JsonKey(name: "apple_id")  String appleId, @JsonKey(name: "_id")  String id, @JsonKey(name: "unique_id")  int paymentId, @JsonKey(name: "phone_number")  int phoneNumber, @JsonKey(name: "created_by_admin")  bool createdByAdmin, @JsonKey(name: "telegram_token")  String telegramToken, @JsonKey(name: "email_lc")  String emailLC, @JsonKey(name: "last_anime_type")  String lastMediaType, @JsonKey(name: "name_lc")  String nameLC, @JsonKey(name: "phone_str")  String phoneStr, @JsonKey(name: "unique_id_str")  String paymentIdStr, @JsonKey(name: "last_anime")  Anime lastAnime, @JsonKey(name: "token_id")  String tokenId, @JsonKey(name: "saved_series")  List<dynamic> savedSeries, @JsonKey(name: "saved_movies")  List<dynamic> savedMovies, @JsonKey(fromJson: addBaseUrl, includeFromJson: true)  String avatar, @JsonKey(name: "privacy_settings")  Privacy privacySettings)?  anibla,TResult Function( String id,  String role,  double balance,  int warning,  bool banned,  String createdDate, @JsonKey(name: "external_user_id")  int paymentId, @JsonKey(name: "first_name")  String name, @JsonKey(name: "phone_number")  String phoneNumber, @JsonKey(name: "picture_link")  String avatar, @JsonKey(name: "admin_scope")  String adminScope)?  mano,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function( String createdAt,  String name,  String email,  double balance,  dynamic subscription,  String role,  bool activated,  List transactions,  String updatedAt,  List<Session> sessions,  int total, @JsonKey(name: "apple_id")  String appleId, @JsonKey(name: "_id")  String id, @JsonKey(name: "unique_id")  int paymentId, @JsonKey(name: "phone_number")  int phoneNumber, @JsonKey(name: "created_by_admin")  bool createdByAdmin, @JsonKey(name: "telegram_token")  String telegramToken, @JsonKey(name: "email_lc")  String emailLC, @JsonKey(name: "last_anime_type")  String lastMediaType, @JsonKey(name: "name_lc")  String nameLC, @JsonKey(name: "phone_str")  String phoneStr, @JsonKey(name: "unique_id_str")  String paymentIdStr, @JsonKey(name: "last_anime")  Anime lastAnime, @JsonKey(name: "token_id")  String tokenId, @JsonKey(name: "saved_series")  List<dynamic> savedSeries, @JsonKey(name: "saved_movies")  List<dynamic> savedMovies, @JsonKey(name: "image")@JsonKey(fromJson: addBaseUrl, includeFromJson: true)  String avatar, @JsonKey(name: "privacy_settings")  Privacy privacySettings)?  anibla,TResult Function( String id,  String role,  String balance,  int warning,  bool banned,  String createdDate, @JsonKey(name: "external_user_id")  int paymentId, @JsonKey(name: "first_name")  String name, @JsonKey(name: "phone_number")  String phoneNumber, @JsonKey(name: "picture_link")  String avatar, @JsonKey(name: "admin_scope")  String adminScope)?  mano,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AniblaProfile() when anibla != null:
 return anibla(_that.createdAt,_that.name,_that.email,_that.balance,_that.subscription,_that.role,_that.activated,_that.transactions,_that.updatedAt,_that.sessions,_that.total,_that.appleId,_that.id,_that.paymentId,_that.phoneNumber,_that.createdByAdmin,_that.telegramToken,_that.emailLC,_that.lastMediaType,_that.nameLC,_that.phoneStr,_that.paymentIdStr,_that.lastAnime,_that.tokenId,_that.savedSeries,_that.savedMovies,_that.avatar,_that.privacySettings);case _ManoProfile() when mano != null:
@@ -203,7 +202,7 @@ return mano(_that.id,_that.role,_that.balance,_that.warning,_that.banned,_that.c
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String createdAt,  String name,  String email,  double balance,  dynamic subscription,  String role,  bool activated,  List transactions,  String updatedAt,  List<Session> sessions,  int total, @JsonKey(name: "apple_id")  String appleId, @JsonKey(name: "_id")  String id, @JsonKey(name: "unique_id")  int paymentId, @JsonKey(name: "phone_number")  int phoneNumber, @JsonKey(name: "created_by_admin")  bool createdByAdmin, @JsonKey(name: "telegram_token")  String telegramToken, @JsonKey(name: "email_lc")  String emailLC, @JsonKey(name: "last_anime_type")  String lastMediaType, @JsonKey(name: "name_lc")  String nameLC, @JsonKey(name: "phone_str")  String phoneStr, @JsonKey(name: "unique_id_str")  String paymentIdStr, @JsonKey(name: "last_anime")  Anime lastAnime, @JsonKey(name: "token_id")  String tokenId, @JsonKey(name: "saved_series")  List<dynamic> savedSeries, @JsonKey(name: "saved_movies")  List<dynamic> savedMovies, @JsonKey(fromJson: addBaseUrl, includeFromJson: true)  String avatar, @JsonKey(name: "privacy_settings")  Privacy privacySettings)  anibla,required TResult Function( String id,  String role,  double balance,  int warning,  bool banned,  String createdDate, @JsonKey(name: "external_user_id")  int paymentId, @JsonKey(name: "first_name")  String name, @JsonKey(name: "phone_number")  String phoneNumber, @JsonKey(name: "picture_link")  String avatar, @JsonKey(name: "admin_scope")  String adminScope)  mano,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function( String createdAt,  String name,  String email,  double balance,  dynamic subscription,  String role,  bool activated,  List transactions,  String updatedAt,  List<Session> sessions,  int total, @JsonKey(name: "apple_id")  String appleId, @JsonKey(name: "_id")  String id, @JsonKey(name: "unique_id")  int paymentId, @JsonKey(name: "phone_number")  int phoneNumber, @JsonKey(name: "created_by_admin")  bool createdByAdmin, @JsonKey(name: "telegram_token")  String telegramToken, @JsonKey(name: "email_lc")  String emailLC, @JsonKey(name: "last_anime_type")  String lastMediaType, @JsonKey(name: "name_lc")  String nameLC, @JsonKey(name: "phone_str")  String phoneStr, @JsonKey(name: "unique_id_str")  String paymentIdStr, @JsonKey(name: "last_anime")  Anime lastAnime, @JsonKey(name: "token_id")  String tokenId, @JsonKey(name: "saved_series")  List<dynamic> savedSeries, @JsonKey(name: "saved_movies")  List<dynamic> savedMovies, @JsonKey(name: "image")@JsonKey(fromJson: addBaseUrl, includeFromJson: true)  String avatar, @JsonKey(name: "privacy_settings")  Privacy privacySettings)  anibla,required TResult Function( String id,  String role,  String balance,  int warning,  bool banned,  String createdDate, @JsonKey(name: "external_user_id")  int paymentId, @JsonKey(name: "first_name")  String name, @JsonKey(name: "phone_number")  String phoneNumber, @JsonKey(name: "picture_link")  String avatar, @JsonKey(name: "admin_scope")  String adminScope)  mano,}) {final _that = this;
 switch (_that) {
 case _AniblaProfile():
 return anibla(_that.createdAt,_that.name,_that.email,_that.balance,_that.subscription,_that.role,_that.activated,_that.transactions,_that.updatedAt,_that.sessions,_that.total,_that.appleId,_that.id,_that.paymentId,_that.phoneNumber,_that.createdByAdmin,_that.telegramToken,_that.emailLC,_that.lastMediaType,_that.nameLC,_that.phoneStr,_that.paymentIdStr,_that.lastAnime,_that.tokenId,_that.savedSeries,_that.savedMovies,_that.avatar,_that.privacySettings);case _ManoProfile():
@@ -221,7 +220,7 @@ return mano(_that.id,_that.role,_that.balance,_that.warning,_that.banned,_that.c
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String createdAt,  String name,  String email,  double balance,  dynamic subscription,  String role,  bool activated,  List transactions,  String updatedAt,  List<Session> sessions,  int total, @JsonKey(name: "apple_id")  String appleId, @JsonKey(name: "_id")  String id, @JsonKey(name: "unique_id")  int paymentId, @JsonKey(name: "phone_number")  int phoneNumber, @JsonKey(name: "created_by_admin")  bool createdByAdmin, @JsonKey(name: "telegram_token")  String telegramToken, @JsonKey(name: "email_lc")  String emailLC, @JsonKey(name: "last_anime_type")  String lastMediaType, @JsonKey(name: "name_lc")  String nameLC, @JsonKey(name: "phone_str")  String phoneStr, @JsonKey(name: "unique_id_str")  String paymentIdStr, @JsonKey(name: "last_anime")  Anime lastAnime, @JsonKey(name: "token_id")  String tokenId, @JsonKey(name: "saved_series")  List<dynamic> savedSeries, @JsonKey(name: "saved_movies")  List<dynamic> savedMovies, @JsonKey(fromJson: addBaseUrl, includeFromJson: true)  String avatar, @JsonKey(name: "privacy_settings")  Privacy privacySettings)?  anibla,TResult? Function( String id,  String role,  double balance,  int warning,  bool banned,  String createdDate, @JsonKey(name: "external_user_id")  int paymentId, @JsonKey(name: "first_name")  String name, @JsonKey(name: "phone_number")  String phoneNumber, @JsonKey(name: "picture_link")  String avatar, @JsonKey(name: "admin_scope")  String adminScope)?  mano,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function( String createdAt,  String name,  String email,  double balance,  dynamic subscription,  String role,  bool activated,  List transactions,  String updatedAt,  List<Session> sessions,  int total, @JsonKey(name: "apple_id")  String appleId, @JsonKey(name: "_id")  String id, @JsonKey(name: "unique_id")  int paymentId, @JsonKey(name: "phone_number")  int phoneNumber, @JsonKey(name: "created_by_admin")  bool createdByAdmin, @JsonKey(name: "telegram_token")  String telegramToken, @JsonKey(name: "email_lc")  String emailLC, @JsonKey(name: "last_anime_type")  String lastMediaType, @JsonKey(name: "name_lc")  String nameLC, @JsonKey(name: "phone_str")  String phoneStr, @JsonKey(name: "unique_id_str")  String paymentIdStr, @JsonKey(name: "last_anime")  Anime lastAnime, @JsonKey(name: "token_id")  String tokenId, @JsonKey(name: "saved_series")  List<dynamic> savedSeries, @JsonKey(name: "saved_movies")  List<dynamic> savedMovies, @JsonKey(name: "image")@JsonKey(fromJson: addBaseUrl, includeFromJson: true)  String avatar, @JsonKey(name: "privacy_settings")  Privacy privacySettings)?  anibla,TResult? Function( String id,  String role,  String balance,  int warning,  bool banned,  String createdDate, @JsonKey(name: "external_user_id")  int paymentId, @JsonKey(name: "first_name")  String name, @JsonKey(name: "phone_number")  String phoneNumber, @JsonKey(name: "picture_link")  String avatar, @JsonKey(name: "admin_scope")  String adminScope)?  mano,}) {final _that = this;
 switch (_that) {
 case _AniblaProfile() when anibla != null:
 return anibla(_that.createdAt,_that.name,_that.email,_that.balance,_that.subscription,_that.role,_that.activated,_that.transactions,_that.updatedAt,_that.sessions,_that.total,_that.appleId,_that.id,_that.paymentId,_that.phoneNumber,_that.createdByAdmin,_that.telegramToken,_that.emailLC,_that.lastMediaType,_that.nameLC,_that.phoneStr,_that.paymentIdStr,_that.lastAnime,_that.tokenId,_that.savedSeries,_that.savedMovies,_that.avatar,_that.privacySettings);case _ManoProfile() when mano != null:
@@ -236,8 +235,8 @@ return mano(_that.id,_that.role,_that.balance,_that.warning,_that.banned,_that.c
 /// @nodoc
 @JsonSerializable()
 
-class _AniblaProfile implements Profile {
-  const _AniblaProfile({this.createdAt = "", this.name = "", this.email = "", this.balance = 0.0, this.subscription = "", this.role = "", this.activated = false, final  List transactions = const [], this.updatedAt = "", final  List<Session> sessions = const [], this.total = 0, @JsonKey(name: "apple_id") this.appleId = "", @JsonKey(name: "_id") this.id = "", @JsonKey(name: "unique_id") this.paymentId = 0, @JsonKey(name: "phone_number") this.phoneNumber = 0, @JsonKey(name: "created_by_admin") this.createdByAdmin = false, @JsonKey(name: "telegram_token") this.telegramToken = "", @JsonKey(name: "email_lc") this.emailLC = "", @JsonKey(name: "last_anime_type") this.lastMediaType = "", @JsonKey(name: "name_lc") this.nameLC = "", @JsonKey(name: "phone_str") this.phoneStr = "", @JsonKey(name: "unique_id_str") this.paymentIdStr = "", @JsonKey(name: "last_anime") this.lastAnime = const Anime(), @JsonKey(name: "token_id") this.tokenId = "", @JsonKey(name: "saved_series") final  List<dynamic> savedSeries = const [], @JsonKey(name: "saved_movies") final  List<dynamic> savedMovies = const [], @JsonKey(fromJson: addBaseUrl, includeFromJson: true) this.avatar = "", @JsonKey(name: "privacy_settings") this.privacySettings = const Privacy(), final  String? $type}): _transactions = transactions,_sessions = sessions,_savedSeries = savedSeries,_savedMovies = savedMovies,$type = $type ?? 'anibla';
+class _AniblaProfile extends Profile {
+  const _AniblaProfile({this.createdAt = "", this.name = "", this.email = "", this.balance = 0.0, this.subscription = "", this.role = "", this.activated = false, final  List transactions = const [], this.updatedAt = "", final  List<Session> sessions = const [], this.total = 0, @JsonKey(name: "apple_id") this.appleId = "", @JsonKey(name: "_id") this.id = "", @JsonKey(name: "unique_id") this.paymentId = 0, @JsonKey(name: "phone_number") this.phoneNumber = 0, @JsonKey(name: "created_by_admin") this.createdByAdmin = false, @JsonKey(name: "telegram_token") this.telegramToken = "", @JsonKey(name: "email_lc") this.emailLC = "", @JsonKey(name: "last_anime_type") this.lastMediaType = "", @JsonKey(name: "name_lc") this.nameLC = "", @JsonKey(name: "phone_str") this.phoneStr = "", @JsonKey(name: "unique_id_str") this.paymentIdStr = "", @JsonKey(name: "last_anime") this.lastAnime = const Anime(), @JsonKey(name: "token_id") this.tokenId = "", @JsonKey(name: "saved_series") final  List<dynamic> savedSeries = const [], @JsonKey(name: "saved_movies") final  List<dynamic> savedMovies = const [], @JsonKey(name: "image")@JsonKey(fromJson: addBaseUrl, includeFromJson: true) this.avatar = "", @JsonKey(name: "privacy_settings") this.privacySettings = const Privacy(), final  String? $type}): _transactions = transactions,_sessions = sessions,_savedSeries = savedSeries,_savedMovies = savedMovies,$type = $type ?? 'anibla',super._();
   factory _AniblaProfile.fromJson(Map<String, dynamic> json) => _$AniblaProfileFromJson(json);
 
 @JsonKey() final  String createdAt;
@@ -290,7 +289,7 @@ class _AniblaProfile implements Profile {
   return EqualUnmodifiableListView(_savedMovies);
 }
 
-@override@JsonKey(fromJson: addBaseUrl, includeFromJson: true) final  String avatar;
+@override@JsonKey(name: "image")@JsonKey(fromJson: addBaseUrl, includeFromJson: true) final  String avatar;
 @JsonKey(name: "privacy_settings") final  Privacy privacySettings;
 
 @JsonKey(name: 'runtimeType')
@@ -330,7 +329,7 @@ abstract mixin class _$AniblaProfileCopyWith<$Res> implements $ProfileCopyWith<$
   factory _$AniblaProfileCopyWith(_AniblaProfile value, $Res Function(_AniblaProfile) _then) = __$AniblaProfileCopyWithImpl;
 @override @useResult
 $Res call({
- String createdAt, String name, String email, double balance, dynamic subscription, String role, bool activated, List transactions, String updatedAt, List<Session> sessions, int total,@JsonKey(name: "apple_id") String appleId,@JsonKey(name: "_id") String id,@JsonKey(name: "unique_id") int paymentId,@JsonKey(name: "phone_number") int phoneNumber,@JsonKey(name: "created_by_admin") bool createdByAdmin,@JsonKey(name: "telegram_token") String telegramToken,@JsonKey(name: "email_lc") String emailLC,@JsonKey(name: "last_anime_type") String lastMediaType,@JsonKey(name: "name_lc") String nameLC,@JsonKey(name: "phone_str") String phoneStr,@JsonKey(name: "unique_id_str") String paymentIdStr,@JsonKey(name: "last_anime") Anime lastAnime,@JsonKey(name: "token_id") String tokenId,@JsonKey(name: "saved_series") List<dynamic> savedSeries,@JsonKey(name: "saved_movies") List<dynamic> savedMovies,@JsonKey(fromJson: addBaseUrl, includeFromJson: true) String avatar,@JsonKey(name: "privacy_settings") Privacy privacySettings
+ String createdAt, String name, String email, double balance, dynamic subscription, String role, bool activated, List transactions, String updatedAt, List<Session> sessions, int total,@JsonKey(name: "apple_id") String appleId,@JsonKey(name: "_id") String id,@JsonKey(name: "unique_id") int paymentId,@JsonKey(name: "phone_number") int phoneNumber,@JsonKey(name: "created_by_admin") bool createdByAdmin,@JsonKey(name: "telegram_token") String telegramToken,@JsonKey(name: "email_lc") String emailLC,@JsonKey(name: "last_anime_type") String lastMediaType,@JsonKey(name: "name_lc") String nameLC,@JsonKey(name: "phone_str") String phoneStr,@JsonKey(name: "unique_id_str") String paymentIdStr,@JsonKey(name: "last_anime") Anime lastAnime,@JsonKey(name: "token_id") String tokenId,@JsonKey(name: "saved_series") List<dynamic> savedSeries,@JsonKey(name: "saved_movies") List<dynamic> savedMovies,@JsonKey(name: "image")@JsonKey(fromJson: addBaseUrl, includeFromJson: true) String avatar,@JsonKey(name: "privacy_settings") Privacy privacySettings
 });
 
 
@@ -405,13 +404,13 @@ $PrivacyCopyWith<$Res> get privacySettings {
 /// @nodoc
 @JsonSerializable()
 
-class _ManoProfile implements Profile {
-  const _ManoProfile({this.id = "", this.role = "", this.balance = 0, this.warning = 0, this.banned = false, this.createdDate = "", @JsonKey(name: "external_user_id") this.paymentId = 0, @JsonKey(name: "first_name") this.name = "", @JsonKey(name: "phone_number") this.phoneNumber = "", @JsonKey(name: "picture_link") this.avatar = "", @JsonKey(name: "admin_scope") this.adminScope = "", final  String? $type}): $type = $type ?? 'mano';
+class _ManoProfile extends Profile {
+  const _ManoProfile({this.id = "", this.role = "", this.balance = "0.0", this.warning = 0, this.banned = false, this.createdDate = "", @JsonKey(name: "external_user_id") this.paymentId = 0, @JsonKey(name: "first_name") this.name = "", @JsonKey(name: "phone_number") this.phoneNumber = "", @JsonKey(name: "picture_link") this.avatar = "", @JsonKey(name: "admin_scope") this.adminScope = "", final  String? $type}): $type = $type ?? 'mano',super._();
   factory _ManoProfile.fromJson(Map<String, dynamic> json) => _$ManoProfileFromJson(json);
 
 @override@JsonKey() final  String id;
 @override@JsonKey() final  String role;
-@override@JsonKey() final  double balance;
+@override@JsonKey() final  String balance;
 @JsonKey() final  int warning;
 @JsonKey() final  bool banned;
 @JsonKey() final  String createdDate;
@@ -458,7 +457,7 @@ abstract mixin class _$ManoProfileCopyWith<$Res> implements $ProfileCopyWith<$Re
   factory _$ManoProfileCopyWith(_ManoProfile value, $Res Function(_ManoProfile) _then) = __$ManoProfileCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String role, double balance, int warning, bool banned, String createdDate,@JsonKey(name: "external_user_id") int paymentId,@JsonKey(name: "first_name") String name,@JsonKey(name: "phone_number") String phoneNumber,@JsonKey(name: "picture_link") String avatar,@JsonKey(name: "admin_scope") String adminScope
+ String id, String role, String balance, int warning, bool banned, String createdDate,@JsonKey(name: "external_user_id") int paymentId,@JsonKey(name: "first_name") String name,@JsonKey(name: "phone_number") String phoneNumber,@JsonKey(name: "picture_link") String avatar,@JsonKey(name: "admin_scope") String adminScope
 });
 
 
@@ -480,7 +479,7 @@ class __$ManoProfileCopyWithImpl<$Res>
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as String,balance: null == balance ? _self.balance : balance // ignore: cast_nullable_to_non_nullable
-as double,warning: null == warning ? _self.warning : warning // ignore: cast_nullable_to_non_nullable
+as String,warning: null == warning ? _self.warning : warning // ignore: cast_nullable_to_non_nullable
 as int,banned: null == banned ? _self.banned : banned // ignore: cast_nullable_to_non_nullable
 as bool,createdDate: null == createdDate ? _self.createdDate : createdDate // ignore: cast_nullable_to_non_nullable
 as String,paymentId: null == paymentId ? _self.paymentId : paymentId // ignore: cast_nullable_to_non_nullable

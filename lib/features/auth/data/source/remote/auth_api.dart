@@ -1,4 +1,6 @@
 import 'package:application/core/network/clients/anibla_client.dart';
+import 'package:application/features/auth/data/models/mano_callback.dart';
+import 'package:application/features/auth/data/models/mano_callfront.dart';
 import 'package:application/shared/models/api_response.dart';
 import 'package:application/features/auth/data/models/login_model.dart';
 import 'package:dio/dio.dart';
@@ -18,4 +20,7 @@ abstract class AuthApi {
 
   @DELETE("/v1/sessions/{tokenId}")
   Future<HttpResponse<ApiResponse<dynamic>>> exitSession(@Path("tokenId") String tokenId);
+
+  @POST("/v1/partner/auth/code")
+  Future<HttpResponse<ManoCallback>> manoCallback(@Body() ManoCallfront request);
 }

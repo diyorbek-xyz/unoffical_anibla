@@ -28,11 +28,19 @@ class _ProfileWrapperState extends State<ProfileWrapper> {
   void goToTabs() => setState(() => inTabs = true);
 
   @override
-  Widget build(BuildContext context) {
-    return SignalAnimatedBuilder(
+  Widget build(BuildContext context) => Scaffold(
+    floatingActionButtonLocation: .startFloat,
+    floatingActionButton: FloatingActionButton(
+      onPressed: () => context.goNamed(widget.isMano ? "anibla" : "mano"),
+      child: Icon(Icons.book),
+    ),
+    body: SignalAnimatedBuilder(
       builder: (context, child) {
         final aniblaState = profileController.aniblaProfile.value;
         final manoState = profileController.manoProfile.value;
+        if (manoState.hasError) {
+          return ErrorBuilder(message: manoState.error.toString(), refresh: profileController.refreshAll);
+        }
         if (aniblaState.hasError) {
           return switch (aniblaState.error as ProfileFailure) {
             ProfileLimitSession(:final sessions) => SessionsFailureWidget(sessions: sessions),
@@ -50,8 +58,8 @@ class _ProfileWrapperState extends State<ProfileWrapper> {
           child: ProfilePage(profile ?? fakeProfile),
         );
       },
-    );
-  }
+    ),
+  );
 
   SizedBox unauthorizedBuilder(BuildContext context) => SizedBox.expand(
     child: Column(

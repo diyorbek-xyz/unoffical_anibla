@@ -40,9 +40,7 @@ _AniblaProfile _$AniblaProfileFromJson(Map<String, dynamic> json) =>
       tokenId: json['token_id'] as String? ?? "",
       savedSeries: json['saved_series'] as List<dynamic>? ?? const [],
       savedMovies: json['saved_movies'] as List<dynamic>? ?? const [],
-      avatar: json['avatar'] == null
-          ? ""
-          : addBaseUrl(json['avatar'] as String?),
+      avatar: json['image'] as String? ?? "",
       privacySettings: json['privacy_settings'] == null
           ? const Privacy()
           : Privacy.fromJson(json['privacy_settings'] as Map<String, dynamic>),
@@ -77,7 +75,7 @@ Map<String, dynamic> _$AniblaProfileToJson(_AniblaProfile instance) =>
       'token_id': instance.tokenId,
       'saved_series': instance.savedSeries,
       'saved_movies': instance.savedMovies,
-      'avatar': instance.avatar,
+      'image': instance.avatar,
       'privacy_settings': instance.privacySettings,
       'runtimeType': instance.$type,
     };
@@ -85,7 +83,7 @@ Map<String, dynamic> _$AniblaProfileToJson(_AniblaProfile instance) =>
 _ManoProfile _$ManoProfileFromJson(Map<String, dynamic> json) => _ManoProfile(
   id: json['id'] as String? ?? "",
   role: json['role'] as String? ?? "",
-  balance: (json['balance'] as num?)?.toDouble() ?? 0,
+  balance: json['balance'] as String? ?? "0.0",
   warning: (json['warning'] as num?)?.toInt() ?? 0,
   banned: json['banned'] as bool? ?? false,
   createdDate: json['createdDate'] as String? ?? "",

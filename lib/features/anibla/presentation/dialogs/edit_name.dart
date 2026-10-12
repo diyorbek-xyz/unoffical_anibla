@@ -14,7 +14,7 @@ class EditNameDialog extends StatefulWidget {
 class _EditNameDialogState extends State<EditNameDialog> {
   final fieldController = TextEditingController();
   void changeName() {
-    sl<ProfileController>().changeName(fieldController.text);
+    sl<ProfileController>().changeProfile(name: fieldController.text);
     Navigator.pop(context);
   }
 

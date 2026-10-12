@@ -44,17 +44,17 @@ abstract class ExceptionMapper {
 
   static Failure mapDioToFailure(DioException exception) => switch (exception.type) {
     DioExceptionType.connectionError || DioExceptionType.connectionTimeout => NetworkFailure(),
-    DioExceptionType.badResponse => (() {
-      if (exception.response?.data is! Map<String, dynamic>) return SimpleFailure(exception.response?.data);
-      return switch (exception.response?.data?['message']?.toString()) {
-        Errors.tooManySessions => SessionLimitedFailure(
-          ApiResponse.fromJson(exception.response?.data, (json) => Sessions.fromJson(json as Map<String, dynamic>)).data,
-        ),
-        Errors.userNotFound => SimpleFailure("Foydalanuvchi topilmadi"),
-        Errors.seriesAlreadyExist => ServerFailure(HttpStatus.conflict),
-        _ => ServerFailure(exception.response?.statusCode ?? 400),
-      };
-    })(),
+    DioExceptionType.badResponse when (exception.response?.data is! Map<String, dynamic>) => SimpleFailure(
+      exception.response?.data,
+    ),
+    DioExceptionType.badResponse => switch (exception.response?.data?['message']?.toString()) {
+      Errors.tooManySessions => SessionLimitedFailure(
+        ApiResponse.fromJson(exception.response?.data, Sessions.fromJson as dynamic).data,
+      ),
+      Errors.userNotFound => SimpleFailure("Foydalanuvchi topilmadi"),
+      Errors.seriesAlreadyExist => ServerFailure(HttpStatus.conflict),
+      _ => ServerFailure(exception.response?.statusCode ?? 400),
+    },
     _ => UnknownFailure(exception.toString()),
   };
 

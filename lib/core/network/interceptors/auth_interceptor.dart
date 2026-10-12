@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:application/core/network/clients/anibla_client.dart';
 import 'package:application/core/network/resources/errors.dart';
 import 'package:application/core/network/resources/failure.dart';
@@ -15,10 +14,10 @@ class AuthInterceptor extends Interceptor {
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
-    final token = await storage.getAccessToken();
+    final token = await storage.getAniblaTokens();
     final staticToken =
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNmE2OWFlNzJhODA0YmNkOTZmYjY3N2M2IiwidG9rZW5faWQiOiJhMjA2NTA2Yy1iMjgzLTQzMmMtYTdkNi1hMWVhZTk3ZmI0YjUiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzkxMzgxMjIwLCJleHAiOjE3OTI1OTA4MjB9.D2VvOwz7K7rESKuCSX9uoJEGApwk1Epwv7oQP4pMcDY";
-    final newOptions = await setHeaders(options, token ?? staticToken);
+    final newOptions = await setHeaders(options, token?.accessToken ?? staticToken);
     handler.next(newOptions);
   }
 
@@ -26,16 +25,16 @@ class AuthInterceptor extends Interceptor {
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.type == DioExceptionType.badResponse && err.response?.statusCode == HttpStatus.unauthorized) {
       try {
-        final refreshToken = await storage.getRefreshToken();
+        final refreshToken = await storage.getAniblaTokens();
         if (refreshToken == null) return handler.next(err);
         final dio = Dio(sl<AniblaClient>().options);
         dio.interceptors.add(ErrorInterceptor());
 
-        final options = await setHeaders(err.requestOptions, refreshToken);
+        final options = await setHeaders(err.requestOptions, refreshToken.refreshToken);
         final response = await dio.fetch(options);
         return handler.resolve(response);
       } on DioException catch (err) {
-        await storage.clearTokens();
+        await storage.clearAniblaTokens();
         return handler.next(err);
       }
     }

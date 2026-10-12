@@ -20,7 +20,7 @@ class _AvatarsMenuState extends State<AvatarsMenu> {
   List<int> selected = [-1, -1];
   void changeAvatar() {
     final avatar = "https://static.crunchyroll.com/assets/avatar/170x170/${models[selected[0]].assets[selected[1]].id}";
-    context.controller<ProfileController>().changeAvatar(avatar);
+    context.controller<ProfileController>().changeProfile(url: avatar);
     Navigator.pop(context);
   }
 

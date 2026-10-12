@@ -9,6 +9,7 @@ part "profile.freezed.dart";
 
 @Freezed(fromJson: true, toJson: true)
 sealed class Profile with _$Profile {
+  const Profile._();
   const factory Profile.anibla({
     @Default("") String createdAt,
     @Default("") String name,
@@ -36,14 +37,14 @@ sealed class Profile with _$Profile {
     @Default("") @JsonKey(name: "token_id") String tokenId,
     @Default([]) @JsonKey(name: "saved_series") List<dynamic> savedSeries,
     @Default([]) @JsonKey(name: "saved_movies") List<dynamic> savedMovies,
-    @Default("") @JsonKey(fromJson: addBaseUrl, includeFromJson: true) String avatar,
+    @Default("") @JsonKey(name: "image") @JsonKey(fromJson: addBaseUrl, includeFromJson: true) String avatar,
     @Default(Privacy()) @JsonKey(name: "privacy_settings") Privacy privacySettings,
   }) = _AniblaProfile;
 
   const factory Profile.mano({
     @Default("") String id,
     @Default("") String role,
-    @Default(0) double balance,
+    @Default("0.0") String balance,
     @Default(0) int warning,
     @Default(false) bool banned,
     @Default("") String createdDate,
@@ -59,4 +60,7 @@ sealed class Profile with _$Profile {
     if (json["id"] != null) return _$ManoProfileFromJson(json);
     return Profile.mano(id: json.toString());
   }
+
+  bool get isMano => map(anibla: (_) => false, mano: (_) => true);
+  bool get isAnibla => map(anibla: (_) => true, mano: (_) => false);
 }

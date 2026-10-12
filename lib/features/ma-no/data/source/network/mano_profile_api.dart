@@ -11,4 +11,7 @@ abstract class ManoProfileApi {
 
   @GET("/v2/user/{id}")
   Future<HttpResponse<Profile>> getProfile(@Path("id") String id);
+
+  @PUT("/v2/user/{id}")
+  Future<HttpResponse<Profile>> updateProfile(@Path("id") String id, @Body() Map<String, dynamic> body);
 }
