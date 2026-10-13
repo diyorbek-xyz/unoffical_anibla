@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:application/features/anibla/data/models/main/anibla_profile.dart';
-import 'package:application/features/anibla/data/models/main/mano_profile.dart';
+import 'package:application/features/mano/data/models/main/mano_profile.dart';
 import 'package:application/features/anibla/data/models/misc/plan.dart';
 import 'package:application/features/anibla/data/source/local/profile_local.dart';
 import 'package:application/features/auth/data/source/remote/auth_api.dart';
@@ -8,7 +8,7 @@ import 'package:application/features/anibla/data/source/network/plans_api.dart';
 import 'package:application/features/anibla/data/source/network/profile_api.dart';
 import 'package:application/features/anibla/domain/repositories/profile_repository.dart';
 import 'package:application/core/network/resources/failure.dart';
-import 'package:application/features/anibla/data/source/network/mano_profile_api.dart';
+import 'package:application/features/mano/data/source/network/mano_profile_api.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';

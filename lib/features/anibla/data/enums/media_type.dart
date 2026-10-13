@@ -18,10 +18,10 @@ enum MediaType {
   @JsonValue("manhwa")
   manxva,
   @HiveField(4)
-  @JsonValue("novella")
+  @JsonValue("novel")
   novel,
   @HiveField(5)
-  @JsonValue("komiks")
+  @JsonValue("comics")
   comics;
 
   bool get isAnime => this == .movie || this == .serie;

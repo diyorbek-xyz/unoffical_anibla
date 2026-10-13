@@ -3,7 +3,7 @@ import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/features/anibla/data/enums/media_type.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/features/anibla/data/models/props/media_props.dart';
-import 'package:application/features/anibla/data/models/mano/manga.dart';
+import 'package:application/features/mano/data/models/main/manga.dart';
 import 'package:application/shared/utils/base_url.dart';
 import 'package:application/features/anibla/presentation/controllers/saved_controller.dart';
 import 'package:application/shared/image_provider/fallback_provider.dart';

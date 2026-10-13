@@ -5,7 +5,7 @@ import 'package:application/core/network/resources/errors.dart';
 import 'package:application/features/anibla/data/enums/media_type.dart';
 import 'package:application/features/anibla/data/models/props/media_props.dart';
 import 'package:application/features/anibla/presentation/controllers/comment_controller.dart';
-import 'package:application/features/anibla/data/models/mano/manga.dart';
+import 'package:application/features/mano/data/models/main/manga.dart';
 import 'package:application/shared/utils/base_url.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/features/anibla/presentation/controllers/media_controller.dart';

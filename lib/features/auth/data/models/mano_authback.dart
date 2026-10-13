@@ -1,4 +1,4 @@
-import 'package:application/features/anibla/data/models/main/mano_profile.dart';
+import 'package:application/features/mano/data/models/main/mano_profile.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part "mano_authback.g.dart";

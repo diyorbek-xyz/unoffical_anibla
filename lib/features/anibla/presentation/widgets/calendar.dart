@@ -1,7 +1,7 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/shared/utils/extensions.dart';
-import 'package:application/features/anibla/presentation/widgets/anime_card.dart';
+import 'package:application/features/anibla/presentation/widgets/media_card.dart';
 import 'package:application/features/anibla/presentation/bloc/calendar/calendar_bloc.dart';
 import 'package:application/features/anibla/presentation/bloc/calendar/calendar_event.dart';
 import 'package:application/features/anibla/presentation/bloc/calendar/calendar_state.dart';

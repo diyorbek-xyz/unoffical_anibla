@@ -1,5 +1,5 @@
 import 'package:application/features/anibla/data/models/main/anibla_profile.dart';
-import 'package:application/features/anibla/data/models/main/mano_profile.dart';
+import 'package:application/features/mano/data/models/main/mano_profile.dart';
 import 'package:application/features/anibla/data/models/misc/plan.dart';
 import 'package:application/core/network/resources/failure.dart';
 import 'package:dartz/dartz.dart';

@@ -4,8 +4,14 @@ import 'package:application/core/network/clients/neutral_client.dart';
 import 'package:application/core/network/interceptors/mano_interceptor.dart';
 import 'package:application/features/anibla/data/models/main/anibla_profile.dart';
 import 'package:application/features/anibla/presentation/controllers/comment_controller.dart';
-import 'package:application/features/anibla/data/source/network/mano_profile_api.dart';
+import 'package:application/features/mano/data/models/main/manga.dart';
+import 'package:application/features/mano/data/repository/book_repository_impl.dart';
+import 'package:application/features/mano/data/source/local/books_local.dart';
+import 'package:application/features/mano/data/source/network/books_api.dart';
+import 'package:application/features/mano/data/source/network/mano_profile_api.dart';
 import 'package:application/features/auth/data/source/remote/mano_auth_api.dart';
+import 'package:application/features/mano/domain/repository/book_repository.dart';
+import 'package:application/features/mano/presentation/controllers/book_controller.dart';
 import 'package:application/features/player/presentation/controller/player_controller.dart';
 import 'package:application/shared/utils/utils.dart';
 import 'package:application/features/anibla/data/models/data/carousel_item.dart';
@@ -109,6 +115,7 @@ Future<void> initializeDependencies() async {
   final downloadsBox = await Hive.openBox<DownloadTask>("downloadTaskBox");
   final savedMediaIdBox = await Hive.openBox<String>("savedMediaIdBox");
   final searchHistory = await Hive.openBox<String>("searchHistory");
+  final mangasBox = await Hive.openBox<Manga>("mangasBox");
 
   await Utils.closeSplashScreen();
 
@@ -138,6 +145,7 @@ Future<void> initializeDependencies() async {
     ..registerSingleton<Box<TimelineModel>>(timelineBox)
     ..registerSingleton<Box<DownloadTask>>(downloadsBox)
     ..registerSingleton<Box<String>>(searchHistory)
+    ..registerSingleton<Box<Manga>>(mangasBox)
     // Register miscs;
     ..registerSingleton<AniblaClient>(aniblaClient)
     ..registerSingleton<ManoClient>(manoClient)
@@ -160,6 +168,7 @@ Future<void> initializeDependencies() async {
     ..registerSingleton<PlansApi>(PlansApi(sl()))
     ..registerSingleton<ManoProfileApi>(ManoProfileApi(sl()))
     ..registerSingleton<ManoAuthApi>(ManoAuthApi(sl()))
+    ..registerSingleton<BooksApi>(BooksApi(sl()))
     // Register Local Storage Services;
     ..registerSingleton<CalendarLocal>(CalendarLocalImpl(sl()))
     ..registerSingleton<ProfileLocal>(ProfileLocalImpl(sl()))
@@ -168,6 +177,7 @@ Future<void> initializeDependencies() async {
     ..registerSingleton<SavedLocal>(SavedLocalImpl(sl(instanceName: 'saved')))
     ..registerSingleton<Timeline>(TimelineImpl(sl()))
     ..registerSingleton<SearchHistoryLocal>(SearchHistoryLocalImpl(sl()))
+    ..registerSingleton<BooksLocal>(BooksLocalImpl(sl()))
     // Register Repositories;
     ..registerLazySingleton<SliderRepository>(() => SliderRepositoryImpl(sl(), sl()))
     ..registerLazySingleton<CalendarRepository>(() => CalendarRepositoryImpl(sl(), sl()))
@@ -179,6 +189,7 @@ Future<void> initializeDependencies() async {
     ..registerLazySingleton<SeasonRepository>(() => SeasonRepositoryImpl(sl()))
     ..registerLazySingleton<ExploreRepository>(() => ExploreRepositoryImpl(sl(), sl(), sl()))
     ..registerLazySingleton<NotificationRepository>(() => NotificationRepositoryImpl(sl()))
+    ..registerLazySingleton<BookRepository>(() => BookRepositoryImpl(sl(), sl()))
     // Register State managers;
     ..registerFactory<AuthBloc>(() => AuthBloc(sl()))
     ..registerFactory<CalendarBloc>(() => CalendarBloc(sl()))
@@ -190,5 +201,6 @@ Future<void> initializeDependencies() async {
     ..registerLazySingleton<MediaController>(() => MediaController(sl(), sl(), sl()))
     ..registerLazySingleton<ExploreController>(() => ExploreController(sl(), sl()))
     ..registerLazySingleton<SliderController>(() => SliderController(sl()))
+    ..registerLazySingleton<BookController>(() => BookController(sl()))
     ..registerLazySingleton<PlayerController>(() => PlayerController(sl(), sl()));
 }

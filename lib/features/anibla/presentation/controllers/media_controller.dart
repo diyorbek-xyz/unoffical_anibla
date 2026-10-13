@@ -7,7 +7,7 @@ import 'package:application/features/anibla/domain/repositories/anime_repository
 import 'package:application/features/anibla/domain/repositories/episode_repository.dart';
 import 'package:application/features/anibla/domain/repositories/season_repository.dart';
 import 'package:application/features/anibla/presentation/controllers/comment_controller.dart';
-import 'package:application/features/anibla/data/models/mano/manga.dart';
+import 'package:application/features/mano/data/models/main/manga.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/shared/controller/signal_state.dart';
 import 'package:application/shared/utils/extensions.dart';
@@ -107,7 +107,7 @@ class MediaController {
     prints([slug, type]);
     mangaState.setLoading(true);
     await Future.delayed(Duration(seconds: 2));
-    mangaState.setValue(Manga.fromJson(manga));
+    mangaState.setValue(Manga());
   }
 
   Future<void> getMedia(MediaType type, String key) async {

@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:application/features/anibla/data/models/main/anibla_profile.dart';
-import 'package:application/features/anibla/data/models/main/mano_profile.dart';
+import 'package:application/features/mano/data/models/main/mano_profile.dart';
 import 'package:application/features/auth/domain/repository/auth_repository.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:application/features/anibla/data/models/misc/plan.dart';

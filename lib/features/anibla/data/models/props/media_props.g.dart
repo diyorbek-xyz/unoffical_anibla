@@ -26,6 +26,6 @@ const _$MediaTypeEnumMap = {
   MediaType.serie: 'Series',
   MediaType.manga: 'manga',
   MediaType.manxva: 'manhwa',
-  MediaType.novel: 'novella',
-  MediaType.comics: 'komiks',
+  MediaType.novel: 'novel',
+  MediaType.comics: 'comics',
 };

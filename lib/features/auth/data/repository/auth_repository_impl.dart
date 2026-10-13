@@ -1,4 +1,4 @@
-import 'package:application/features/anibla/data/models/main/mano_profile.dart';
+import 'package:application/features/mano/data/models/main/mano_profile.dart';
 import 'package:application/features/auth/data/models/login_model.dart';
 import 'package:application/features/auth/data/models/mano_callback.dart';
 import 'package:application/features/auth/data/models/mano_callfront.dart';

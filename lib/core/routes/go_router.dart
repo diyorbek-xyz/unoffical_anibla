@@ -7,8 +7,8 @@ import 'package:application/features/anibla/presentation/pages/explore_page.dart
 import 'package:application/features/anibla/presentation/pages/home_page.dart';
 import 'package:application/features/anibla/presentation/pages/main_page.dart';
 import 'package:application/features/anibla/presentation/pages/saveds_page.dart';
-import 'package:application/features/anibla/presentation/pages/manga_page.dart';
-import 'package:application/features/anibla/presentation/pages/novel_page.dart';
+import 'package:application/features/mano/presentation/pages/manga_page.dart';
+import 'package:application/features/mano/presentation/pages/novel_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -29,7 +29,7 @@ GoRouter routerConfig(String initial) => GoRouter(
         StatefulShellBranch(
           initialLocation: "/mangas",
           routes: [
-            GoRoute(path: "/mangas", name: "mangas", builder: (context, state) => const MangaPage()),
+            GoRoute(path: "/mangas", name: "mangas", builder: (context, state) => MangaPage()),
             GoRoute(path: "/novels", name: "novels", builder: (context, state) => const NovelPage()),
           ],
         ),
