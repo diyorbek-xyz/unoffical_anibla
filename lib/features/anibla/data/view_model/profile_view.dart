@@ -31,7 +31,7 @@ abstract class ProfileView with _$ProfileView {
     type: DataType.anibla,
     avatar: profile.avatar,
     tokenId: profile.tokenId,
-    balance: "${profile.balance} so'm",
+    balance: "${profile.balance.toStringAsFixed(1)} so'm",
     paymentId: profile.paymentId.toString(),
     hasSubscription: profile.subscription != null,
     createdAt: "${DateTime.tryParse(profile.createdAt)?.formatFull()}-yil",
@@ -45,7 +45,7 @@ abstract class ProfileView with _$ProfileView {
     type: DataType.mano,
     avatar: profile.avatar,
     paymentId: profile.paymentId.toString(),
-    balance: "${profile.balance} so'm",
+    balance: "${profile.balance.tryParseDouble() ?? 0.0} so'm",
     createdAt: "${DateTime.tryParse(profile.createdDate)?.formatFull()}-yil",
     phoneNumber: profile.phoneNumber.toNullable() ?? "Mavjud emas",
   );

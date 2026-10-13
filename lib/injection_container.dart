@@ -48,7 +48,7 @@ import 'package:application/features/anibla/domain/repositories/comment_reposito
 import 'package:application/features/anibla/presentation/bloc/comment/comment_bloc.dart';
 import 'package:application/features/anibla/data/repositories/explore_repository_impl.dart';
 import 'package:application/features/anibla/data/source/local/history_local.dart';
-import 'package:application/features/anibla/data/source/network/filter_api.dart';
+import 'package:application/features/anibla/data/source/network/explore_api.dart';
 import 'package:application/features/anibla/data/source/network/genre_api.dart';
 import 'package:application/features/anibla/domain/repositories/explore_repository.dart';
 import 'package:application/features/anibla/data/source/local/slider_local.dart';
@@ -153,7 +153,7 @@ Future<void> initializeDependencies() async {
     ..registerSingleton<GenreApi>(GenreApi(sl()))
     ..registerSingleton<CommentApi>(CommentApi(sl()))
     ..registerSingleton<VideoApi>(VideoApi(sl()))
-    ..registerSingleton<FilterApi>(FilterApi(sl()))
+    ..registerSingleton<AniblaExploreApi>(AniblaExploreApi(sl()))
     ..registerSingleton<DownloadsLocal>(DownloadsLocalImpl(sl()))
     ..registerSingleton<HlsDownloadService>(HlsDownloadService(sl(), sl()))
     ..registerSingleton<NotificationsApi>(NotificationsApi(sl()))

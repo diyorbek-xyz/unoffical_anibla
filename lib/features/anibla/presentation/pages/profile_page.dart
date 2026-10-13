@@ -1,4 +1,5 @@
 import 'package:application/core/config/theme/app_colors.dart';
+import 'package:application/features/anibla/data/enums/data_type.dart';
 import 'package:application/features/anibla/data/models/data/privacy.dart';
 import 'package:application/features/anibla/data/models/data/session.dart';
 import 'package:application/features/anibla/data/models/misc/plan.dart';
@@ -34,6 +35,8 @@ class ProfilePage extends StatefulWidget {
     required this.notifications,
     required this.privacy,
   });
+
+  DataType get type => profile.type;
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -163,7 +166,7 @@ class _ProfilePageState extends State<ProfilePage> {
           RichText(
             text: TextSpan(
               style: TextStyle(fontSize: 16, color: Colors.white70),
-              children: [TextSpan(text: "Balans: $balance so'm")],
+              children: [TextSpan(text: "Balans: $balance")],
             ),
           ),
         ],
@@ -195,7 +198,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ],
               ),
             ),
-            Text("Balans: $balance so'm", style: TextStyle(fontSize: 16, color: Colors.white70)),
+            Text("Balans: $balance", style: TextStyle(fontSize: 16, color: Colors.white70)),
           ],
         ),
         Expanded(child: Container()),
@@ -222,7 +225,7 @@ class _ProfilePageState extends State<ProfilePage> {
     ),
   );
 
-  bool get isAnibla => widget.profile.type.isAnibla;
+  bool get isAnibla => widget.type.isAnibla;
 
   late final views = <Widget>[
     ProfileInfosMenu(widget.profile),

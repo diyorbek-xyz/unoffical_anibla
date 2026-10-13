@@ -41,8 +41,16 @@ GoRouter routerConfig(String initial) => GoRouter(
         ),
         StatefulShellBranch(
           routes: [
-            GoRoute(path: "/profile/anibla", name: "anibla", builder: (context, state) => const ProfileWrapper(false)),
-            GoRoute(path: "/profile/mano", name: "mano", builder: (context, state) => const ProfileWrapper(true)),
+            GoRoute(
+              path: "/profile/anibla",
+              name: "anibla",
+              pageBuilder: (context, state) => NoTransitionPage(key: state.pageKey, child: const ProfileWrapper(false)),
+            ),
+            GoRoute(
+              path: "/profile/mano",
+              name: "mano",
+              pageBuilder: (context, state) => NoTransitionPage(key: state.pageKey, child: const ProfileWrapper(true)),
+            ),
           ],
         ),
       ],

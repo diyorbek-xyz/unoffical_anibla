@@ -7,6 +7,7 @@ import 'package:application/features/auth/data/models/mano_authback.dart';
 import 'package:application/features/auth/data/source/local/auth_storage.dart';
 import 'package:application/shared/utils/device_info.dart';
 import 'package:dio/dio.dart';
+import 'package:retrofit/retrofit.dart';
 
 class ManoInterceptor extends Interceptor {
   final AuthStorage storage;
@@ -36,7 +37,9 @@ class ManoInterceptor extends Interceptor {
       final tokens = await storage.getManoTokens();
       if (tokens == null) throw SimpleFailure("no tokens");
       final body = {"refresh_token": tokens.refreshToken};
-      final response = await client.fetch(RequestOptions(baseUrl: ManoPaths.baseUrl, path: ManoPaths.refreshToken, data: body));
+      final response = await client.fetch(
+        RequestOptions(baseUrl: ManoPaths.baseUrl, method: HttpMethod.POST, path: ManoPaths.refreshToken, data: body),
+      );
       final data = ManoAuthed.fromJson(response.data);
       final newTokens = TokensModel(accessToken: data.accessToken, refreshToken: data.refreshToken);
       await storage.saveManoTokens(newTokens);

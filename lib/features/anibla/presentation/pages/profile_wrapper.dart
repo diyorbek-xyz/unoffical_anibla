@@ -22,18 +22,12 @@ class ProfileWrapper extends StatefulWidget {
 class _ProfileWrapperState extends State<ProfileWrapper> {
   late final profileController = sl<ProfileController>();
 
-  int currentIndex = 0;
-  bool inTabs = true;
-
-  void setCurrentIndex(int index) => setState(() => [currentIndex = index, inTabs = false]);
-  void goToTabs() => setState(() => inTabs = true);
-
   @override
   Widget build(BuildContext context) => Scaffold(
     floatingActionButtonLocation: .startFloat,
     floatingActionButton: FloatingActionButton.extended(
-      icon: Icon(Icons.book),
-      label: Text("Manoga kirish"),
+      icon: Icon(widget.isMano ? Icons.movie : Icons.menu_book),
+      label: Text(widget.isMano ? "Anibla profile" : "Mano profile"),
       onPressed: () => context.goNamed(widget.isMano ? "anibla" : "mano"),
     ),
     body: SignalAnimatedBuilder(
@@ -43,7 +37,6 @@ class _ProfileWrapperState extends State<ProfileWrapper> {
         final notfState = profileController.notificationSignal.value;
         final plansState = profileController.plansSignal.value;
         if (manoState.hasError && widget.isMano) {
-          print(manoState.error.runtimeType);
           return switch (manoState.error as ProfileFailure) {
             ProfileUnauthorized() => manoUnauthorizedBuilder(),
             ProfileFailed(:final message) => ErrorBuilder(message: message, refresh: profileController.refreshAll),
