@@ -7,6 +7,7 @@ import 'package:application/shared/widgets/error.dart';
 import 'package:application/shared/widgets/recommend.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -34,7 +35,11 @@ class MangaPage extends StatelessWidget {
           enableSwitchAnimation: true,
           child: Scaffold(
             floatingActionButtonLocation: .startFloat,
-            floatingActionButton: FloatingActionButton(heroTag: "manga", onPressed: () {}, child: Icon(Icons.book)),
+            floatingActionButton: FloatingActionButton(
+              heroTag: "manga",
+              onPressed: () => context.replaceNamed("novels"),
+              child: Icon(Icons.book),
+            ),
             body: SingleChildScrollView(
               physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
               child: Column(

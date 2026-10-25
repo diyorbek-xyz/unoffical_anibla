@@ -7,12 +7,7 @@ import 'package:application/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-void showLogoutModal(
-  BuildContext context, {
-  required String tokenId,
-  required bool isCurrent,
-  String? deviceName,
-}) {
+void showLogoutModal(BuildContext context, {required String tokenId, required bool isCurrent, String? deviceName}) {
   showDialog(
     context: context,
     barrierDismissible: true,
@@ -36,10 +31,7 @@ void showLogoutModal(
                 Text(deviceName != null ? "Qurilma: $deviceName" : "Chiqish"),
                 Align(
                   alignment: AlignmentGeometry.centerEnd,
-                  child: IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: Icon(Icons.close),
-                  ),
+                  child: IconButton(onPressed: () => Navigator.pop(context), icon: Icon(Icons.close)),
                 ),
               ],
             ),
@@ -48,9 +40,7 @@ void showLogoutModal(
               height: double.infinity,
               alignment: AlignmentGeometry.center,
               child: Text(
-                deviceName != null
-                    ? "Rostdan ushbu qurilmadan chiqmoqchimisiz"
-                    : "Rostdan ham accountingizdan chiqmoqchimisiz?",
+                deviceName != null ? "Rostdan ushbu qurilmadan chiqmoqchimisiz" : "Rostdan ham accountingizdan chiqmoqchimisiz?",
                 style: TextStyle(fontSize: 24),
                 textAlign: TextAlign.center,
               ),

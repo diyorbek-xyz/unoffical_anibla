@@ -58,4 +58,4 @@ class SafeImageProvider extends ImageProvider<SafeImageProvider> {
 }
 
 ImageProvider imageProviderFallback(String url) =>
-    SafeImageProvider(CachedNetworkImageProvider(url), fallbackProvider: AssetImage("assets/images/poster.png"));
+    SafeImageProvider(CachedNetworkImageProvider(url), fallbackProvider: AssetImage("assets/images/fallback.jpg"));

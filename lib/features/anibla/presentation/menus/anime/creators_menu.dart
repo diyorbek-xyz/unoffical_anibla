@@ -1,11 +1,10 @@
 import 'package:application/core/config/theme/app_colors.dart';
-import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/shared/image_provider/fallback_provider.dart';
 import 'package:flutter/material.dart';
 
 class CreatorsMenu extends StatelessWidget {
-  final Anime anime;
-  const CreatorsMenu({super.key, required this.anime});
+  final List<(String, String)> creators;
+  const CreatorsMenu(this.creators, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,17 +19,17 @@ class CreatorsMenu extends StatelessWidget {
             SliverList.separated(
               separatorBuilder: (context, index) => SizedBox(height: 10),
               itemBuilder: (context, index) {
-                final creator = anime.creators.elementAt(index);
+                final creator = creators.elementAt(index);
                 return ListTile(
                   leading: CircleAvatar(
                     radius: 30,
-                    backgroundImage: imageProviderFallback(creator.image),
+                    backgroundImage: imageProviderFallback(creator.$2),
                     onBackgroundImageError: (exception, stackTrace) => exception.toString(),
                   ),
-                  title: Text(creator.name, style: TextStyle(color: context.appColors.primary)),
+                  title: Text(creator.$1, style: TextStyle(color: context.appColors.primary)),
                 );
               },
-              itemCount: anime.creators.length,
+              itemCount: creators.length,
             ),
           ],
         ),

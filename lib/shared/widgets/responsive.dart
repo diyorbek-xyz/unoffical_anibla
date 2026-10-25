@@ -16,7 +16,8 @@ class PlatformBuilder extends StatelessWidget {
       final isMobile = constraints.maxWidth < MOBILE_WIDTH;
       final mustMobile = whenMobile?.call(Utils.isMobilePlatform, constraints.maxWidth < MOBILE_WIDTH);
       final theChild = builder(context, constraints, mustMobile);
-      if (containerBuilder != null && theChild != null) return containerBuilder!(context, constraints, (mustMobile ?? isMobile), theChild);
+      if (containerBuilder != null && theChild != null)
+        return containerBuilder!(context, constraints, (mustMobile ?? isMobile), theChild);
       if (theChild != null) return theChild;
       throw Exception('Birnima ber menga');
     },

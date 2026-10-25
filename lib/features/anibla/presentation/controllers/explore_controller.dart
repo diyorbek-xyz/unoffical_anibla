@@ -1,3 +1,4 @@
+import 'package:application/features/anibla/data/models/data/category.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:application/features/anibla/data/models/data/genre.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
@@ -14,34 +15,36 @@ class ExploreController {
   ExploreController(this.repository, this._searchHistoryLocal);
 
   final fakeGenres = List.generate(4, (index) => Genre());
+  final fakeCategories = List.generate(4, (index) => Category());
+
+  final searchSignal = signal(SignalState<Searched>());
   late final genresSignal = futureSignal(() async {
     final either = await repository.getGenres();
     return either.getData();
   });
-
+  late final categoriesSignal = futureSignal(() async {
+    final either = await repository.getCategories();
+    return either.getData();
+  });
   late final historySignal = futureSignal(() async {
     final either = await repository.getHistoy();
     return either.getData();
   });
+  late final searchHistorySignal = futureSignal(_searchHistoryLocal.getHistory);
 
   Future<void> deleteFromHistory(String id) async {
     await repository.deleteFromHistory(id);
     await historySignal.refresh();
   }
 
-  late final searchHistorySignal = futureSignal(_searchHistoryLocal.getHistory);
   Future<void> deleteFromSearch(String id) async {
     await _searchHistoryLocal.deleteFromHistory(id);
     await searchHistorySignal.refresh();
   }
 
-  final searchSignal = signal(SignalState<Searched>());
+  Future searchAnime(SearchRequest query) async {
+    if (query.isEmpty) return searchSignal.set(SignalState<Searched>());
 
-  Future<void> searchAnime(SearchRequest query) async {
-    if (query.isEmpty) {
-      searchSignal.set(SignalState<Searched>());
-      return;
-    }
     searchSignal.setLoading(true);
 
     String? error;
@@ -63,9 +66,10 @@ class ExploreController {
   }
 
   Future<void> refreshAll() async {
-    await genresSignal.refresh();
     await historySignal.refresh();
     await searchHistorySignal.refresh();
+    await categoriesSignal.refresh();
+    await genresSignal.refresh();
   }
 }
 

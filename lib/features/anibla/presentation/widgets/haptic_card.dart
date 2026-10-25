@@ -9,7 +9,7 @@ import 'package:application/features/anibla/presentation/controllers/saved_contr
 import 'package:application/shared/image_provider/fallback_provider.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:application/injection_container.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';

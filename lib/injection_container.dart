@@ -5,6 +5,7 @@ import 'package:application/core/network/interceptors/mano_interceptor.dart';
 import 'package:application/features/anibla/data/models/main/anibla_profile.dart';
 import 'package:application/features/anibla/presentation/controllers/comment_controller.dart';
 import 'package:application/features/mano/data/models/main/manga.dart';
+import 'package:application/features/mano/data/models/main/novel.dart';
 import 'package:application/features/mano/data/repository/book_repository_impl.dart';
 import 'package:application/features/mano/data/source/local/books_local.dart';
 import 'package:application/features/mano/data/source/network/books_api.dart';
@@ -116,6 +117,7 @@ Future<void> initializeDependencies() async {
   final savedMediaIdBox = await Hive.openBox<String>("savedMediaIdBox");
   final searchHistory = await Hive.openBox<String>("searchHistory");
   final mangasBox = await Hive.openBox<Manga>("mangasBox");
+  final novelsBox = await Hive.openBox<Novel>("novelsBox");
 
   await Utils.closeSplashScreen();
 
@@ -146,6 +148,7 @@ Future<void> initializeDependencies() async {
     ..registerSingleton<Box<DownloadTask>>(downloadsBox)
     ..registerSingleton<Box<String>>(searchHistory)
     ..registerSingleton<Box<Manga>>(mangasBox)
+    ..registerSingleton<Box<Novel>>(novelsBox)
     // Register miscs;
     ..registerSingleton<AniblaClient>(aniblaClient)
     ..registerSingleton<ManoClient>(manoClient)
@@ -177,7 +180,7 @@ Future<void> initializeDependencies() async {
     ..registerSingleton<SavedLocal>(SavedLocalImpl(sl(instanceName: 'saved')))
     ..registerSingleton<Timeline>(TimelineImpl(sl()))
     ..registerSingleton<SearchHistoryLocal>(SearchHistoryLocalImpl(sl()))
-    ..registerSingleton<BooksLocal>(BooksLocalImpl(sl()))
+    ..registerSingleton<BooksLocal>(BooksLocalImpl(sl(), sl()))
     // Register Repositories;
     ..registerLazySingleton<SliderRepository>(() => SliderRepositoryImpl(sl(), sl()))
     ..registerLazySingleton<CalendarRepository>(() => CalendarRepositoryImpl(sl(), sl()))

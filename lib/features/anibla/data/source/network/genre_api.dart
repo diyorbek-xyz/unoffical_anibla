@@ -1,4 +1,5 @@
 import 'package:application/core/network/clients/anibla_client.dart';
+import 'package:application/features/anibla/data/models/response/categories_response.dart';
 import 'package:application/shared/models/api_response.dart';
 import 'package:application/features/anibla/data/models/response/genres_response.dart';
 import 'package:dio/dio.dart';
@@ -11,5 +12,8 @@ abstract class GenreApi {
   factory GenreApi(AniblaClient dio) = _GenreApi;
 
   @GET('/v1/genres')
-  Future<HttpResponse<ApiResponse<GenresResponse>>> getTemplate();
+  Future<HttpResponse<ApiResponse<GenresResponse>>> getGenres();
+
+  @GET('/v1/categories')
+  Future<HttpResponse<ApiResponse<CategoriesReponse>>> getCategories();
 }

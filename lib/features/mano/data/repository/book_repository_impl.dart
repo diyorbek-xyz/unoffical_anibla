@@ -1,8 +1,12 @@
-import 'dart:io';
-
 import 'package:application/core/network/resources/failure.dart';
+import 'package:application/features/anibla/data/enums/media_type.dart';
+import 'package:application/features/mano/data/models/data/mano_chapter.dart';
 import 'package:application/features/mano/data/models/main/manga.dart';
+import 'package:application/features/mano/data/models/main/novel.dart';
+import 'package:application/features/mano/data/models/request/chapter_request.dart';
 import 'package:application/features/mano/data/models/request/manga_request.dart';
+import 'package:application/features/mano/data/models/request/novel_request.dart';
+import 'package:application/features/mano/data/models/response/chapter_response.dart';
 import 'package:application/features/mano/data/source/local/books_local.dart';
 import 'package:application/features/mano/data/source/network/books_api.dart';
 import 'package:application/features/mano/domain/repository/book_repository.dart';
@@ -19,7 +23,9 @@ class BookRepositoryImpl implements BookRepository {
     try {
       final httpResponse = await _booksApi.getMangas(request);
       final mangas = httpResponse.data.data;
-      await Future.wait(List.generate(mangas.length, (index) async => await _booksLocal.save(mangas[index].id, mangas[index])));
+      await Future.wait(
+        List.generate(mangas.length, (index) async => await _booksLocal.saveManga(mangas[index].id, mangas[index])),
+      );
       return Right(mangas);
     } on DioException catch (e) {
       return Left(ExceptionMapper.mapDioToFailure(e));
@@ -27,9 +33,54 @@ class BookRepositoryImpl implements BookRepository {
   }
 
   @override
-  Either<Failure, Manga> getManga(String id) {
-    final manga = _booksLocal.get(id);
-    if (manga == null) return Left(ServerFailure(HttpStatus.notFound));
-    return Right(manga);
+  Future<Either<Failure, List<Novel>>> getNovels(NovelRequest request) async {
+    try {
+      final httpResponse = await _booksApi.getNovels(request);
+      final novels = httpResponse.data.data;
+      await Future.wait(
+        List.generate(novels.length, (index) async => await _booksLocal.saveNovel(novels[index].id, novels[index])),
+      );
+      return Right(novels);
+    } on DioException catch (e) {
+      return Left(ExceptionMapper.mapDioToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Manga>> getManga(String id) async {
+    try {
+      final manga = _booksLocal.getManga(id);
+      if (manga != null) return Right(manga);
+      final newManga = await _booksApi.getManga(id);
+      return Right(newManga.data);
+    } on DioException catch (e) {
+      return Left(ExceptionMapper.mapDioToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Novel>> getNovel(String id) async {
+    try {
+      final novel = _booksLocal.getNovel(id);
+      if (novel != null) return Right(novel);
+      final newNovel = await _booksApi.getNovel(id);
+      return Right(newNovel.data);
+    } on DioException catch (e) {
+      return Left(ExceptionMapper.mapDioToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, ChapterResponse<List<ManoChapter>>>> getChapters({
+    required MediaType type,
+    required String id,
+    required ChapterRequest request,
+  }) async {
+    try {
+      final httpResponse = await _booksApi.getChapters(MediaType.manga.jsonValue, id, request);
+      return Right(httpResponse.data);
+    } on DioException catch (e) {
+      return Left(ExceptionMapper.mapDioToFailure(e));
+    }
   }
 }

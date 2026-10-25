@@ -6,6 +6,7 @@ import 'package:hive_ce/hive_ce.dart';
 import 'package:application/features/anibla/data/enums/episode_type.dart';
 import 'package:application/features/anibla/data/enums/media_type.dart';
 import 'package:application/features/anibla/data/models/data/carousel_item.dart';
+import 'package:application/features/anibla/data/models/data/category.dart';
 import 'package:application/features/anibla/data/models/data/creator.dart';
 import 'package:application/features/anibla/data/models/data/episode_notf.dart';
 import 'package:application/features/anibla/data/models/data/genre.dart';
@@ -21,7 +22,7 @@ import 'package:application/features/anibla/data/models/main/season.dart';
 import 'package:application/features/anibla/data/models/misc/calendar.dart';
 import 'package:application/features/anibla/data/models/misc/timer.dart';
 import 'package:application/features/anibla/data/models/response/notification_response.dart';
-import 'package:application/features/mano/data/models/data/manga_status.dart';
+import 'package:application/features/mano/data/models/data/book_status.dart';
 import 'package:application/features/mano/data/models/data/mano_banner.dart';
 import 'package:application/features/mano/data/models/data/mano_category.dart';
 import 'package:application/features/mano/data/models/data/mano_chapter.dart';
@@ -29,6 +30,7 @@ import 'package:application/features/mano/data/models/data/mano_genre.dart';
 import 'package:application/features/mano/data/models/data/mano_translator.dart';
 import 'package:application/features/mano/data/models/main/manga.dart';
 import 'package:application/features/mano/data/models/main/mano_profile.dart';
+import 'package:application/features/mano/data/models/main/novel.dart';
 import 'package:application/features/player/data/model/download/completed_models.dart';
 import 'package:application/features/player/data/model/parser_models.dart';
 import 'package:application/features/player/data/model/service/download_models.dart';
@@ -38,8 +40,10 @@ extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
     registerAdapter(AniblaProfileAdapter());
     registerAdapter(AnimeAdapter());
+    registerAdapter(BookStatusAdapter());
     registerAdapter(CalendarAdapter());
     registerAdapter(CarouselItemAdapter());
+    registerAdapter(CategoryAdapter());
     registerAdapter(ChunkAdapter());
     registerAdapter(CreatorAdapter());
     registerAdapter(DownloadInfosAdapter());
@@ -52,7 +56,6 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(GenreAdapter());
     registerAdapter(LocalizedAdapter());
     registerAdapter(MangaAdapter());
-    registerAdapter(MangaStatusAdapter());
     registerAdapter(ManoBannerAdapter());
     registerAdapter(ManoCategoryAdapter());
     registerAdapter(ManoChapterAdapter());
@@ -64,6 +67,7 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(MediaTypeAdapter());
     registerAdapter(NotificationAdapter());
     registerAdapter(NotificationResponseAdapter());
+    registerAdapter(NovelAdapter());
     registerAdapter(PaginationAdapter());
     registerAdapter(PrivacyAdapter());
     registerAdapter(SeasonAdapter());
@@ -79,8 +83,10 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
     registerAdapter(AniblaProfileAdapter());
     registerAdapter(AnimeAdapter());
+    registerAdapter(BookStatusAdapter());
     registerAdapter(CalendarAdapter());
     registerAdapter(CarouselItemAdapter());
+    registerAdapter(CategoryAdapter());
     registerAdapter(ChunkAdapter());
     registerAdapter(CreatorAdapter());
     registerAdapter(DownloadInfosAdapter());
@@ -93,7 +99,6 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
     registerAdapter(GenreAdapter());
     registerAdapter(LocalizedAdapter());
     registerAdapter(MangaAdapter());
-    registerAdapter(MangaStatusAdapter());
     registerAdapter(ManoBannerAdapter());
     registerAdapter(ManoCategoryAdapter());
     registerAdapter(ManoChapterAdapter());
@@ -105,6 +110,7 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
     registerAdapter(MediaTypeAdapter());
     registerAdapter(NotificationAdapter());
     registerAdapter(NotificationResponseAdapter());
+    registerAdapter(NovelAdapter());
     registerAdapter(PaginationAdapter());
     registerAdapter(PrivacyAdapter());
     registerAdapter(SeasonAdapter());

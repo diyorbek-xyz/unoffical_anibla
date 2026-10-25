@@ -1,3 +1,4 @@
+import 'package:application/features/anibla/data/models/data/category.dart';
 import 'package:application/shared/utils/base_url.dart';
 import 'package:application/features/anibla/data/enums/media_type.dart';
 import 'package:application/features/anibla/data/models/data/creator.dart';
@@ -25,7 +26,7 @@ abstract class Anime with _$Anime {
     @Default({}) @HiveField(9) dynamic country,
     @Default("") @HiveField(10) String trailer,
     @Default({}) @HiveField(11) dynamic director,
-    @Default([]) @HiveField(12) dynamic categories,
+    @Default([]) @HiveField(12) List<Category> categories,
     @Default("") @HiveField(13) String createdDate,
     @Default("") @HiveField(14) String updatedDate,
     @Default([]) @HiveField(15) List<Genre> genres,

@@ -1,5 +1,5 @@
 import 'package:application/features/anibla/data/enums/media_type.dart';
-import 'package:application/features/mano/data/models/data/manga_status.dart';
+import 'package:application/features/mano/data/models/data/book_status.dart';
 import 'package:application/features/mano/data/models/data/mano_chapter.dart';
 import 'package:application/features/mano/data/models/data/mano_category.dart';
 import 'package:application/features/mano/data/models/data/mano_genre.dart';
@@ -38,8 +38,8 @@ abstract class Manga with _$Manga {
     @HiveField(21) @Default(false) @JsonKey(name: "is_bookmarked") bool isBookmarked,
     @HiveField(22) @Default(0) @JsonKey(name: "bookmarked_count") int bookmarkedCount,
     @HiveField(23) @Default("") @JsonKey(name: "age_restriction") String ageRestriction,
-    @HiveField(24) @Default(MangaStatus.stopped) @JsonKey(name: "release_status") MangaStatus releaseStatus,
-    @HiveField(25) @Default(MangaStatus.stopped) @JsonKey(name: "translation_status") MangaStatus translationStatus,
+    @HiveField(24) @Default(BookStatus.stopped) @JsonKey(name: "release_status") BookStatus releaseStatus,
+    @HiveField(25) @Default(BookStatus.stopped) @JsonKey(name: "translation_status") BookStatus translationStatus,
   }) = _Manga;
   factory Manga.fromJson(Map<String, dynamic> json) => _$MangaFromJson(json);
 }

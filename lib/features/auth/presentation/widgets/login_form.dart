@@ -32,7 +32,9 @@ class _LoginFormState extends State<LoginForm> {
 
   void confirmCode(BuildContext context) {
     context.read<AuthBloc>().add(
-      ConfirmEvent(ConfirmModel(code: confirmController.text.parseInt(), login: "${current.code}${phoneController.text}".parseInt())),
+      ConfirmEvent(
+        ConfirmModel(code: confirmController.text.parseInt(), login: "${current.code}${phoneController.text}".parseInt()),
+      ),
     );
   }
 
@@ -84,7 +86,9 @@ class _LoginFormState extends State<LoginForm> {
                   ElevatedButton(
                     onPressed: () => getConfirmCode(context),
                     style: buttonStyle,
-                    child: loading ? CircularProgressIndicator(constraints: BoxConstraints.tightFor(height: 20, width: 20)) : Text("Send Code"),
+                    child: loading
+                        ? CircularProgressIndicator(constraints: BoxConstraints.tightFor(height: 20, width: 20))
+                        : Text("Send Code"),
                   ),
                 if ((receivedCode || codeFailed) && !codeCorrect)
                   ElevatedButton(

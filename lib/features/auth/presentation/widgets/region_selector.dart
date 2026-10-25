@@ -25,7 +25,8 @@ class _RegionSelectorState extends State<RegionSelector> {
   Widget build(BuildContext context) {
     return PopupMenuButton(
       child: Text("+${widget.current.code}"),
-      itemBuilder: (context) => regions.map((e) => PopupMenuItem(onTap: () => widget.changeRegion(e), child: Text(e.toString()))).toList(),
+      itemBuilder: (context) =>
+          regions.map((e) => PopupMenuItem(onTap: () => widget.changeRegion(e), child: Text(e.toString()))).toList(),
     );
   }
 }

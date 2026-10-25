@@ -1,6 +1,5 @@
-import 'package:application/features/anibla/data/models/props/media_props.dart';
-import 'package:application/features/anibla/presentation/pages/media_page.dart';
-import 'package:application/features/anibla/presentation/pages/profile_wrapper.dart';
+import 'package:application/features/anibla/presentation/wrappers/media_wrapper.dart';
+import 'package:application/features/anibla/presentation/wrappers/profile_wrapper.dart';
 import 'package:application/features/anibla/presentation/pages/watch_page.dart';
 import 'package:application/features/auth/presentation/pages/login_page.dart';
 import 'package:application/features/anibla/presentation/pages/explore_page.dart';
@@ -30,7 +29,7 @@ GoRouter routerConfig(String initial) => GoRouter(
           initialLocation: "/mangas",
           routes: [
             GoRoute(path: "/mangas", name: "mangas", builder: (context, state) => MangaPage()),
-            GoRoute(path: "/novels", name: "novels", builder: (context, state) => const NovelPage()),
+            GoRoute(path: "/novels", name: "novels", builder: (context, state) => NovelPage()),
           ],
         ),
         StatefulShellBranch(
@@ -55,9 +54,9 @@ GoRouter routerConfig(String initial) => GoRouter(
         ),
       ],
     ),
-    GoRoute(name: "media", path: "/media", builder: (context, state) => MediaPage(.fromJson(state.uri.queryParameters))),
+    GoRoute(name: "media", path: "/media", builder: (context, state) => MediaWrapper(.fromJson(state.uri.queryParameters))),
     GoRoute(name: "watch", path: "/watch", builder: (context, state) => WatchPage(.fromJson(state.uri.queryParameters))),
-    GoRoute(name: "read", path: "/read", builder: (context, state) => MediaPage(MediaProps.fromJson(state.uri.queryParameters))),
+    GoRoute(name: "read", path: "/read", builder: (context, state) => MediaWrapper(.fromJson(state.uri.queryParameters))),
     GoRoute(name: "login", path: "/login", builder: (context, state) => const LoginPage()),
   ],
 );

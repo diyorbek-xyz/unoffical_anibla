@@ -25,19 +25,6 @@ class _HomePageState extends State<HomePage> {
         SliverToBoxAdapter(child: Calendar()),
         AnimeRecommends(),
       ],
-      // : [
-      //     SliverFillRemaining(
-      //       child: Column(
-      //         crossAxisAlignment: .center,
-      //         mainAxisAlignment: .center,
-      //         spacing: 10,
-      //         children: [
-      //           Icon(Icons.network_check, size: context.textTheme.displayLarge!.fontSize),
-      //           Text("Internet tarmoqni tekshiring", style: context.textTheme.titleMedium),
-      //         ],
-      //       ),
-      //     ),
-      //   ],
     );
   }
 }

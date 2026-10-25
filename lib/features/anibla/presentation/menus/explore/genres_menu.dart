@@ -4,14 +4,14 @@ import 'package:application/shared/widgets/error.dart';
 import 'package:application/features/anibla/presentation/controllers/explore_controller.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/core/network/resources/failure.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
-class GenresPage extends StatelessWidget {
+class GenresMenu extends StatelessWidget {
   final SearchController controller;
   final Function(String value, BuildContext context) submit;
-  GenresPage({super.key, required this.controller, required this.submit});
+  GenresMenu({super.key, required this.controller, required this.submit});
 
   final _exploreController = sl<ExploreController>();
 
@@ -32,7 +32,10 @@ class GenresPage extends StatelessWidget {
             if (state.hasError) {
               final failure = state.error as Failure;
               return SliverFillRemaining(
-                child: ErrorBuilder(message: ExceptionMapper.mapFailureToMessage(failure), refresh: () => _exploreController.refreshAll()),
+                child: ErrorBuilder(
+                  message: ExceptionMapper.mapFailureToMessage(failure),
+                  refresh: () => _exploreController.refreshAll(),
+                ),
               );
             }
             final data = state.value ?? _exploreController.fakeGenres;

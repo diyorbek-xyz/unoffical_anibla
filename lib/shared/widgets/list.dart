@@ -30,7 +30,15 @@ class ListModel {
   final IconData? icon;
   final bool? isThreeLine;
   final double? height;
-  const ListModel({this.actions, this.height, this.leading, this.icon, this.isThreeLine, required this.label, required this.value});
+  const ListModel({
+    this.actions,
+    this.height,
+    this.leading,
+    this.icon,
+    this.isThreeLine,
+    required this.label,
+    required this.value,
+  });
 }
 
 class ListsWidget extends StatelessWidget {
@@ -72,11 +80,15 @@ class ListsWidget extends StatelessWidget {
             textColor: context.appColors.primaryFixed,
             iconColor: context.appColors.primaryFixed,
             contentPadding: EdgeInsets.symmetric(vertical: 3, horizontal: 18),
-            leading: list.leading ?? (list.icon != null ? Padding(padding: EdgeInsetsGeometry.only(right: 5), child: Icon(list.icon)) : null),
+            leading:
+                list.leading ??
+                (list.icon != null ? Padding(padding: EdgeInsetsGeometry.only(right: 5), child: Icon(list.icon)) : null),
             title: Text(list.label),
             onTap: () {},
             subtitle: Text(list.value, style: TextStyle(color: context.appColors.primaryFixedDim)),
-            trailing: (list.actions != null && list.actions!.isNotEmpty) ? Row(mainAxisSize: MainAxisSize.min, children: list.actions!) : null,
+            trailing: (list.actions != null && list.actions!.isNotEmpty)
+                ? Row(mainAxisSize: MainAxisSize.min, children: list.actions!)
+                : null,
             isThreeLine: list.isThreeLine,
             minTileHeight: list.height,
           );
@@ -87,11 +99,15 @@ class ListsWidget extends StatelessWidget {
           iconColor: context.appColors.primaryFixed,
           shape: RoundedRectangleBorder(borderRadius: borderRadius.fromIndex(index, items.length)),
           contentPadding: EdgeInsets.symmetric(vertical: 3, horizontal: 18),
-          leading: list.leading ?? (list.icon != null ? Padding(padding: EdgeInsetsGeometry.only(right: 5), child: Icon(list.icon)) : null),
+          leading:
+              list.leading ??
+              (list.icon != null ? Padding(padding: EdgeInsetsGeometry.only(right: 5), child: Icon(list.icon)) : null),
           title: Text(list.label),
           onTap: () {},
           subtitle: Text(list.value, style: TextStyle(color: context.appColors.primaryFixedDim)),
-          trailing: (list.actions != null && list.actions!.isNotEmpty) ? Row(mainAxisSize: MainAxisSize.min, children: list.actions!) : null,
+          trailing: (list.actions != null && list.actions!.isNotEmpty)
+              ? Row(mainAxisSize: MainAxisSize.min, children: list.actions!)
+              : null,
           isThreeLine: list.isThreeLine,
           minTileHeight: list.height,
         );

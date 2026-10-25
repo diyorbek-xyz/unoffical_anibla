@@ -38,7 +38,7 @@ enum MediaType {
     .manga => "manga",
     .manxva => "manhwa",
     .movie => "movies",
-    .novel => "novella",
+    .novel => "novell",
     .serie => "series",
   };
 

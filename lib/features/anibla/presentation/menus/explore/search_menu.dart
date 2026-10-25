@@ -6,14 +6,14 @@ import 'package:application/shared/widgets/list.dart';
 import 'package:application/features/anibla/presentation/controllers/explore_controller.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/main.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
-class SearchPage extends StatelessWidget {
+class SearchMenu extends StatelessWidget {
   final SearchController controller;
-  final Function(String value, BuildContext context) submit;
-  SearchPage({super.key, required this.controller, required this.submit});
+  final void Function(String value, BuildContext context) submit;
+  SearchMenu({super.key, required this.controller, required this.submit});
 
   final _exploreController = sl<ExploreController>();
 

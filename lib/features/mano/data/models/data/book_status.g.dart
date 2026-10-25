@@ -1,37 +1,37 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'manga_status.dart';
+part of 'book_status.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class MangaStatusAdapter extends TypeAdapter<MangaStatus> {
+class BookStatusAdapter extends TypeAdapter<BookStatus> {
   @override
   final typeId = 5326;
 
   @override
-  MangaStatus read(BinaryReader reader) {
+  BookStatus read(BinaryReader reader) {
     switch (reader.readByte()) {
       case 0:
-        return MangaStatus.continuing;
+        return BookStatus.continuing;
       case 1:
-        return MangaStatus.stopped;
+        return BookStatus.stopped;
       case 2:
-        return MangaStatus.finished;
+        return BookStatus.finished;
       default:
-        return MangaStatus.continuing;
+        return BookStatus.continuing;
     }
   }
 
   @override
-  void write(BinaryWriter writer, MangaStatus obj) {
+  void write(BinaryWriter writer, BookStatus obj) {
     switch (obj) {
-      case MangaStatus.continuing:
+      case BookStatus.continuing:
         writer.writeByte(0);
-      case MangaStatus.stopped:
+      case BookStatus.stopped:
         writer.writeByte(1);
-      case MangaStatus.finished:
+      case BookStatus.finished:
         writer.writeByte(2);
     }
   }
@@ -42,7 +42,7 @@ class MangaStatusAdapter extends TypeAdapter<MangaStatus> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is MangaStatusAdapter &&
+      other is BookStatusAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

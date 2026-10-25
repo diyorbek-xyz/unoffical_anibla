@@ -15,7 +15,7 @@ class AuthInterceptor extends Interceptor {
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     final token = await _storage.getAniblaTokens();
     final staticToken =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNmE2OWFlNzJhODA0YmNkOTZmYjY3N2M2IiwidG9rZW5faWQiOiJhMjA2NTA2Yy1iMjgzLTQzMmMtYTdkNi1hMWVhZTk3ZmI0YjUiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzkxMzgxMjIwLCJleHAiOjE3OTI1OTA4MjB9.D2VvOwz7K7rESKuCSX9uoJEGApwk1Epwv7oQP4pMcDY";
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNmE2OWFlNzJhODA0YmNkOTZmYjY3N2M2IiwidG9rZW5faWQiOiJhMjA2NTA2Yy1iMjgzLTQzMmMtYTdkNi1hMWVhZTk3ZmI0YjUiLCJ0eXBlIjoiYWNjZXNzIiwiaWF0IjoxNzkyODIzNDI5LCJleHAiOjE3OTQwMzMwMjl9.jLIQHzNnIcTJ0PUTSv1zFJrBCs04YPFWyte5x7As6uQ";
     final newOptions = await setHeaders(options, token?.accessToken ?? staticToken);
     handler.next(newOptions);
   }

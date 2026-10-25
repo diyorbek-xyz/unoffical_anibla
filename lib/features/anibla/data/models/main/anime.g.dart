@@ -28,7 +28,9 @@ class AnimeAdapter extends TypeAdapter<Anime> {
       country: fields[9] == null ? {} : fields[9] as dynamic,
       trailer: fields[10] == null ? '' : fields[10] as String,
       director: fields[11] == null ? {} : fields[11] as dynamic,
-      categories: fields[12] == null ? [] : fields[12] as dynamic,
+      categories: fields[12] == null
+          ? []
+          : (fields[12] as List).cast<Category>(),
       createdDate: fields[13] == null ? '' : fields[13] as String,
       updatedDate: fields[14] == null ? '' : fields[14] as String,
       genres: fields[15] == null ? [] : (fields[15] as List).cast<Genre>(),
@@ -128,7 +130,11 @@ _Anime _$AnimeFromJson(Map<String, dynamic> json) => _Anime(
   country: json['country'] ?? const {},
   trailer: json['trailer'] as String? ?? "",
   director: json['director'] ?? const {},
-  categories: json['categories'] ?? const [],
+  categories:
+      (json['categories'] as List<dynamic>?)
+          ?.map((e) => Category.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
   createdDate: json['createdDate'] as String? ?? "",
   updatedDate: json['updatedDate'] as String? ?? "",
   genres:

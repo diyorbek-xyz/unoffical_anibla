@@ -7,7 +7,6 @@ import 'package:application/features/anibla/domain/repositories/anime_repository
 import 'package:application/features/anibla/domain/repositories/episode_repository.dart';
 import 'package:application/features/anibla/domain/repositories/season_repository.dart';
 import 'package:application/features/anibla/presentation/controllers/comment_controller.dart';
-import 'package:application/features/mano/data/models/main/manga.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/shared/controller/signal_state.dart';
 import 'package:application/shared/utils/extensions.dart';
@@ -23,17 +22,14 @@ class MediaController {
   final animeState = signal(SignalState<Anime>());
   final seasonsState = signal(SignalState<List<Season>>());
   final episodesState = signal(SignalState<List<Episode>>());
-  final mangaState = signal(SignalState<Manga>());
 
-  final fakeAnime = Anime();
+  final fakeAnime = Anime(ru: {"description": lorem(), "title": lorem(10)}, uz: {"description": lorem(), "title": lorem(10)});
   final fakeSeasons = List.generate(2, (index) => Season());
   final fakeEpisodes = List.generate(6, (index) => Episode());
-  final fakeManga = Manga();
 
   MediaType? _mediaType;
   String? _animeSlug;
   String? _seasonSlug;
-  String? _mangaSlug;
 
   Future<void> getHome(Pagination paginator) async {
     homeState.set(homeState.value.setLoading(true));
@@ -99,43 +95,22 @@ class MediaController {
     await commentCon.getAnimeComments();
   }
 
-  Future<void> getManga([MediaType? mediaType, String? mangaSlug]) async {
-    if (mangaState.isLoading) return;
-    if (mediaType != null) _mediaType = mediaType;
-    final slug = mangaSlug ?? _mangaSlug;
-    final type = mediaType ?? _mediaType;
-    prints([slug, type]);
-    mangaState.setLoading(true);
-    await Future.delayed(Duration(seconds: 2));
-    mangaState.setValue(Manga());
-  }
-
-  Future<void> getMedia(MediaType type, String key) async {
-    if (type.isAnime) await getFullAnime(type, key);
-    if (type.isBook) await getManga(type, key);
-  }
-
   bool isSame() => animeState.data?.slug == _animeSlug && animeState.data?.id != null && _animeSlug != null;
 
-  MediaType get mediaType => _mediaType ?? animeState.data?.type ?? mangaState.data?.type ?? MediaType.serie;
+  MediaType get mediaType => _mediaType ?? animeState.data?.type ?? MediaType.serie;
 
   Future<void> refreshFullAnime() async {
     if (_mediaType == null) return;
     resetMedia();
-    if (_mediaType!.isAnime) {
-      await getAnime();
-      await getSeasons();
-      await getEpisodes();
-    } else {
-      await getManga();
-    }
+    await getAnime();
+    await getSeasons();
+    await getEpisodes();
   }
 
   void resetMedia() {
     animeState.set(SignalState<Anime>());
     seasonsState.set(SignalState<List<Season>>());
     episodesState.set(SignalState<List<Episode>>());
-    mangaState.set(SignalState<Manga>());
   }
 
   void disposeMedia() {

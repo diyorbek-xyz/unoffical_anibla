@@ -1,7 +1,7 @@
 import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/features/anibla/data/models/local/saved_anime.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
-import 'package:application/features/anibla/data/models/props/anime_page_props.dart';
+import 'package:application/features/anibla/data/models/props/media_props.dart';
 import 'package:application/features/anibla/presentation/controllers/saved_controller.dart';
 import 'package:application/features/anibla/presentation/widgets/horizontal_card.dart';
 import 'package:application/features/anibla/data/models/misc/tab_item.dart';
@@ -81,14 +81,7 @@ class _SavedsPageState extends State<SavedsPage> {
                 final infos = data[index].infos;
                 return ListTile(
                   title: Text(infos.anime.title.uz),
-                  onTap: () => context.pushNamed(
-                    "watch",
-                    queryParameters: AnimePageProps(
-                      mediaType: infos.anime.type,
-                      animeSlug: infos.anime.slug,
-                      localPath: data[index].masterPlaylist.localUrl,
-                    ).toJson(),
-                  ),
+                  onTap: () => context.pushNamed("watch", queryParameters: MediaProps.fromAnime(infos.anime).toJson()),
                   subtitle: Text("${infos.season.title.uz} fasl ~ ${infos.episode.episodeNumber}-qism"),
                 );
               },

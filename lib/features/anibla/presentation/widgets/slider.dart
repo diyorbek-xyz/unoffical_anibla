@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
-import 'package:application/features/anibla/data/models/props/anime_page_props.dart';
+import 'package:application/features/anibla/data/models/props/media_props.dart';
 import 'package:application/shared/image_provider/fallback_provider.dart';
 import 'package:application/shared/utils/base_url.dart';
 import 'package:application/shared/widgets/error.dart';
@@ -60,8 +60,8 @@ class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin 
     _startTimer();
   }
 
-  void _next() => _goTo((_current + 1) % _length);
-  void _prev() => _goTo((_current - 1 + _length) % _length);
+  void _next() => _length < 0 ? null : _goTo((_current + 1) % _length);
+  void _prev() => _length < 0 ? null : _goTo((_current - 1 + _length) % _length);
 
   void _onDrag(DragEndDetails d) {
     final v = d.primaryVelocity ?? 0;
@@ -178,10 +178,8 @@ class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin 
                         spacing: 10,
                         children: [
                           FilledButton.icon(
-                            onPressed: () => context.pushNamed(
-                              "anime",
-                              queryParameters: AnimePageProps(mediaType: item.anime.type, animeSlug: item.anime.slug).toJson(),
-                            ),
+                            onPressed: () =>
+                                context.pushNamed("media", queryParameters: MediaProps.fromAnime(item.anime).toJson()),
                             icon: Icon(Icons.play_arrow),
                             style: ButtonStyle(
                               backgroundColor: WidgetStatePropertyAll(context.appColors.primary),

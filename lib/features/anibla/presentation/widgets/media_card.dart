@@ -4,6 +4,7 @@ import 'package:application/features/anibla/data/enums/media_type.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/features/anibla/data/models/props/media_props.dart';
 import 'package:application/features/mano/data/models/main/manga.dart';
+import 'package:application/features/mano/data/models/main/novel.dart';
 import 'package:application/shared/utils/base_url.dart';
 import 'package:application/features/anibla/presentation/controllers/saved_controller.dart';
 import 'package:application/shared/image_provider/fallback_provider.dart';
@@ -63,6 +64,16 @@ class MediaCard extends StatefulWidget {
     navigate: (c) => c.pushNamed("media", queryParameters: MediaProps.fromManga(manga).toJson()),
     badges: badges,
     progress: "${manga.chaptersCount} Bob",
+  );
+
+  factory MediaCard.fromNovel(Novel novel, {bool? expand, double? aspectRatio, List<String>? badges}) => MediaCard(
+    id: novel.id,
+    thumbnail: novel.thumbnail,
+    title: novel.title.toNullable() ?? "Lorem ipsum dolor sit",
+    type: .novel,
+    navigate: (c) => c.pushNamed("media", queryParameters: MediaProps.fromNovel(novel).toJson()),
+    badges: badges,
+    progress: "${novel.chaptersCount} Bob",
   );
 }
 

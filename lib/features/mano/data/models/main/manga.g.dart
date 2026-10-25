@@ -48,11 +48,11 @@ class MangaAdapter extends TypeAdapter<Manga> {
       bookmarkedCount: fields[22] == null ? 0 : (fields[22] as num).toInt(),
       ageRestriction: fields[23] == null ? '' : fields[23] as String,
       releaseStatus: fields[24] == null
-          ? MangaStatus.stopped
-          : fields[24] as MangaStatus,
+          ? BookStatus.stopped
+          : fields[24] as BookStatus,
       translationStatus: fields[25] == null
-          ? MangaStatus.stopped
-          : fields[25] as MangaStatus,
+          ? BookStatus.stopped
+          : fields[25] as BookStatus,
     );
   }
 
@@ -172,11 +172,11 @@ _Manga _$MangaFromJson(Map<String, dynamic> json) => _Manga(
   bookmarkedCount: (json['bookmarked_count'] as num?)?.toInt() ?? 0,
   ageRestriction: json['age_restriction'] as String? ?? "",
   releaseStatus:
-      $enumDecodeNullable(_$MangaStatusEnumMap, json['release_status']) ??
-      MangaStatus.stopped,
+      $enumDecodeNullable(_$BookStatusEnumMap, json['release_status']) ??
+      BookStatus.stopped,
   translationStatus:
-      $enumDecodeNullable(_$MangaStatusEnumMap, json['translation_status']) ??
-      MangaStatus.stopped,
+      $enumDecodeNullable(_$BookStatusEnumMap, json['translation_status']) ??
+      BookStatus.stopped,
 );
 
 Map<String, dynamic> _$MangaToJson(_Manga instance) => <String, dynamic>{
@@ -204,8 +204,8 @@ Map<String, dynamic> _$MangaToJson(_Manga instance) => <String, dynamic>{
   'is_bookmarked': instance.isBookmarked,
   'bookmarked_count': instance.bookmarkedCount,
   'age_restriction': instance.ageRestriction,
-  'release_status': _$MangaStatusEnumMap[instance.releaseStatus]!,
-  'translation_status': _$MangaStatusEnumMap[instance.translationStatus]!,
+  'release_status': _$BookStatusEnumMap[instance.releaseStatus]!,
+  'translation_status': _$BookStatusEnumMap[instance.translationStatus]!,
 };
 
 const _$MediaTypeEnumMap = {
@@ -217,8 +217,8 @@ const _$MediaTypeEnumMap = {
   MediaType.comics: 'comics',
 };
 
-const _$MangaStatusEnumMap = {
-  MangaStatus.continuing: 'continue',
-  MangaStatus.stopped: 'stopped',
-  MangaStatus.finished: 'finished',
+const _$BookStatusEnumMap = {
+  BookStatus.continuing: 'continue',
+  BookStatus.stopped: 'stopped',
+  BookStatus.finished: 'finished',
 };
