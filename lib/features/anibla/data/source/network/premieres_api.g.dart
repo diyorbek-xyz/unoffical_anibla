@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'calendar_api.dart';
+part of 'premieres_api.dart';
 
 // dart format off
 
@@ -8,10 +8,11 @@ part of 'calendar_api.dart';
 // RetrofitGenerator
 // **************************************************************************
 
+// ignore_for_file: type=lint
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter,avoid_unused_constructor_parameters,unreachable_from_main,avoid_redundant_argument_values
 
-class _CalendarApi implements CalendarApi {
-  _CalendarApi(this._dio, {this.baseUrl, this.errorLogger});
+class _PremieresApi implements PremieresApi {
+  _PremieresApi(this._dio, {this.baseUrl, this.errorLogger});
 
   final Dio _dio;
 
@@ -20,7 +21,7 @@ class _CalendarApi implements CalendarApi {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HttpResponse<ApiResponse<dynamic>>> getCalendar(
+  Future<HttpResponse<ApiResponse<dynamic>>> getPremieres(
     String date, {
     int limit = 10,
   }) async {

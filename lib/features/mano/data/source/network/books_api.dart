@@ -1,7 +1,6 @@
 import 'package:application/core/network/clients/mano_client.dart';
 import 'package:application/features/mano/data/models/data/mano_chapter.dart';
-import 'package:application/features/mano/data/models/main/manga.dart';
-import 'package:application/features/mano/data/models/main/novel.dart';
+import 'package:application/features/mano/data/models/main/book.dart';
 import 'package:application/features/mano/data/models/request/chapter_request.dart';
 import 'package:application/features/mano/data/models/request/manga_request.dart';
 import 'package:application/features/mano/data/models/request/novel_request.dart';
@@ -17,16 +16,16 @@ abstract class BooksApi {
   factory BooksApi(ManoClient client) = _BooksApi;
 
   @GET("/v2/manga")
-  Future<HttpResponse<ManoResponse<List<Manga>>>> getMangas(@Queries() MangaRequest request);
+  Future<HttpResponse<ManoResponse<List<Book>>>> getMangas(@Queries() MangaRequest request);
 
   @GET("/v2/manga/{id}")
-  Future<HttpResponse<Manga>> getManga(@Path("id") String id);
+  Future<HttpResponse<Book>> getManga(@Path("id") String id);
 
   @GET("/v2/novels")
-  Future<HttpResponse<ManoResponse<List<Novel>>>> getNovels(@Queries() NovelRequest request);
+  Future<HttpResponse<ManoResponse<List<Book>>>> getNovels(@Queries() NovelRequest request);
 
   @GET("/v2/novels/{id}")
-  Future<HttpResponse<Novel>> getNovel(@Path("id") String id);
+  Future<HttpResponse<Book>> getNovel(@Path("id") String id);
 
   @GET("/v2/{type}/{id}/chapters")
   Future<HttpResponse<ChapterResponse<List<ManoChapter>>>> getChapters(

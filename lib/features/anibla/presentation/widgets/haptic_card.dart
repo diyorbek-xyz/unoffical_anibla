@@ -3,13 +3,13 @@ import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/features/anibla/data/enums/media_type.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/features/anibla/data/models/props/media_props.dart';
-import 'package:application/features/mano/data/models/main/manga.dart';
+import 'package:application/features/mano/data/models/main/book.dart';
 import 'package:application/shared/utils/base_url.dart';
 import 'package:application/features/anibla/presentation/controllers/saved_controller.dart';
 import 'package:application/shared/image_provider/fallback_provider.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:application/injection_container.dart';
-import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -54,12 +54,12 @@ class HapticCard extends StatefulWidget {
         ? "Barcha qismlar"
         : "${anime.availableEpisodes} - ${anime.totalEpisodes}",
   );
-  factory HapticCard.fromManga(Manga manga, {bool? expand, double? aspectRatio, List<String>? badges}) => HapticCard(
+  factory HapticCard.fromManga(Book manga, {bool? expand, double? aspectRatio, List<String>? badges}) => HapticCard(
     id: manga.id,
     thumbnail: manga.thumbnail,
     title: manga.title,
     type: manga.type,
-    navigate: (c) => c.pushNamed("media", queryParameters: MediaProps.fromManga(manga).toJson()),
+    navigate: (c) => c.pushNamed("media", queryParameters: MediaProps.fromBook(manga).toJson()),
     badges: badges,
     progress: "${manga.chaptersCount} Bob",
   );

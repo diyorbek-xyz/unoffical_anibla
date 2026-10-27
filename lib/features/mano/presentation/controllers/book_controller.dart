@@ -1,7 +1,6 @@
 import 'package:application/features/anibla/data/enums/media_type.dart';
 import 'package:application/features/mano/data/models/data/mano_chapter.dart';
-import 'package:application/features/mano/data/models/main/manga.dart';
-import 'package:application/features/mano/data/models/main/novel.dart';
+import 'package:application/features/mano/data/models/main/book.dart';
 import 'package:application/features/mano/data/models/request/chapter_request.dart';
 import 'package:application/features/mano/data/models/request/manga_request.dart';
 import 'package:application/features/mano/data/models/request/novel_request.dart';
@@ -14,18 +13,18 @@ class BookController {
   final BookRepository _bookRepository;
   BookController(this._bookRepository);
 
-  FutureSignal<List<Novel>> createNovelContainer(NovelRequest request) => futureSignal(() async {
+  FutureSignal<List<Book>> createNovelContainer(NovelRequest request) => futureSignal(() async {
     final either = await _bookRepository.getNovels(request);
     return either.getData();
   });
 
-  FutureSignal<List<Manga>> createMangaContainer(MangaRequest request) => futureSignal(() async {
+  FutureSignal<List<Book>> createMangaContainer(MangaRequest request) => futureSignal(() async {
     final either = await _bookRepository.getMangas(request);
     return either.getData();
   });
 
-  late final novelContainer = futureSignalContainer<List<Novel>, NovelRequest>(createNovelContainer, cache: true);
-  late final mangaContainer = futureSignalContainer<List<Manga>, MangaRequest>(createMangaContainer, cache: true);
+  late final novelContainer = futureSignalContainer<List<Book>, NovelRequest>(createNovelContainer, cache: true);
+  late final mangaContainer = futureSignalContainer<List<Book>, MangaRequest>(createMangaContainer, cache: true);
 
   late final hotUpdateMangas = mangaContainer(MangaRequest(sortBy: .latestChapter));
   late final newestMangas = mangaContainer(MangaRequest(sortBy: .newest));
@@ -35,18 +34,17 @@ class BookController {
   late final newestNovels = novelContainer(NovelRequest(sortBy: .newest));
   late final topNovels = novelContainer(NovelRequest(type: .manga));
 
-  late final manga = signal(SignalState<Manga>());
-  late final novel = signal(SignalState<Novel>());
+  late final book = signal(SignalState<Book>());
   late final chapters = signal(SignalState<List<ManoChapter>>());
 
   Future<void> getManga(String id) async {
     final either = await _bookRepository.getManga(id);
-    either.fold((l) => manga.setError(l.message), manga.setValue);
+    either.fold((l) => book.setError(l.message), book.setValue);
   }
 
   Future<void> getNovel(String id) async {
     final either = await _bookRepository.getNovel(id);
-    either.fold((l) => novel.setError(l.message), novel.setValue);
+    either.fold((l) => book.setError(l.message), book.setValue);
   }
 
   Future<void> getChapters(MediaType type, String id) async {
@@ -63,9 +61,7 @@ class BookController {
 
   void refreshNewest() => newestMangas.refresh();
 
-  final fakeMangas = List.generate(5, (index) => const Manga());
-  final fakeNovels = List.generate(5, (index) => const Novel());
+  final fakeBooks = List.generate(5, (index) => const Book());
   final fakeChapters = List.generate(5, (index) => const ManoChapter());
-  final fakeNovel = const Novel();
-  final fakeManga = const Manga();
+  final fakeBook = const Book();
 }

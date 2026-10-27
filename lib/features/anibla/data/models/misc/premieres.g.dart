@@ -1,38 +1,38 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'calendar.dart';
+part of 'premieres.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class CalendarAdapter extends TypeAdapter<Calendar> {
+class PremieresAdapter extends TypeAdapter<Premieres> {
   @override
   final typeId = 302;
 
   @override
-  Calendar read(BinaryReader reader) {
+  Premieres read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Calendar(
+    return Premieres(
       pagination: fields[0] == null
           ? const Pagination()
           : fields[0] as Pagination,
-      timers: fields[1] == null ? [] : (fields[1] as List).cast<Timer>(),
       date: fields[2] == null ? '' : fields[2] as String,
+      premieres: fields[1] == null ? [] : (fields[1] as List).cast<Premiere>(),
     );
   }
 
   @override
-  void write(BinaryWriter writer, Calendar obj) {
+  void write(BinaryWriter writer, Premieres obj) {
     writer
       ..writeByte(3)
       ..writeByte(0)
       ..write(obj.pagination)
       ..writeByte(1)
-      ..write(obj.timers)
+      ..write(obj.premieres)
       ..writeByte(2)
       ..write(obj.date);
   }
@@ -43,7 +43,7 @@ class CalendarAdapter extends TypeAdapter<Calendar> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is CalendarAdapter &&
+      other is PremieresAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
@@ -52,20 +52,21 @@ class CalendarAdapter extends TypeAdapter<Calendar> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-_Calendar _$CalendarFromJson(Map<String, dynamic> json) => _Calendar(
+_Premieres _$PremieresFromJson(Map<String, dynamic> json) => _Premieres(
   pagination: json['pagination'] == null
       ? const Pagination()
       : Pagination.fromJson(json['pagination'] as Map<String, dynamic>),
-  timers:
+  date: json['date'] as String? ?? "",
+  premieres:
       (json['timers'] as List<dynamic>?)
-          ?.map((e) => Timer.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => Premiere.fromJson(e as Map<String, dynamic>))
           .toList() ??
       const [],
-  date: json['date'] as String? ?? "",
 );
 
-Map<String, dynamic> _$CalendarToJson(_Calendar instance) => <String, dynamic>{
-  'pagination': instance.pagination,
-  'timers': instance.timers,
-  'date': instance.date,
-};
+Map<String, dynamic> _$PremieresToJson(_Premieres instance) =>
+    <String, dynamic>{
+      'pagination': instance.pagination,
+      'date': instance.date,
+      'timers': instance.premieres,
+    };

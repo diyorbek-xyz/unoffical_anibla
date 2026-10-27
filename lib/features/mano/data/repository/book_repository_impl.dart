@@ -1,8 +1,7 @@
 import 'package:application/core/network/resources/failure.dart';
 import 'package:application/features/anibla/data/enums/media_type.dart';
 import 'package:application/features/mano/data/models/data/mano_chapter.dart';
-import 'package:application/features/mano/data/models/main/manga.dart';
-import 'package:application/features/mano/data/models/main/novel.dart';
+import 'package:application/features/mano/data/models/main/book.dart';
 import 'package:application/features/mano/data/models/request/chapter_request.dart';
 import 'package:application/features/mano/data/models/request/manga_request.dart';
 import 'package:application/features/mano/data/models/request/novel_request.dart';
@@ -19,12 +18,12 @@ class BookRepositoryImpl implements BookRepository {
   const BookRepositoryImpl(this._booksApi, this._booksLocal);
 
   @override
-  Future<Either<Failure, List<Manga>>> getMangas(MangaRequest request) async {
+  Future<Either<Failure, List<Book>>> getMangas(MangaRequest request) async {
     try {
       final httpResponse = await _booksApi.getMangas(request);
       final mangas = httpResponse.data.data;
       await Future.wait(
-        List.generate(mangas.length, (index) async => await _booksLocal.saveManga(mangas[index].id, mangas[index])),
+        List.generate(mangas.length, (index) async => await _booksLocal.saveBook(mangas[index].id, mangas[index])),
       );
       return Right(mangas);
     } on DioException catch (e) {
@@ -33,12 +32,12 @@ class BookRepositoryImpl implements BookRepository {
   }
 
   @override
-  Future<Either<Failure, List<Novel>>> getNovels(NovelRequest request) async {
+  Future<Either<Failure, List<Book>>> getNovels(NovelRequest request) async {
     try {
       final httpResponse = await _booksApi.getNovels(request);
       final novels = httpResponse.data.data;
       await Future.wait(
-        List.generate(novels.length, (index) async => await _booksLocal.saveNovel(novels[index].id, novels[index])),
+        List.generate(novels.length, (index) async => await _booksLocal.saveBook(novels[index].id, novels[index])),
       );
       return Right(novels);
     } on DioException catch (e) {
@@ -47,9 +46,9 @@ class BookRepositoryImpl implements BookRepository {
   }
 
   @override
-  Future<Either<Failure, Manga>> getManga(String id) async {
+  Future<Either<Failure, Book>> getManga(String id) async {
     try {
-      final manga = _booksLocal.getManga(id);
+      final manga = _booksLocal.getBook(id);
       if (manga != null) return Right(manga);
       final newManga = await _booksApi.getManga(id);
       return Right(newManga.data);
@@ -59,9 +58,9 @@ class BookRepositoryImpl implements BookRepository {
   }
 
   @override
-  Future<Either<Failure, Novel>> getNovel(String id) async {
+  Future<Either<Failure, Book>> getNovel(String id) async {
     try {
-      final novel = _booksLocal.getNovel(id);
+      final novel = _booksLocal.getBook(id);
       if (novel != null) return Right(novel);
       final newNovel = await _booksApi.getNovel(id);
       return Right(newNovel.data);

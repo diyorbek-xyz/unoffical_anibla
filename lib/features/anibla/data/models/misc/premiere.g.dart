@@ -1,22 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'timer.dart';
+part of 'premiere.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class TimerAdapter extends TypeAdapter<Timer> {
+class PremiereAdapter extends TypeAdapter<Premiere> {
   @override
   final typeId = 303;
 
   @override
-  Timer read(BinaryReader reader) {
+  Premiere read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Timer(
+    return Premiere(
       anime: fields[0] == null ? const Anime() : fields[0] as Anime,
       id: fields[1] == null ? '' : fields[1] as String,
       type: fields[4] == null ? MediaType.serie : fields[4] as MediaType,
@@ -27,7 +27,7 @@ class TimerAdapter extends TypeAdapter<Timer> {
   }
 
   @override
-  void write(BinaryWriter writer, Timer obj) {
+  void write(BinaryWriter writer, Premiere obj) {
     writer
       ..writeByte(6)
       ..writeByte(0)
@@ -50,7 +50,7 @@ class TimerAdapter extends TypeAdapter<Timer> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is TimerAdapter &&
+      other is PremiereAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
@@ -59,7 +59,7 @@ class TimerAdapter extends TypeAdapter<Timer> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-_Timer _$TimerFromJson(Map<String, dynamic> json) => _Timer(
+_Premiere _$PremiereFromJson(Map<String, dynamic> json) => _Premiere(
   anime: json['media'] == null ? const Anime() : Anime.fromJson(json['media']),
   id: json['_id'] as String? ?? "",
   type:
@@ -72,7 +72,7 @@ _Timer _$TimerFromJson(Map<String, dynamic> json) => _Timer(
   totalEpisodes: (json['total_episodes'] as num?)?.toInt() ?? -1,
 );
 
-Map<String, dynamic> _$TimerToJson(_Timer instance) => <String, dynamic>{
+Map<String, dynamic> _$PremiereToJson(_Premiere instance) => <String, dynamic>{
   'media': instance.anime,
   '_id': instance.id,
   'mediaType': _$MediaTypeEnumMap[instance.type]!,

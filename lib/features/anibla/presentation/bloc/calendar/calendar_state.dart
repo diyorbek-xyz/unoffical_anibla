@@ -1,4 +1,4 @@
-import 'package:application/features/anibla/data/models/misc/calendar.dart';
+import 'package:application/features/anibla/data/models/misc/premieres.dart';
 
 sealed class CalendarState {
   const CalendarState();
@@ -13,12 +13,12 @@ final class CalendarLoading extends CalendarState {
 }
 
 final class CalendarSuccess extends CalendarState {
-  final Calendar data;
+  final Premieres data;
   const CalendarSuccess(this.data);
 }
 
 final class CalendarWeeklySuccess extends CalendarState {
-  final List<Calendar?> data;
+  final List<Premieres?> data;
   const CalendarWeeklySuccess(this.data);
 }
 

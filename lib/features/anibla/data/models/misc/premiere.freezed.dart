@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'timer.dart';
+part of 'premiere.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -13,22 +13,22 @@ part of 'timer.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$Timer {
+mixin _$Premiere {
 
 @HiveField(0)@JsonKey(name: "media") Anime get anime;@HiveField(1)@JsonKey(name: "_id") String get id;@HiveField(4)@JsonKey(name: "mediaType") MediaType get type;@HiveField(5)@JsonKey(name: "episode_id") Episode get episode;@HiveField(3)@JsonKey(name: "time") String get date;@HiveField(6)@JsonKey(name: "total_episodes") int get totalEpisodes;
-/// Create a copy of Timer
+/// Create a copy of Premiere
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$TimerCopyWith<Timer> get copyWith => _$TimerCopyWithImpl<Timer>(this as Timer, _$identity);
+$PremiereCopyWith<Premiere> get copyWith => _$PremiereCopyWithImpl<Premiere>(this as Premiere, _$identity);
 
-  /// Serializes this Timer to a JSON map.
+  /// Serializes this Premiere to a JSON map.
   Map<String, dynamic> toJson();
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Timer&&(identical(other.anime, anime) || other.anime == anime)&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.episode, episode) || other.episode == episode)&&(identical(other.date, date) || other.date == date)&&(identical(other.totalEpisodes, totalEpisodes) || other.totalEpisodes == totalEpisodes));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Premiere&&(identical(other.anime, anime) || other.anime == anime)&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.episode, episode) || other.episode == episode)&&(identical(other.date, date) || other.date == date)&&(identical(other.totalEpisodes, totalEpisodes) || other.totalEpisodes == totalEpisodes));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -37,15 +37,15 @@ int get hashCode => Object.hash(runtimeType,anime,id,type,episode,date,totalEpis
 
 @override
 String toString() {
-  return 'Timer(anime: $anime, id: $id, type: $type, episode: $episode, date: $date, totalEpisodes: $totalEpisodes)';
+  return 'Premiere(anime: $anime, id: $id, type: $type, episode: $episode, date: $date, totalEpisodes: $totalEpisodes)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $TimerCopyWith<$Res>  {
-  factory $TimerCopyWith(Timer value, $Res Function(Timer) _then) = _$TimerCopyWithImpl;
+abstract mixin class $PremiereCopyWith<$Res>  {
+  factory $PremiereCopyWith(Premiere value, $Res Function(Premiere) _then) = _$PremiereCopyWithImpl;
 @useResult
 $Res call({
 @HiveField(0)@JsonKey(name: "media") Anime anime,@HiveField(1)@JsonKey(name: "_id") String id,@HiveField(4)@JsonKey(name: "mediaType") MediaType type,@HiveField(5)@JsonKey(name: "episode_id") Episode episode,@HiveField(3)@JsonKey(name: "time") String date,@HiveField(6)@JsonKey(name: "total_episodes") int totalEpisodes
@@ -56,14 +56,14 @@ $AnimeCopyWith<$Res> get anime;$EpisodeCopyWith<$Res> get episode;
 
 }
 /// @nodoc
-class _$TimerCopyWithImpl<$Res>
-    implements $TimerCopyWith<$Res> {
-  _$TimerCopyWithImpl(this._self, this._then);
+class _$PremiereCopyWithImpl<$Res>
+    implements $PremiereCopyWith<$Res> {
+  _$PremiereCopyWithImpl(this._self, this._then);
 
-  final Timer _self;
-  final $Res Function(Timer) _then;
+  final Premiere _self;
+  final $Res Function(Premiere) _then;
 
-/// Create a copy of Timer
+/// Create a copy of Premiere
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? anime = null,Object? id = null,Object? type = null,Object? episode = null,Object? date = null,Object? totalEpisodes = null,}) {
   return _then(_self.copyWith(
@@ -76,7 +76,7 @@ as String,totalEpisodes: null == totalEpisodes ? _self.totalEpisodes : totalEpis
 as int,
   ));
 }
-/// Create a copy of Timer
+/// Create a copy of Premiere
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -85,7 +85,7 @@ $AnimeCopyWith<$Res> get anime {
   return $AnimeCopyWith<$Res>(_self.anime, (value) {
     return _then(_self.copyWith(anime: value));
   });
-}/// Create a copy of Timer
+}/// Create a copy of Premiere
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -98,8 +98,8 @@ $EpisodeCopyWith<$Res> get episode {
 }
 
 
-/// Adds pattern-matching-related methods to [Timer].
-extension TimerPatterns on Timer {
+/// Adds pattern-matching-related methods to [Premiere].
+extension PremierePatterns on Premiere {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:
@@ -112,10 +112,10 @@ extension TimerPatterns on Timer {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _Timer value)?  $default,{required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _Premiere value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case _Timer() when $default != null:
+case _Premiere() when $default != null:
 return $default(_that);case _:
   return orElse();
 
@@ -134,10 +134,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _Timer value)  $default,){
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _Premiere value)  $default,){
 final _that = this;
 switch (_that) {
-case _Timer():
+case _Premiere():
 return $default(_that);}
 }
 /// A variant of `map` that fallback to returning `null`.
@@ -152,10 +152,10 @@ return $default(_that);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _Timer value)?  $default,){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _Premiere value)?  $default,){
 final _that = this;
 switch (_that) {
-case _Timer() when $default != null:
+case _Premiere() when $default != null:
 return $default(_that);case _:
   return null;
 
@@ -175,7 +175,7 @@ return $default(_that);case _:
 
 @optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@HiveField(0)@JsonKey(name: "media")  Anime anime, @HiveField(1)@JsonKey(name: "_id")  String id, @HiveField(4)@JsonKey(name: "mediaType")  MediaType type, @HiveField(5)@JsonKey(name: "episode_id")  Episode episode, @HiveField(3)@JsonKey(name: "time")  String date, @HiveField(6)@JsonKey(name: "total_episodes")  int totalEpisodes)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case _Timer() when $default != null:
+case _Premiere() when $default != null:
 return $default(_that.anime,_that.id,_that.type,_that.episode,_that.date,_that.totalEpisodes);case _:
   return orElse();
 
@@ -196,7 +196,7 @@ return $default(_that.anime,_that.id,_that.type,_that.episode,_that.date,_that.t
 
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@HiveField(0)@JsonKey(name: "media")  Anime anime, @HiveField(1)@JsonKey(name: "_id")  String id, @HiveField(4)@JsonKey(name: "mediaType")  MediaType type, @HiveField(5)@JsonKey(name: "episode_id")  Episode episode, @HiveField(3)@JsonKey(name: "time")  String date, @HiveField(6)@JsonKey(name: "total_episodes")  int totalEpisodes)  $default,) {final _that = this;
 switch (_that) {
-case _Timer():
+case _Premiere():
 return $default(_that.anime,_that.id,_that.type,_that.episode,_that.date,_that.totalEpisodes);}
 }
 /// A variant of `when` that fallback to returning `null`
@@ -213,7 +213,7 @@ return $default(_that.anime,_that.id,_that.type,_that.episode,_that.date,_that.t
 
 @optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@HiveField(0)@JsonKey(name: "media")  Anime anime, @HiveField(1)@JsonKey(name: "_id")  String id, @HiveField(4)@JsonKey(name: "mediaType")  MediaType type, @HiveField(5)@JsonKey(name: "episode_id")  Episode episode, @HiveField(3)@JsonKey(name: "time")  String date, @HiveField(6)@JsonKey(name: "total_episodes")  int totalEpisodes)?  $default,) {final _that = this;
 switch (_that) {
-case _Timer() when $default != null:
+case _Premiere() when $default != null:
 return $default(_that.anime,_that.id,_that.type,_that.episode,_that.date,_that.totalEpisodes);case _:
   return null;
 
@@ -225,9 +225,9 @@ return $default(_that.anime,_that.id,_that.type,_that.episode,_that.date,_that.t
 /// @nodoc
 @JsonSerializable()
 
-class _Timer extends Timer {
-  const _Timer({@HiveField(0)@JsonKey(name: "media") this.anime = const Anime(), @HiveField(1)@JsonKey(name: "_id") this.id = "", @HiveField(4)@JsonKey(name: "mediaType") this.type = MediaType.serie, @HiveField(5)@JsonKey(name: "episode_id") this.episode = const Episode(), @HiveField(3)@JsonKey(name: "time") this.date = "", @HiveField(6)@JsonKey(name: "total_episodes") this.totalEpisodes = -1}): super._();
-  factory _Timer.fromJson(Map<String, dynamic> json) => _$TimerFromJson(json);
+class _Premiere extends Premiere {
+  const _Premiere({@HiveField(0)@JsonKey(name: "media") this.anime = const Anime(), @HiveField(1)@JsonKey(name: "_id") this.id = "", @HiveField(4)@JsonKey(name: "mediaType") this.type = MediaType.serie, @HiveField(5)@JsonKey(name: "episode_id") this.episode = const Episode(), @HiveField(3)@JsonKey(name: "time") this.date = "", @HiveField(6)@JsonKey(name: "total_episodes") this.totalEpisodes = -1}): super._();
+  factory _Premiere.fromJson(Map<String, dynamic> json) => _$PremiereFromJson(json);
 
 @override@HiveField(0)@JsonKey(name: "media") final  Anime anime;
 @override@HiveField(1)@JsonKey(name: "_id") final  String id;
@@ -236,20 +236,20 @@ class _Timer extends Timer {
 @override@HiveField(3)@JsonKey(name: "time") final  String date;
 @override@HiveField(6)@JsonKey(name: "total_episodes") final  int totalEpisodes;
 
-/// Create a copy of Timer
+/// Create a copy of Premiere
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$TimerCopyWith<_Timer> get copyWith => __$TimerCopyWithImpl<_Timer>(this, _$identity);
+_$PremiereCopyWith<_Premiere> get copyWith => __$PremiereCopyWithImpl<_Premiere>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
-  return _$TimerToJson(this, );
+  return _$PremiereToJson(this, );
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Timer&&(identical(other.anime, anime) || other.anime == anime)&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.episode, episode) || other.episode == episode)&&(identical(other.date, date) || other.date == date)&&(identical(other.totalEpisodes, totalEpisodes) || other.totalEpisodes == totalEpisodes));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Premiere&&(identical(other.anime, anime) || other.anime == anime)&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.episode, episode) || other.episode == episode)&&(identical(other.date, date) || other.date == date)&&(identical(other.totalEpisodes, totalEpisodes) || other.totalEpisodes == totalEpisodes));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -258,15 +258,15 @@ int get hashCode => Object.hash(runtimeType,anime,id,type,episode,date,totalEpis
 
 @override
 String toString() {
-  return 'Timer(anime: $anime, id: $id, type: $type, episode: $episode, date: $date, totalEpisodes: $totalEpisodes)';
+  return 'Premiere(anime: $anime, id: $id, type: $type, episode: $episode, date: $date, totalEpisodes: $totalEpisodes)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$TimerCopyWith<$Res> implements $TimerCopyWith<$Res> {
-  factory _$TimerCopyWith(_Timer value, $Res Function(_Timer) _then) = __$TimerCopyWithImpl;
+abstract mixin class _$PremiereCopyWith<$Res> implements $PremiereCopyWith<$Res> {
+  factory _$PremiereCopyWith(_Premiere value, $Res Function(_Premiere) _then) = __$PremiereCopyWithImpl;
 @override @useResult
 $Res call({
 @HiveField(0)@JsonKey(name: "media") Anime anime,@HiveField(1)@JsonKey(name: "_id") String id,@HiveField(4)@JsonKey(name: "mediaType") MediaType type,@HiveField(5)@JsonKey(name: "episode_id") Episode episode,@HiveField(3)@JsonKey(name: "time") String date,@HiveField(6)@JsonKey(name: "total_episodes") int totalEpisodes
@@ -277,17 +277,17 @@ $Res call({
 
 }
 /// @nodoc
-class __$TimerCopyWithImpl<$Res>
-    implements _$TimerCopyWith<$Res> {
-  __$TimerCopyWithImpl(this._self, this._then);
+class __$PremiereCopyWithImpl<$Res>
+    implements _$PremiereCopyWith<$Res> {
+  __$PremiereCopyWithImpl(this._self, this._then);
 
-  final _Timer _self;
-  final $Res Function(_Timer) _then;
+  final _Premiere _self;
+  final $Res Function(_Premiere) _then;
 
-/// Create a copy of Timer
+/// Create a copy of Premiere
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? anime = null,Object? id = null,Object? type = null,Object? episode = null,Object? date = null,Object? totalEpisodes = null,}) {
-  return _then(_Timer(
+  return _then(_Premiere(
 anime: null == anime ? _self.anime : anime // ignore: cast_nullable_to_non_nullable
 as Anime,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
@@ -298,7 +298,7 @@ as int,
   ));
 }
 
-/// Create a copy of Timer
+/// Create a copy of Premiere
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -307,7 +307,7 @@ $AnimeCopyWith<$Res> get anime {
   return $AnimeCopyWith<$Res>(_self.anime, (value) {
     return _then(_self.copyWith(anime: value));
   });
-}/// Create a copy of Timer
+}/// Create a copy of Premiere
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')

@@ -3,12 +3,12 @@ import 'package:application/shared/models/api_response.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
-part 'calendar_api.g.dart';
+part 'premieres_api.g.dart';
 
 @RestApi()
-abstract class CalendarApi {
-  factory CalendarApi(AniblaClient dio) = _CalendarApi;
+abstract class PremieresApi {
+  factory PremieresApi(AniblaClient dio) = _PremieresApi;
 
   @GET('/v1/timer/time/{date}')
-  Future<HttpResponse<ApiResponse<dynamic>>> getCalendar(@Path("date") String date, {@Query("limit") int limit = 10});
+  Future<HttpResponse<ApiResponse<dynamic>>> getPremieres(@Path("date") String date, {@Query("limit") int limit = 10});
 }

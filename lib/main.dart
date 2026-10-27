@@ -20,7 +20,9 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) => MaterialApp.router(
     routerConfig: config,
     debugShowCheckedModeBanner: false,
-    theme: AppThemes.darkTheme,
+    themeMode: .system,
+    darkTheme: AppThemes.darkTheme,
+    theme: AppThemes.lightTheme,
     builder: (_, child) => KeyboardShortcuts(config, child!),
   );
 }

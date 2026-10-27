@@ -1,13 +1,8 @@
-import 'dart:ui';
-import 'package:application/core/config/theme/app_colors.dart';
-import 'package:application/core/network/resources/errors.dart';
 import 'package:application/features/anibla/data/models/props/media_props.dart';
 import 'package:application/features/anibla/data/view_model/media_view.dart';
 import 'package:application/features/anibla/presentation/widgets/media_page_hero.dart';
-import 'package:application/shared/widgets/error.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class MediaPage extends StatelessWidget {
   final MediaProps mediaProps;
@@ -26,13 +21,14 @@ class MediaPage extends StatelessWidget {
       ),
       body: NestedScrollView(
         clipBehavior: Clip.hardEdge,
-        headerSliverBuilder: (_, _) => [
+        headerSliverBuilder: (_, isScrolled) => [
           MediaPageHero(
             isSaved: false,
-            items: mediaInfos.items,
             tabs: mediaInfos.tabs,
-            thumbnail: mediaInfos.thumbnail,
+            isScrolled: isScrolled,
+            items: mediaInfos.items,
             title: mediaInfos.title,
+            thumbnail: mediaInfos.thumbnail,
           ),
         ],
         body: TabBarView(children: mediaInfos.views),
@@ -40,19 +36,3 @@ class MediaPage extends StatelessWidget {
     ),
   );
 }
-
-void openErrorDialog(BuildContext context, {required void Function() refresh, required String error}) => showDialog(
-  context: context,
-  builder: (_) => Skeleton.ignore(
-    ignore: true,
-    child: BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-      child: Container(
-        decoration: BoxDecoration(color: context.appColors.surface.withAlpha(100)),
-        width: 400,
-        height: 400,
-        child: ErrorBuilder(message: ErrorMessages.fromMessage(error), refresh: refresh),
-      ),
-    ),
-  ),
-);

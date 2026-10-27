@@ -1,22 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'novel.dart';
+part of 'book.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class NovelAdapter extends TypeAdapter<Novel> {
+class BookAdapter extends TypeAdapter<Book> {
   @override
-  final typeId = 6236;
+  final typeId = 6234;
 
   @override
-  Novel read(BinaryReader reader) {
+  Book read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Novel(
+    return Book(
       slug: fields[0] == null ? '' : fields[0] as String,
       title: fields[1] == null ? '' : fields[1] as String,
       description: fields[2] == null ? '' : fields[2] as String,
@@ -38,7 +38,8 @@ class NovelAdapter extends TypeAdapter<Novel> {
       bookmarkedCount: fields[12] == null ? 0 : (fields[12] as num).toInt(),
       isShowed: fields[13] == null ? false : fields[13] as bool,
       isBookmarked: fields[14] == null ? false : fields[14] as bool,
-      isCommentEnabled: fields[15] == null ? false : fields[15] as bool,
+      type: fields[15] == null ? MediaType.novel : fields[15] as MediaType,
+      isCommentEnabled: fields[26] == null ? false : fields[26] as bool,
       id: fields[16] == null ? '' : fields[16] as String,
       realLink: fields[17] == null ? '' : fields[17] as String,
       thumbnail: fields[18] == null ? '' : fields[18] as String,
@@ -57,9 +58,9 @@ class NovelAdapter extends TypeAdapter<Novel> {
   }
 
   @override
-  void write(BinaryWriter writer, Novel obj) {
+  void write(BinaryWriter writer, Book obj) {
     writer
-      ..writeByte(26)
+      ..writeByte(27)
       ..writeByte(0)
       ..write(obj.slug)
       ..writeByte(1)
@@ -91,7 +92,7 @@ class NovelAdapter extends TypeAdapter<Novel> {
       ..writeByte(14)
       ..write(obj.isBookmarked)
       ..writeByte(15)
-      ..write(obj.isCommentEnabled)
+      ..write(obj.type)
       ..writeByte(16)
       ..write(obj.id)
       ..writeByte(17)
@@ -111,7 +112,9 @@ class NovelAdapter extends TypeAdapter<Novel> {
       ..writeByte(24)
       ..write(obj.releaseStatus)
       ..writeByte(25)
-      ..write(obj.translationStatus);
+      ..write(obj.translationStatus)
+      ..writeByte(26)
+      ..write(obj.isCommentEnabled);
   }
 
   @override
@@ -120,7 +123,7 @@ class NovelAdapter extends TypeAdapter<Novel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is NovelAdapter &&
+      other is BookAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
@@ -129,7 +132,7 @@ class NovelAdapter extends TypeAdapter<Novel> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-_Novel _$NovelFromJson(Map<String, dynamic> json) => _Novel(
+_Book _$BookFromJson(Map<String, dynamic> json) => _Book(
   slug: json['slug'] as String? ?? "",
   title: json['title'] as String? ?? "",
   description: json['description'] as String? ?? "",
@@ -161,8 +164,10 @@ _Novel _$NovelFromJson(Map<String, dynamic> json) => _Novel(
   bookmarkedCount: (json['bookmarked_count'] as num?)?.toInt() ?? 0,
   isShowed: json['is_showed'] as bool? ?? false,
   isBookmarked: json['is_bookmarked'] as bool? ?? false,
+  type:
+      $enumDecodeNullable(_$MediaTypeEnumMap, json['type']) ?? MediaType.novel,
   isCommentEnabled: json['is_comment_enabled'] as bool? ?? false,
-  id: json['novel_id'] as String? ?? "",
+  id: json['id'] as String? ?? "",
   realLink: json['real_link'] as String? ?? "",
   thumbnail: json['image_url'] as String? ?? "",
   updatedAt: json['updated_at'] as String? ?? "",
@@ -178,7 +183,7 @@ _Novel _$NovelFromJson(Map<String, dynamic> json) => _Novel(
       BookStatus.stopped,
 );
 
-Map<String, dynamic> _$NovelToJson(_Novel instance) => <String, dynamic>{
+Map<String, dynamic> _$BookToJson(_Book instance) => <String, dynamic>{
   'slug': instance.slug,
   'title': instance.title,
   'description': instance.description,
@@ -194,8 +199,9 @@ Map<String, dynamic> _$NovelToJson(_Novel instance) => <String, dynamic>{
   'bookmarked_count': instance.bookmarkedCount,
   'is_showed': instance.isShowed,
   'is_bookmarked': instance.isBookmarked,
+  'type': _$MediaTypeEnumMap[instance.type]!,
   'is_comment_enabled': instance.isCommentEnabled,
-  'novel_id': instance.id,
+  'id': instance.id,
   'real_link': instance.realLink,
   'image_url': instance.thumbnail,
   'updated_at': instance.updatedAt,
@@ -205,6 +211,15 @@ Map<String, dynamic> _$NovelToJson(_Novel instance) => <String, dynamic>{
   'age_restriction': instance.ageRestriction,
   'release_status': _$BookStatusEnumMap[instance.releaseStatus]!,
   'translation_status': _$BookStatusEnumMap[instance.translationStatus]!,
+};
+
+const _$MediaTypeEnumMap = {
+  MediaType.movie: 'Movies',
+  MediaType.serie: 'Series',
+  MediaType.manga: 'manga',
+  MediaType.manxva: 'manhwa',
+  MediaType.novel: 'novel',
+  MediaType.comics: 'comics',
 };
 
 const _$BookStatusEnumMap = {

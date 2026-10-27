@@ -1,7 +1,11 @@
 import 'package:application/core/config/theme/app_theme.dart';
+import 'package:application/core/network/resources/failure.dart';
 import 'package:application/shared/utils/extensions.dart';
+import 'package:application/shared/widgets/error.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:signals_flutter/signals_flutter.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class Recommends extends StatefulWidget {
   final List<Widget> items;
@@ -20,6 +24,23 @@ class Recommends extends StatefulWidget {
 
   @override
   State<Recommends> createState() => _RecommendsState();
+
+  static Widget futureSignalBuilder<T>({
+    required String title,
+    required FutureSignal<List<T>> futureSignal,
+    required Widget Function(BuildContext context, T item) builder,
+    List<T> fake = const [],
+  }) => SignalBuilder(
+    builder: (context) {
+      final state = futureSignal.value;
+      if (state.hasError) return ErrorBuilder(message: (state.error as Failure).message, refresh: () {});
+      final data = state.value ?? fake;
+      return Skeletonizer(
+        enabled: state.isLoading,
+        child: Recommends(title: title, items: data.map((e) => builder(context, e)).toList()),
+      );
+    },
+  );
 }
 
 class _RecommendsState extends State<Recommends> {

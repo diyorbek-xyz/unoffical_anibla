@@ -5,7 +5,7 @@ import 'package:application/features/anibla/presentation/widgets/media_card.dart
 import 'package:application/features/anibla/presentation/bloc/calendar/calendar_bloc.dart';
 import 'package:application/features/anibla/presentation/bloc/calendar/calendar_event.dart';
 import 'package:application/features/anibla/presentation/bloc/calendar/calendar_state.dart';
-import 'package:application/features/anibla/data/models/misc/calendar.dart' as cal;
+import 'package:application/features/anibla/data/models/misc/premieres.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/main.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +26,7 @@ class Calendar extends StatelessWidget {
           builder: (context, state) {
             final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
             final isLoading = state is! CalendarWeeklySuccess;
-            final fake = List.generate(7, (index) => cal.Calendar());
+            final fake = List.generate(7, (index) => Premieres());
             final data = isLoading ? fake : state.data;
             final outerRadius = Radius.circular(15);
             final innerRadius = Radius.circular(5);
@@ -82,7 +82,6 @@ class Calendar extends StatelessWidget {
                                   SliverConstrainedCrossAxis(maxExtent: 5, sliver: const SliverToBoxAdapter(child: SizedBox())),
                                   SliverCrossAxisExpanded(
                                     flex: 1,
-                                    // maxExtent: timersHeight,
                                     sliver: SliverToBoxAdapter(child: timers(context, innerRadius, outerRadius, e)),
                                   ),
                                 ],
@@ -102,7 +101,7 @@ class Calendar extends StatelessWidget {
     );
   }
 
-  Container weekTitle(BuildContext context, Radius innerRadius, Radius outerRadius, cal.Calendar? e) {
+  Container weekTitle(BuildContext context, Radius innerRadius, Radius outerRadius, Premieres? e) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
       decoration: BoxDecoration(
@@ -117,14 +116,14 @@ class Calendar extends StatelessWidget {
       child: Skeleton.ignore(
         ignore: true,
         child: Text(
-          "${toBeginningOfSentenceCase(DateTime.tryParse(e?.date ?? "")?.formatDynamicWeeks())}${e?.timers != null ? " ${e?.timers.length}ta" : ""}",
+          "${toBeginningOfSentenceCase(DateTime.tryParse(e?.date ?? "")?.formatDynamicWeeks())}${e?.premieres != null ? " ${e?.premieres.length}ta" : ""}",
           style: TextStyle(color: context.appColors.onPrimary),
         ),
       ),
     );
   }
 
-  Container timers(BuildContext context, Radius innerRadius, Radius outerRadius, cal.Calendar? calendar) {
+  Container timers(BuildContext context, Radius innerRadius, Radius outerRadius, Premieres? calendar) {
     final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
     final double width = isMobile ? 150 : 180;
 
@@ -139,10 +138,10 @@ class Calendar extends StatelessWidget {
         ),
       ),
       padding: EdgeInsets.all(5),
-      child: (calendar != null && calendar.timers.isNotEmpty)
+      child: (calendar != null && calendar.premieres.isNotEmpty)
           ? Row(
               spacing: 10,
-              children: calendar.timers.where((e) => e.anime.slug != "bir-soatli-qizcha-5").toList().asMap().entries.map((e) {
+              children: calendar.premieres.where((e) => e.anime.slug != "bir-soatli-qizcha-5").toList().asMap().entries.map((e) {
                 final timer = e.value;
                 final episode = timer.totalEpisodes;
                 final hasEpisode = episode != 0;

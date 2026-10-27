@@ -6,7 +6,6 @@ import 'package:application/features/anibla/data/view_model/media_chapter.dart';
 import 'package:application/features/anibla/data/view_model/media_view.dart';
 import 'package:application/features/anibla/presentation/dialogs/image_preview.dart';
 import 'package:application/features/anibla/presentation/menus/anime/comments_menu.dart';
-import 'package:application/features/anibla/presentation/menus/anime/creators_menu.dart';
 import 'package:application/features/anibla/presentation/menus/anime/episodes_menu.dart';
 import 'package:application/features/anibla/presentation/menus/anime/infos_menu.dart';
 import 'package:application/features/anibla/presentation/pages/media_page.dart';
@@ -50,19 +49,8 @@ class _MediaWrapperState extends State<MediaWrapper> {
   }
 
   void errorHandler() {
-    if (_bookController.novel.hasError && widget.props.type.isNovel) {
-      openErrorDialog(
-        context,
-        refresh: _bookController.refreshNewest,
-        error: _bookController.novel.error ?? "Nimadur xato ketti",
-      );
-    }
-    if (_bookController.manga.hasError && widget.props.type.isManga) {
-      openErrorDialog(
-        context,
-        refresh: _bookController.refreshNewest,
-        error: _bookController.manga.error ?? "Nimadur xato ketti",
-      );
+    if (_bookController.book.hasError && widget.props.type.isNovel) {
+      openErrorDialog(context, refresh: _bookController.refreshNewest, error: _bookController.book.error ?? "Nimadur xato ketti");
     }
     if (_mediaController.animeState.hasError && widget.props.type.isAnime) {
       openErrorDialog(
@@ -107,9 +95,8 @@ class _MediaWrapperState extends State<MediaWrapper> {
     builder: (context) {
       final mediaProps = widget.props;
       final mediaInfo = switch (widget.props.type) {
-        .comics || .manga || .manxva => buildMangaProps(),
         .serie || .movie => buildAnimeProps(),
-        .novel => buildNovelProps(),
+        _ => buildBookProps(),
       };
       if (mediaInfo.hasError) return ErrorBuilder(message: mediaInfo.error, refresh: () {});
       return Skeletonizer(
@@ -118,6 +105,7 @@ class _MediaWrapperState extends State<MediaWrapper> {
       );
     },
   );
+
   MediaView buildAnimeProps() {
     final mediaState = _mediaController.animeState.value;
     final chapterState = _mediaController.episodesState.value;
@@ -144,142 +132,98 @@ class _MediaWrapperState extends State<MediaWrapper> {
               children: anime.images.map((e) => Ink.image(fit: .cover, image: imageProviderFallback(addBaseUrl(e)))).toList(),
             ),
     );
+    final translators = anime.creators
+        .map(
+          (e) => ActionChip(
+            onPressed: () {},
+            labelPadding: .all(20),
+            avatar: CircleAvatar(foregroundImage: CachedNetworkImageProvider(e.image), radius: 80),
+            label: Text(e.name, style: context.textTheme.titleMedium),
+          ),
+        )
+        .toList();
     void openMedia(MediaChapter chapter) =>
         context.pushNamed("watch", queryParameters: MediaProps.fromAnime(anime, chapterKey: chapter.key).toJson());
-
+    final views = [
+      AnimeInfosMenu([
+        Single("Anime haqida ma'lumot", anime.description.uz),
+        Multi("Tarjimonlar", translators),
+        MultiActions("Janrlar", genres),
+        MultiActions("Kategoriya", categories, true),
+        Custom("Animedan kadrlar", frames),
+      ]),
+      CommentsMenu(),
+      if (isSerie)
+        AnimeEpisodesMenu(
+          total: chapters.length,
+          chapters: chapters.map(MediaChapter.fromAnime).toList(),
+          openChapter: openMedia,
+        ),
+    ];
+    final items = [
+      MapEntry<String, Object>("Chiqarilgan yil:", "${anime.publishedYear}-yil"),
+      MapEntry<String, Object>("Mamlakat:", anime.country?['name']?['uz'] ?? "NN"),
+      MapEntry<String, Object>("Studia:", anime.studio?['name'] ?? "NN"),
+    ];
+    final tabs = [Tab(text: "Ma'lumotlar"), Tab(text: "Izohlar"), if (isSerie) Tab(text: "Qismlar")];
     return .new(
+      tabs: tabs,
+      views: views,
+      items: items,
       cover: anime.cover,
-      thumbnail: anime.thumbnail,
       title: anime.title.uz,
+      thumbnail: anime.thumbnail,
       hasError: mediaState.hasError,
       isLoading: mediaState.isLoading,
       error: mediaState.error ?? "Nimadur xato ketti",
-      views: [
-        AnimeInfosMenu([
-          Single("Anime haqida ma'lumot", anime.description.uz),
-          MultiActions("Janrlar", genres),
-          MultiActions("Kategoriya", categories, true),
-          Custom("Animedan kadrlar", frames),
-        ]),
-        CommentsMenu(),
-        CreatorsMenu(anime.creators.map((e) => (e.name, e.image)).toList()),
-        if (isSerie)
-          AnimeEpisodesMenu(
-            total: chapters.length,
-            chapters: chapters.map(MediaChapter.fromAnime).toList(),
-            openChapter: openMedia,
+    );
+  }
+
+  MediaView buildBookProps() {
+    final state = _bookController.book.value;
+    final chapterState = _bookController.chapters.value;
+    final book = state.value ?? _bookController.fakeBook;
+    final chapters = chapterState.value ?? _bookController.fakeChapters;
+    final translators = book.translators
+        .map(
+          (e) => ActionChip(
+            onPressed: () {},
+            labelPadding: .all(20),
+            avatar: CircleAvatar(foregroundImage: CachedNetworkImageProvider(e.picture), radius: 80),
+            label: Text(e.firstName, style: context.textTheme.titleMedium),
           ),
-      ],
-      items: [
-        MapEntry("Chiqarilgan yil:", "${anime.publishedYear}-yil"),
-        MapEntry("Mamlakat:", anime.country?['name']?['uz'] ?? "NN"),
-        MapEntry("Studia:", anime.studio?['name'] ?? "NN"),
-      ],
-      tabs: [
-        Tab(text: "Ma'lumotlar"),
-        Tab(text: "Izohlar"),
-        Tab(text: "Ovoz beruvchilar"),
-        if (isSerie) Tab(text: "Qismlar"),
-      ],
-    );
-  }
+        )
+        .toList();
 
-  MediaView buildNovelProps() {
-    final state = _bookController.novel.value;
-    final chapterState = _bookController.chapters.value;
-    final novel = state.value ?? _bookController.fakeNovel;
-    final chapters = chapterState.value ?? _bookController.fakeChapters;
-    final translators = Wrap(
-      children: novel.translators
-          .map(
-            (e) => ActionChip(
-              onPressed: () {},
-              labelPadding: .all(20),
-              avatar: CircleAvatar(foregroundImage: CachedNetworkImageProvider(e.picture), radius: 80),
-              label: Text(e.firstName, style: context.textTheme.titleMedium),
-            ),
-          )
-          .toList(),
-    );
+    final items = [
+      MapEntry("Chiqarilgan yili", DateTime.tryParse(book.createdAt)?.formatFull() ?? ""),
+      MapEntry("Holati", book.translationStatus.name),
+      MapEntry("Reyting", book.averageRating.toDouble()),
+    ];
+    final tabs = [Tab(text: "Ma'lumotlar"), Tab(text: "Boblar")];
+    final views = [
+      AnimeInfosMenu([
+        Single("Novella haqida ma'lumot", book.description),
+        Multi("Tarjimonlar", translators),
+        if (book.genres.isNotEmpty) MultiActions("Janrlar", book.genres.map((e) => e.title).toList()),
+        if (book.categories.isNotEmpty) MultiActions("Kategoriya", book.categories.map((e) => e.title).toList()),
+      ]),
+      AnimeEpisodesMenu(
+        chapters: chapters.map(MediaChapter.fromBook).toList(),
+        total: chapters.length,
+        openChapter: (key) => print(key.key),
+      ),
+    ];
     return .new(
-      cover: novel.thumbnail,
-      thumbnail: novel.thumbnail,
+      cover: book.thumbnail,
+      thumbnail: book.thumbnail,
       isLoading: state.isLoading,
       hasError: state.hasError,
       error: state.error ?? "Nimadur xato ketti",
-      title: novel.title,
-      items: [
-        MapEntry("Chiqarilgan yili", DateTime.tryParse(novel.createdAt)?.formatFull() ?? ""),
-        MapEntry("Holati", novel.translationStatus.name),
-        MapEntry("Reyting", novel.averageRating.toDouble()),
-      ],
-      tabs: [
-        Tab(text: "Ma'lumotlar"),
-        Tab(text: "Boblar"),
-      ],
-      views: [
-        AnimeInfosMenu([
-          Single("Novella haqida ma'lumot", novel.description),
-          if (novel.genres.isNotEmpty) MultiActions("Janrlar", novel.genres.map((e) => e.title).toList()),
-          if (novel.categories.isNotEmpty) MultiActions("Kategoriya", novel.categories.map((e) => e.title).toList()),
-          Custom("Tarjimonlar", translators),
-        ]),
-        AnimeEpisodesMenu(
-          chapters: chapters.map(MediaChapter.fromBook).toList(),
-          total: chapters.length,
-          openChapter: (key) => print(key.key),
-        ),
-      ],
-    );
-  }
-
-  MediaView buildMangaProps() {
-    final state = _bookController.manga.value;
-    final data = state.value ?? _bookController.fakeManga;
-    final chapterState = _bookController.chapters.value;
-    final chapters = chapterState.value ?? _bookController.fakeChapters;
-    final translators = Wrap(
-      children: data.translators
-          .map(
-            (e) => ActionChip(
-              onPressed: () {},
-              labelPadding: .all(20),
-              avatar: CircleAvatar(foregroundImage: CachedNetworkImageProvider(e.picture), radius: 80),
-              label: Text(e.firstName, style: context.textTheme.titleMedium),
-            ),
-          )
-          .toList(),
-    );
-
-    return .new(
-      isLoading: state.isLoading,
-      hasError: state.hasError,
-      error: state.error ?? "Nimadur xato ketti",
-      cover: data.thumbnail,
-      thumbnail: data.thumbnail,
-      title: data.title,
-      views: [
-        AnimeInfosMenu([
-          Single("${data.type} haqida ma'lumot", data.description),
-          if (data.genres.isNotEmpty) MultiActions("Janrlar", data.genres.map((e) => e.title).toList()),
-          if (data.categories.isNotEmpty) MultiActions("Kategoriya", data.categories.map((e) => e.title).toList()),
-          Custom("Tarjimonlar", translators),
-        ]),
-        AnimeEpisodesMenu(
-          chapters: chapters.map(MediaChapter.fromBook).toList(),
-          total: chapters.length,
-          openChapter: (key) => print(key.key),
-        ),
-      ],
-      tabs: [
-        Tab(text: "Ma'lumotlar"),
-        Tab(text: "Boblar"),
-      ],
-      items: [
-        MapEntry("Chiqarilgan yili", DateTime.tryParse(data.createdAt)?.formatFull() ?? ""),
-        MapEntry("Holati", data.translationStatus.name),
-        MapEntry("Reyting", data.averageRating.toDouble()),
-      ],
+      title: book.title,
+      items: items,
+      tabs: tabs,
+      views: views,
     );
   }
 }

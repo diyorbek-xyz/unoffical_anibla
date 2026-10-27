@@ -8,6 +8,7 @@ part of 'books_api.dart';
 // RetrofitGenerator
 // **************************************************************************
 
+// ignore_for_file: type=lint
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter,avoid_unused_constructor_parameters,unreachable_from_main,avoid_redundant_argument_values
 
 class _BooksApi implements BooksApi {
@@ -20,7 +21,7 @@ class _BooksApi implements BooksApi {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HttpResponse<ManoResponse<List<Manga>>>> getMangas(
+  Future<HttpResponse<ManoResponse<List<Book>>>> getMangas(
     MangaRequest request,
   ) async {
     final _extra = <String, dynamic>{};
@@ -28,7 +29,7 @@ class _BooksApi implements BooksApi {
     queryParameters.addAll(request.toJson());
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<ManoResponse<List<Manga>>>>(
+    final _options = _setStreamType<HttpResponse<ManoResponse<List<Book>>>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -39,13 +40,13 @@ class _BooksApi implements BooksApi {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late ManoResponse<List<Manga>> _value;
+    late ManoResponse<List<Book>> _value;
     try {
-      _value = ManoResponse<List<Manga>>.fromJson(
+      _value = ManoResponse<List<Book>>.fromJson(
         _result.data!,
         (json) => json is List<dynamic>
             ? json
-                  .map<Manga>((i) => Manga.fromJson(i as Map<String, dynamic>))
+                  .map<Book>((i) => Book.fromJson(i as Map<String, dynamic>))
                   .toList()
             : List.empty(),
       );
@@ -58,12 +59,12 @@ class _BooksApi implements BooksApi {
   }
 
   @override
-  Future<HttpResponse<Manga>> getManga(String id) async {
+  Future<HttpResponse<Book>> getManga(String id) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<Manga>>(
+    final _options = _setStreamType<HttpResponse<Book>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -74,9 +75,9 @@ class _BooksApi implements BooksApi {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late Manga _value;
+    late Book _value;
     try {
-      _value = Manga.fromJson(_result.data!);
+      _value = Book.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -86,7 +87,7 @@ class _BooksApi implements BooksApi {
   }
 
   @override
-  Future<HttpResponse<ManoResponse<List<Novel>>>> getNovels(
+  Future<HttpResponse<ManoResponse<List<Book>>>> getNovels(
     NovelRequest request,
   ) async {
     final _extra = <String, dynamic>{};
@@ -94,7 +95,7 @@ class _BooksApi implements BooksApi {
     queryParameters.addAll(request.toJson());
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<ManoResponse<List<Novel>>>>(
+    final _options = _setStreamType<HttpResponse<ManoResponse<List<Book>>>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -105,13 +106,13 @@ class _BooksApi implements BooksApi {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late ManoResponse<List<Novel>> _value;
+    late ManoResponse<List<Book>> _value;
     try {
-      _value = ManoResponse<List<Novel>>.fromJson(
+      _value = ManoResponse<List<Book>>.fromJson(
         _result.data!,
         (json) => json is List<dynamic>
             ? json
-                  .map<Novel>((i) => Novel.fromJson(i as Map<String, dynamic>))
+                  .map<Book>((i) => Book.fromJson(i as Map<String, dynamic>))
                   .toList()
             : List.empty(),
       );
@@ -124,12 +125,12 @@ class _BooksApi implements BooksApi {
   }
 
   @override
-  Future<HttpResponse<Novel>> getNovel(String id) async {
+  Future<HttpResponse<Book>> getNovel(String id) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<Novel>>(
+    final _options = _setStreamType<HttpResponse<Book>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -140,9 +141,9 @@ class _BooksApi implements BooksApi {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late Novel _value;
+    late Book _value;
     try {
-      _value = Novel.fromJson(_result.data!);
+      _value = Book.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;

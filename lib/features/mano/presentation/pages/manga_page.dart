@@ -28,8 +28,8 @@ class MangaPage extends StatelessWidget {
         final isDataLoading = newsState.value == null || topState.value == null;
         if (hasError || (isDataLoading && !isLoading))
           return ErrorBuilder(message: error.toString(), refresh: _bookController.refreshNewest);
-        final news = newsState.value ?? _bookController.fakeMangas;
-        final tops = topState.value ?? _bookController.fakeMangas;
+        final news = newsState.value ?? _bookController.fakeBooks;
+        final tops = topState.value ?? _bookController.fakeBooks;
         return Skeletonizer(
           enabled: isLoading,
           enableSwitchAnimation: true,
@@ -46,8 +46,8 @@ class MangaPage extends StatelessWidget {
                 crossAxisAlignment: .start,
                 children: [
                   banner(context),
-                  Recommends(title: "Yangi Asarlar", onMoreClick: () {}, items: news.map(MediaCard.fromManga).toList()),
-                  Recommends(title: "Top manga", onMoreClick: () {}, items: tops.map(MediaCard.fromManga).toList()),
+                  Recommends(title: "Yangi Asarlar", onMoreClick: () {}, items: news.map(MediaCard.fromBook).toList()),
+                  Recommends(title: "Top manga", onMoreClick: () {}, items: tops.map(MediaCard.fromBook).toList()),
                 ],
               ),
             ),

@@ -26,6 +26,7 @@ class _ProfileWrapperState extends State<ProfileWrapper> {
   Widget build(BuildContext context) => Scaffold(
     floatingActionButtonLocation: .startFloat,
     floatingActionButton: FloatingActionButton.extended(
+      heroTag: "profile",
       icon: Icon(widget.isMano ? Icons.movie : Icons.menu_book),
       label: Text(widget.isMano ? "Anibla profile" : "Mano profile"),
       onPressed: () => context.goNamed(widget.isMano ? "anibla" : "mano"),

@@ -27,22 +27,21 @@ class AnimeInfosMenu extends StatelessWidget {
                 children: entries
                     .map(
                       (e) => switch (e) {
-                        Custom() => [Text(e.label, style: titleStyle), e.child],
-                        Single() => [Text(e.label, style: titleStyle), Text(e.value, style: bodyStyle)],
-                        Multi() => [Text(e.label, style: titleStyle), Wrap(children: e.children)],
+                        Custom() => [Text(e.label, style: titleStyle), e.child, SizedBox(height: 10)],
+                        Single() => [Text(e.label, style: titleStyle), Text(e.value, style: bodyStyle), SizedBox(height: 10)],
+                        Multi() => [
+                          Text(e.label, style: titleStyle),
+                          Wrap(spacing: 10, runSpacing: 10, children: e.children),
+                          SizedBox(height: 10),
+                        ],
                         MultiActions() => [
                           Text(e.label, style: titleStyle),
                           Wrap(
                             spacing: 10,
                             runSpacing: 10,
-                            children: e.value
-                                .map(
-                                  (a) => e.isFilled
-                                      ? FilledButton(onPressed: () {}, child: Text(a))
-                                      : OutlinedButton(onPressed: () {}, child: Text(a)),
-                                )
-                                .toList(),
+                            children: e.value.map((a) => ActionChip(label: Text(a), onPressed: () {})).toList(),
                           ),
+                          SizedBox(height: 10),
                         ],
                       },
                     )

@@ -23,7 +23,7 @@ GoRouter routerConfig(String initial) => GoRouter(
       branches: [
         StatefulShellBranch(
           navigatorKey: _shellNavigatorKey,
-          routes: [GoRoute(path: '/', name: "home", builder: (context, state) => const HomePage())],
+          routes: [GoRoute(path: '/', name: "home", builder: (context, state) => HomePage())],
         ),
         StatefulShellBranch(
           initialLocation: "/mangas",

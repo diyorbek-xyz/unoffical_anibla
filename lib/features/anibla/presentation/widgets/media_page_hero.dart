@@ -15,8 +15,10 @@ class MediaPageHero extends StatelessWidget {
   final String thumbnail;
   final bool isSaved;
   final List<MapEntry<String, Object>> items;
+  final bool isScrolled;
   const MediaPageHero({
     super.key,
+    required this.isScrolled,
     required this.isSaved,
     required this.items,
     required this.tabs,
@@ -34,6 +36,7 @@ class MediaPageHero extends StatelessWidget {
       toolbarHeight: kToolbarHeight,
       stretch: true,
       centerTitle: false,
+      forceElevated: isScrolled,
       expandedHeight: 350 + kTextTabBarHeight + kToolbarHeight,
       collapsedHeight: kTextTabBarHeight + kToolbarHeight + MediaQuery.paddingOf(context).top,
       title: Text(title),

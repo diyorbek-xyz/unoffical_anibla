@@ -1,20 +1,20 @@
 import 'package:application/shared/utils/extensions.dart';
-import 'package:application/features/anibla/data/models/misc/calendar.dart';
-import 'package:application/features/anibla/domain/repositories/calendar_repository.dart';
+import 'package:application/features/anibla/data/models/misc/premieres.dart';
+import 'package:application/features/anibla/domain/repositories/premieres_repository.dart';
 import 'package:application/features/anibla/presentation/bloc/calendar/calendar_event.dart';
 import 'package:application/features/anibla/presentation/bloc/calendar/calendar_state.dart';
 import 'package:application/core/network/resources/failure.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
-  final CalendarRepository repository;
+  final PremieresRepository repository;
   CalendarBloc(this.repository) : super(CalendarLoading()) {
     on<GetCalendar>(onGetCalendar);
     on<GetCalendarWeekly>(onGetWeekly);
   }
   void onGetCalendar(GetCalendar event, Emitter<CalendarState> emit) async {
     emit(CalendarLoading());
-    final either = await repository.getCalendar(event.date);
+    final either = await repository.getPremieres(event.date);
     emit(
       either.fold(
         (failure) => CalendarError(ExceptionMapper.mapFailureToMessage(failure)),
@@ -26,10 +26,10 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   void onGetWeekly(GetCalendarWeekly event, Emitter<CalendarState> emit) async {
     emit(CalendarLoading());
     final days = DateTime.now().getWeekDays();
-    List<Calendar?> calendars = [];
+    List<Premieres?> calendars = [];
 
     for (DateTime day in days) {
-      final either = await repository.getCalendar(day);
+      final either = await repository.getPremieres(day);
       calendars.add(
         either.fold(
           (failure) {
@@ -39,9 +39,9 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
             return;
           },
           (calendar) {
-            final timers = [...calendar.timers];
+            final timers = [...calendar.premieres];
             timers.sort((a, b) => a.time.compareTo(b.time));
-            return calendar.copyWith(timers: timers);
+            return calendar.copyWith(premieres: timers);
           },
         ),
       );

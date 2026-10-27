@@ -4,8 +4,7 @@ import 'package:application/core/network/clients/neutral_client.dart';
 import 'package:application/core/network/interceptors/mano_interceptor.dart';
 import 'package:application/features/anibla/data/models/main/anibla_profile.dart';
 import 'package:application/features/anibla/presentation/controllers/comment_controller.dart';
-import 'package:application/features/mano/data/models/main/manga.dart';
-import 'package:application/features/mano/data/models/main/novel.dart';
+import 'package:application/features/mano/data/models/main/book.dart';
 import 'package:application/features/mano/data/repository/book_repository_impl.dart';
 import 'package:application/features/mano/data/source/local/books_local.dart';
 import 'package:application/features/mano/data/source/network/books_api.dart';
@@ -17,7 +16,7 @@ import 'package:application/features/player/presentation/controller/player_contr
 import 'package:application/shared/utils/utils.dart';
 import 'package:application/features/anibla/data/models/data/carousel_item.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
-import 'package:application/features/anibla/data/models/misc/calendar.dart';
+import 'package:application/features/anibla/data/models/misc/premieres.dart';
 import 'package:application/features/anibla/data/repositories/profile_repository_impl.dart';
 import 'package:application/features/anibla/data/source/local/profile_local.dart';
 import 'package:application/features/anibla/data/source/local/saved_ids_local.dart';
@@ -52,7 +51,6 @@ import 'package:application/features/anibla/domain/repositories/season_repositor
 import 'package:application/features/anibla/data/repositories/comment_repository_impl.dart';
 import 'package:application/features/anibla/data/source/network/comment_api.dart';
 import 'package:application/features/anibla/domain/repositories/comment_repository.dart';
-import 'package:application/features/anibla/presentation/bloc/comment/comment_bloc.dart';
 import 'package:application/features/anibla/data/repositories/explore_repository_impl.dart';
 import 'package:application/features/anibla/data/source/local/history_local.dart';
 import 'package:application/features/anibla/data/source/network/explore_api.dart';
@@ -66,10 +64,10 @@ import 'package:application/features/auth/data/source/local/auth_storage.dart';
 import 'package:application/features/auth/data/source/remote/auth_api.dart';
 import 'package:application/features/auth/domain/repository/auth_repository.dart';
 import 'package:application/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:application/features/anibla/data/repositories/calendar_repository_impl.dart';
-import 'package:application/features/anibla/data/source/local/calendar_local.dart';
-import 'package:application/features/anibla/data/source/network/calendar_api.dart';
-import 'package:application/features/anibla/domain/repositories/calendar_repository.dart';
+import 'package:application/features/anibla/data/repositories/premieres_repository_impl.dart';
+import 'package:application/features/anibla/data/source/local/premieres_local.dart';
+import 'package:application/features/anibla/data/source/network/premieres_api.dart';
+import 'package:application/features/anibla/domain/repositories/premieres_repository.dart';
 import 'package:application/features/anibla/presentation/bloc/calendar/calendar_bloc.dart';
 import 'package:application/features/anibla/data/source/network/profile_api.dart';
 import 'package:application/features/anibla/domain/repositories/profile_repository.dart';
@@ -108,7 +106,7 @@ Future<void> initializeDependencies() async {
   await setupMiscs();
 
   // Open boxes;
-  final calendarBox = await Hive.openBox<Calendar>("calendarBox");
+  final calendarBox = await Hive.openBox<Premieres>("calendarBox");
   final profileBox = await Hive.openBox<AniblaProfile>("profileBox");
   final sliderBox = await Hive.openBox<CarouselItem>("sliderBox");
   final historyBox = await Hive.openBox<Anime>("historyBox");
@@ -116,8 +114,7 @@ Future<void> initializeDependencies() async {
   final downloadsBox = await Hive.openBox<DownloadTask>("downloadTaskBox");
   final savedMediaIdBox = await Hive.openBox<String>("savedMediaIdBox");
   final searchHistory = await Hive.openBox<String>("searchHistory");
-  final mangasBox = await Hive.openBox<Manga>("mangasBox");
-  final novelsBox = await Hive.openBox<Novel>("novelsBox");
+  final booksBox = await Hive.openBox<Book>("booksBox");
 
   await Utils.closeSplashScreen();
 
@@ -139,7 +136,7 @@ Future<void> initializeDependencies() async {
 
   sl
     // Register local storages;
-    ..registerSingleton<Box<Calendar>>(calendarBox)
+    ..registerSingleton<Box<Premieres>>(calendarBox)
     ..registerSingleton<Box<Anime>>(historyBox, instanceName: "history")
     ..registerSingleton<Box<String>>(savedMediaIdBox, instanceName: "saved")
     ..registerSingleton<Box<AniblaProfile>>(profileBox)
@@ -147,15 +144,14 @@ Future<void> initializeDependencies() async {
     ..registerSingleton<Box<TimelineModel>>(timelineBox)
     ..registerSingleton<Box<DownloadTask>>(downloadsBox)
     ..registerSingleton<Box<String>>(searchHistory)
-    ..registerSingleton<Box<Manga>>(mangasBox)
-    ..registerSingleton<Box<Novel>>(novelsBox)
+    ..registerSingleton<Box<Book>>(booksBox)
     // Register miscs;
     ..registerSingleton<AniblaClient>(aniblaClient)
     ..registerSingleton<ManoClient>(manoClient)
     ..registerSingleton<DotEnv>(dotenv)
     // Register remote Api Services;
     ..registerSingleton<SliderApi>(SliderApi(sl()))
-    ..registerSingleton<CalendarApi>(CalendarApi(sl()))
+    ..registerSingleton<PremieresApi>(PremieresApi(sl()))
     ..registerSingleton<AuthApi>(AuthApi(sl()))
     ..registerSingleton<ProfileApi>(ProfileApi(sl()))
     ..registerSingleton<AnimeApi>(AnimeApi(sl()))
@@ -173,17 +169,17 @@ Future<void> initializeDependencies() async {
     ..registerSingleton<ManoAuthApi>(ManoAuthApi(sl()))
     ..registerSingleton<BooksApi>(BooksApi(sl()))
     // Register Local Storage Services;
-    ..registerSingleton<CalendarLocal>(CalendarLocalImpl(sl()))
+    ..registerSingleton<PremieresLocal>(PremieresLocalImpl(sl()))
     ..registerSingleton<ProfileLocal>(ProfileLocalImpl(sl()))
     ..registerSingleton<SliderLocal>(SliderLocalImpl(sl()))
     ..registerSingleton<HistoryLocal>(HistoryLocalImpl(sl(instanceName: 'history')))
     ..registerSingleton<SavedLocal>(SavedLocalImpl(sl(instanceName: 'saved')))
     ..registerSingleton<Timeline>(TimelineImpl(sl()))
     ..registerSingleton<SearchHistoryLocal>(SearchHistoryLocalImpl(sl()))
-    ..registerSingleton<BooksLocal>(BooksLocalImpl(sl(), sl()))
+    ..registerSingleton<BooksLocal>(BooksLocalImpl(sl()))
     // Register Repositories;
     ..registerLazySingleton<SliderRepository>(() => SliderRepositoryImpl(sl(), sl()))
-    ..registerLazySingleton<CalendarRepository>(() => CalendarRepositoryImpl(sl(), sl()))
+    ..registerLazySingleton<PremieresRepository>(() => PremieresRepositoryImpl(sl(), sl()))
     ..registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl(), sl(), sl()))
     ..registerLazySingleton<EpisodeRepository>(() => EpisodeRepositoryImpl(sl(), sl(), sl()))
     ..registerLazySingleton<CommentRepository>(() => CommentRepositoryImpl(sl()))
@@ -196,7 +192,6 @@ Future<void> initializeDependencies() async {
     // Register State managers;
     ..registerFactory<AuthBloc>(() => AuthBloc(sl()))
     ..registerFactory<CalendarBloc>(() => CalendarBloc(sl()))
-    ..registerFactory<CommentBloc>(() => CommentBloc(sl()))
     // Register Signal controllers;
     ..registerLazySingleton<ProfileController>(() => ProfileController(sl(), sl(), sl()))
     ..registerLazySingleton<LocalAnimesController>(() => LocalAnimesController(sl(), sl(), sl()))

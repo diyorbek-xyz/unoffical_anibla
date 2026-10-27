@@ -1,41 +1,26 @@
-import 'package:application/features/mano/data/models/main/manga.dart';
-import 'package:application/features/mano/data/models/main/novel.dart';
+import 'package:application/features/mano/data/models/main/book.dart';
 import 'package:hive_ce/hive_ce.dart';
 
 abstract class BooksLocal {
-  Manga? getManga(String id);
-  Future<void> clearMangas();
-  Future<void> deleteMangas(String id);
-  Future<void> saveManga(String id, Manga manga);
-
-  Novel? getNovel(String id);
-  Future<void> clearNovels();
-  Future<void> deleteNovels(String id);
-  Future<void> saveNovel(String id, Novel manga);
+  Book? getBook(String id);
+  Future<void> clearBooks();
+  Future<void> deleteBooks(String id);
+  Future<void> saveBook(String id, Book manga);
 }
 
 class BooksLocalImpl implements BooksLocal {
-  final Box<Manga> _mangaBox;
-  final Box<Novel> _novelBox;
-  const BooksLocalImpl(this._mangaBox, this._novelBox);
+  final Box<Book> _mangaBox;
+  const BooksLocalImpl(this._mangaBox);
 
   @override
-  Novel? getNovel(String id) => _novelBox.get(id);
-  @override
-  Manga? getManga(String id) => _mangaBox.get(id);
+  Book? getBook(String id) => _mangaBox.get(id);
 
   @override
-  Future<void> clearMangas() async => await _mangaBox.clear();
-  @override
-  Future<void> clearNovels() async => await _novelBox.clear();
+  Future<void> clearBooks() async => await _mangaBox.clear();
 
   @override
-  Future<void> deleteMangas(String id) async => await _mangaBox.delete(id);
-  @override
-  Future<void> deleteNovels(String id) async => await _novelBox.delete(id);
+  Future<void> deleteBooks(String id) async => await _mangaBox.delete(id);
 
   @override
-  Future<void> saveManga(String id, Manga manga) async => await _mangaBox.put(id, manga);
-  @override
-  Future<void> saveNovel(String id, Novel novel) async => await _novelBox.put(id, novel);
+  Future<void> saveBook(String id, Book manga) async => await _mangaBox.put(id, manga);
 }

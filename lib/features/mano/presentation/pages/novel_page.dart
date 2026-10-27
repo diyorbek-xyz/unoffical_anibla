@@ -28,15 +28,15 @@ class NovelPage extends StatelessWidget {
         final isDataLoading = newsState.value == null || topState.value == null;
         if (hasError || (isDataLoading && !isLoading))
           return ErrorBuilder(message: error.toString(), refresh: _bookController.refreshNewest);
-        final news = newsState.value ?? _bookController.fakeNovels;
-        final tops = topState.value ?? _bookController.fakeNovels;
+        final news = newsState.value ?? _bookController.fakeBooks;
+        final tops = topState.value ?? _bookController.fakeBooks;
         return Skeletonizer(
           enabled: isLoading,
           enableSwitchAnimation: true,
           child: Scaffold(
             floatingActionButtonLocation: .startFloat,
             floatingActionButton: FloatingActionButton(
-              heroTag: "manga",
+              heroTag: "novel",
               onPressed: () => context.replaceNamed("mangas"),
               child: Icon(Icons.book),
             ),
@@ -46,8 +46,8 @@ class NovelPage extends StatelessWidget {
                 crossAxisAlignment: .start,
                 children: [
                   banner(context),
-                  Recommends(title: "Yangi Asarlar", onMoreClick: () {}, items: news.map(MediaCard.fromNovel).toList()),
-                  Recommends(title: "Top manga", onMoreClick: () {}, items: tops.map(MediaCard.fromNovel).toList()),
+                  Recommends(title: "Yangi Asarlar", onMoreClick: () {}, items: news.map(MediaCard.fromBook).toList()),
+                  Recommends(title: "Top manga", onMoreClick: () {}, items: tops.map(MediaCard.fromBook).toList()),
                 ],
               ),
             ),

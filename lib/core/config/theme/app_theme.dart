@@ -1,5 +1,5 @@
 import 'package:application/core/config/theme/app_colors.dart';
-import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -10,6 +10,7 @@ class AppThemes {
   static ThemeData _themeBuilder(ColorScheme colorScheme) => ThemeData(
     colorScheme: colorScheme,
     useMaterial3: true,
+    useSystemColors: true,
     fontFamily: GoogleFonts.googleSansFlex().fontFamily,
     pageTransitionsTheme: pageTransitions,
     splashColor: colorScheme.primary.withAlpha(25),
