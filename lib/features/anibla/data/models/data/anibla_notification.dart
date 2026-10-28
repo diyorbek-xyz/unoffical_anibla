@@ -2,13 +2,13 @@ import 'package:application/features/anibla/data/models/data/episode_notf.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
-part 'notification.freezed.dart';
-part 'notification.g.dart';
+part 'anibla_notification.freezed.dart';
+part 'anibla_notification.g.dart';
 
 @freezed
 @HiveType(typeId: 104)
-abstract class Notification with _$Notification {
-  const factory Notification({
+abstract class AniblaNotification with _$AniblaNotification {
+  const factory AniblaNotification({
     @Default("") @HiveField(0) @JsonKey(name: "_id") String id,
     @Default("") @HiveField(1) String userId,
     @Default("") @HiveField(2) String title,
@@ -18,6 +18,6 @@ abstract class Notification with _$Notification {
     @Default("") @HiveField(6) String createdAt,
     @Default("") @HiveField(7) String updatedAt,
     @Default(EpisodeNotification()) @HiveField(8) EpisodeNotification data,
-  }) = _Notification;
-  factory Notification.fromJson(Map<String, dynamic> json) => _$NotificationFromJson(json);
+  }) = _AniblaNotification;
+  factory AniblaNotification.fromJson(Map<String, dynamic> json) => _$AniblaNotificationFromJson(json);
 }

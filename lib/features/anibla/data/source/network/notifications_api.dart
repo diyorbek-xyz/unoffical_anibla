@@ -1,5 +1,5 @@
 import 'package:application/core/network/clients/anibla_client.dart';
-import 'package:application/features/anibla/data/models/response/notification_response.dart';
+import 'package:application/features/anibla/data/models/response/anibla_notification_res.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -10,5 +10,5 @@ abstract class NotificationsApi {
   factory NotificationsApi(AniblaClient dio) = _NotificationsApi;
 
   @GET("/v1/notifications")
-  Future<NotificationResponse> getNotifications();
+  Future<AniblaNotificationRes> getNotifications();
 }

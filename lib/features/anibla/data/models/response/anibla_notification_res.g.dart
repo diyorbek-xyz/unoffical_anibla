@@ -1,23 +1,25 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'notification_response.dart';
+part of 'anibla_notification_res.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class NotificationResponseAdapter extends TypeAdapter<NotificationResponse> {
+class AniblaNotificationResAdapter extends TypeAdapter<AniblaNotificationRes> {
   @override
   final typeId = 901;
 
   @override
-  NotificationResponse read(BinaryReader reader) {
+  AniblaNotificationRes read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return NotificationResponse(
-      data: fields[0] == null ? [] : (fields[0] as List).cast<Notification>(),
+    return AniblaNotificationRes(
+      data: fields[0] == null
+          ? []
+          : (fields[0] as List).cast<AniblaNotification>(),
       unreadCount: fields[1] == null ? 0 : (fields[1] as num).toInt(),
       pagination: fields[2] == null
           ? const Pagination()
@@ -26,7 +28,7 @@ class NotificationResponseAdapter extends TypeAdapter<NotificationResponse> {
   }
 
   @override
-  void write(BinaryWriter writer, NotificationResponse obj) {
+  void write(BinaryWriter writer, AniblaNotificationRes obj) {
     writer
       ..writeByte(3)
       ..writeByte(0)
@@ -43,7 +45,7 @@ class NotificationResponseAdapter extends TypeAdapter<NotificationResponse> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is NotificationResponseAdapter &&
+      other is AniblaNotificationResAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
@@ -52,12 +54,12 @@ class NotificationResponseAdapter extends TypeAdapter<NotificationResponse> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-_NotificationResponse _$NotificationResponseFromJson(
+_AniblaNotificationRes _$AniblaNotificationResFromJson(
   Map<String, dynamic> json,
-) => _NotificationResponse(
+) => _AniblaNotificationRes(
   data:
       (json['data'] as List<dynamic>?)
-          ?.map((e) => Notification.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => AniblaNotification.fromJson(e as Map<String, dynamic>))
           .toList() ??
       const [],
   unreadCount: (json['unreadCount'] as num?)?.toInt() ?? 0,
@@ -66,8 +68,8 @@ _NotificationResponse _$NotificationResponseFromJson(
       : Pagination.fromJson(json['pagination'] as Map<String, dynamic>),
 );
 
-Map<String, dynamic> _$NotificationResponseToJson(
-  _NotificationResponse instance,
+Map<String, dynamic> _$AniblaNotificationResToJson(
+  _AniblaNotificationRes instance,
 ) => <String, dynamic>{
   'data': instance.data,
   'unreadCount': instance.unreadCount,

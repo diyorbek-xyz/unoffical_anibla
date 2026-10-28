@@ -1,22 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'notification.dart';
+part of 'anibla_notification.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class NotificationAdapter extends TypeAdapter<Notification> {
+class AniblaNotificationAdapter extends TypeAdapter<AniblaNotification> {
   @override
   final typeId = 104;
 
   @override
-  Notification read(BinaryReader reader) {
+  AniblaNotification read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Notification(
+    return AniblaNotification(
       id: fields[0] == null ? '' : fields[0] as String,
       userId: fields[1] == null ? '' : fields[1] as String,
       title: fields[2] == null ? '' : fields[2] as String,
@@ -32,7 +32,7 @@ class NotificationAdapter extends TypeAdapter<Notification> {
   }
 
   @override
-  void write(BinaryWriter writer, Notification obj) {
+  void write(BinaryWriter writer, AniblaNotification obj) {
     writer
       ..writeByte(9)
       ..writeByte(0)
@@ -61,7 +61,7 @@ class NotificationAdapter extends TypeAdapter<Notification> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is NotificationAdapter &&
+      other is AniblaNotificationAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
@@ -70,8 +70,8 @@ class NotificationAdapter extends TypeAdapter<Notification> {
 // JsonSerializableGenerator
 // **************************************************************************
 
-_Notification _$NotificationFromJson(Map<String, dynamic> json) =>
-    _Notification(
+_AniblaNotification _$AniblaNotificationFromJson(Map<String, dynamic> json) =>
+    _AniblaNotification(
       id: json['_id'] as String? ?? "",
       userId: json['userId'] as String? ?? "",
       title: json['title'] as String? ?? "",
@@ -85,7 +85,7 @@ _Notification _$NotificationFromJson(Map<String, dynamic> json) =>
           : EpisodeNotification.fromJson(json['data'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$NotificationToJson(_Notification instance) =>
+Map<String, dynamic> _$AniblaNotificationToJson(_AniblaNotification instance) =>
     <String, dynamic>{
       '_id': instance.id,
       'userId': instance.userId,

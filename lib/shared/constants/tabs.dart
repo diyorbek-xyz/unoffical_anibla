@@ -1,4 +1,4 @@
-import 'package:application/features/anibla/data/models/misc/tab_item.dart';
+import 'package:application/features/view/models/tab_view.dart';
 import 'package:flutter/material.dart';
 
 const List<TabItem> mobileTabs = [

@@ -1,5 +1,7 @@
+import 'package:application/features/anibla/data/enums/media_type.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
+import 'package:intl/intl.dart';
 
 part 'episode_notf.freezed.dart';
 part 'episode_notf.g.dart';
@@ -15,7 +17,7 @@ abstract class EpisodeNotification with _$EpisodeNotification {
     @Default("") @HiveField(4) String seasonNumber,
     @Default("") @HiveField(5) String episodeNumber,
     @Default("") @HiveField(6) String mediaId,
-    @Default("") @HiveField(7) String mediaType,
+    @Default(MediaType.serie) @HiveField(7) MediaType mediaType,
     @Default("") @HiveField(8) String seasonIndex,
     @Default("") @HiveField(9) String episodeIndex,
     @Default("") @HiveField(10) String seasonRouteIndex,
@@ -24,5 +26,8 @@ abstract class EpisodeNotification with _$EpisodeNotification {
     @Default("") @HiveField(13) String imageUrl,
     @Default("") @HiveField(14) String image,
   }) = _EpisodeNotification;
-  factory EpisodeNotification.fromJson(Map<String, dynamic> json) => _$EpisodeNotificationFromJson(json);
+  factory EpisodeNotification.fromJson(Map<String, dynamic> json) {
+    json['mediaType'] = toBeginningOfSentenceCase(json['mediaType']);
+    return _$EpisodeNotificationFromJson(json);
+  }
 }

@@ -1,18 +1,9 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/features/anibla/data/enums/data_type.dart';
-import 'package:application/features/anibla/data/models/data/privacy.dart';
-import 'package:application/features/anibla/data/models/data/session.dart';
-import 'package:application/features/anibla/data/models/misc/plan.dart';
-import 'package:application/features/anibla/data/models/misc/tab_item.dart';
-import 'package:application/features/anibla/data/models/response/notification_response.dart';
 import 'package:application/features/anibla/data/view_model/profile_view.dart';
+import 'package:application/features/view/models/tab_view.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:application/features/anibla/presentation/controllers/profile_controller.dart';
-import 'package:application/features/anibla/presentation/menus/profile/devices_menu.dart';
-import 'package:application/features/anibla/presentation/menus/profile/infos_menu.dart';
-import 'package:application/features/anibla/presentation/menus/profile/notifications_menu.dart';
-import 'package:application/features/anibla/presentation/menus/profile/plans_menu.dart';
-import 'package:application/features/anibla/presentation/menus/profile/privacy_settings.dart';
 import 'package:application/features/anibla/presentation/widgets/avatar_selector.dart';
 import 'package:application/injection_container.dart';
 import 'package:flutter/material.dart';
@@ -23,18 +14,8 @@ import 'package:application/features/anibla/presentation/dialogs/logout_modal.da
 
 class ProfilePage extends StatefulWidget {
   final ProfileView profile;
-  final NotificationResponse notifications;
-  final List<Plan> plans;
-  final List<Session> sessions;
-  final Privacy privacy;
-  const ProfilePage({
-    super.key,
-    required this.profile,
-    required this.plans,
-    required this.sessions,
-    required this.notifications,
-    required this.privacy,
-  });
+  final List<TabView> tabViews;
+  const ProfilePage({super.key, required this.profile, required this.tabViews});
 
   DataType get type => profile.type;
 
@@ -60,10 +41,10 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             ListTile(
               leading: IconButton(onPressed: goToTabs, icon: Icon(Icons.keyboard_arrow_left)),
-              title: Text(tabs[currentIndex].label),
+              title: Text(widget.tabViews[currentIndex].tab.label),
               minTileHeight: 70,
             ),
-            Expanded(child: views[currentIndex]),
+            Expanded(child: widget.tabViews[currentIndex].view),
           ],
         );
       }
@@ -92,7 +73,7 @@ class _ProfilePageState extends State<ProfilePage> {
     crossAxisAlignment: .start,
     children: [
       SizedBox(width: 350, child: navTabs),
-      Expanded(child: views[currentIndex]),
+      Expanded(child: widget.tabViews[currentIndex].view),
     ],
   );
 
@@ -101,10 +82,10 @@ class _ProfilePageState extends State<ProfilePage> {
     shrinkWrap: true,
     addRepaintBoundaries: true,
     addAutomaticKeepAlives: false,
-    itemCount: tabs.length,
+    itemCount: widget.tabViews.length,
     separatorBuilder: (context, index) => const SizedBox(height: 5),
     itemBuilder: (context, i) {
-      final tab = tabs[i];
+      final tab = widget.tabViews[i].tab;
       final index = i;
       final selected = index == currentIndex;
       final isNotf = index == 1;
@@ -226,26 +207,4 @@ class _ProfilePageState extends State<ProfilePage> {
   );
 
   bool get isAnibla => widget.type.isAnibla;
-
-  late final views = <Widget>[
-    ProfileInfosMenu(widget.profile),
-    NotificationsMenu(widget.notifications),
-    if (isAnibla) PlansMenu(widget.plans),
-    if (isAnibla) ProfileDevicesMenu(widget.sessions, widget.profile.tokenId),
-    if (isAnibla) PrivacySettings(widget.privacy),
-  ];
-
-  late final tabs = <TabItem>[
-    TabItem(path: "infos", activeIcon: Icons.info, icon: Icons.info_outline, label: "Profil ma'lumotlari"),
-    TabItem(
-      path: "notifications",
-      activeIcon: Icons.notifications,
-      icon: Icons.notifications_outlined,
-      label: "Bildirishnomalar",
-    ),
-    if (isAnibla) TabItem(path: "plans", activeIcon: Icons.verified, icon: Icons.verified_outlined, label: "Obunalar"),
-    if (isAnibla) TabItem(path: "devices", activeIcon: Icons.devices, icon: Icons.devices_outlined, label: "Qurilmalar"),
-    if (isAnibla)
-      TabItem(path: "privacy", activeIcon: Icons.privacy_tip, icon: Icons.privacy_tip_outlined, label: "Xavfsizlik sozlamalari"),
-  ];
 }

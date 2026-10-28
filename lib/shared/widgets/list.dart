@@ -1,5 +1,6 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/shared/utils/extensions.dart';
+import 'package:application/shared/utils/html_widget.dart';
 import 'package:flutter/material.dart';
 
 class ListBorderRadius {
@@ -30,12 +31,16 @@ class ListModel {
   final IconData? icon;
   final bool? isThreeLine;
   final double? height;
+  final bool isHtml;
+  final VoidCallback? onTap;
   const ListModel({
     this.actions,
     this.height,
     this.leading,
     this.icon,
     this.isThreeLine,
+    this.isHtml = false,
+    this.onTap,
     required this.label,
     required this.value,
   });
@@ -80,17 +85,19 @@ class ListsWidget extends StatelessWidget {
             textColor: context.appColors.primaryFixed,
             iconColor: context.appColors.primaryFixed,
             contentPadding: EdgeInsets.symmetric(vertical: 3, horizontal: 18),
+            title: Text(list.label),
+            onTap: list.onTap,
+            isThreeLine: list.isThreeLine,
+            minTileHeight: list.height,
             leading:
                 list.leading ??
                 (list.icon != null ? Padding(padding: EdgeInsetsGeometry.only(right: 5), child: Icon(list.icon)) : null),
-            title: Text(list.label),
-            onTap: () {},
-            subtitle: Text(list.value, style: TextStyle(color: context.appColors.primaryFixedDim)),
+            subtitle: list.isHtml
+                ? Html.htmlBuilder(list.value)
+                : Text(list.value, style: TextStyle(color: context.appColors.primaryFixedDim)),
             trailing: (list.actions != null && list.actions!.isNotEmpty)
                 ? Row(mainAxisSize: MainAxisSize.min, children: list.actions!)
                 : null,
-            isThreeLine: list.isThreeLine,
-            minTileHeight: list.height,
           );
         }
         return ListTile(
@@ -99,17 +106,19 @@ class ListsWidget extends StatelessWidget {
           iconColor: context.appColors.primaryFixed,
           shape: RoundedRectangleBorder(borderRadius: borderRadius.fromIndex(index, items.length)),
           contentPadding: EdgeInsets.symmetric(vertical: 3, horizontal: 18),
+          title: Text(list.label),
+          onTap: list.onTap,
+          isThreeLine: list.isThreeLine,
+          minTileHeight: list.height,
           leading:
               list.leading ??
               (list.icon != null ? Padding(padding: EdgeInsetsGeometry.only(right: 5), child: Icon(list.icon)) : null),
-          title: Text(list.label),
-          onTap: () {},
-          subtitle: Text(list.value, style: TextStyle(color: context.appColors.primaryFixedDim)),
+          subtitle: list.isHtml
+              ? Html.htmlBuilder(list.value)
+              : Text(list.value, style: TextStyle(color: context.appColors.primaryFixedDim)),
           trailing: (list.actions != null && list.actions!.isNotEmpty)
               ? Row(mainAxisSize: MainAxisSize.min, children: list.actions!)
               : null,
-          isThreeLine: list.isThreeLine,
-          minTileHeight: list.height,
         );
       },
     );

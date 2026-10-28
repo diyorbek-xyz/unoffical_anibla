@@ -13,6 +13,14 @@ class ManoInterceptor extends Interceptor {
   final AuthStorage storage;
   final NeutralClient client;
   const ManoInterceptor(this.client, this.storage);
+  @override
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+    final tokens = await storage.getManoTokens();
+    final accessToken = tokens?.accessToken;
+    if (accessToken == null) return handler.next(options);
+    final newOptions = await _setHeaders(options, accessToken);
+    return handler.next(newOptions);
+  }
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {

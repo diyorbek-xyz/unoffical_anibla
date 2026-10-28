@@ -5,12 +5,12 @@
 import 'package:hive_ce/hive_ce.dart';
 import 'package:application/features/anibla/data/enums/episode_type.dart';
 import 'package:application/features/anibla/data/enums/media_type.dart';
+import 'package:application/features/anibla/data/models/data/anibla_notification.dart';
 import 'package:application/features/anibla/data/models/data/carousel_item.dart';
 import 'package:application/features/anibla/data/models/data/category.dart';
 import 'package:application/features/anibla/data/models/data/creator.dart';
 import 'package:application/features/anibla/data/models/data/episode_notf.dart';
 import 'package:application/features/anibla/data/models/data/genre.dart';
-import 'package:application/features/anibla/data/models/data/notification.dart';
 import 'package:application/features/anibla/data/models/data/privacy.dart';
 import 'package:application/features/anibla/data/models/data/session.dart';
 import 'package:application/features/anibla/data/models/helper/localized.dart';
@@ -21,7 +21,7 @@ import 'package:application/features/anibla/data/models/main/episode.dart';
 import 'package:application/features/anibla/data/models/main/season.dart';
 import 'package:application/features/anibla/data/models/misc/premiere.dart';
 import 'package:application/features/anibla/data/models/misc/premieres.dart';
-import 'package:application/features/anibla/data/models/response/notification_response.dart';
+import 'package:application/features/anibla/data/models/response/anibla_notification_res.dart';
 import 'package:application/features/mano/data/models/data/book_status.dart';
 import 'package:application/features/mano/data/models/data/mano_banner.dart';
 import 'package:application/features/mano/data/models/data/mano_category.dart';
@@ -37,6 +37,8 @@ import 'package:application/features/player/data/model/timeline_model.dart';
 
 extension HiveRegistrar on HiveInterface {
   void registerAdapters() {
+    registerAdapter(AniblaNotificationAdapter());
+    registerAdapter(AniblaNotificationResAdapter());
     registerAdapter(AniblaProfileAdapter());
     registerAdapter(AnimeAdapter());
     registerAdapter(BookAdapter());
@@ -63,8 +65,6 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(MasterPlaylistAdapter());
     registerAdapter(MediaPlaylistAdapter());
     registerAdapter(MediaTypeAdapter());
-    registerAdapter(NotificationAdapter());
-    registerAdapter(NotificationResponseAdapter());
     registerAdapter(PaginationAdapter());
     registerAdapter(PremiereAdapter());
     registerAdapter(PremieresAdapter());
@@ -79,6 +79,8 @@ extension HiveRegistrar on HiveInterface {
 
 extension IsolatedHiveRegistrar on IsolatedHiveInterface {
   void registerAdapters() {
+    registerAdapter(AniblaNotificationAdapter());
+    registerAdapter(AniblaNotificationResAdapter());
     registerAdapter(AniblaProfileAdapter());
     registerAdapter(AnimeAdapter());
     registerAdapter(BookAdapter());
@@ -105,8 +107,6 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
     registerAdapter(MasterPlaylistAdapter());
     registerAdapter(MediaPlaylistAdapter());
     registerAdapter(MediaTypeAdapter());
-    registerAdapter(NotificationAdapter());
-    registerAdapter(NotificationResponseAdapter());
     registerAdapter(PaginationAdapter());
     registerAdapter(PremiereAdapter());
     registerAdapter(PremieresAdapter());

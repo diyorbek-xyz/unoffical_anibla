@@ -1,6 +1,6 @@
 import 'package:application/features/anibla/data/enums/media_type.dart';
-import 'package:application/features/mano/data/models/request/list_converter.dart';
-import 'package:application/features/mano/data/models/request/sort_type.dart';
+import 'package:application/features/mano/data/models/converter/list_converter.dart';
+import 'package:application/features/mano/data/models/enum/sort_type.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part "novel_request.g.dart";

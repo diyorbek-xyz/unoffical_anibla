@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/features/anibla/data/models/props/media_props.dart';
-import 'package:application/shared/image_provider/fallback_provider.dart';
 import 'package:application/shared/utils/base_url.dart';
 import 'package:application/shared/widgets/error.dart';
 import 'package:application/features/anibla/presentation/controllers/slider_controller.dart';
@@ -10,6 +9,7 @@ import 'package:application/injection_container.dart';
 import 'package:application/main.dart';
 import 'package:application/core/network/resources/failure.dart';
 import 'package:application/shared/widgets/image.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -23,19 +23,23 @@ class Carousel extends StatefulWidget {
   State<Carousel> createState() => _CarouselState();
 }
 
-class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin {
+class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
   static const _interval = Duration(seconds: 10);
   static const _fade = Duration(milliseconds: 600);
 
   @override
   bool get wantKeepAlive => true;
 
-  final _controller = sl<SliderController>();
   Timer? _timer;
+  bool _fading = false;
   int _current = 0;
   int _previous = 0;
+  final _controller = sl<SliderController>();
 
-  int get _length => _controller.sliderSignal.value.value?.length ?? 0;
+  void _startTimer() {
+    _timer?.cancel();
+    _timer = Timer.periodic(_interval, (_) => _next());
+  }
 
   @override
   void initState() {
@@ -43,25 +47,53 @@ class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin 
     _startTimer();
   }
 
+  bool _busy = false; // true from tap until fade finishes
+
+  late final _anim = AnimationController(vsync: this, duration: _fade, value: 1)
+    ..addStatusListener((s) {
+      if (s == AnimationStatus.completed && mounted) {
+        setState(() {
+          _fading = false;
+          _busy = false;
+        });
+      }
+    });
+
+  late final _opacity = CurvedAnimation(parent: _anim, curve: Curves.easeInOut);
+
   @override
   void dispose() {
     _timer?.cancel();
+    _opacity.dispose();
+    _anim.dispose();
     super.dispose();
   }
 
-  void _startTimer() {
-    _timer?.cancel();
-    _timer = Timer.periodic(_interval, (_) => _next());
-  }
-
-  void _goTo(int page) {
-    if (_length <= 1) return;
-    setState(() => (_previous = _current, _current = page));
+  void _goTo(int page, List<CarouselItem> data) {
+    if (data.length <= 1 || page == _current || _busy) return;
+    _busy = true;
+    if (!mounted) return;
+    _anim.value = 0;
+    setState(() {
+      _previous = _current;
+      _current = page;
+      _fading = true;
+    });
+    _anim.forward();
     _startTimer();
   }
 
-  void _next() => _length < 0 ? null : _goTo((_current + 1) % _length);
-  void _prev() => _length < 0 ? null : _goTo((_current - 1 + _length) % _length);
+  void _next() {
+    final data = _controller.sliderSignal.value.value ?? const <CarouselItem>[];
+    if (data.isEmpty) return;
+    _goTo((_current + 1) % data.length, data);
+  }
+
+  void _prev() {
+    final data = _controller.sliderSignal.value.value ?? const <CarouselItem>[];
+    if (data.isEmpty) return;
+    _goTo((_current - 1 + data.length) % data.length, data);
+  }
 
   void _onDrag(DragEndDetails d) {
     final v = d.primaryVelocity ?? 0;
@@ -77,12 +109,22 @@ class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin 
     return SignalBuilder(
       builder: (context) {
         final state = _controller.sliderSignal.value;
-        if (state.hasError) return ErrorBuilder(message: (state.error as Failure).message, refresh: _controller.refresh);
+        if (state.hasError) {
+          return ErrorBuilder(message: (state.error as Failure).message, refresh: _controller.refresh);
+        }
         final data = state.value ?? _controller.fakeSlider;
         return Skeletonizer(enableSwitchAnimation: true, enabled: state.isLoading, child: _slides(data, isMobile));
       },
     );
   }
+
+  Widget _layer(List<CarouselItem> data, int index, Animation<double> opacity) => KeyedSubtree(
+    key: ValueKey(index),
+    child: FadeTransition(
+      opacity: opacity,
+      child: RepaintBoundary(child: carouselItem(data[index], context)),
+    ),
+  );
 
   Widget _slides(List<CarouselItem> data, bool isMobile) {
     if (data.isEmpty) return const SizedBox.shrink();
@@ -94,17 +136,8 @@ class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin 
       child: Stack(
         fit: StackFit.expand,
         children: [
-          if (prev != cur) IgnorePointer(child: carouselItem(data[prev], context)),
-
-          TweenAnimationBuilder<double>(
-            key: ValueKey(cur),
-            tween: Tween(begin: 0, end: 1),
-            duration: _fade,
-            curve: Curves.easeInOut,
-            builder: (_, v, child) => Opacity(opacity: v, child: child),
-            child: carouselItem(data[cur], context),
-          ),
-
+          if (_fading && prev != cur) IgnorePointer(child: _layer(data, prev, kAlwaysCompleteAnimation)),
+          _layer(data, cur, _opacity),
           if (!isMobile) _arrows(),
         ],
       ),
@@ -131,12 +164,25 @@ class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin 
     ),
   );
 
+  ButtonStyle _buttonStyle(BuildContext context, Size size) => ButtonStyle(
+    backgroundColor: WidgetStatePropertyAll(context.appColors.primary),
+    foregroundColor: WidgetStatePropertyAll(context.appColors.onPrimary),
+    padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+    fixedSize: WidgetStatePropertyAll(size),
+    shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
+    side: WidgetStateProperty.fromMap({
+      WidgetState.selected | WidgetState.focused | WidgetState.hovered: BorderSide(width: 3, color: context.appColors.secondary),
+    }),
+  );
+
   Widget carouselItem(CarouselItem item, BuildContext context) => LayoutBuilder(
     builder: (context, consts) {
       final isMobile = consts.maxWidth < MOBILE_WIDTH;
+      final showSideImage = !isMobile && consts.maxWidth >= 1000;
+
       return DecoratedBox(
         decoration: BoxDecoration(
-          image: item.image.isEmpty ? null : DecorationImage(image: imageProviderFallback(item.image), fit: BoxFit.cover),
+          image: item.image.isEmpty ? null : DecorationImage(image: CachedNetworkImageProvider(item.image), fit: BoxFit.cover),
           color: item.image.isEmpty ? context.appColors.surface : null,
         ),
         child: Container(
@@ -144,22 +190,22 @@ class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin 
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [context.appColors.surface, Colors.transparent],
-              begin: isMobile ? .bottomCenter : .topStart,
-              end: isMobile ? .center : .center,
+              begin: isMobile ? Alignment.bottomCenter : Alignment.topLeft,
+              end: Alignment.center,
             ),
           ),
           child: Row(
-            crossAxisAlignment: .end,
-            mainAxisAlignment: .spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: isMobile ? .end : .center,
+                  mainAxisAlignment: isMobile ? MainAxisAlignment.end : MainAxisAlignment.center,
                   spacing: 10,
                   children: [
                     Text(
-                      "${item.anime.title.uz.toString()} [${item.anime.age}+]",
+                      "${item.anime.title.uz} [${item.anime.age}+]",
                       style: isMobile ? context.textTheme.titleLarge : context.textTheme.displayMedium,
                     ),
                     SizedBox(
@@ -171,50 +217,22 @@ class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin 
                         style: isMobile ? context.textTheme.bodyMedium : context.textTheme.bodyLarge,
                       ),
                     ),
-
                     if (!isMobile) ...[
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Row(
                         spacing: 10,
                         children: [
                           FilledButton.icon(
                             onPressed: () =>
                                 context.pushNamed("media", queryParameters: MediaProps.fromAnime(item.anime).toJson()),
-                            icon: Icon(Icons.play_arrow),
-                            style: ButtonStyle(
-                              backgroundColor: WidgetStatePropertyAll(context.appColors.primary),
-                              foregroundColor: WidgetStatePropertyAll(context.appColors.onPrimary),
-                              padding: WidgetStatePropertyAll(EdgeInsets.zero),
-                              fixedSize: WidgetStatePropertyAll(Size(150, 40)),
-                              shape: WidgetStatePropertyAll(
-                                RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(5)),
-                              ),
-                              side: WidgetStateProperty.fromMap({
-                                WidgetState.selected | WidgetState.focused | WidgetState.hovered: BorderSide(
-                                  width: 3,
-                                  color: context.appColors.secondary,
-                                ),
-                              }),
-                            ),
-                            label: Text("Tomosha qilish"),
+                            icon: const Icon(Icons.play_arrow),
+                            style: _buttonStyle(context, const Size(150, 40)),
+                            label: const Text("Tomosha qilish"),
                           ),
                           IconButton(
                             onPressed: () {},
-                            padding: EdgeInsets.zero,
-                            icon: Icon(Icons.bookmark_outline),
-                            style: ButtonStyle(
-                              side: WidgetStateProperty.fromMap({
-                                WidgetState.selected | WidgetState.focused | WidgetState.hovered: BorderSide(
-                                  width: 3,
-                                  color: context.appColors.secondary,
-                                ),
-                              }),
-                              backgroundColor: WidgetStatePropertyAll(context.appColors.primary),
-                              foregroundColor: WidgetStatePropertyAll(context.appColors.onPrimary),
-                              padding: WidgetStatePropertyAll(EdgeInsets.zero),
-                              fixedSize: WidgetStatePropertyAll(Size(40, 40)),
-                              shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: .circular(5))),
-                            ),
+                            icon: const Icon(Icons.bookmark_outline),
+                            style: _buttonStyle(context, const Size(40, 40)),
                           ),
                         ],
                       ),
@@ -222,9 +240,10 @@ class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin 
                   ],
                 ),
               ),
-              if (!(consts.maxWidth < 1000) && item.mobileImage.isNotEmpty && !isMobile)
-                SafeImage(imageUrl: addBaseUrl(item.mobileImage), height: 500, width: 300, fit: .cover),
-              if (item.mobileImage.isEmpty && !isMobile) Container(height: 500, width: 300, color: context.appColors.primary),
+              if (showSideImage)
+                item.mobileImage.isNotEmpty
+                    ? SafeImage(imageUrl: addBaseUrl(item.mobileImage), height: 500, width: 300, fit: BoxFit.cover)
+                    : Container(height: 500, width: 300, color: context.appColors.primary),
             ],
           ),
         ),

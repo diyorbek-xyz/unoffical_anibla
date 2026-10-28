@@ -24,7 +24,7 @@ class EpisodeNotificationAdapter extends TypeAdapter<EpisodeNotification> {
       seasonNumber: fields[4] == null ? '' : fields[4] as String,
       episodeNumber: fields[5] == null ? '' : fields[5] as String,
       mediaId: fields[6] == null ? '' : fields[6] as String,
-      mediaType: fields[7] == null ? '' : fields[7] as String,
+      mediaType: fields[7] == null ? MediaType.serie : fields[7] as MediaType,
       seasonIndex: fields[8] == null ? '' : fields[8] as String,
       episodeIndex: fields[9] == null ? '' : fields[9] as String,
       seasonRouteIndex: fields[10] == null ? '' : fields[10] as String,
@@ -95,7 +95,9 @@ _EpisodeNotification _$EpisodeNotificationFromJson(Map<String, dynamic> json) =>
       seasonNumber: json['seasonNumber'] as String? ?? "",
       episodeNumber: json['episodeNumber'] as String? ?? "",
       mediaId: json['mediaId'] as String? ?? "",
-      mediaType: json['mediaType'] as String? ?? "",
+      mediaType:
+          $enumDecodeNullable(_$MediaTypeEnumMap, json['mediaType']) ??
+          MediaType.serie,
       seasonIndex: json['seasonIndex'] as String? ?? "",
       episodeIndex: json['episodeIndex'] as String? ?? "",
       seasonRouteIndex: json['seasonRouteIndex'] as String? ?? "",
@@ -115,7 +117,7 @@ Map<String, dynamic> _$EpisodeNotificationToJson(
   'seasonNumber': instance.seasonNumber,
   'episodeNumber': instance.episodeNumber,
   'mediaId': instance.mediaId,
-  'mediaType': instance.mediaType,
+  'mediaType': _$MediaTypeEnumMap[instance.mediaType]!,
   'seasonIndex': instance.seasonIndex,
   'episodeIndex': instance.episodeIndex,
   'seasonRouteIndex': instance.seasonRouteIndex,
@@ -123,4 +125,13 @@ Map<String, dynamic> _$EpisodeNotificationToJson(
   'mediaSlug': instance.mediaSlug,
   'imageUrl': instance.imageUrl,
   'image': instance.image,
+};
+
+const _$MediaTypeEnumMap = {
+  MediaType.movie: 'Movies',
+  MediaType.serie: 'Series',
+  MediaType.manga: 'manga',
+  MediaType.manxva: 'manhwa',
+  MediaType.novel: 'novel',
+  MediaType.comics: 'comics',
 };

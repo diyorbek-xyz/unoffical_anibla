@@ -6,12 +6,16 @@ import 'package:application/features/anibla/data/models/main/anibla_profile.dart
 import 'package:application/features/anibla/presentation/controllers/comment_controller.dart';
 import 'package:application/features/mano/data/models/main/book.dart';
 import 'package:application/features/mano/data/repository/book_repository_impl.dart';
+import 'package:application/features/mano/data/repository/mano_profile_repo_impl.dart';
 import 'package:application/features/mano/data/source/local/books_local.dart';
 import 'package:application/features/mano/data/source/network/books_api.dart';
+import 'package:application/features/mano/data/source/network/mano_notification_api.dart';
 import 'package:application/features/mano/data/source/network/mano_profile_api.dart';
 import 'package:application/features/auth/data/source/remote/mano_auth_api.dart';
 import 'package:application/features/mano/domain/repository/book_repository.dart';
+import 'package:application/features/mano/domain/repository/mano_profile_repo.dart';
 import 'package:application/features/mano/presentation/controllers/book_controller.dart';
+import 'package:application/features/mano/presentation/controllers/mano_profile_controller.dart';
 import 'package:application/features/player/presentation/controller/player_controller.dart';
 import 'package:application/shared/utils/utils.dart';
 import 'package:application/features/anibla/data/models/data/carousel_item.dart';
@@ -29,10 +33,8 @@ import 'package:application/features/player/data/model/timeline_model.dart';
 import 'package:application/features/player/data/services/download_service.dart';
 import 'package:application/features/player/data/source/local/downloads.dart';
 import 'package:application/features/player/data/source/local/timeline.dart';
-import 'package:application/features/anibla/data/repositories/notification_repository_impl.dart';
 import 'package:application/features/anibla/data/source/network/notifications_api.dart';
 import 'package:application/features/anibla/data/source/network/plans_api.dart';
-import 'package:application/features/anibla/domain/repositories/notification_repository.dart';
 import 'package:application/features/anibla/presentation/controllers/profile_controller.dart';
 import 'package:application/features/anibla/presentation/controllers/slider_controller.dart';
 import 'package:flutter/widgets.dart';
@@ -165,9 +167,10 @@ Future<void> initializeDependencies() async {
     ..registerSingleton<HlsDownloadService>(HlsDownloadService(sl(), sl()))
     ..registerSingleton<NotificationsApi>(NotificationsApi(sl()))
     ..registerSingleton<PlansApi>(PlansApi(sl()))
-    ..registerSingleton<ManoProfileApi>(ManoProfileApi(sl()))
-    ..registerSingleton<ManoAuthApi>(ManoAuthApi(sl()))
     ..registerSingleton<BooksApi>(BooksApi(sl()))
+    ..registerSingleton<ManoAuthApi>(ManoAuthApi(sl()))
+    ..registerSingleton<ManoProfileApi>(ManoProfileApi(sl()))
+    ..registerSingleton<ManoNotificationApi>(ManoNotificationApi(sl()))
     // Register Local Storage Services;
     ..registerSingleton<PremieresLocal>(PremieresLocalImpl(sl()))
     ..registerSingleton<ProfileLocal>(ProfileLocalImpl(sl()))
@@ -187,13 +190,14 @@ Future<void> initializeDependencies() async {
     ..registerLazySingleton<AnimeRepository>(() => AnimeRepositoryImpl(sl(), sl(), sl()))
     ..registerLazySingleton<SeasonRepository>(() => SeasonRepositoryImpl(sl()))
     ..registerLazySingleton<ExploreRepository>(() => ExploreRepositoryImpl(sl(), sl(), sl()))
-    ..registerLazySingleton<NotificationRepository>(() => NotificationRepositoryImpl(sl()))
     ..registerLazySingleton<BookRepository>(() => BookRepositoryImpl(sl(), sl()))
+    ..registerLazySingleton<ManoProfileRepo>(() => ManoProfileRepoImpl(sl(), sl()))
     // Register State managers;
     ..registerFactory<AuthBloc>(() => AuthBloc(sl()))
     ..registerFactory<CalendarBloc>(() => CalendarBloc(sl()))
     // Register Signal controllers;
-    ..registerLazySingleton<ProfileController>(() => ProfileController(sl(), sl(), sl()))
+    ..registerLazySingleton<ProfileController>(() => ProfileController(sl()))
+    ..registerLazySingleton<ManoProfileController>(() => ManoProfileController(sl(), sl()))
     ..registerLazySingleton<LocalAnimesController>(() => LocalAnimesController(sl(), sl(), sl()))
     ..registerLazySingleton<CommentController>(() => CommentController(sl(), sl()))
     ..registerLazySingleton<MediaController>(() => MediaController(sl(), sl(), sl()))

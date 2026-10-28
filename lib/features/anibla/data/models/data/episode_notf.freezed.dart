@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EpisodeNotification {
 
-@HiveField(0) String get seriesId;@HiveField(1) String get seasonId;@HiveField(2) String get episodeId;@HiveField(3) String get seriesName;@HiveField(4) String get seasonNumber;@HiveField(5) String get episodeNumber;@HiveField(6) String get mediaId;@HiveField(7) String get mediaType;@HiveField(8) String get seasonIndex;@HiveField(9) String get episodeIndex;@HiveField(10) String get seasonRouteIndex;@HiveField(11) String get episodeRouteIndex;@HiveField(12) String get mediaSlug;@HiveField(13) String get imageUrl;@HiveField(14) String get image;
+@HiveField(0) String get seriesId;@HiveField(1) String get seasonId;@HiveField(2) String get episodeId;@HiveField(3) String get seriesName;@HiveField(4) String get seasonNumber;@HiveField(5) String get episodeNumber;@HiveField(6) String get mediaId;@HiveField(7) MediaType get mediaType;@HiveField(8) String get seasonIndex;@HiveField(9) String get episodeIndex;@HiveField(10) String get seasonRouteIndex;@HiveField(11) String get episodeRouteIndex;@HiveField(12) String get mediaSlug;@HiveField(13) String get imageUrl;@HiveField(14) String get image;
 /// Create a copy of EpisodeNotification
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $EpisodeNotificationCopyWith<$Res>  {
   factory $EpisodeNotificationCopyWith(EpisodeNotification value, $Res Function(EpisodeNotification) _then) = _$EpisodeNotificationCopyWithImpl;
 @useResult
 $Res call({
-@HiveField(0) String seriesId,@HiveField(1) String seasonId,@HiveField(2) String episodeId,@HiveField(3) String seriesName,@HiveField(4) String seasonNumber,@HiveField(5) String episodeNumber,@HiveField(6) String mediaId,@HiveField(7) String mediaType,@HiveField(8) String seasonIndex,@HiveField(9) String episodeIndex,@HiveField(10) String seasonRouteIndex,@HiveField(11) String episodeRouteIndex,@HiveField(12) String mediaSlug,@HiveField(13) String imageUrl,@HiveField(14) String image
+@HiveField(0) String seriesId,@HiveField(1) String seasonId,@HiveField(2) String episodeId,@HiveField(3) String seriesName,@HiveField(4) String seasonNumber,@HiveField(5) String episodeNumber,@HiveField(6) String mediaId,@HiveField(7) MediaType mediaType,@HiveField(8) String seasonIndex,@HiveField(9) String episodeIndex,@HiveField(10) String seasonRouteIndex,@HiveField(11) String episodeRouteIndex,@HiveField(12) String mediaSlug,@HiveField(13) String imageUrl,@HiveField(14) String image
 });
 
 
@@ -75,7 +75,7 @@ as String,seasonNumber: null == seasonNumber ? _self.seasonNumber : seasonNumber
 as String,episodeNumber: null == episodeNumber ? _self.episodeNumber : episodeNumber // ignore: cast_nullable_to_non_nullable
 as String,mediaId: null == mediaId ? _self.mediaId : mediaId // ignore: cast_nullable_to_non_nullable
 as String,mediaType: null == mediaType ? _self.mediaType : mediaType // ignore: cast_nullable_to_non_nullable
-as String,seasonIndex: null == seasonIndex ? _self.seasonIndex : seasonIndex // ignore: cast_nullable_to_non_nullable
+as MediaType,seasonIndex: null == seasonIndex ? _self.seasonIndex : seasonIndex // ignore: cast_nullable_to_non_nullable
 as String,episodeIndex: null == episodeIndex ? _self.episodeIndex : episodeIndex // ignore: cast_nullable_to_non_nullable
 as String,seasonRouteIndex: null == seasonRouteIndex ? _self.seasonRouteIndex : seasonRouteIndex // ignore: cast_nullable_to_non_nullable
 as String,episodeRouteIndex: null == episodeRouteIndex ? _self.episodeRouteIndex : episodeRouteIndex // ignore: cast_nullable_to_non_nullable
@@ -167,7 +167,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@HiveField(0)  String seriesId, @HiveField(1)  String seasonId, @HiveField(2)  String episodeId, @HiveField(3)  String seriesName, @HiveField(4)  String seasonNumber, @HiveField(5)  String episodeNumber, @HiveField(6)  String mediaId, @HiveField(7)  String mediaType, @HiveField(8)  String seasonIndex, @HiveField(9)  String episodeIndex, @HiveField(10)  String seasonRouteIndex, @HiveField(11)  String episodeRouteIndex, @HiveField(12)  String mediaSlug, @HiveField(13)  String imageUrl, @HiveField(14)  String image)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@HiveField(0)  String seriesId, @HiveField(1)  String seasonId, @HiveField(2)  String episodeId, @HiveField(3)  String seriesName, @HiveField(4)  String seasonNumber, @HiveField(5)  String episodeNumber, @HiveField(6)  String mediaId, @HiveField(7)  MediaType mediaType, @HiveField(8)  String seasonIndex, @HiveField(9)  String episodeIndex, @HiveField(10)  String seasonRouteIndex, @HiveField(11)  String episodeRouteIndex, @HiveField(12)  String mediaSlug, @HiveField(13)  String imageUrl, @HiveField(14)  String image)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EpisodeNotification() when $default != null:
 return $default(_that.seriesId,_that.seasonId,_that.episodeId,_that.seriesName,_that.seasonNumber,_that.episodeNumber,_that.mediaId,_that.mediaType,_that.seasonIndex,_that.episodeIndex,_that.seasonRouteIndex,_that.episodeRouteIndex,_that.mediaSlug,_that.imageUrl,_that.image);case _:
@@ -188,7 +188,7 @@ return $default(_that.seriesId,_that.seasonId,_that.episodeId,_that.seriesName,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@HiveField(0)  String seriesId, @HiveField(1)  String seasonId, @HiveField(2)  String episodeId, @HiveField(3)  String seriesName, @HiveField(4)  String seasonNumber, @HiveField(5)  String episodeNumber, @HiveField(6)  String mediaId, @HiveField(7)  String mediaType, @HiveField(8)  String seasonIndex, @HiveField(9)  String episodeIndex, @HiveField(10)  String seasonRouteIndex, @HiveField(11)  String episodeRouteIndex, @HiveField(12)  String mediaSlug, @HiveField(13)  String imageUrl, @HiveField(14)  String image)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@HiveField(0)  String seriesId, @HiveField(1)  String seasonId, @HiveField(2)  String episodeId, @HiveField(3)  String seriesName, @HiveField(4)  String seasonNumber, @HiveField(5)  String episodeNumber, @HiveField(6)  String mediaId, @HiveField(7)  MediaType mediaType, @HiveField(8)  String seasonIndex, @HiveField(9)  String episodeIndex, @HiveField(10)  String seasonRouteIndex, @HiveField(11)  String episodeRouteIndex, @HiveField(12)  String mediaSlug, @HiveField(13)  String imageUrl, @HiveField(14)  String image)  $default,) {final _that = this;
 switch (_that) {
 case _EpisodeNotification():
 return $default(_that.seriesId,_that.seasonId,_that.episodeId,_that.seriesName,_that.seasonNumber,_that.episodeNumber,_that.mediaId,_that.mediaType,_that.seasonIndex,_that.episodeIndex,_that.seasonRouteIndex,_that.episodeRouteIndex,_that.mediaSlug,_that.imageUrl,_that.image);case _:
@@ -208,7 +208,7 @@ return $default(_that.seriesId,_that.seasonId,_that.episodeId,_that.seriesName,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@HiveField(0)  String seriesId, @HiveField(1)  String seasonId, @HiveField(2)  String episodeId, @HiveField(3)  String seriesName, @HiveField(4)  String seasonNumber, @HiveField(5)  String episodeNumber, @HiveField(6)  String mediaId, @HiveField(7)  String mediaType, @HiveField(8)  String seasonIndex, @HiveField(9)  String episodeIndex, @HiveField(10)  String seasonRouteIndex, @HiveField(11)  String episodeRouteIndex, @HiveField(12)  String mediaSlug, @HiveField(13)  String imageUrl, @HiveField(14)  String image)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@HiveField(0)  String seriesId, @HiveField(1)  String seasonId, @HiveField(2)  String episodeId, @HiveField(3)  String seriesName, @HiveField(4)  String seasonNumber, @HiveField(5)  String episodeNumber, @HiveField(6)  String mediaId, @HiveField(7)  MediaType mediaType, @HiveField(8)  String seasonIndex, @HiveField(9)  String episodeIndex, @HiveField(10)  String seasonRouteIndex, @HiveField(11)  String episodeRouteIndex, @HiveField(12)  String mediaSlug, @HiveField(13)  String imageUrl, @HiveField(14)  String image)?  $default,) {final _that = this;
 switch (_that) {
 case _EpisodeNotification() when $default != null:
 return $default(_that.seriesId,_that.seasonId,_that.episodeId,_that.seriesName,_that.seasonNumber,_that.episodeNumber,_that.mediaId,_that.mediaType,_that.seasonIndex,_that.episodeIndex,_that.seasonRouteIndex,_that.episodeRouteIndex,_that.mediaSlug,_that.imageUrl,_that.image);case _:
@@ -223,7 +223,7 @@ return $default(_that.seriesId,_that.seasonId,_that.episodeId,_that.seriesName,_
 @JsonSerializable()
 
 class _EpisodeNotification implements EpisodeNotification {
-  const _EpisodeNotification({@HiveField(0) this.seriesId = "", @HiveField(1) this.seasonId = "", @HiveField(2) this.episodeId = "", @HiveField(3) this.seriesName = "", @HiveField(4) this.seasonNumber = "", @HiveField(5) this.episodeNumber = "", @HiveField(6) this.mediaId = "", @HiveField(7) this.mediaType = "", @HiveField(8) this.seasonIndex = "", @HiveField(9) this.episodeIndex = "", @HiveField(10) this.seasonRouteIndex = "", @HiveField(11) this.episodeRouteIndex = "", @HiveField(12) this.mediaSlug = "", @HiveField(13) this.imageUrl = "", @HiveField(14) this.image = ""});
+  const _EpisodeNotification({@HiveField(0) this.seriesId = "", @HiveField(1) this.seasonId = "", @HiveField(2) this.episodeId = "", @HiveField(3) this.seriesName = "", @HiveField(4) this.seasonNumber = "", @HiveField(5) this.episodeNumber = "", @HiveField(6) this.mediaId = "", @HiveField(7) this.mediaType = MediaType.serie, @HiveField(8) this.seasonIndex = "", @HiveField(9) this.episodeIndex = "", @HiveField(10) this.seasonRouteIndex = "", @HiveField(11) this.episodeRouteIndex = "", @HiveField(12) this.mediaSlug = "", @HiveField(13) this.imageUrl = "", @HiveField(14) this.image = ""});
   factory _EpisodeNotification.fromJson(Map<String, dynamic> json) => _$EpisodeNotificationFromJson(json);
 
 @override@JsonKey()@HiveField(0) final  String seriesId;
@@ -233,7 +233,7 @@ class _EpisodeNotification implements EpisodeNotification {
 @override@JsonKey()@HiveField(4) final  String seasonNumber;
 @override@JsonKey()@HiveField(5) final  String episodeNumber;
 @override@JsonKey()@HiveField(6) final  String mediaId;
-@override@JsonKey()@HiveField(7) final  String mediaType;
+@override@JsonKey()@HiveField(7) final  MediaType mediaType;
 @override@JsonKey()@HiveField(8) final  String seasonIndex;
 @override@JsonKey()@HiveField(9) final  String episodeIndex;
 @override@JsonKey()@HiveField(10) final  String seasonRouteIndex;
@@ -275,7 +275,7 @@ abstract mixin class _$EpisodeNotificationCopyWith<$Res> implements $EpisodeNoti
   factory _$EpisodeNotificationCopyWith(_EpisodeNotification value, $Res Function(_EpisodeNotification) _then) = __$EpisodeNotificationCopyWithImpl;
 @override @useResult
 $Res call({
-@HiveField(0) String seriesId,@HiveField(1) String seasonId,@HiveField(2) String episodeId,@HiveField(3) String seriesName,@HiveField(4) String seasonNumber,@HiveField(5) String episodeNumber,@HiveField(6) String mediaId,@HiveField(7) String mediaType,@HiveField(8) String seasonIndex,@HiveField(9) String episodeIndex,@HiveField(10) String seasonRouteIndex,@HiveField(11) String episodeRouteIndex,@HiveField(12) String mediaSlug,@HiveField(13) String imageUrl,@HiveField(14) String image
+@HiveField(0) String seriesId,@HiveField(1) String seasonId,@HiveField(2) String episodeId,@HiveField(3) String seriesName,@HiveField(4) String seasonNumber,@HiveField(5) String episodeNumber,@HiveField(6) String mediaId,@HiveField(7) MediaType mediaType,@HiveField(8) String seasonIndex,@HiveField(9) String episodeIndex,@HiveField(10) String seasonRouteIndex,@HiveField(11) String episodeRouteIndex,@HiveField(12) String mediaSlug,@HiveField(13) String imageUrl,@HiveField(14) String image
 });
 
 
@@ -302,7 +302,7 @@ as String,seasonNumber: null == seasonNumber ? _self.seasonNumber : seasonNumber
 as String,episodeNumber: null == episodeNumber ? _self.episodeNumber : episodeNumber // ignore: cast_nullable_to_non_nullable
 as String,mediaId: null == mediaId ? _self.mediaId : mediaId // ignore: cast_nullable_to_non_nullable
 as String,mediaType: null == mediaType ? _self.mediaType : mediaType // ignore: cast_nullable_to_non_nullable
-as String,seasonIndex: null == seasonIndex ? _self.seasonIndex : seasonIndex // ignore: cast_nullable_to_non_nullable
+as MediaType,seasonIndex: null == seasonIndex ? _self.seasonIndex : seasonIndex // ignore: cast_nullable_to_non_nullable
 as String,episodeIndex: null == episodeIndex ? _self.episodeIndex : episodeIndex // ignore: cast_nullable_to_non_nullable
 as String,seasonRouteIndex: null == seasonRouteIndex ? _self.seasonRouteIndex : seasonRouteIndex // ignore: cast_nullable_to_non_nullable
 as String,episodeRouteIndex: null == episodeRouteIndex ? _self.episodeRouteIndex : episodeRouteIndex // ignore: cast_nullable_to_non_nullable
