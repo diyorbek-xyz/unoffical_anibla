@@ -211,7 +211,7 @@ class _MediaWrapperState extends State<MediaWrapper> {
       AnimeEpisodesMenu(
         chapters: chapters.map(MediaChapter.fromBook).toList(),
         total: chapters.length,
-        openChapter: (key) => print(key.key),
+        openChapter: (key) => context.pushNamed("read", queryParameters: widget.props.copyWith(chapterKey: key.key).toJson()),
       ),
     ];
     return .new(

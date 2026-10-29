@@ -82,4 +82,14 @@ class BookRepositoryImpl implements BookRepository {
       return Left(ExceptionMapper.mapDioToFailure(e));
     }
   }
+
+  @override
+  Future<Either<Failure, ManoChapter>> getChapterPages(String id) async {
+    try {
+      final httpRequest = await _booksApi.getChapterPages(id);
+      return Right(httpRequest.data);
+    } on DioException catch (e) {
+      return Left(ExceptionMapper.mapDioToFailure(e));
+    }
+  }
 }

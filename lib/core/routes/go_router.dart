@@ -8,6 +8,7 @@ import 'package:application/features/anibla/presentation/pages/main_page.dart';
 import 'package:application/features/anibla/presentation/pages/saveds_page.dart';
 import 'package:application/features/mano/presentation/pages/manga_page.dart';
 import 'package:application/features/mano/presentation/pages/novel_page.dart';
+import 'package:application/features/mano/presentation/pages/read_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -56,7 +57,7 @@ GoRouter routerConfig(String initial) => GoRouter(
     ),
     GoRoute(name: "media", path: "/media", builder: (context, state) => MediaWrapper(.fromJson(state.uri.queryParameters))),
     GoRoute(name: "watch", path: "/watch", builder: (context, state) => WatchPage(.fromJson(state.uri.queryParameters))),
-    GoRoute(name: "read", path: "/read", builder: (context, state) => MediaWrapper(.fromJson(state.uri.queryParameters))),
+    GoRoute(name: "read", path: "/read", builder: (context, state) => ReadPage(.fromJson(state.uri.queryParameters))),
     GoRoute(name: "login", path: "/login", builder: (context, state) => const LoginPage()),
   ],
 );

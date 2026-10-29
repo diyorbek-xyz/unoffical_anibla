@@ -21,4 +21,7 @@ Map<String, dynamic> _$ManoNotificationReqToJson(
   'status': _$NotificationStatusEnumMap[instance.status],
 };
 
-const _$NotificationStatusEnumMap = {NotificationStatus.read: 'read'};
+const _$NotificationStatusEnumMap = {
+  NotificationStatus.read: 'read',
+  NotificationStatus.unread: 'unread',
+};

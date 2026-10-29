@@ -23,6 +23,7 @@ import 'package:application/features/anibla/data/models/misc/premiere.dart';
 import 'package:application/features/anibla/data/models/misc/premieres.dart';
 import 'package:application/features/anibla/data/models/response/anibla_notification_res.dart';
 import 'package:application/features/mano/data/models/data/book_status.dart';
+import 'package:application/features/mano/data/models/data/chapter_page.dart';
 import 'package:application/features/mano/data/models/data/mano_banner.dart';
 import 'package:application/features/mano/data/models/data/mano_category.dart';
 import 'package:application/features/mano/data/models/data/mano_chapter.dart';
@@ -45,6 +46,7 @@ extension HiveRegistrar on HiveInterface {
     registerAdapter(BookStatusAdapter());
     registerAdapter(CarouselItemAdapter());
     registerAdapter(CategoryAdapter());
+    registerAdapter(ChapterPageAdapter());
     registerAdapter(ChunkAdapter());
     registerAdapter(CreatorAdapter());
     registerAdapter(DownloadInfosAdapter());
@@ -87,6 +89,7 @@ extension IsolatedHiveRegistrar on IsolatedHiveInterface {
     registerAdapter(BookStatusAdapter());
     registerAdapter(CarouselItemAdapter());
     registerAdapter(CategoryAdapter());
+    registerAdapter(ChapterPageAdapter());
     registerAdapter(ChunkAdapter());
     registerAdapter(CreatorAdapter());
     registerAdapter(DownloadInfosAdapter());

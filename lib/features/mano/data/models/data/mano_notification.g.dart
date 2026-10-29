@@ -59,7 +59,10 @@ Map<String, dynamic> _$ManoNotificationToJson(_ManoNotification instance) =>
 
 const _$NotificationTypeEnumMap = {NotificationType.newChapter: 'new_chapter'};
 
-const _$NotificationStatusEnumMap = {NotificationStatus.read: 'read'};
+const _$NotificationStatusEnumMap = {
+  NotificationStatus.read: 'read',
+  NotificationStatus.unread: 'unread',
+};
 
 const _$NotificationPlatformEnumMap = {
   NotificationPlatform.telegram: 'telegram',

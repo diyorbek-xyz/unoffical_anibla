@@ -25,13 +25,15 @@ class ManoChapterAdapter extends TypeAdapter<ManoChapter> {
       isRead: fields[5] == null ? false : fields[5] as bool,
       isLiked: fields[6] == null ? false : fields[6] as bool,
       isFree: fields[7] == null ? false : fields[7] as bool,
+      pages: fields[8] == null ? [] : (fields[8] as List).cast<ChapterPage>(),
+      title: fields[9] == null ? '' : fields[9] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, ManoChapter obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -47,7 +49,11 @@ class ManoChapterAdapter extends TypeAdapter<ManoChapter> {
       ..writeByte(6)
       ..write(obj.isLiked)
       ..writeByte(7)
-      ..write(obj.isFree);
+      ..write(obj.isFree)
+      ..writeByte(8)
+      ..write(obj.pages)
+      ..writeByte(9)
+      ..write(obj.title);
   }
 
   @override
@@ -74,6 +80,12 @@ _ManoChapter _$ManoChapterFromJson(Map<String, dynamic> json) => _ManoChapter(
   isRead: json['is_read'] as bool? ?? false,
   isLiked: json['is_liked'] as bool? ?? false,
   isFree: json['is_free'] as bool? ?? false,
+  pages:
+      (json['pages'] as List<dynamic>?)
+          ?.map((e) => ChapterPage.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
+  title: json['title'] as String? ?? "",
 );
 
 Map<String, dynamic> _$ManoChapterToJson(_ManoChapter instance) =>
@@ -86,4 +98,6 @@ Map<String, dynamic> _$ManoChapterToJson(_ManoChapter instance) =>
       'is_read': instance.isRead,
       'is_liked': instance.isLiked,
       'is_free': instance.isFree,
+      'pages': instance.pages,
+      'title': instance.title,
     };

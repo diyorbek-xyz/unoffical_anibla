@@ -36,6 +36,7 @@ class BookController {
 
   late final book = signal(SignalState<Book>());
   late final chapters = signal(SignalState<List<ManoChapter>>());
+  late final chapter = signal(SignalState<ManoChapter>());
 
   Future<void> getManga(String id) async {
     final either = await _bookRepository.getManga(id);
@@ -59,9 +60,15 @@ class BookController {
     await getChapters(type, id);
   }
 
+  Future<void> getChapterPages(String id) async {
+    final either = await _bookRepository.getChapterPages(id);
+    either.fold((l) => chapter.setError(l.message), chapter.setValue);
+  }
+
   void refreshNewest() => newestMangas.refresh();
 
   final fakeBooks = List.generate(5, (index) => const Book());
   final fakeChapters = List.generate(5, (index) => const ManoChapter());
+  final fakeChapter = const ManoChapter();
   final fakeBook = const Book();
 }

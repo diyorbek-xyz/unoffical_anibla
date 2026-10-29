@@ -1,3 +1,4 @@
+import 'package:application/features/mano/data/models/data/chapter_page.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
@@ -16,6 +17,8 @@ abstract class ManoChapter with _$ManoChapter {
     @HiveField(5) @Default(false) @JsonKey(name: "is_read") bool isRead,
     @HiveField(6) @Default(false) @JsonKey(name: "is_liked") bool isLiked,
     @HiveField(7) @Default(false) @JsonKey(name: "is_free") bool isFree,
+    @HiveField(8) @Default([]) @JsonKey(name: "pages") List<ChapterPage> pages,
+    @HiveField(9) @Default("") @JsonKey(name: "title") String title,
   }) = _ManoChapter;
   factory ManoChapter.fromJson(Map<String, dynamic> json) => _$ManoChapterFromJson(json);
 }

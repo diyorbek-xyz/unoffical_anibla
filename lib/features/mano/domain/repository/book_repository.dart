@@ -18,4 +18,5 @@ abstract class BookRepository {
     required String id,
     required ChapterRequest request,
   });
+  Future<Either<Failure, ManoChapter>> getChapterPages(String id);
 }

@@ -33,4 +33,7 @@ abstract class BooksApi {
     @Path("id") String id,
     @Queries() ChapterRequest request,
   );
+
+  @GET("/v2/chapter/{id}")
+  Future<HttpResponse<ManoChapter>> getChapterPages(@Path("id") String id);
 }
