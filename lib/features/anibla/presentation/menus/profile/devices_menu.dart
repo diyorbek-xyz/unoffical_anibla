@@ -4,7 +4,7 @@ import 'package:application/features/anibla/data/models/misc/device.dart';
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:application/shared/widgets/list.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ProfileDevicesMenu extends StatelessWidget {
   final List<Session> sessions;
@@ -25,7 +25,7 @@ class ProfileDevicesMenu extends StatelessWidget {
             IconButton(
               onPressed: () => showLogoutModal(context, tokenId: e.tokenId, deviceName: e.device, isCurrent: false),
               icon: Icon(Icons.exit_to_app),
-              color: context.appColors.error,
+              color: context.colors.error,
               mouseCursor: SystemMouseCursors.click,
             ),
         ],

@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MediaView {
 
- String get cover; String get title; String get error; bool get hasError; bool get isLoading; List<Tab> get tabs; String get thumbnail; List<Widget> get views; List<MapEntry<String, Object>> get items;
+ MediaType get type; int get releaseYear; int get ageRestriction; int get views; int get likes; int get saves; String get cover; String get title; String get author; String get studio; String get thumbnail; String get description; List<String> get frames; Map<String, String> get genres; Map<String, String> get categories; Map<String, String> get translators; List<MediaChapter> get chapters; void Function(String? chapter) get openMedia;
 /// Create a copy of MediaView
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $MediaViewCopyWith<MediaView> get copyWith => _$MediaViewCopyWithImpl<MediaView>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MediaView&&(identical(other.cover, cover) || other.cover == cover)&&(identical(other.title, title) || other.title == title)&&(identical(other.error, error) || other.error == error)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other.tabs, tabs)&&(identical(other.thumbnail, thumbnail) || other.thumbnail == thumbnail)&&const DeepCollectionEquality().equals(other.views, views)&&const DeepCollectionEquality().equals(other.items, items));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MediaView&&(identical(other.type, type) || other.type == type)&&(identical(other.releaseYear, releaseYear) || other.releaseYear == releaseYear)&&(identical(other.ageRestriction, ageRestriction) || other.ageRestriction == ageRestriction)&&(identical(other.views, views) || other.views == views)&&(identical(other.likes, likes) || other.likes == likes)&&(identical(other.saves, saves) || other.saves == saves)&&(identical(other.cover, cover) || other.cover == cover)&&(identical(other.title, title) || other.title == title)&&(identical(other.author, author) || other.author == author)&&(identical(other.studio, studio) || other.studio == studio)&&(identical(other.thumbnail, thumbnail) || other.thumbnail == thumbnail)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.frames, frames)&&const DeepCollectionEquality().equals(other.genres, genres)&&const DeepCollectionEquality().equals(other.categories, categories)&&const DeepCollectionEquality().equals(other.translators, translators)&&const DeepCollectionEquality().equals(other.chapters, chapters)&&(identical(other.openMedia, openMedia) || other.openMedia == openMedia));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,cover,title,error,hasError,isLoading,const DeepCollectionEquality().hash(tabs),thumbnail,const DeepCollectionEquality().hash(views),const DeepCollectionEquality().hash(items));
+int get hashCode => Object.hash(runtimeType,type,releaseYear,ageRestriction,views,likes,saves,cover,title,author,studio,thumbnail,description,const DeepCollectionEquality().hash(frames),const DeepCollectionEquality().hash(genres),const DeepCollectionEquality().hash(categories),const DeepCollectionEquality().hash(translators),const DeepCollectionEquality().hash(chapters),openMedia);
 
 @override
 String toString() {
-  return 'MediaView(cover: $cover, title: $title, error: $error, hasError: $hasError, isLoading: $isLoading, tabs: $tabs, thumbnail: $thumbnail, views: $views, items: $items)';
+  return 'MediaView(type: $type, releaseYear: $releaseYear, ageRestriction: $ageRestriction, views: $views, likes: $likes, saves: $saves, cover: $cover, title: $title, author: $author, studio: $studio, thumbnail: $thumbnail, description: $description, frames: $frames, genres: $genres, categories: $categories, translators: $translators, chapters: $chapters, openMedia: $openMedia)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $MediaViewCopyWith<$Res>  {
   factory $MediaViewCopyWith(MediaView value, $Res Function(MediaView) _then) = _$MediaViewCopyWithImpl;
 @useResult
 $Res call({
- String cover, String title, String error, bool hasError, bool isLoading, List<Tab> tabs, String thumbnail, List<Widget> views, List<MapEntry<String, Object>> items
+ MediaType type, int releaseYear, int ageRestriction, int views, int likes, int saves, String cover, String title, String author, String studio, String thumbnail, String description, List<String> frames, Map<String, String> genres, Map<String, String> categories, Map<String, String> translators, List<MediaChapter> chapters, void Function(String? chapter) openMedia
 });
 
 
@@ -62,18 +62,27 @@ class _$MediaViewCopyWithImpl<$Res>
 
 /// Create a copy of MediaView
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? cover = null,Object? title = null,Object? error = null,Object? hasError = null,Object? isLoading = null,Object? tabs = null,Object? thumbnail = null,Object? views = null,Object? items = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? releaseYear = null,Object? ageRestriction = null,Object? views = null,Object? likes = null,Object? saves = null,Object? cover = null,Object? title = null,Object? author = null,Object? studio = null,Object? thumbnail = null,Object? description = null,Object? frames = null,Object? genres = null,Object? categories = null,Object? translators = null,Object? chapters = null,Object? openMedia = null,}) {
   return _then(_self.copyWith(
-cover: null == cover ? _self.cover : cover // ignore: cast_nullable_to_non_nullable
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as MediaType,releaseYear: null == releaseYear ? _self.releaseYear : releaseYear // ignore: cast_nullable_to_non_nullable
+as int,ageRestriction: null == ageRestriction ? _self.ageRestriction : ageRestriction // ignore: cast_nullable_to_non_nullable
+as int,views: null == views ? _self.views : views // ignore: cast_nullable_to_non_nullable
+as int,likes: null == likes ? _self.likes : likes // ignore: cast_nullable_to_non_nullable
+as int,saves: null == saves ? _self.saves : saves // ignore: cast_nullable_to_non_nullable
+as int,cover: null == cover ? _self.cover : cover // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,error: null == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
-as String,hasError: null == hasError ? _self.hasError : hasError // ignore: cast_nullable_to_non_nullable
-as bool,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
-as bool,tabs: null == tabs ? _self.tabs : tabs // ignore: cast_nullable_to_non_nullable
-as List<Tab>,thumbnail: null == thumbnail ? _self.thumbnail : thumbnail // ignore: cast_nullable_to_non_nullable
-as String,views: null == views ? _self.views : views // ignore: cast_nullable_to_non_nullable
-as List<Widget>,items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
-as List<MapEntry<String, Object>>,
+as String,author: null == author ? _self.author : author // ignore: cast_nullable_to_non_nullable
+as String,studio: null == studio ? _self.studio : studio // ignore: cast_nullable_to_non_nullable
+as String,thumbnail: null == thumbnail ? _self.thumbnail : thumbnail // ignore: cast_nullable_to_non_nullable
+as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String,frames: null == frames ? _self.frames : frames // ignore: cast_nullable_to_non_nullable
+as List<String>,genres: null == genres ? _self.genres : genres // ignore: cast_nullable_to_non_nullable
+as Map<String, String>,categories: null == categories ? _self.categories : categories // ignore: cast_nullable_to_non_nullable
+as Map<String, String>,translators: null == translators ? _self.translators : translators // ignore: cast_nullable_to_non_nullable
+as Map<String, String>,chapters: null == chapters ? _self.chapters : chapters // ignore: cast_nullable_to_non_nullable
+as List<MediaChapter>,openMedia: null == openMedia ? _self.openMedia : openMedia // ignore: cast_nullable_to_non_nullable
+as void Function(String? chapter),
   ));
 }
 
@@ -158,10 +167,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String cover,  String title,  String error,  bool hasError,  bool isLoading,  List<Tab> tabs,  String thumbnail,  List<Widget> views,  List<MapEntry<String, Object>> items)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( MediaType type,  int releaseYear,  int ageRestriction,  int views,  int likes,  int saves,  String cover,  String title,  String author,  String studio,  String thumbnail,  String description,  List<String> frames,  Map<String, String> genres,  Map<String, String> categories,  Map<String, String> translators,  List<MediaChapter> chapters,  void Function(String? chapter) openMedia)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MediaView() when $default != null:
-return $default(_that.cover,_that.title,_that.error,_that.hasError,_that.isLoading,_that.tabs,_that.thumbnail,_that.views,_that.items);case _:
+return $default(_that.type,_that.releaseYear,_that.ageRestriction,_that.views,_that.likes,_that.saves,_that.cover,_that.title,_that.author,_that.studio,_that.thumbnail,_that.description,_that.frames,_that.genres,_that.categories,_that.translators,_that.chapters,_that.openMedia);case _:
   return orElse();
 
 }
@@ -179,10 +188,10 @@ return $default(_that.cover,_that.title,_that.error,_that.hasError,_that.isLoadi
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String cover,  String title,  String error,  bool hasError,  bool isLoading,  List<Tab> tabs,  String thumbnail,  List<Widget> views,  List<MapEntry<String, Object>> items)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( MediaType type,  int releaseYear,  int ageRestriction,  int views,  int likes,  int saves,  String cover,  String title,  String author,  String studio,  String thumbnail,  String description,  List<String> frames,  Map<String, String> genres,  Map<String, String> categories,  Map<String, String> translators,  List<MediaChapter> chapters,  void Function(String? chapter) openMedia)  $default,) {final _that = this;
 switch (_that) {
 case _MediaView():
-return $default(_that.cover,_that.title,_that.error,_that.hasError,_that.isLoading,_that.tabs,_that.thumbnail,_that.views,_that.items);case _:
+return $default(_that.type,_that.releaseYear,_that.ageRestriction,_that.views,_that.likes,_that.saves,_that.cover,_that.title,_that.author,_that.studio,_that.thumbnail,_that.description,_that.frames,_that.genres,_that.categories,_that.translators,_that.chapters,_that.openMedia);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +208,10 @@ return $default(_that.cover,_that.title,_that.error,_that.hasError,_that.isLoadi
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String cover,  String title,  String error,  bool hasError,  bool isLoading,  List<Tab> tabs,  String thumbnail,  List<Widget> views,  List<MapEntry<String, Object>> items)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( MediaType type,  int releaseYear,  int ageRestriction,  int views,  int likes,  int saves,  String cover,  String title,  String author,  String studio,  String thumbnail,  String description,  List<String> frames,  Map<String, String> genres,  Map<String, String> categories,  Map<String, String> translators,  List<MediaChapter> chapters,  void Function(String? chapter) openMedia)?  $default,) {final _that = this;
 switch (_that) {
 case _MediaView() when $default != null:
-return $default(_that.cover,_that.title,_that.error,_that.hasError,_that.isLoading,_that.tabs,_that.thumbnail,_that.views,_that.items);case _:
+return $default(_that.type,_that.releaseYear,_that.ageRestriction,_that.views,_that.likes,_that.saves,_that.cover,_that.title,_that.author,_that.studio,_that.thumbnail,_that.description,_that.frames,_that.genres,_that.categories,_that.translators,_that.chapters,_that.openMedia);case _:
   return null;
 
 }
@@ -214,36 +223,57 @@ return $default(_that.cover,_that.title,_that.error,_that.hasError,_that.isLoadi
 
 
 class _MediaView implements MediaView {
-  const _MediaView({this.cover = "", this.title = "", this.error = "", this.hasError = false, this.isLoading = false, final  List<Tab> tabs = const [], this.thumbnail = "", final  List<Widget> views = const [], final  List<MapEntry<String, Object>> items = const []}): _tabs = tabs,_views = views,_items = items;
+  const _MediaView({this.type = MediaType.comics, this.releaseYear = 0, this.ageRestriction = 0, this.views = 0, this.likes = 0, this.saves = 0, this.cover = "", this.title = "", this.author = "", this.studio = "", this.thumbnail = "", this.description = "", final  List<String> frames = const [], final  Map<String, String> genres = const {}, final  Map<String, String> categories = const {}, final  Map<String, String> translators = const {}, final  List<MediaChapter> chapters = const [], required this.openMedia}): _frames = frames,_genres = genres,_categories = categories,_translators = translators,_chapters = chapters;
   
 
+@override@JsonKey() final  MediaType type;
+@override@JsonKey() final  int releaseYear;
+@override@JsonKey() final  int ageRestriction;
+@override@JsonKey() final  int views;
+@override@JsonKey() final  int likes;
+@override@JsonKey() final  int saves;
 @override@JsonKey() final  String cover;
 @override@JsonKey() final  String title;
-@override@JsonKey() final  String error;
-@override@JsonKey() final  bool hasError;
-@override@JsonKey() final  bool isLoading;
- final  List<Tab> _tabs;
-@override@JsonKey() List<Tab> get tabs {
-  if (_tabs is EqualUnmodifiableListView) return _tabs;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_tabs);
-}
-
+@override@JsonKey() final  String author;
+@override@JsonKey() final  String studio;
 @override@JsonKey() final  String thumbnail;
- final  List<Widget> _views;
-@override@JsonKey() List<Widget> get views {
-  if (_views is EqualUnmodifiableListView) return _views;
+@override@JsonKey() final  String description;
+ final  List<String> _frames;
+@override@JsonKey() List<String> get frames {
+  if (_frames is EqualUnmodifiableListView) return _frames;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_views);
+  return EqualUnmodifiableListView(_frames);
 }
 
- final  List<MapEntry<String, Object>> _items;
-@override@JsonKey() List<MapEntry<String, Object>> get items {
-  if (_items is EqualUnmodifiableListView) return _items;
+ final  Map<String, String> _genres;
+@override@JsonKey() Map<String, String> get genres {
+  if (_genres is EqualUnmodifiableMapView) return _genres;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_items);
+  return EqualUnmodifiableMapView(_genres);
 }
 
+ final  Map<String, String> _categories;
+@override@JsonKey() Map<String, String> get categories {
+  if (_categories is EqualUnmodifiableMapView) return _categories;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_categories);
+}
+
+ final  Map<String, String> _translators;
+@override@JsonKey() Map<String, String> get translators {
+  if (_translators is EqualUnmodifiableMapView) return _translators;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_translators);
+}
+
+ final  List<MediaChapter> _chapters;
+@override@JsonKey() List<MediaChapter> get chapters {
+  if (_chapters is EqualUnmodifiableListView) return _chapters;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_chapters);
+}
+
+@override final  void Function(String? chapter) openMedia;
 
 /// Create a copy of MediaView
 /// with the given fields replaced by the non-null parameter values.
@@ -255,16 +285,16 @@ _$MediaViewCopyWith<_MediaView> get copyWith => __$MediaViewCopyWithImpl<_MediaV
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MediaView&&(identical(other.cover, cover) || other.cover == cover)&&(identical(other.title, title) || other.title == title)&&(identical(other.error, error) || other.error == error)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other._tabs, _tabs)&&(identical(other.thumbnail, thumbnail) || other.thumbnail == thumbnail)&&const DeepCollectionEquality().equals(other._views, _views)&&const DeepCollectionEquality().equals(other._items, _items));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MediaView&&(identical(other.type, type) || other.type == type)&&(identical(other.releaseYear, releaseYear) || other.releaseYear == releaseYear)&&(identical(other.ageRestriction, ageRestriction) || other.ageRestriction == ageRestriction)&&(identical(other.views, views) || other.views == views)&&(identical(other.likes, likes) || other.likes == likes)&&(identical(other.saves, saves) || other.saves == saves)&&(identical(other.cover, cover) || other.cover == cover)&&(identical(other.title, title) || other.title == title)&&(identical(other.author, author) || other.author == author)&&(identical(other.studio, studio) || other.studio == studio)&&(identical(other.thumbnail, thumbnail) || other.thumbnail == thumbnail)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other._frames, _frames)&&const DeepCollectionEquality().equals(other._genres, _genres)&&const DeepCollectionEquality().equals(other._categories, _categories)&&const DeepCollectionEquality().equals(other._translators, _translators)&&const DeepCollectionEquality().equals(other._chapters, _chapters)&&(identical(other.openMedia, openMedia) || other.openMedia == openMedia));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,cover,title,error,hasError,isLoading,const DeepCollectionEquality().hash(_tabs),thumbnail,const DeepCollectionEquality().hash(_views),const DeepCollectionEquality().hash(_items));
+int get hashCode => Object.hash(runtimeType,type,releaseYear,ageRestriction,views,likes,saves,cover,title,author,studio,thumbnail,description,const DeepCollectionEquality().hash(_frames),const DeepCollectionEquality().hash(_genres),const DeepCollectionEquality().hash(_categories),const DeepCollectionEquality().hash(_translators),const DeepCollectionEquality().hash(_chapters),openMedia);
 
 @override
 String toString() {
-  return 'MediaView(cover: $cover, title: $title, error: $error, hasError: $hasError, isLoading: $isLoading, tabs: $tabs, thumbnail: $thumbnail, views: $views, items: $items)';
+  return 'MediaView(type: $type, releaseYear: $releaseYear, ageRestriction: $ageRestriction, views: $views, likes: $likes, saves: $saves, cover: $cover, title: $title, author: $author, studio: $studio, thumbnail: $thumbnail, description: $description, frames: $frames, genres: $genres, categories: $categories, translators: $translators, chapters: $chapters, openMedia: $openMedia)';
 }
 
 
@@ -275,7 +305,7 @@ abstract mixin class _$MediaViewCopyWith<$Res> implements $MediaViewCopyWith<$Re
   factory _$MediaViewCopyWith(_MediaView value, $Res Function(_MediaView) _then) = __$MediaViewCopyWithImpl;
 @override @useResult
 $Res call({
- String cover, String title, String error, bool hasError, bool isLoading, List<Tab> tabs, String thumbnail, List<Widget> views, List<MapEntry<String, Object>> items
+ MediaType type, int releaseYear, int ageRestriction, int views, int likes, int saves, String cover, String title, String author, String studio, String thumbnail, String description, List<String> frames, Map<String, String> genres, Map<String, String> categories, Map<String, String> translators, List<MediaChapter> chapters, void Function(String? chapter) openMedia
 });
 
 
@@ -292,18 +322,27 @@ class __$MediaViewCopyWithImpl<$Res>
 
 /// Create a copy of MediaView
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? cover = null,Object? title = null,Object? error = null,Object? hasError = null,Object? isLoading = null,Object? tabs = null,Object? thumbnail = null,Object? views = null,Object? items = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? releaseYear = null,Object? ageRestriction = null,Object? views = null,Object? likes = null,Object? saves = null,Object? cover = null,Object? title = null,Object? author = null,Object? studio = null,Object? thumbnail = null,Object? description = null,Object? frames = null,Object? genres = null,Object? categories = null,Object? translators = null,Object? chapters = null,Object? openMedia = null,}) {
   return _then(_MediaView(
-cover: null == cover ? _self.cover : cover // ignore: cast_nullable_to_non_nullable
+type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as MediaType,releaseYear: null == releaseYear ? _self.releaseYear : releaseYear // ignore: cast_nullable_to_non_nullable
+as int,ageRestriction: null == ageRestriction ? _self.ageRestriction : ageRestriction // ignore: cast_nullable_to_non_nullable
+as int,views: null == views ? _self.views : views // ignore: cast_nullable_to_non_nullable
+as int,likes: null == likes ? _self.likes : likes // ignore: cast_nullable_to_non_nullable
+as int,saves: null == saves ? _self.saves : saves // ignore: cast_nullable_to_non_nullable
+as int,cover: null == cover ? _self.cover : cover // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,error: null == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
-as String,hasError: null == hasError ? _self.hasError : hasError // ignore: cast_nullable_to_non_nullable
-as bool,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
-as bool,tabs: null == tabs ? _self._tabs : tabs // ignore: cast_nullable_to_non_nullable
-as List<Tab>,thumbnail: null == thumbnail ? _self.thumbnail : thumbnail // ignore: cast_nullable_to_non_nullable
-as String,views: null == views ? _self._views : views // ignore: cast_nullable_to_non_nullable
-as List<Widget>,items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
-as List<MapEntry<String, Object>>,
+as String,author: null == author ? _self.author : author // ignore: cast_nullable_to_non_nullable
+as String,studio: null == studio ? _self.studio : studio // ignore: cast_nullable_to_non_nullable
+as String,thumbnail: null == thumbnail ? _self.thumbnail : thumbnail // ignore: cast_nullable_to_non_nullable
+as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String,frames: null == frames ? _self._frames : frames // ignore: cast_nullable_to_non_nullable
+as List<String>,genres: null == genres ? _self._genres : genres // ignore: cast_nullable_to_non_nullable
+as Map<String, String>,categories: null == categories ? _self._categories : categories // ignore: cast_nullable_to_non_nullable
+as Map<String, String>,translators: null == translators ? _self._translators : translators // ignore: cast_nullable_to_non_nullable
+as Map<String, String>,chapters: null == chapters ? _self._chapters : chapters // ignore: cast_nullable_to_non_nullable
+as List<MediaChapter>,openMedia: null == openMedia ? _self.openMedia : openMedia // ignore: cast_nullable_to_non_nullable
+as void Function(String? chapter),
   ));
 }
 

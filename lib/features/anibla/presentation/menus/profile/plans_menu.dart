@@ -2,7 +2,7 @@ import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/features/anibla/data/models/misc/plan.dart';
 import 'package:application/shared/utils/extensions.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class PlansMenu extends StatelessWidget {
   final List<Plan> plans;
@@ -28,7 +28,7 @@ class PlansMenu extends StatelessWidget {
         child: InkWell(
           onTap: () {},
           child: Ink(
-            color: context.appColors.primaryContainer,
+            color: context.colors.primaryContainer,
             padding: .all(10),
             child: Column(
               crossAxisAlignment: .center,
@@ -38,21 +38,21 @@ class PlansMenu extends StatelessWidget {
                 Text(
                   "${plans[index].title.uz} - ${plans[index].price} so'm",
                   style: TextStyle(
-                    color: context.appColors.onPrimaryContainer,
+                    color: context.colors.onPrimaryContainer,
                     fontSize: context.textTheme.headlineMedium!.fontSize,
                   ),
                 ),
                 Text(
                   "Muddat: ${DateTime.now().add(Duration(days: (plans[index].time * 30.5).floor())).formatFull()} gacha",
                   style: TextStyle(
-                    color: context.appColors.onPrimaryContainer.withAlpha(200),
+                    color: context.colors.onPrimaryContainer.withAlpha(200),
                     fontSize: context.textTheme.titleMedium!.fontSize,
                   ),
                 ),
                 Text(
                   "Oyiga: ${(pricePerM.isFinite ? pricePerM : 0).ceil()} so'm",
                   style: TextStyle(
-                    color: context.appColors.onPrimaryContainer.withAlpha(200),
+                    color: context.colors.onPrimaryContainer.withAlpha(200),
                     fontSize: context.textTheme.titleMedium!.fontSize,
                   ),
                 ),

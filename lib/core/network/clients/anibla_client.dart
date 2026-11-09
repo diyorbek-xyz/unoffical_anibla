@@ -1,10 +1,10 @@
+import 'package:application/core/network/clients/mano_client.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AniblaClient extends DioForNative {
   AniblaClient() : super(baseOptions);
-  static final baseOptions = BaseOptions(baseUrl: "${dotenv.env["AMEDIA_URL"]!}/api", headers: headers);
+  static final baseOptions = BaseOptions(baseUrl: "$AMEDIA_URL/api", headers: headers);
   static const headers = {
     "User-Agent": "okhttp/4.12.0",
     "Accept-Encoding": "gzip",

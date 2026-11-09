@@ -10,7 +10,7 @@ import 'package:application/main.dart';
 import 'package:application/core/network/resources/failure.dart';
 import 'package:application/shared/widgets/image.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -165,13 +165,13 @@ class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin,
   );
 
   ButtonStyle _buttonStyle(BuildContext context, Size size) => ButtonStyle(
-    backgroundColor: WidgetStatePropertyAll(context.appColors.primary),
-    foregroundColor: WidgetStatePropertyAll(context.appColors.onPrimary),
+    backgroundColor: WidgetStatePropertyAll(context.colors.primary),
+    foregroundColor: WidgetStatePropertyAll(context.colors.onPrimary),
     padding: const WidgetStatePropertyAll(EdgeInsets.zero),
     fixedSize: WidgetStatePropertyAll(size),
     shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
     side: WidgetStateProperty.fromMap({
-      WidgetState.selected | WidgetState.focused | WidgetState.hovered: BorderSide(width: 3, color: context.appColors.secondary),
+      WidgetState.selected | WidgetState.focused | WidgetState.hovered: BorderSide(width: 3, color: context.colors.secondary),
     }),
   );
 
@@ -183,13 +183,13 @@ class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin,
       return DecoratedBox(
         decoration: BoxDecoration(
           image: item.image.isEmpty ? null : DecorationImage(image: CachedNetworkImageProvider(item.image), fit: BoxFit.cover),
-          color: item.image.isEmpty ? context.appColors.surface : null,
+          color: item.image.isEmpty ? context.colors.surface : null,
         ),
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: isMobile ? 10 : 100, vertical: isMobile ? 10 : 90),
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [context.appColors.surface, Colors.transparent],
+              colors: [context.colors.surface, Colors.transparent],
               begin: isMobile ? Alignment.bottomCenter : Alignment.topLeft,
               end: Alignment.center,
             ),
@@ -243,7 +243,7 @@ class _CarouselState extends State<Carousel> with AutomaticKeepAliveClientMixin,
               if (showSideImage)
                 item.mobileImage.isNotEmpty
                     ? SafeImage(imageUrl: addBaseUrl(item.mobileImage), height: 500, width: 300, fit: BoxFit.cover)
-                    : Container(height: 500, width: 300, color: context.appColors.primary),
+                    : Container(height: 500, width: 300, color: context.colors.primary),
             ],
           ),
         ),

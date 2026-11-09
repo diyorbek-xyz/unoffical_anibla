@@ -12,4 +12,6 @@ enum BookStatus {
   stopped,
   @HiveField(2)
   finished,
+  @HiveField(3)
+  ongoing,
 }

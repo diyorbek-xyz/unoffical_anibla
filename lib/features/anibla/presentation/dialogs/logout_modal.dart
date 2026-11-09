@@ -4,7 +4,7 @@ import 'package:application/features/auth/presentation/bloc/auth_event.dart';
 import 'package:application/features/auth/presentation/bloc/auth_state.dart';
 import 'package:application/shared/interactions/error_messenger.dart';
 import 'package:application/injection_container.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 void showLogoutModal(BuildContext context, {required String tokenId, required bool isCurrent, String? deviceName}) {

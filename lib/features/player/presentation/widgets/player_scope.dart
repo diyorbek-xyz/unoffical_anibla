@@ -1,5 +1,5 @@
 import 'package:application/features/player/presentation/controller/player_controller.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class PlayerScope extends InheritedWidget {
   const PlayerScope({super.key, required this.controller, required super.child});

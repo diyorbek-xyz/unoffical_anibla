@@ -1,6 +1,6 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:application/core/network/clients/mano_client.dart';
 
 class ManoPaths {
-  static final baseUrl = dotenv.env['MANO_URL'] ?? "";
+  static final baseUrl = MANO_URL;
   static const refreshToken = "/v2/user/refresh";
 }

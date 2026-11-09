@@ -19,6 +19,8 @@ class BookStatusAdapter extends TypeAdapter<BookStatus> {
         return BookStatus.stopped;
       case 2:
         return BookStatus.finished;
+      case 3:
+        return BookStatus.ongoing;
       default:
         return BookStatus.continuing;
     }
@@ -33,6 +35,8 @@ class BookStatusAdapter extends TypeAdapter<BookStatus> {
         writer.writeByte(1);
       case BookStatus.finished:
         writer.writeByte(2);
+      case BookStatus.ongoing:
+        writer.writeByte(3);
     }
   }
 

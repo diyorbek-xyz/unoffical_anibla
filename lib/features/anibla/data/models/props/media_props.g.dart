@@ -8,7 +8,7 @@ part of 'media_props.dart';
 
 _MediaProps _$MediaPropsFromJson(Map<String, dynamic> json) => _MediaProps(
   mediaKey: json['mediaKey'] as String,
-  type: $enumDecode(_$MediaTypeEnumMap, json['type']),
+  type: MediaType.fromJson(json['type'] as String),
   seasonKey: json['seasonKey'] as String?,
   chapterKey: json['chapterKey'] as String?,
 );

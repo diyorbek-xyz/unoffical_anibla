@@ -4,7 +4,7 @@ import 'package:application/features/anibla/data/models/data/session.dart';
 import 'package:application/features/anibla/presentation/controllers/profile_controller.dart';
 import 'package:application/features/anibla/presentation/widgets/platform.dart';
 import 'package:application/injection_container.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 class SessionsFailureWidget extends StatelessWidget {
@@ -34,8 +34,8 @@ class SessionsFailureWidget extends StatelessWidget {
                   children: sessions.sessions
                       .map(
                         (e) => ListTile(
-                          textColor: context.appColors.onSurface,
-                          iconColor: context.appColors.onSurface,
+                          textColor: context.colors.onSurface,
+                          iconColor: context.colors.onSurface,
                           onTap: () {},
                           isThreeLine: true,
                           leading: PlatformWidget(platform: e.platform),

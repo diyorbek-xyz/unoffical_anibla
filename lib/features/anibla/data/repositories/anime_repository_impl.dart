@@ -1,7 +1,8 @@
+import 'package:application/features/anibla/data/models/data/history_item.dart';
+import 'package:application/features/anibla/data/models/request/animes_query.dart';
 import 'package:application/shared/models/api_response.dart';
 import 'package:application/core/resources/cache_entry.dart';
 import 'package:application/features/anibla/data/enums/media_type.dart';
-import 'package:application/features/anibla/data/models/helper/pagination.dart';
 import 'package:application/features/anibla/data/models/local/saved_anime.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/features/anibla/data/models/response/big_response.dart';
@@ -10,8 +11,8 @@ import 'package:application/features/anibla/data/source/network/anime_api.dart';
 import 'package:application/features/anibla/domain/repositories/anime_repository.dart';
 import 'package:application/features/anibla/data/source/local/history_local.dart';
 import 'package:application/core/network/resources/failure.dart';
+import 'package:application/shared/utils/failure_messenger.dart';
 import 'package:dartz/dartz.dart';
-import 'package:dio/dio.dart';
 import 'package:intl/intl.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -37,19 +38,14 @@ class AnimeRepositoryImpl implements AnimeRepository {
       } else {
         throw ExceptionMapper.mapResponseToDio(serie.response);
       }
-    } on DioException catch (e) {
-      return Left(ExceptionMapper.mapDioToFailure(e));
+    } catch (e) {
+      return failureMaker(e);
     }
   }
 
   @override
-  Future<Either<Failure, BigResponse<Anime>>> getHomeAnimes(Pagination query) async {
-    try {
-      final animes = await _animeApi.getHomeAnimes(query);
-      return Right(animes.data);
-    } on DioException catch (e) {
-      return Left(ExceptionMapper.mapDioToFailure(e));
-    }
+  Future<Either<Failure, BigResponse<Anime>>> getHomeAnimes(AnimesQuery query) async {
+    return await getFutureData<BigResponse<Anime>>(() => _animeApi.getHomeAnimes(query));
   }
 
   @override
@@ -63,8 +59,8 @@ class AnimeRepositoryImpl implements AnimeRepository {
         return Right(true);
       }
       throw ExceptionMapper.mapResponseToDio(response.response);
-    } on DioException catch (e) {
-      return Left(ExceptionMapper.mapDioToFailure(e));
+    } catch (e) {
+      return failureMaker(e);
     }
   }
 
@@ -79,8 +75,8 @@ class AnimeRepositoryImpl implements AnimeRepository {
         return Right(true);
       }
       throw ExceptionMapper.mapResponseToDio(response.response);
-    } on DioException catch (e) {
-      return Left(ExceptionMapper.mapDioToFailure(e));
+    } catch (e) {
+      return failureMaker(e);
     }
   }
 
@@ -94,8 +90,23 @@ class AnimeRepositoryImpl implements AnimeRepository {
       await _savedLocal.fullChange((movies + series).map((e) => e.id).toList());
 
       return Right(SavedAnimes(movies: movies, series: series));
-    } on DioException catch (e) {
-      return Left(ExceptionMapper.mapDioToFailure(e));
+    } catch (e) {
+      return failureMaker(e);
     }
+  }
+
+  @override
+  Future<Either<Failure, List<HistoryItem>>> getWatchHistory() async {
+    try {
+      final resp = await _animeApi.getWatchHistory();
+      return Right(resp.data.data.items);
+    } catch (e) {
+      return failureMaker(e);
+    }
+  }
+
+  @override
+  Future<Either<Failure, BigResponse<Anime>>> getAnimes(AnimesQuery req) async {
+    return await getFutureData(() => _animeApi.getMedias(req.type, req));
   }
 }

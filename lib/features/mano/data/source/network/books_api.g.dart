@@ -21,19 +21,20 @@ class _BooksApi implements BooksApi {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<HttpResponse<ManoResponse<List<Book>>>> getMangas(
-    MangaRequest request,
+  Future<HttpResponse<ManoResponse<List<Book>>>> getBooks(
+    BooksQueryType type,
+    BooksQuery query,
   ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    queryParameters.addAll(request.toJson());
+    queryParameters.addAll(query.toJson());
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _options = _setStreamType<HttpResponse<ManoResponse<List<Book>>>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/manga',
+            '/v2/${type}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -59,7 +60,7 @@ class _BooksApi implements BooksApi {
   }
 
   @override
-  Future<HttpResponse<Book>> getManga(String id) async {
+  Future<HttpResponse<Book>> getBook(BooksQueryType type, String id) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -68,73 +69,7 @@ class _BooksApi implements BooksApi {
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/v2/manga/${id}',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late Book _value;
-    try {
-      _value = Book.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, response: _result);
-      rethrow;
-    }
-    final httpResponse = HttpResponse(_value, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<ManoResponse<List<Book>>>> getNovels(
-    NovelRequest request,
-  ) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    queryParameters.addAll(request.toJson());
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<ManoResponse<List<Book>>>>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/v2/novels',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late ManoResponse<List<Book>> _value;
-    try {
-      _value = ManoResponse<List<Book>>.fromJson(
-        _result.data!,
-        (json) => json is List<dynamic>
-            ? json
-                  .map<Book>((i) => Book.fromJson(i as Map<String, dynamic>))
-                  .toList()
-            : List.empty(),
-      );
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options, response: _result);
-      rethrow;
-    }
-    final httpResponse = HttpResponse(_value, _result);
-    return httpResponse;
-  }
-
-  @override
-  Future<HttpResponse<Book>> getNovel(String id) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<HttpResponse<Book>>(
-      Options(method: 'GET', headers: _headers, extra: _extra)
-          .compose(
-            _dio.options,
-            '/v2/novels/${id}',
+            '/v2/${type}/${id}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -154,7 +89,6 @@ class _BooksApi implements BooksApi {
 
   @override
   Future<HttpResponse<ChapterResponse<List<ManoChapter>>>> getChapters(
-    String type,
     String id,
     ChapterRequest request,
   ) async {
@@ -168,7 +102,7 @@ class _BooksApi implements BooksApi {
           Options(method: 'GET', headers: _headers, extra: _extra)
               .compose(
                 _dio.options,
-                '/v2/${type}/${id}/chapters',
+                '/v2/manga/${id}/chapters',
                 queryParameters: queryParameters,
                 data: _data,
               )

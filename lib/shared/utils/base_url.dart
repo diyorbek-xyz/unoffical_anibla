@@ -1,4 +1,4 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:application/core/network/clients/mano_client.dart';
 
 List<String> addBaseUrlAsList(List<dynamic>? list) {
   if (list == null) return [];
@@ -10,17 +10,17 @@ String addBaseUrl(String? path) {
   if (path.contains('profile_not_found.png')) {
     return "https://i.pinimg.com/736x/15/0f/a8/150fa8800b0a0d5633abc1d1c4db3d87.jpg";
   }
-  if (path.startsWith(dotenv.env['BASE_URL']!) || path.startsWith("https:")) {
+  if (path.startsWith(AMEDIA_URL) || path.startsWith("https:")) {
     return path;
   } else if (path.startsWith("/")) {
-    return dotenv.env['BASE_URL']! + path;
+    return AMEDIA_URL + path;
   } else {
-    return "${dotenv.env['BASE_URL']}/$path";
+    return "$AMEDIA_URL/$path";
   }
 }
 
 bool hasBaseUrl(String? path) {
-  return (path?.contains(dotenv.env['BASE_URL']!) ?? false) || (path?.startsWith("https:") ?? false);
+  return (path?.contains(AMEDIA_URL) ?? false) || (path?.startsWith("https:") ?? false);
 }
 
 bool isUsable(String? path) {

@@ -1,8 +1,7 @@
 import 'package:application/core/config/theme/app_theme.dart';
-import 'package:application/core/network/resources/failure.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:application/shared/widgets/error.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -30,14 +29,34 @@ class Recommends extends StatefulWidget {
     required FutureSignal<List<T>> futureSignal,
     required Widget Function(BuildContext context, T item) builder,
     List<T> fake = const [],
+    final VoidCallback? onMoreClick,
   }) => SignalBuilder(
     builder: (context) {
       final state = futureSignal.value;
-      if (state.hasError) return ErrorBuilder(message: (state.error as Failure).message, refresh: () {});
+      if (state.hasError) return ErrorBuilder(message: state.error.toString(), refresh: () {});
       final data = state.value ?? fake;
       return Skeletonizer(
         enabled: state.isLoading,
-        child: Recommends(title: title, items: data.map((e) => builder(context, e)).toList()),
+        child: Recommends(title: title, onMoreClick: onMoreClick, items: data.map((e) => builder(context, e)).toList()),
+      );
+    },
+  );
+  static Widget signalBuilder<T>({
+    required Widget Function(BuildContext context, T item) builder,
+    required List<T>? value,
+    required bool isLoading,
+    required bool hasError,
+    required String title,
+    VoidCallback? onMoreClick,
+    Object? error,
+    List<T> fake = const [],
+  }) => Builder(
+    builder: (context) {
+      if (hasError) return ErrorBuilder(message: error.toString(), refresh: () {});
+      final data = value ?? fake;
+      return Skeletonizer(
+        enabled: isLoading,
+        child: Recommends(title: title, onMoreClick: onMoreClick, items: data.map((e) => builder(context, e)).toList()),
       );
     },
   );
@@ -64,9 +83,8 @@ class _RecommendsState extends State<Recommends> {
           ),
           SingleChildScrollView(
             scrollDirection: .horizontal,
-            padding: .symmetric(horizontal: context.isMobile ? 10 : 0),
+            padding: .symmetric(horizontal: 10).add(.only(bottom: 10)),
             clipBehavior: .none,
-            physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
             child: Row(spacing: 10, children: widget.items),
           ),
         ],

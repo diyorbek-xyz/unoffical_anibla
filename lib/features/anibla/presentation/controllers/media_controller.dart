@@ -1,8 +1,9 @@
 import 'package:application/features/anibla/data/enums/media_type.dart';
-import 'package:application/features/anibla/data/models/helper/pagination.dart';
+import 'package:application/features/anibla/data/models/data/history_item.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/features/anibla/data/models/main/episode.dart';
 import 'package:application/features/anibla/data/models/main/season.dart';
+import 'package:application/features/anibla/data/models/request/animes_query.dart';
 import 'package:application/features/anibla/domain/repositories/anime_repository.dart';
 import 'package:application/features/anibla/domain/repositories/episode_repository.dart';
 import 'package:application/features/anibla/domain/repositories/season_repository.dart';
@@ -18,22 +19,12 @@ class MediaController {
   final EpisodeRepository _episodeRepository;
   MediaController(this._animeRepository, this._seasonRepository, this._episodeRepository);
 
-  final homeState = signal(BigSignalState<Anime>());
-  final animeState = signal(SignalState<Anime>());
-  final seasonsState = signal(SignalState<List<Season>>());
-  final episodesState = signal(SignalState<List<Episode>>());
-
-  final fakeAnime = Anime(ru: {"description": lorem(), "title": lorem(10)}, uz: {"description": lorem(), "title": lorem(10)});
-  final fakeSeasons = List.generate(2, (index) => Season());
-  final fakeEpisodes = List.generate(6, (index) => Episode());
-
-  MediaType? _mediaType;
-  String? _animeSlug;
-  String? _seasonSlug;
-
-  Future<void> getHome(Pagination paginator) async {
+  AnimesQuery? _request;
+  final homeState = signal(BigSignalState<Anime, AnimesQuery>());
+  Future<void> getHome(AnimesQuery query) async {
     homeState.set(homeState.value.setLoading(true));
-    final either = await _animeRepository.getHomeAnimes(paginator);
+    _request = query;
+    final either = await _animeRepository.getHomeAnimes(query);
     final data = either.fold((l) => homeState.value.withError(l.message), (r) => homeState.value.withMore(r.pagination, r.datas));
     homeState.set(data);
   }
@@ -41,9 +32,11 @@ class MediaController {
   Future<void> getHomeMore() async {
     final pagination = homeState.value.pagination;
     if (!pagination.hasMore) return;
-    await getHome(Pagination(limit: pagination.limit, page: pagination.page + 1));
+    final req = _request ?? AnimesQuery(limit: pagination.limit);
+    await getHome(req.copyWith(page: pagination.page + 1));
   }
 
+  final animeState = signal(SignalState<Anime>());
   Future<void> getAnime([MediaType? mediatype, String? animeSlug]) async {
     if (animeState.isLoading) return;
     if (mediatype != null) _mediaType = mediatype;
@@ -60,6 +53,7 @@ class MediaController {
     });
   }
 
+  final seasonsState = signal(SignalState<List<Season>>());
   Future<void> getSeasons([String? animeSlug]) async {
     if (seasonsState.isLoading) return;
     final slug = animeSlug ?? _animeSlug;
@@ -74,6 +68,7 @@ class MediaController {
     });
   }
 
+  final episodesState = signal(SignalState<List<Episode>>());
   Future<void> getEpisodes([String? animeSlug, String? seasonSlug]) async {
     if (episodesState.isLoading) return;
 
@@ -95,10 +90,6 @@ class MediaController {
     await commentCon.getAnimeComments();
   }
 
-  bool isSame() => animeState.data?.slug == _animeSlug && animeState.data?.id != null && _animeSlug != null;
-
-  MediaType get mediaType => _mediaType ?? animeState.data?.type ?? MediaType.serie;
-
   Future<void> refreshFullAnime() async {
     if (_mediaType == null) return;
     resetMedia();
@@ -118,4 +109,20 @@ class MediaController {
     seasonsState.dispose();
     episodesState.dispose();
   }
+
+  late final watchHistory = futureSignal(() async {
+    final either = await _animeRepository.getWatchHistory();
+    return either.getData();
+  });
+
+  MediaType? _mediaType;
+  String? _animeSlug;
+  String? _seasonSlug;
+
+  bool isSame() => animeState.data?.slug == _animeSlug && animeState.data?.id != null && _animeSlug != null;
+  MediaType get mediaType => _mediaType ?? animeState.data?.type ?? MediaType.serie;
+  final fakeAnime = Anime(ru: {"description": lorem(), "title": lorem(10)}, uz: {"description": lorem(), "title": lorem(10)});
+  final fakeSeasons = List.generate(2, (index) => Season());
+  final fakeEpisodes = List.generate(6, (index) => Episode());
+  final fakeHistory = List.generate(6, (index) => HistoryItem());
 }

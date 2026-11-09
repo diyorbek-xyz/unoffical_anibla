@@ -1,5 +1,5 @@
 import 'package:application/features/view/models/tab_view.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 const List<TabItem> mobileTabs = [
   TabItem(activeIcon: Icons.movie, icon: Icons.movie_outlined, label: "Animelar"),

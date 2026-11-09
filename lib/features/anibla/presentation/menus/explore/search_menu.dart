@@ -7,7 +7,7 @@ import 'package:application/features/anibla/presentation/controllers/explore_con
 import 'package:application/injection_container.dart';
 import 'package:application/main.dart';
 import 'package:cupertino_ui/cupertino_ui.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 class SearchMenu extends StatelessWidget {
@@ -20,8 +20,6 @@ class SearchMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
-      scrollBehavior: ScrollBehavior().copyWith(scrollbars: false),
-      physics: BouncingScrollPhysics(),
       key: const PageStorageKey("results"),
       slivers: [
         CupertinoSliverRefreshControl(
@@ -122,7 +120,7 @@ class SearchMenu extends StatelessWidget {
                   left: 4,
                   child: IconButton(
                     mouseCursor: SystemMouseCursors.click,
-                    color: context.appColors.errorContainer,
+                    color: context.colors.errorContainer,
                     onPressed: () => _exploreController.deleteFromHistory(animes.elementAt(index).id),
                     icon: Icon(Icons.delete),
                   ),

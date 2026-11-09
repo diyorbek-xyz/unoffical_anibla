@@ -1,4 +1,5 @@
 import 'package:application/features/anibla/data/models/data/comment.dart';
+import 'package:application/features/anibla/data/models/request/animes_query.dart';
 import 'package:application/features/anibla/domain/repositories/comment_repository.dart';
 import 'package:application/features/anibla/presentation/controllers/media_controller.dart';
 import 'package:application/shared/controller/signal_state.dart';
@@ -10,7 +11,7 @@ class CommentController {
   final CommentRepository _animeCommentRepo;
   CommentController(this._mediaController, this._animeCommentRepo);
 
-  final animeCommentsState = signal(BigSignalState<Comment>());
+  final animeCommentsState = signal(BigSignalState<Comment, AnimesQuery>());
   final animeRepliesState = signal(NamedSignalState<Comment>());
 
   final mangaCommentsState = signal(BigSignalState());
@@ -41,8 +42,8 @@ class CommentController {
   }
 
   void resetAll() {
-    animeCommentsState.set(BigSignalState<Comment>());
-    mangaCommentsState.set(BigSignalState<Comment>());
+    animeCommentsState.set(BigSignalState<Comment, AnimesQuery>());
+    mangaCommentsState.set(BigSignalState<Comment, AnimesQuery>());
     animeRepliesState.set(NamedSignalState<Comment>());
   }
 }

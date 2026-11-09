@@ -1,8 +1,8 @@
 import 'package:application/features/anibla/data/models/data/category.dart';
+import 'package:application/features/anibla/data/models/request/animes_query.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:application/features/anibla/data/models/data/genre.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
-import 'package:application/features/anibla/data/models/request/search_request.dart';
 import 'package:application/shared/controller/signal_state.dart';
 import 'package:application/features/anibla/data/source/local/search_history_local.dart';
 import 'package:application/features/anibla/domain/repositories/explore_repository.dart';
@@ -16,8 +16,8 @@ class ExploreController {
 
   final fakeGenres = List.generate(4, (index) => Genre());
   final fakeCategories = List.generate(4, (index) => Category());
-
   final searchSignal = signal(SignalState<Searched>());
+
   late final genresSignal = futureSignal(() async {
     final either = await repository.getGenres();
     return either.getData();
@@ -42,9 +42,8 @@ class ExploreController {
     await searchHistorySignal.refresh();
   }
 
-  Future searchAnime(SearchRequest query) async {
+  Future searchAnime(AnimesQuery query) async {
     if (query.isEmpty) return searchSignal.set(SignalState<Searched>());
-
     searchSignal.setLoading(true);
 
     String? error;
@@ -60,7 +59,7 @@ class ExploreController {
     if (error != null) {
       searchSignal.setError(error!);
     } else {
-      searchSignal.setValue(Searched(search: query.search ?? "", series: serieAnimes, movies: movieAnimes));
+      searchSignal.setValue(Searched(search: query.search??"", series: serieAnimes, movies: movieAnimes));
     }
     await searchHistorySignal.refresh();
   }

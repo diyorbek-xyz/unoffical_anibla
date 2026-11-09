@@ -1,6 +1,6 @@
 import 'package:application/shared/utils/utils.dart';
 import 'package:application/main.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class PlatformBuilder extends StatelessWidget {
   final Widget Function(BuildContext context, BoxConstraints constraints, bool isMobile, Widget child)? containerBuilder;

@@ -5,17 +5,17 @@ import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/shared/image_provider/fallback_provider.dart';
 import 'package:application/shared/utils/base_url.dart';
 import 'package:application/shared/widgets/image.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class MediaPageHero extends StatelessWidget {
   final String title;
-  final List<Tab> tabs;
-  final String thumbnail;
   final bool isSaved;
-  final List<MapEntry<String, Object>> items;
   final bool isScrolled;
+  final String thumbnail;
+  final List<String> tabs;
+  final Map<String, Object> items;
   const MediaPageHero({
     super.key,
     required this.isScrolled,
@@ -40,7 +40,13 @@ class MediaPageHero extends StatelessWidget {
       expandedHeight: 350 + kTextTabBarHeight + kToolbarHeight,
       collapsedHeight: kTextTabBarHeight + kToolbarHeight + MediaQuery.paddingOf(context).top,
       title: Text(title),
-      bottom: TabBar(tabAlignment: TabAlignment.center, isScrollable: true, dividerHeight: 0, indicatorWeight: 3, tabs: tabs),
+      bottom: TabBar(
+        tabAlignment: TabAlignment.center,
+        isScrollable: true,
+        dividerHeight: 0,
+        indicatorWeight: 3,
+        tabs: tabs.map((e) => Tab(text: e)).toList(),
+      ),
       flexibleSpace: FlexibleSpaceBar(
         collapseMode: CollapseMode.pin,
         background: DecoratedBox(
@@ -59,7 +65,7 @@ class MediaPageHero extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: AlignmentGeometry.center,
                   end: AlignmentGeometry.bottomCenter,
-                  colors: [Colors.transparent, context.appColors.surface],
+                  colors: [Colors.transparent, context.colors.surface],
                 ),
               ),
               padding: EdgeInsetsGeometry.only(top: kToolbarHeight, left: 10, right: 10),
@@ -87,7 +93,7 @@ class MediaPageHero extends StatelessWidget {
                                 aspectRatio: 0.65,
                                 child: isUsable(thumbnail)
                                     ? SafeImage(imageUrl: thumbnail, fit: BoxFit.cover)
-                                    : Skeleton.leaf(enabled: true, child: Container(color: context.appColors.error)),
+                                    : Skeleton.leaf(enabled: true, child: Container(color: context.colors.error)),
                               ),
                             ),
                           ),
@@ -96,7 +102,11 @@ class MediaPageHero extends StatelessWidget {
                               crossAxisAlignment: .start,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Column(spacing: 5, crossAxisAlignment: .start, children: items.map(infoItem).toList()),
+                                Column(
+                                  spacing: 5,
+                                  crossAxisAlignment: .start,
+                                  children: items.entries.map((e) => infoItem(e)).toList(),
+                                ),
                                 FilledButton.icon(
                                   onPressed: () {},
                                   icon: Icon(isSaved ? Icons.bookmark : Icons.bookmark_outline),
@@ -133,7 +143,7 @@ class MediaPageHero extends StatelessWidget {
     style: TextStyle(
       fontSize: context.textTheme.titleLarge?.fontSize,
       fontWeight: FontWeight.bold,
-      color: context.appColors.primary,
+      color: context.colors.primary,
     ),
   );
 }

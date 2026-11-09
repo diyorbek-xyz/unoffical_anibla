@@ -95,9 +95,9 @@ _EpisodeNotification _$EpisodeNotificationFromJson(Map<String, dynamic> json) =>
       seasonNumber: json['seasonNumber'] as String? ?? "",
       episodeNumber: json['episodeNumber'] as String? ?? "",
       mediaId: json['mediaId'] as String? ?? "",
-      mediaType:
-          $enumDecodeNullable(_$MediaTypeEnumMap, json['mediaType']) ??
-          MediaType.serie,
+      mediaType: json['mediaType'] == null
+          ? MediaType.serie
+          : MediaType.fromJson(json['mediaType'] as String),
       seasonIndex: json['seasonIndex'] as String? ?? "",
       episodeIndex: json['episodeIndex'] as String? ?? "",
       seasonRouteIndex: json['seasonRouteIndex'] as String? ?? "",

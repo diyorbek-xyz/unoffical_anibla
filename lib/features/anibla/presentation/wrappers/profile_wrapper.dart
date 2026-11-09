@@ -14,7 +14,7 @@ import 'package:application/features/anibla/presentation/controllers/profile_con
 import 'package:application/features/anibla/presentation/controllers/profile_errors.dart';
 import 'package:application/features/anibla/presentation/widgets/sessions.dart';
 import 'package:application/injection_container.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -66,7 +66,7 @@ class _ProfileWrapperState extends State<ProfileWrapper> {
       return Skeletonizer(
         enabled: isLoading,
         justifyMultiLineText: true,
-        effect: PulseEffect(duration: Duration(seconds: 1), from: context.appColors.primary, to: context.appColors.onPrimary),
+        effect: PulseEffect(duration: Duration(seconds: 1), from: context.colors.primary, to: context.colors.onPrimary),
         child: ProfilePage(
           tabViews: [
             TabView(
@@ -114,7 +114,7 @@ class _ProfileWrapperState extends State<ProfileWrapper> {
       return Skeletonizer(
         enabled: isLoading,
         justifyMultiLineText: true,
-        effect: PulseEffect(duration: Duration(seconds: 1), from: context.appColors.primary, to: context.appColors.onPrimary),
+        effect: PulseEffect(duration: Duration(seconds: 1), from: context.colors.primary, to: context.colors.onPrimary),
         child: ProfilePage(
           tabViews: [
             TabView(

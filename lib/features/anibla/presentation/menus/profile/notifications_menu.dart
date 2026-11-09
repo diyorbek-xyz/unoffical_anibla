@@ -2,7 +2,7 @@ import 'package:application/features/anibla/data/models/props/media_props.dart';
 import 'package:application/features/view/models/notification_view.dart';
 import 'package:application/shared/image_provider/fallback_provider.dart';
 import 'package:application/shared/widgets/list.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 
 class NotificationsMenu extends StatelessWidget {

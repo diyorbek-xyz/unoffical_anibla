@@ -6,7 +6,7 @@ import 'package:application/shared/utils/url_launcher.dart';
 import 'package:application/shared/widgets/error.dart';
 import 'package:application/shared/widgets/recommend.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -41,13 +41,12 @@ class NovelPage extends StatelessWidget {
               child: Icon(Icons.book),
             ),
             body: SingleChildScrollView(
-              physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
               child: Column(
                 crossAxisAlignment: .start,
                 children: [
                   banner(context),
-                  Recommends(title: "Yangi Asarlar", onMoreClick: () {}, items: news.map(MediaCard.fromBook).toList()),
-                  Recommends(title: "Top manga", onMoreClick: () {}, items: tops.map(MediaCard.fromBook).toList()),
+                  Recommends(title: "Yangi Asarlar", onMoreClick: () {}, items: news.map(MediaCard.fromManga).toList()),
+                  Recommends(title: "Top manga", onMoreClick: () {}, items: tops.map(MediaCard.fromManga).toList()),
                 ],
               ),
             ),

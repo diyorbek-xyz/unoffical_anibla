@@ -66,9 +66,9 @@ _CarouselItem _$CarouselItemFromJson(Map<String, dynamic> json) =>
       anime: json['media'] == null
           ? const Anime()
           : Anime.fromJson(json['media']),
-      type:
-          $enumDecodeNullable(_$MediaTypeEnumMap, json['mediaType']) ??
-          MediaType.movie,
+      type: json['mediaType'] == null
+          ? MediaType.movie
+          : MediaType.fromJson(json['mediaType'] as String),
     );
 
 Map<String, dynamic> _$CarouselItemToJson(_CarouselItem instance) =>

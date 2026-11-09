@@ -40,6 +40,8 @@ abstract class Anime with _$Anime {
     @Default("") @HiveField(22) @JsonKey(fromJson: addBaseUrl, includeFromJson: true) String thumbnail,
     @Default("") @HiveField(23) @JsonKey(fromJson: addBaseUrl, includeFromJson: true) String cover,
     @Default([]) @HiveField(24) @JsonKey(fromJson: addBaseUrlAsList, includeFromJson: true) List<String> images,
+    @Default(0) @HiveField(26) int rating,
+    @Default(0) @HiveField(27) @JsonKey(name: "rating_count")  int ratingCount
   }) = _Anime;
 
   Localized get title => Localized(ru: ru['title'] ?? "", uz: uz['title'] ?? "");

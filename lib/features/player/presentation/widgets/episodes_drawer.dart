@@ -6,7 +6,7 @@ import 'package:application/features/anibla/presentation/controllers/media_contr
 import 'package:application/features/player/data/model/player_props.dart';
 import 'package:application/features/player/presentation/controller/player_controller.dart';
 import 'package:application/injection_container.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 class EpisodesDrawer extends StatefulWidget {
@@ -117,7 +117,6 @@ class _EpisodesDrawerState extends State<EpisodesDrawer> {
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 10,
                   addRepaintBoundaries: true,
-                  physics: BouncingScrollPhysics(),
                   children: entries.map((entry) {
                     final episode = entry.value;
                     final isCurrent = current == entry.value.episodeNumber;
@@ -136,15 +135,15 @@ class _EpisodesDrawerState extends State<EpisodesDrawer> {
                       forCache: next?.video,
                     );
                     final timeline = null;
-                    final typeColor = episode.type.isFree ? context.appColors.secondary : context.appColors.primary;
+                    final typeColor = episode.type.isFree ? context.colors.secondary : context.colors.primary;
                     final currentColor = typeColor.withAlpha(isCurrent ? 255 : 50);
                     return RepaintBoundary(
                       child: Tooltip(
                         waitDuration: Duration(seconds: 1),
-                        decoration: BoxDecoration(color: context.appColors.primaryContainer),
+                        decoration: BoxDecoration(color: context.colors.primaryContainer),
                         ignorePointer: true,
                         preferBelow: true,
-                        textStyle: TextStyle(color: context.appColors.onPrimaryContainer),
+                        textStyle: TextStyle(color: context.colors.onPrimaryContainer),
                         message: title,
                         child: InkWell(
                           onTap: () => _playerController.init(props),

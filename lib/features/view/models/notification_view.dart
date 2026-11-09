@@ -2,7 +2,7 @@ import 'package:application/features/anibla/data/enums/media_type.dart';
 import 'package:application/features/anibla/data/models/data/anibla_notification.dart';
 import 'package:application/features/mano/data/models/data/mano_notification.dart';
 import 'package:application/features/view/models/action_view.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'notification_view.freezed.dart';

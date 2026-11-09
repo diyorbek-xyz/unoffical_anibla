@@ -5,7 +5,7 @@ import 'package:application/features/anibla/presentation/controllers/explore_con
 import 'package:application/injection_container.dart';
 import 'package:application/core/network/resources/failure.dart';
 import 'package:cupertino_ui/cupertino_ui.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 class GenresMenu extends StatelessWidget {
@@ -18,9 +18,7 @@ class GenresMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
-      scrollBehavior: ScrollBehavior().copyWith(scrollbars: false),
       key: const PageStorageKey("genres"),
-      physics: BouncingScrollPhysics(),
       slivers: [
         CupertinoSliverRefreshControl(onRefresh: _exploreController.refreshAll),
         SignalBuilder(
@@ -64,11 +62,11 @@ class GenresMenu extends StatelessWidget {
       onTap: searchGenre,
       mouseCursor: SystemMouseCursors.click,
       child: Ink(
-        decoration: BoxDecoration(color: context.appColors.primary, borderRadius: BorderRadius.circular(4)),
+        decoration: BoxDecoration(color: context.colors.primary, borderRadius: BorderRadius.circular(4)),
         padding: EdgeInsets.all(10),
         child: Align(
           alignment: AlignmentGeometry.center,
-          child: Text(e.title.uz, style: TextStyle(color: context.appColors.onPrimary, fontSize: 20)),
+          child: Text(e.title.uz, style: TextStyle(color: context.colors.onPrimary, fontSize: 20)),
         ),
       ),
     );

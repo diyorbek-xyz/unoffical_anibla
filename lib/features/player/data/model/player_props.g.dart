@@ -7,7 +7,7 @@ part of 'player_props.dart';
 // **************************************************************************
 
 _MediaStream _$MediaStreamFromJson(Map<String, dynamic> json) => _MediaStream(
-  type: $enumDecode(_$MediaTypeEnumMap, json['type']),
+  type: MediaType.fromJson(json['type'] as String),
   animeTitle: json['animeTitle'] as String,
   episodeTitle: json['episodeTitle'] as String,
   cover: json['cover'] as String,

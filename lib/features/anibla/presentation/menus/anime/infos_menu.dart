@@ -1,6 +1,6 @@
 import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/features/anibla/data/models/view/media_info_entry.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AnimeInfosMenu extends StatelessWidget {
   final List<MediaInfoEntry> entries;
@@ -11,7 +11,6 @@ class AnimeInfosMenu extends StatelessWidget {
     final titleStyle = context.textTheme.titleLarge;
     final bodyStyle = context.textTheme.bodyLarge;
     return CustomScrollView(
-      scrollBehavior: ScrollBehavior().copyWith(scrollbars: false),
       key: const PageStorageKey("infos"),
       slivers: [
         SliverOverlapInjector(handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context)),

@@ -8,7 +8,7 @@ import 'package:application/features/view/models/tab_view.dart';
 import 'package:application/shared/widgets/responsive.dart';
 import 'package:application/features/anibla/presentation/controllers/explore_controller.dart';
 import 'package:application/injection_container.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
@@ -52,11 +52,7 @@ class _SavedsPageState extends State<SavedsPage> {
         body: Material(
           type: .transparency,
           child: TabBarView(
-            children: [
-              savedAnimes,
-              historyAnimes,
-              downloadedAnimes,
-            ].map((e) => SingleChildScrollView(physics: BouncingScrollPhysics(), child: e)).toList(),
+            children: [savedAnimes, historyAnimes, downloadedAnimes].map((e) => SingleChildScrollView(child: e)).toList(),
           ),
         ),
       ),

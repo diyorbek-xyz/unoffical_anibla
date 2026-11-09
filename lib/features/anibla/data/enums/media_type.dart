@@ -1,3 +1,4 @@
+import 'package:application/features/mano/data/models/request/books_query.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
 
@@ -33,6 +34,11 @@ enum MediaType {
   bool get isComics => this == .comics;
   bool get isNovel => this == .novel;
 
+  BooksQueryType get toBookRequest => switch (this) {
+    .novel => .novels,
+    _ => .manga,
+  };
+
   String get jsonValue => switch (this) {
     .comics => "komiks",
     .manga => "manga",
@@ -40,6 +46,16 @@ enum MediaType {
     .movie => "movies",
     .novel => "novell",
     .serie => "series",
+  };
+
+  factory MediaType.fromJson(String str) => switch (str) {
+    "komiks" => .comics,
+    "manga" => .manga,
+    "manhwa" => .manxva,
+    "movies" => .movie,
+    "novell" => .novel,
+    "series" => .serie,
+    _ => .serie,
   };
 
   @override

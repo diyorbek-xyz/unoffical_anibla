@@ -1,6 +1,6 @@
 import 'package:application/core/config/theme/app_colors.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppThemes {
@@ -30,13 +30,13 @@ class AppThemes {
   );
 
   static ButtonStyle getErrorButtonStyle(BuildContext context) => ButtonStyle(
-    backgroundColor: WidgetStatePropertyAll(context.appColors.error),
-    foregroundColor: WidgetStatePropertyAll(context.appColors.onError),
+    backgroundColor: WidgetStatePropertyAll(context.colors.error),
+    foregroundColor: WidgetStatePropertyAll(context.colors.onError),
   );
 
   static ButtonStyle getPrimaryButtonStyle(BuildContext context) => ButtonStyle(
-    backgroundColor: WidgetStatePropertyAll(context.appColors.primary),
-    foregroundColor: WidgetStatePropertyAll(context.appColors.onPrimary),
+    backgroundColor: WidgetStatePropertyAll(context.colors.primary),
+    foregroundColor: WidgetStatePropertyAll(context.colors.onPrimary),
   );
 }
 

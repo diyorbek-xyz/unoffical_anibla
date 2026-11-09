@@ -1,6 +1,6 @@
 import 'package:application/features/anibla/data/models/data/privacy.dart';
 import 'package:application/shared/widgets/list.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class PrivacySettings extends StatelessWidget {
   final Privacy privacy;

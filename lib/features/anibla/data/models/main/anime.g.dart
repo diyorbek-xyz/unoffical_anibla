@@ -44,13 +44,15 @@ class AnimeAdapter extends TypeAdapter<Anime> {
       thumbnail: fields[22] == null ? '' : fields[22] as String,
       cover: fields[23] == null ? '' : fields[23] as String,
       images: fields[24] == null ? [] : (fields[24] as List).cast<String>(),
+      rating: fields[26] == null ? 0 : (fields[26] as num).toInt(),
+      ratingCount: fields[27] == null ? 0 : (fields[27] as num).toInt(),
     );
   }
 
   @override
   void write(BinaryWriter writer, Anime obj) {
     writer
-      ..writeByte(25)
+      ..writeByte(27)
       ..writeByte(1)
       ..write(obj.age)
       ..writeByte(2)
@@ -100,7 +102,11 @@ class AnimeAdapter extends TypeAdapter<Anime> {
       ..writeByte(24)
       ..write(obj.images)
       ..writeByte(25)
-      ..write(obj.availableEpisodes);
+      ..write(obj.availableEpisodes)
+      ..writeByte(26)
+      ..write(obj.rating)
+      ..writeByte(27)
+      ..write(obj.ratingCount);
   }
 
   @override
@@ -144,9 +150,9 @@ _Anime _$AnimeFromJson(Map<String, dynamic> json) => _Anime(
       (json['creators'] as List<dynamic>?)?.map(Creator.fromJson).toList() ??
       const [],
   id: json['_id'] as String? ?? "",
-  type:
-      $enumDecodeNullable(_$MediaTypeEnumMap, json['mediaType']) ??
-      MediaType.serie,
+  type: json['mediaType'] == null
+      ? MediaType.serie
+      : MediaType.fromJson(json['mediaType'] as String),
   forOnlyMDH: json['for_only_mdh'] as bool? ?? false,
   publishedYear: (json['published_year'] as num?)?.toInt() ?? 0,
   totalEpisodes: (json['total_episodes'] as num?)?.toInt() ?? 0,
@@ -158,6 +164,8 @@ _Anime _$AnimeFromJson(Map<String, dynamic> json) => _Anime(
   images: json['images'] == null
       ? const []
       : addBaseUrlAsList(json['images'] as List?),
+  rating: (json['rating'] as num?)?.toInt() ?? 0,
+  ratingCount: (json['rating_count'] as num?)?.toInt() ?? 0,
 );
 
 Map<String, dynamic> _$AnimeToJson(_Anime instance) => <String, dynamic>{
@@ -186,6 +194,8 @@ Map<String, dynamic> _$AnimeToJson(_Anime instance) => <String, dynamic>{
   'thumbnail': instance.thumbnail,
   'cover': instance.cover,
   'images': instance.images,
+  'rating': instance.rating,
+  'rating_count': instance.ratingCount,
 };
 
 const _$MediaTypeEnumMap = {

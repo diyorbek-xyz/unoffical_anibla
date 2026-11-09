@@ -1,7 +1,7 @@
 import 'package:application/features/anibla/presentation/widgets/bottom_bar.dart';
 import 'package:application/features/anibla/presentation/widgets/sidebar.dart';
 import 'package:application/main.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 
 class MainPage extends StatelessWidget {

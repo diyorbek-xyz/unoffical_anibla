@@ -9,8 +9,8 @@ import 'package:application/features/anibla/presentation/controllers/saved_contr
 import 'package:application/shared/image_provider/fallback_provider.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:application/injection_container.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
@@ -129,9 +129,7 @@ class _HapticCardState extends State<HapticCard> {
             child: Ink(
               decoration: isUsable(widget.thumbnail)
                   ? BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(color: context.appColors.surfaceContainerLowest, blurRadius: 4, offset: Offset(0, 2)),
-                      ],
+                      boxShadow: [BoxShadow(color: context.colors.surfaceContainerLowest, blurRadius: 4, offset: Offset(0, 2))],
                       image: DecorationImage(
                         isAntiAlias: true,
                         image: imageProviderFallback(addBaseUrl(widget.thumbnail)),
@@ -140,7 +138,7 @@ class _HapticCardState extends State<HapticCard> {
                       ),
                       borderRadius: BorderRadius.circular(14),
                     )
-                  : BoxDecoration(color: context.appColors.errorContainer, borderRadius: BorderRadius.circular(14)),
+                  : BoxDecoration(color: context.colors.errorContainer, borderRadius: BorderRadius.circular(14)),
               padding: .all(3),
               child: Column(
                 crossAxisAlignment: .end,
@@ -206,10 +204,10 @@ class _HapticCardState extends State<HapticCard> {
             topRight: tFirst ?? tMiddle ?? tLast ?? outer,
           ),
         ),
-        color: context.appColors.primaryContainer.withAlpha(220),
+        color: context.colors.primaryContainer.withAlpha(220),
       ),
       padding: .symmetric(vertical: 1.5, horizontal: 10),
-      child: Text(text, style: context.textTheme.labelLarge?.copyWith(color: context.appColors.onPrimaryContainer)),
+      child: Text(text, style: context.textTheme.labelLarge?.copyWith(color: context.colors.onPrimaryContainer)),
     );
   }
 }

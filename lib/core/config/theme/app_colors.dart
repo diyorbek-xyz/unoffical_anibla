@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AppColors {
-  static final primary = const Color(0xFFC300FF);
+  static final primary = const Color(0xFFFFAE00);
   static final secondary = Colors.green;
   static final darkBackground = Color(0xFF202028);
   static final darkForeground = Color(0xFFFFFEE8);
@@ -13,5 +13,5 @@ class AppColors {
 }
 
 extension AppColorScheme on BuildContext {
-  ColorScheme get appColors => ColorScheme.of(this);
+  ColorScheme get colors => ColorScheme.of(this);
 }

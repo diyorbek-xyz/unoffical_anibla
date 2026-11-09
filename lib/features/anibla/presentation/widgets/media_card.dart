@@ -7,11 +7,10 @@ import 'package:application/features/mano/data/models/main/book.dart';
 import 'package:application/shared/utils/base_url.dart';
 import 'package:application/features/anibla/presentation/controllers/saved_controller.dart';
 import 'package:application/shared/image_provider/fallback_provider.dart';
-import 'package:application/shared/utils/extensions.dart';
 import 'package:application/shared/widgets/tv_focuser.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/main.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
@@ -25,6 +24,7 @@ class MediaCard extends StatefulWidget {
   final double? aspectRatio;
   final List<String>? badges;
   final String? progress;
+  final BorderRadius? borderRadius;
   const MediaCard({
     required this.id,
     required this.navigate,
@@ -36,13 +36,23 @@ class MediaCard extends StatefulWidget {
     this.aspectRatio,
     this.progress,
     this.badges = const [],
+    this.borderRadius = const .all(.circular(17)),
   });
   static double width = 150;
 
   @override
   State<MediaCard> createState() => _MediaCardState();
 
-  factory MediaCard.fromAnime(Anime anime, {bool? expand, double? aspectRatio, List<String>? badges}) => MediaCard(
+  factory MediaCard.fromAnime(
+    Anime anime, {
+    bool? expand,
+    double? aspectRatio,
+    List<String>? badges,
+    BorderRadius? borderRadius,
+  }) => MediaCard(
+    borderRadius: borderRadius ?? const .all(.circular(17)),
+    aspectRatio: aspectRatio,
+    expand: expand,
     id: anime.id,
     thumbnail: anime.thumbnail,
     title: anime.title.uz,
@@ -55,14 +65,23 @@ class MediaCard extends StatefulWidget {
         ? "Barcha qismlar"
         : "${anime.availableEpisodes} - ${anime.totalEpisodes}",
   );
-  factory MediaCard.fromBook(Book book, {bool? expand, double? aspectRatio, List<String>? badges}) => MediaCard(
-    id: book.id,
-    thumbnail: book.thumbnail,
-    title: book.title.toNullable() ?? "Lorem ipsum dolor sit",
-    type: book.type,
-    navigate: (c) => c.pushNamed("media", queryParameters: MediaProps.fromBook(book).toJson()),
+  factory MediaCard.fromManga(
+    Book manga, {
+    bool? expand,
+    double? aspectRatio,
+    List<String>? badges,
+    BorderRadius? borderRadius,
+  }) => MediaCard(
+    borderRadius: borderRadius ?? const .all(.circular(17)),
+    aspectRatio: aspectRatio,
+    expand: expand,
+    id: manga.id,
+    thumbnail: manga.thumbnail,
+    title: manga.title,
+    type: manga.type,
+    navigate: (c) => c.pushNamed("media", queryParameters: MediaProps.fromBook(manga).toJson()),
     badges: badges,
-    progress: "${book.chaptersCount} Bob",
+    progress: "${manga.chaptersCount} Bob",
   );
 }
 
@@ -122,7 +141,7 @@ class _MediaCardState extends State<MediaCard> {
         builder: (node) => InkWell(
           focusNode: node,
           mouseCursor: SystemMouseCursors.click,
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: widget.borderRadius,
           onTap: () => widget.navigate(context),
           radius: 350,
           child: Column(
@@ -133,16 +152,16 @@ class _MediaCardState extends State<MediaCard> {
                 aspectRatio: 9 / 12,
                 child: Ink(
                   decoration: BoxDecoration(
-                    boxShadow: [BoxShadow(color: context.appColors.surfaceContainerLowest, blurRadius: 4, offset: Offset(0, 2))],
+                    boxShadow: [BoxShadow(color: context.colors.surfaceContainerLowest, blurRadius: 4, offset: Offset(0, 2))],
                     image: DecorationImage(
                       isAntiAlias: true,
                       image: imageProviderFallback(addBaseUrl(widget.thumbnail)),
                       fit: BoxFit.cover,
                       alignment: AlignmentGeometry.center,
                     ),
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: widget.borderRadius,
                   ),
-                  padding: .all(3),
+                  padding: .all(7),
                   child: Column(
                     crossAxisAlignment: .end,
                     mainAxisAlignment: .end,
@@ -196,10 +215,10 @@ class _MediaCardState extends State<MediaCard> {
             topRight: tFirst ?? tMiddle ?? tLast ?? outer,
           ),
         ),
-        color: context.appColors.primaryContainer.withAlpha(220),
+        color: context.colors.primaryContainer.withAlpha(220),
       ),
-      padding: .symmetric(vertical: 1.5, horizontal: 10),
-      child: Text(text, style: context.textTheme.labelLarge?.copyWith(color: context.appColors.onPrimaryContainer)),
+      padding: .symmetric(vertical: 2, horizontal: 10),
+      child: Text(text, style: context.textTheme.labelLarge?.copyWith(color: context.colors.onPrimaryContainer)),
     );
   }
 }

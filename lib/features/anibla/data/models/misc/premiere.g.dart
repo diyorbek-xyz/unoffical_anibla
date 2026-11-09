@@ -62,9 +62,9 @@ class PremiereAdapter extends TypeAdapter<Premiere> {
 _Premiere _$PremiereFromJson(Map<String, dynamic> json) => _Premiere(
   anime: json['media'] == null ? const Anime() : Anime.fromJson(json['media']),
   id: json['_id'] as String? ?? "",
-  type:
-      $enumDecodeNullable(_$MediaTypeEnumMap, json['mediaType']) ??
-      MediaType.serie,
+  type: json['mediaType'] == null
+      ? MediaType.serie
+      : MediaType.fromJson(json['mediaType'] as String),
   episode: json['episode_id'] == null
       ? const Episode()
       : Episode.fromJson(json['episode_id'] as Map<String, dynamic>),

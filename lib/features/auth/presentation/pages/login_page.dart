@@ -2,7 +2,7 @@ import 'package:application/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:application/features/auth/presentation/bloc/auth_state.dart';
 import 'package:application/features/auth/presentation/widgets/login_form.dart';
 import 'package:application/injection_container.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 

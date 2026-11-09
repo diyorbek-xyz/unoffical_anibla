@@ -1,6 +1,6 @@
 import 'package:application/features/anibla/presentation/controllers/profile_controller.dart';
 import 'package:application/injection_container.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 void showEditProfileName(BuildContext context) => showDialog(context: context, builder: (_) => EditNameDialog());
 

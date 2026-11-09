@@ -1,5 +1,5 @@
 import 'package:application/shared/utils/url_launcher.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class Html {
   static Text htmlBuilder(String text) => Text.rich(

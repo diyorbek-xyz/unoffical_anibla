@@ -1,7 +1,7 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/shared/image_provider/fallback_provider.dart';
 import 'package:application/features/anibla/presentation/dialogs/avatars_menu.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AvatarSelector extends StatefulWidget {
   final String url;
@@ -21,7 +21,7 @@ class _AvatarSelectorState extends State<AvatarSelector> {
       children: [
         CircleAvatar(
           radius: 54,
-          backgroundColor: context.appColors.primary,
+          backgroundColor: context.colors.primary,
           backgroundImage: imageProviderFallback(widget.url),
           child: (widget.fallback != null) ? Text(widget.fallback!, style: TextStyle(fontSize: 42)) : null,
         ),
@@ -31,8 +31,8 @@ class _AvatarSelectorState extends State<AvatarSelector> {
             constraints: BoxConstraints.tightFor(height: 35, width: 35),
             padding: EdgeInsets.all(0),
             mouseCursor: SystemMouseCursors.click,
-            color: context.appColors.onPrimary,
-            style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(context.appColors.primary)),
+            color: context.colors.onPrimary,
+            style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(context.colors.primary)),
             icon: Icon(Icons.edit),
           ),
         ),

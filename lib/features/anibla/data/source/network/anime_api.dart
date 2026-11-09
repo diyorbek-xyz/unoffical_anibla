@@ -1,6 +1,7 @@
 import 'package:application/core/network/clients/anibla_client.dart';
+import 'package:application/features/anibla/data/models/request/animes_query.dart';
+import 'package:application/features/anibla/data/models/response/history_response.dart';
 import 'package:application/shared/models/api_response.dart';
-import 'package:application/features/anibla/data/models/helper/pagination.dart';
 import 'package:application/features/anibla/data/models/local/saved_anime.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/features/anibla/data/models/response/big_response.dart';
@@ -16,7 +17,7 @@ abstract class AnimeApi {
   @GET("/v1/{type}/{slug}")
   Future<HttpResponse<ApiResponse<Anime>>> getSerie(@Path("type") String type, @Path("slug") String slug);
   @GET("/v1/media/mobile")
-  Future<HttpResponse<BigResponse<Anime>>> getHomeAnimes(@Queries() Pagination query);
+  Future<HttpResponse<BigResponse<Anime>>> getHomeAnimes(@Queries(encoded: true) AnimesQuery query);
 
   @GET("/v1/saved-series")
   Future<HttpResponse<ApiResponse<List<SavedAnime>>>> getSavedSeries();
@@ -32,4 +33,13 @@ abstract class AnimeApi {
   Future<HttpResponse<ApiResponse<dynamic>>> unsaveSeries(@Path("id") String body);
   @DELETE("/v1/saved-movies/{id}")
   Future<HttpResponse<ApiResponse<dynamic>>> unsaveMovies(@Path("id") String body);
+
+  @GET("/v1/users/me/watch-history")
+  Future<HttpResponse<ApiResponse<HistoryResponse>>> getWatchHistory();
+
+  @GET("/v1/{type}/mobile")
+  Future<HttpResponse<BigResponse<Anime>>> getMedias(
+    @Path("type") AnimesQueryType type,
+    @Queries(encoded: true) AnimesQuery query,
+  );
 }

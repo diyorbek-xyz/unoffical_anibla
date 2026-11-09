@@ -1,4 +1,5 @@
 import 'package:application/features/anibla/data/models/helper/pagination.dart';
+import 'package:application/features/anibla/data/models/request/animes_query.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -22,33 +23,36 @@ abstract class SignalState<T> with _$SignalState<T> {
 }
 
 @freezed
-abstract class BigSignalState<T> with _$BigSignalState<T> {
+abstract class BigSignalState<T, Q> with _$BigSignalState<T, Q> {
   const BigSignalState._();
   factory BigSignalState({
     @Default(false) bool isLoading,
+    @Default(false) bool isLoadingMore,
     @Default(false) bool hasValue,
     @Default(false) bool hasError,
     @Default(Pagination()) Pagination pagination,
     @Default([]) List<T> value,
+    Q? request,
     String? error,
-  }) = _BigSignalState;
+  }) = _BigSignalState<T, Q>;
 
-  BigSignalState<T> withMore(Pagination pagination, List<T> values) =>
+  BigSignalState<T, Q> withRequest(Q request) => copyWith(request: request);
+  BigSignalState<T, Q> withMore(Pagination pagination, List<T> values) =>
       copyWith(error: null, hasError: false, hasValue: true, isLoading: false, value: value + values, pagination: pagination);
-  BigSignalState<T> withPagination(Pagination pagination) => copyWith(pagination: pagination);
-  BigSignalState<T> withValues(List<T> values) =>
+  BigSignalState<T, Q> withPagination(Pagination pagination) => copyWith(pagination: pagination);
+  BigSignalState<T, Q> withValues(List<T> values) =>
       copyWith(error: null, hasError: false, hasValue: true, isLoading: false, value: value + values);
-  BigSignalState<T> withError(String error) =>
+  BigSignalState<T, Q> withError(String error) =>
       copyWith(error: error, hasError: true, hasValue: false, isLoading: false, value: value);
-  BigSignalState<T> setLoading(bool value) => copyWith(isLoading: value);
+  BigSignalState<T, Q> setLoading(bool value) => copyWith(isLoading: value);
 }
 
 @freezed
 abstract class NamedSignalState<T> with _$NamedSignalState<T> {
   const NamedSignalState._();
-  factory NamedSignalState([@Default({}) Map<String, BigSignalState<T>> entries]) = _NamedSignalState;
+  factory NamedSignalState([@Default({}) Map<String, BigSignalState<T, AnimesQuery>> entries]) = _NamedSignalState;
 
-  BigSignalState<T>? getEntry(String key) => entries[key];
+  BigSignalState<T, AnimesQuery>? getEntry(String key) => entries[key];
   String? getError(String key) => getEntry(key)?.error;
   List<T>? getData(String key) => getEntry(key)?.value;
   Pagination getPagination(String key) => getEntry(key)?.pagination ?? Pagination();

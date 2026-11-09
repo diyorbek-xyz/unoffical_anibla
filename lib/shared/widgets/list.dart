@@ -1,7 +1,7 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:application/shared/utils/html_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ListBorderRadius {
   final Radius outerRadius;
@@ -82,8 +82,8 @@ class ListsWidget extends StatelessWidget {
         final list = items[index];
         if (context.isMobile) {
           return ListTile(
-            textColor: context.appColors.primaryFixed,
-            iconColor: context.appColors.primaryFixed,
+            textColor: context.colors.primaryFixed,
+            iconColor: context.colors.primaryFixed,
             contentPadding: EdgeInsets.symmetric(vertical: 3, horizontal: 18),
             title: Text(list.label),
             onTap: list.onTap,
@@ -94,16 +94,16 @@ class ListsWidget extends StatelessWidget {
                 (list.icon != null ? Padding(padding: EdgeInsetsGeometry.only(right: 5), child: Icon(list.icon)) : null),
             subtitle: list.isHtml
                 ? Html.htmlBuilder(list.value)
-                : Text(list.value, style: TextStyle(color: context.appColors.primaryFixedDim)),
+                : Text(list.value, style: TextStyle(color: context.colors.primaryFixedDim)),
             trailing: (list.actions != null && list.actions!.isNotEmpty)
                 ? Row(mainAxisSize: MainAxisSize.min, children: list.actions!)
                 : null,
           );
         }
         return ListTile(
-          tileColor: context.appColors.primaryContainer,
-          textColor: context.appColors.primaryFixed,
-          iconColor: context.appColors.primaryFixed,
+          tileColor: context.colors.primaryContainer,
+          textColor: context.colors.primaryFixed,
+          iconColor: context.colors.primaryFixed,
           shape: RoundedRectangleBorder(borderRadius: borderRadius.fromIndex(index, items.length)),
           contentPadding: EdgeInsets.symmetric(vertical: 3, horizontal: 18),
           title: Text(list.label),
@@ -115,7 +115,7 @@ class ListsWidget extends StatelessWidget {
               (list.icon != null ? Padding(padding: EdgeInsetsGeometry.only(right: 5), child: Icon(list.icon)) : null),
           subtitle: list.isHtml
               ? Html.htmlBuilder(list.value)
-              : Text(list.value, style: TextStyle(color: context.appColors.primaryFixedDim)),
+              : Text(list.value, style: TextStyle(color: context.colors.primaryFixedDim)),
           trailing: (list.actions != null && list.actions!.isNotEmpty)
               ? Row(mainAxisSize: MainAxisSize.min, children: list.actions!)
               : null,

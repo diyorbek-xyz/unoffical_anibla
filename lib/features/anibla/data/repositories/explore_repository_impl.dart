@@ -4,7 +4,7 @@ import 'package:application/features/anibla/data/enums/media_type.dart';
 import 'package:application/features/anibla/data/models/data/category.dart';
 import 'package:application/features/anibla/data/models/data/genre.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
-import 'package:application/features/anibla/data/models/request/search_request.dart';
+import 'package:application/features/anibla/data/models/request/animes_query.dart';
 import 'package:application/features/anibla/data/source/local/history_local.dart';
 import 'package:application/features/anibla/data/source/network/explore_api.dart';
 import 'package:application/features/anibla/data/source/network/genre_api.dart';
@@ -40,7 +40,7 @@ class ExploreRepositoryImpl implements ExploreRepository {
   }
 
   @override
-  Future<Either<Failure, List<Anime>>> searchAnime(MediaType type, SearchRequest query) async {
+  Future<Either<Failure, List<Anime>>> searchAnime(MediaType type, AnimesQuery query) async {
     try {
       final httpResponse = await _aniblaExploreApi.searchAnime(type.jsonValue, query);
       if (httpResponse.response.statusCode == HttpStatus.ok) return Right(httpResponse.data.data);

@@ -2,7 +2,7 @@ import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/core/routes/go_router.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/shared/widgets/keyboard_shortcuts.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 
 void main(List<String> args) async {
@@ -23,6 +23,7 @@ class MainApp extends StatelessWidget {
     themeMode: .system,
     darkTheme: AppThemes.darkTheme,
     theme: AppThemes.lightTheme,
+    scrollBehavior: MaterialScrollBehavior().copyWith(scrollbars: false, physics: .bouncing()),
     builder: (_, child) => KeyboardShortcuts(config, child!),
   );
 }

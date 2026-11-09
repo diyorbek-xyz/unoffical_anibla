@@ -1,6 +1,6 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/shared/image_provider/fallback_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class CreatorsMenu extends StatelessWidget {
   final List<(String, String)> creators;
@@ -13,7 +13,6 @@ class CreatorsMenu extends StatelessWidget {
         constraints: BoxConstraints(maxWidth: 1000),
         child: CustomScrollView(
           key: const PageStorageKey("creators"),
-          scrollBehavior: ScrollBehavior().copyWith(scrollbars: false),
           slivers: [
             SliverOverlapInjector(handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context)),
             SliverList.separated(
@@ -26,7 +25,7 @@ class CreatorsMenu extends StatelessWidget {
                     backgroundImage: imageProviderFallback(creator.$2),
                     onBackgroundImageError: (exception, stackTrace) => exception.toString(),
                   ),
-                  title: Text(creator.$1, style: TextStyle(color: context.appColors.primary)),
+                  title: Text(creator.$1, style: TextStyle(color: context.colors.primary)),
                 );
               },
               itemCount: creators.length,

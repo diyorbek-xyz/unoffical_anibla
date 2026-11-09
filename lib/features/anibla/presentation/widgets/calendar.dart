@@ -8,7 +8,7 @@ import 'package:application/features/anibla/presentation/bloc/calendar/calendar_
 import 'package:application/features/anibla/data/models/misc/premieres.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/main.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -28,45 +28,36 @@ class Calendar extends StatelessWidget {
             final isLoading = state is! CalendarWeeklySuccess;
             final fake = List.generate(7, (index) => Premieres());
             final data = isLoading ? fake : state.data;
-            final outerRadius = Radius.circular(15);
+            final outerRadius = Radius.circular(20);
             final innerRadius = Radius.circular(5);
 
             return Skeletonizer(
               enabled: isLoading,
               enableSwitchAnimation: true,
               child: Padding(
-                padding: .only(top: 30, bottom: 10),
+                padding: .only(bottom: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Skeleton.keep(
                       keep: true,
-                      child: Padding(
-                        padding: EdgeInsetsGeometry.symmetric(horizontal: 10),
-                        child: Row(
-                          textDirection: isMobile ? .rtl : .ltr,
-                          spacing: 10,
-                          children: [
-                            IconButton(
-                              onPressed: () => context.read<CalendarBloc>().add(GetCalendarWeekly()),
-                              icon: Icon(Icons.refresh),
-                            ),
-                            Expanded(
-                              child: Text(
-                                "Har kunlik chiqadigan animelar ro'yxati",
-                                style: isMobile ? context.textTheme.headlineSmall : context.textTheme.headlineLarge,
-                              ),
-                            ),
-                          ],
+                      child: ListTile(
+                        leading: Icon(Icons.calendar_month),
+                        trailing: IconButton(
+                          onPressed: () => context.read<CalendarBloc>().add(GetCalendarWeekly()),
+                          icon: Icon(Icons.refresh),
+                        ),
+                        minTileHeight: 80,
+                        title: Text(
+                          "Yangi qismlar ro'yxati",
+                          style: isMobile ? context.textTheme.headlineSmall : context.textTheme.headlineLarge,
                         ),
                       ),
                     ),
-                    SizedBox(height: 23),
                     SizedBox(
                       height: isMobile ? 300 : 350,
                       child: CustomScrollView(
                         shrinkWrap: true,
-                        physics: const BouncingScrollPhysics(),
                         scrollDirection: Axis.horizontal,
                         slivers: [
                           const SliverToBoxAdapter(child: SizedBox(width: 5)),
@@ -105,7 +96,7 @@ class Calendar extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
       decoration: BoxDecoration(
-        color: context.appColors.primary,
+        color: context.colors.primary,
         borderRadius: BorderRadius.only(
           bottomLeft: innerRadius,
           bottomRight: outerRadius,
@@ -117,7 +108,7 @@ class Calendar extends StatelessWidget {
         ignore: true,
         child: Text(
           "${toBeginningOfSentenceCase(DateTime.tryParse(e?.date ?? "")?.formatDynamicWeeks())}${e?.premieres != null ? " ${e?.premieres.length}ta" : ""}",
-          style: TextStyle(color: context.appColors.onPrimary),
+          style: TextStyle(color: context.colors.onPrimary),
         ),
       ),
     );
@@ -129,7 +120,7 @@ class Calendar extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(width: 1, color: context.appColors.primaryContainer),
+        border: Border.all(width: 1, color: context.colors.primaryContainer),
         borderRadius: BorderRadius.only(
           topLeft: innerRadius,
           bottomLeft: outerRadius,
@@ -150,6 +141,7 @@ class Calendar extends StatelessWidget {
                   order: NumericFocusOrder(date.year * 100 + date.month * 10 + date.day + (e.key * 0.1)),
                   child: MediaCard.fromAnime(
                     timer.anime,
+                    borderRadius: BorderRadius.all(outerRadius),
                     expand: false,
                     badges: ["${timer.time.formatTime()}${hasEpisode ? "\t/\t$episode-qism" : ""}"],
                   ),

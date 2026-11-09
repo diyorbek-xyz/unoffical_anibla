@@ -6,7 +6,7 @@ import 'package:application/shared/utils/extensions.dart';
 import 'package:application/features/anibla/presentation/controllers/profile_controller.dart';
 import 'package:application/features/anibla/presentation/widgets/avatar_selector.dart';
 import 'package:application/injection_container.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 import 'package:application/shared/widgets/responsive.dart';
@@ -96,15 +96,15 @@ class _ProfilePageState extends State<ProfilePage> {
         onTap: () => setCurrentIndex(index),
         tileColor: Colors.transparent,
         selected: selected,
-        selectedTileColor: context.appColors.primaryFixed.withValues(alpha: 0.1),
+        selectedTileColor: context.colors.primaryFixed.withValues(alpha: 0.1),
         contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 11),
         leading: Ink(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(100),
-            color: selected ? context.appColors.primary : context.appColors.onPrimary,
+            color: selected ? context.colors.primary : context.colors.onPrimary,
           ),
           padding: EdgeInsets.all(10),
-          child: Icon(tab.icon, color: selected ? context.appColors.onPrimary : context.appColors.primary),
+          child: Icon(tab.icon, color: selected ? context.colors.onPrimary : context.colors.primary),
         ),
       );
     },
@@ -132,13 +132,13 @@ class _ProfilePageState extends State<ProfilePage> {
             text: TextSpan(
               children: [
                 TextSpan(text: name, style: TextStyle(fontSize: 24)),
-                if (isSubscribed) WidgetSpan(child: Icon(Icons.verified, color: context.appColors.onSurface)),
+                if (isSubscribed) WidgetSpan(child: Icon(Icons.verified, color: context.colors.onSurface)),
                 WidgetSpan(
                   child: Container(
                     margin: .symmetric(horizontal: 10),
                     padding: .symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(color: context.appColors.primary, borderRadius: .circular(10)),
-                    child: Text(widget.profile.type.toString(), style: TextStyle(color: context.appColors.onPrimary)),
+                    decoration: BoxDecoration(color: context.colors.primary, borderRadius: .circular(10)),
+                    child: Text(widget.profile.type.toString(), style: TextStyle(color: context.colors.onPrimary)),
                   ),
                 ),
               ],
@@ -167,13 +167,13 @@ class _ProfilePageState extends State<ProfilePage> {
               text: TextSpan(
                 children: [
                   TextSpan(text: name, style: TextStyle(fontSize: 24)),
-                  if (isSubscribed) WidgetSpan(child: Icon(Icons.verified, color: context.appColors.onSurface)),
+                  if (isSubscribed) WidgetSpan(child: Icon(Icons.verified, color: context.colors.onSurface)),
                   WidgetSpan(
                     child: Container(
                       margin: .symmetric(horizontal: 10),
                       padding: .symmetric(horizontal: 6, vertical: 2),
-                      decoration: BoxDecoration(color: context.appColors.primary, borderRadius: .circular(10)),
-                      child: Text(widget.profile.type.toString(), style: TextStyle(color: context.appColors.onPrimary)),
+                      decoration: BoxDecoration(color: context.colors.primary, borderRadius: .circular(10)),
+                      child: Text(widget.profile.type.toString(), style: TextStyle(color: context.colors.onPrimary)),
                     ),
                   ),
                 ],

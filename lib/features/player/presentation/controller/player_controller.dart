@@ -9,7 +9,7 @@ import 'package:application/features/player/data/services/dowload_hls.dart';
 import 'package:application/features/player/data/source/local/timeline.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:application/shared/utils/utils.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_video_caching/flutter_video_caching.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
@@ -73,7 +73,7 @@ class PlayerController {
   // end of states;
 
   final controllerConfig = const VideoControllerConfiguration();
-  final playerConfig = const PlayerConfiguration(title: "Anibla.uz");
+  final playerConfig = const PlayerConfiguration(title: "Anibla.uz", osc: false, pitch: true);
   late final player = Player(configuration: playerConfig);
   late final controller = VideoController(player, configuration: controllerConfig);
   final List<StreamSubscription> subscriptions = [];
@@ -117,7 +117,9 @@ class PlayerController {
       _totalEpisodes.set(stream.totalEpisodes);
       _offset.set(stream.episode);
       _audioTracks.set(master.audios);
+      print("opeing player");
       await player.open(Media(audio != null ? variantPath : variantPath.toLocalUrl(), start: time?.progress), play: false);
+      print("success");
       _currentStream.set(stream);
       if (audio != null) await setAudio(audio);
     } catch (e) {
@@ -229,7 +231,6 @@ class PlayerController {
   Future<void> saveTimeline([Duration? time]) async {
     final adjusted = (time ?? player.state.position) - const Duration(seconds: 3);
     final safeProgress = adjusted.isNegative ? Duration.zero : adjusted;
-    print(_currentStream.value?.url);
     await timeline.saveTimeline(_currentStream.value!.url, TimelineModel(progress: safeProgress, duration: _duration.value));
   }
 

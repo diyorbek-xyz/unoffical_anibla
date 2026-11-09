@@ -164,8 +164,9 @@ _Book _$BookFromJson(Map<String, dynamic> json) => _Book(
   bookmarkedCount: (json['bookmarked_count'] as num?)?.toInt() ?? 0,
   isShowed: json['is_showed'] as bool? ?? false,
   isBookmarked: json['is_bookmarked'] as bool? ?? false,
-  type:
-      $enumDecodeNullable(_$MediaTypeEnumMap, json['type']) ?? MediaType.novel,
+  type: json['type'] == null
+      ? MediaType.novel
+      : MediaType.fromJson(json['type'] as String),
   isCommentEnabled: json['is_comment_enabled'] as bool? ?? false,
   id: json['id'] as String? ?? "",
   realLink: json['real_link'] as String? ?? "",
@@ -213,6 +214,13 @@ Map<String, dynamic> _$BookToJson(_Book instance) => <String, dynamic>{
   'translation_status': _$BookStatusEnumMap[instance.translationStatus]!,
 };
 
+const _$BookStatusEnumMap = {
+  BookStatus.continuing: 'continue',
+  BookStatus.stopped: 'stopped',
+  BookStatus.finished: 'finished',
+  BookStatus.ongoing: 'ongoing',
+};
+
 const _$MediaTypeEnumMap = {
   MediaType.movie: 'Movies',
   MediaType.serie: 'Series',
@@ -220,10 +228,4 @@ const _$MediaTypeEnumMap = {
   MediaType.manxva: 'manhwa',
   MediaType.novel: 'novel',
   MediaType.comics: 'comics',
-};
-
-const _$BookStatusEnumMap = {
-  BookStatus.continuing: 'continue',
-  BookStatus.stopped: 'stopped',
-  BookStatus.finished: 'finished',
 };

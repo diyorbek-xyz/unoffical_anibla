@@ -17,6 +17,7 @@ import 'package:application/features/mano/domain/repository/mano_profile_repo.da
 import 'package:application/features/mano/presentation/controllers/book_controller.dart';
 import 'package:application/features/mano/presentation/controllers/mano_profile_controller.dart';
 import 'package:application/features/player/presentation/controller/player_controller.dart';
+import 'package:application/features/polished/presentation/controller/media_search_controller.dart';
 import 'package:application/shared/utils/utils.dart';
 import 'package:application/features/anibla/data/models/data/carousel_item.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
@@ -95,17 +96,17 @@ Future<void> setupHive() async {
 
 Future<void> setupMiscs() async {
   MediaKit.ensureInitialized();
+  // await dotenv.load(fileName: '.env');
   await video_caching.VideoProxy.init();
   await Utils.initFullscreen();
-  await dotenv.load(fileName: '.env');
   await initializeDateFormatting('uz');
 }
 
 Future<void> initializeDependencies() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await setupHive();
   await setupMiscs();
+  await setupHive();
 
   // Open boxes;
   final calendarBox = await Hive.openBox<Premieres>("calendarBox");
@@ -204,5 +205,6 @@ Future<void> initializeDependencies() async {
     ..registerLazySingleton<ExploreController>(() => ExploreController(sl(), sl()))
     ..registerLazySingleton<SliderController>(() => SliderController(sl()))
     ..registerLazySingleton<BookController>(() => BookController(sl()))
-    ..registerLazySingleton<PlayerController>(() => PlayerController(sl(), sl()));
+    ..registerLazySingleton<PlayerController>(() => PlayerController(sl(), sl()))
+    ..registerFactory<MediaSearchController>(() => MediaSearchController(sl(), sl()));
 }

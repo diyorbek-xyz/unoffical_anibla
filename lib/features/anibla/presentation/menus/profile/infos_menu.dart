@@ -1,7 +1,7 @@
 import 'package:application/features/anibla/data/view_model/profile_view.dart';
 import 'package:application/features/anibla/presentation/dialogs/edit_name.dart';
 import 'package:application/shared/widgets/list.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ProfileInfosMenu extends StatelessWidget {
   final ProfileView profile;

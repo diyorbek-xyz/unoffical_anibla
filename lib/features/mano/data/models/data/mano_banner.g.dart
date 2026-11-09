@@ -58,9 +58,9 @@ _ManoCategory _$ManoCategoryFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String? ?? "",
       description: json['description'] as String? ?? "",
       imageLink: json['image_link'] as String? ?? "",
-      type:
-          $enumDecodeNullable(_$MediaTypeEnumMap, json['content_type']) ??
-          MediaType.manga,
+      type: json['content_type'] == null
+          ? MediaType.manga
+          : MediaType.fromJson(json['content_type'] as String),
     );
 
 Map<String, dynamic> _$ManoCategoryToJson(_ManoCategory instance) =>

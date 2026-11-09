@@ -1,11 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+final AMEDIA_URL = "https://amediatv.up-it.uz";
+final MANO_URL = "https://mano.deltateam.uz";
 
 class ManoClient extends DioForNative {
   ManoClient() : super(baseOptions);
 
-  static final baseOptions = BaseOptions(baseUrl: dotenv.env["MANO_URL"]!, headers: headers);
+  static final baseOptions = BaseOptions(baseUrl: MANO_URL, headers: headers);
   static const headers = {
     "User-Agent": "okhttp/4.12.0",
     "Accept-Encoding": "gzip",

@@ -1,13 +1,14 @@
 import 'package:application/core/network/resources/failure.dart';
 import 'package:application/features/anibla/data/models/helper/pagination.dart';
 import 'package:application/features/anibla/data/models/main/episode.dart';
+import 'package:application/features/anibla/data/models/request/animes_query.dart';
 import 'package:application/features/player/presentation/controller/player_controller.dart';
 import 'package:application/features/player/presentation/widgets/player_scope.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/main.dart';
 import 'package:application/shared/controller/signal_state.dart';
 import 'package:dartz/dartz.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
@@ -114,7 +115,7 @@ extension SignalExt<T> on FlutterSignal<SignalState<T>> {
   bool get hasValue => value.hasValue;
 }
 
-extension BigSignalExt<T> on FlutterSignal<BigSignalState<T>> {
+extension BigSignalExt<T, Q> on FlutterSignal<BigSignalState<T, Q>> {
   void setLoading(bool val) => set(value.setLoading(val));
   void setValues(List<T> values) => set(value.withValues(values));
   void setMore(Pagination pagination, List<T> values) => set(value.withMore(pagination, values));
@@ -132,7 +133,7 @@ extension NamedSignalExt<T> on FlutterSignal<NamedSignalState<T>> {
   void setEntry(String key, Pagination paginate, List<T> values) => set(value.withEntry(key, paginate, values));
   void setPagination(String key, Pagination pagination) => set(value.withPagination(key, pagination));
   void setError(String key, String err) => set(value.withError(key, err));
-  BigSignalState<T>? getEntry(String key) => value.getEntry(key);
+  BigSignalState<T, AnimesQuery>? getEntry(String key) => value.getEntry(key);
   String? getError(String key) => value.getError(key);
   Pagination getPagination(String key) => value.getPagination(key);
   bool getIsLoading(String key) => value.getIsLoading(key);

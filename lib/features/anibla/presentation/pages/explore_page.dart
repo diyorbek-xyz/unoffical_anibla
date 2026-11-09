@@ -1,10 +1,10 @@
-import 'package:application/features/anibla/data/models/request/search_request.dart';
+import 'package:application/features/anibla/data/models/request/animes_query.dart';
 import 'package:application/features/anibla/presentation/controllers/explore_controller.dart';
-import 'package:application/features/anibla/presentation/menus/explore/categories_menu.dart';
 import 'package:application/features/anibla/presentation/menus/explore/genres_menu.dart';
 import 'package:application/features/anibla/presentation/menus/explore/search_menu.dart';
+import 'package:application/features/anibla/presentation/menus/explore/series_menu.dart';
 import 'package:application/injection_container.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({super.key});
@@ -33,10 +33,9 @@ class _ExplorePageState extends State<ExplorePage> with SingleTickerProviderStat
         ],
         body: TabBarView(
           controller: _tabController,
-          physics: BouncingScrollPhysics(),
           children: [
             SearchMenu(controller: searchController, submit: submitSearch),
-            CategoriesMenu(controller: searchController, submit: submitSearch),
+            const AnimesMenu(),
             GenresMenu(controller: searchController, submit: submitSearch),
           ],
         ),
@@ -47,7 +46,7 @@ class _ExplorePageState extends State<ExplorePage> with SingleTickerProviderStat
   final searchController = SearchController();
 
   void submitSearch(String value, BuildContext context) {
-    _exploreController.searchAnime(SearchRequest.fromSearch(value));
+    _exploreController.searchAnime(AnimesQuery.fromString(value));
     if (_tabController.index != 0) {
       _tabController.animateTo(0);
     }
@@ -55,7 +54,7 @@ class _ExplorePageState extends State<ExplorePage> with SingleTickerProviderStat
 
   void clearSearch(BuildContext context) {
     searchController.clear();
-    _exploreController.searchAnime(SearchRequest());
+    _exploreController.searchAnime(.new());
   }
 
   @override

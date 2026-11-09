@@ -6,8 +6,7 @@ import 'package:application/shared/constants/icons.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:application/features/anibla/data/models/data/comment.dart';
 import 'package:application/shared/image_provider/fallback_provider.dart';
-import 'package:application/main.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -35,7 +34,6 @@ class _CommentsMenuState extends State<CommentsMenu> {
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: 1000),
         child: CustomScrollView(
-          scrollBehavior: ScrollBehavior().copyWith(scrollbars: false),
           key: const PageStorageKey("comments"),
           slivers: [
             SliverOverlapInjector(handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context)),
@@ -66,26 +64,24 @@ class _CommentsMenuState extends State<CommentsMenu> {
     );
   }
 
-  Widget desktopCommentItem(Comment comment) {
-    return SignalBuilder(
-      builder: (context) {
-        final state = _commentController.animeRepliesState;
-        final replies = state.getEntry(comment.id);
-        if (replies == null || !replies.hasValue) return commentTile(comment);
-        return Column(
-          children: [
-            commentTile(comment),
-            Padding(
-              padding: EdgeInsetsGeometry.only(left: 50),
-              child: Column(children: replies.value.map(commentTile).toList()),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  Widget desktopCommentItem(Comment comment) => SignalBuilder(
+    builder: (context) {
+      final state = _commentController.animeRepliesState;
+      final replies = state.getEntry(comment.id);
+      if (replies == null || !replies.hasValue) return commentTile(comment);
+      return Column(
+        children: [
+          commentTile(comment),
+          Padding(
+            padding: EdgeInsetsGeometry.only(left: 50),
+            child: Column(children: replies.value.map(commentTile).toList()),
+          ),
+        ],
+      );
+    },
+  );
 
-  Positioned repliesLine() => Positioned(
+  Widget repliesLine() => Positioned(
     left: 45,
     top: 50,
     bottom: 70,
@@ -94,47 +90,39 @@ class _CommentsMenuState extends State<CommentsMenu> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(bottomLeft: .circular(20)),
         border: Border(
-          left: BorderSide(width: 1, color: context.appColors.primary),
-          bottom: BorderSide(width: 1, color: context.appColors.primary),
+          left: BorderSide(width: 1, color: context.colors.primary),
+          bottom: BorderSide(width: 1, color: context.colors.primary),
         ),
       ),
     ),
   );
 
-  Widget commentTile(Comment comment) {
-    final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
-    return SelectionArea(
-      child: ListTile(
-        minTileHeight: 100,
-        leading: CircleAvatar(
-          radius: isMobile ? 20 : 30,
-          backgroundImage: imageProviderFallback(comment.user.avatar),
-          onBackgroundImageError: (exception, stackTrace) => exception.toString(),
+  Widget commentTile(Comment comment) => ListTile(
+    minTileHeight: 100,
+    leading: CircleAvatar(
+      radius: context.isMobile ? 20 : 30,
+      backgroundImage: imageProviderFallback(comment.user.avatar),
+      onBackgroundImageError: (exception, stackTrace) => exception.toString(),
+    ),
+    title: Row(
+      spacing: 10,
+      children: [
+        Text(comment.user.name, style: TextStyle(color: context.colors.primary)),
+        Text(
+          DateTime.tryParse(comment.createdAt)?.formatRemaining() ?? "",
+          style: TextStyle(color: context.colors.onSurface.withAlpha(100)),
         ),
-        title: Row(
-          spacing: 10,
-          children: [
-            Text(comment.user.name, style: TextStyle(color: context.appColors.primary)),
-            Text(
-              DateTime.tryParse(comment.createdAt)?.formatRemaining() ?? "",
-              style: TextStyle(color: context.appColors.onSurface.withAlpha(100)),
-            ),
-          ],
-        ),
-        isThreeLine: true,
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 5,
-          children: [
-            MouseRegion(cursor: SystemMouseCursors.text, child: Text(comment.message)),
-            commentActions(comment),
-          ],
-        ),
-      ),
-    );
-  }
+      ],
+    ),
+    isThreeLine: true,
+    subtitle: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 5,
+      children: [Text(comment.message), commentActions(comment)],
+    ),
+  );
 
-  Wrap commentActions(Comment comment) => Wrap(
+  Widget commentActions(Comment comment) => Wrap(
     spacing: 5,
     children: [
       InkWell(
@@ -173,8 +161,8 @@ class _CommentsMenuState extends State<CommentsMenu> {
                   crossAxisAlignment: .center,
                   mainAxisSize: .min,
                   children: [
-                    Text("${comment.repliesCount}ta javoblarni ochish", style: TextStyle(color: context.appColors.primary)),
-                    Icon(Icons.keyboard_arrow_down, color: context.appColors.primary, size: 18),
+                    Text("${comment.repliesCount}ta javoblarni ochish", style: TextStyle(color: context.colors.primary)),
+                    Icon(Icons.keyboard_arrow_down, color: context.colors.primary, size: 18),
                   ],
                 ),
               ),

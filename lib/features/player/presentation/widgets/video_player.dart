@@ -10,7 +10,7 @@ import 'package:application/injection_container.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:application/features/player/presentation/widgets/episodes_drawer.dart';
 import 'package:application/features/player/presentation/widgets/player_components.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
 import 'package:go_router/go_router.dart';
@@ -48,7 +48,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
   int forwardSkipSteps = 0;
   int backwardSkipSteps = 0;
 
-  late final _textStyle = TextStyle(color: context.appColors.primaryContainer);
+  late final _textStyle = TextStyle(color: context.colors.primaryContainer);
 
   void toggleControls() => autoHideControls(!isControlsVisible);
   void hideControls() {
@@ -122,8 +122,8 @@ class _VideoPlayerState extends State<VideoPlayer> {
     iconButtonTheme: IconButtonThemeData(
       style: IconButton.styleFrom(
         enabledMouseCursor: SystemMouseCursors.click,
-        backgroundColor: context.appColors.primaryContainer.withAlpha(150),
-        foregroundColor: context.appColors.onPrimaryContainer,
+        backgroundColor: context.colors.primaryContainer.withAlpha(150),
+        foregroundColor: context.colors.onPrimaryContainer,
       ),
     ),
   );
@@ -228,7 +228,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
   );
 
   Container errorBuilder(BuildContext context, PlayerStatus status, String error) => Container(
-    color: context.appColors.surface.withAlpha(100),
+    color: context.colors.surface.withAlpha(100),
     constraints: .expand(width: 600),
     child: BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
@@ -328,7 +328,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
         strokeWidth: 7,
         constraints: BoxConstraints.tightFor(width: 100, height: 100),
         strokeCap: StrokeCap.round,
-        valueColor: AlwaysStoppedAnimation(context.appColors.primaryContainer),
+        valueColor: AlwaysStoppedAnimation(context.colors.primaryContainer),
       ),
     ),
   );
@@ -345,15 +345,15 @@ class _VideoPlayerState extends State<VideoPlayer> {
             progress: controller.progress,
             buffered: controller.buffer,
             total: controller.duration,
-            progressBarColor: context.appColors.primaryContainer,
-            bufferedBarColor: context.appColors.primaryFixed.withAlpha(150),
+            progressBarColor: context.colors.primaryContainer,
+            bufferedBarColor: context.colors.primaryFixed.withAlpha(150),
             barHeight: 5,
-            baseBarColor: context.appColors.primaryContainer.withAlpha(100),
+            baseBarColor: context.colors.primaryContainer.withAlpha(100),
             barCapShape: BarCapShape.round,
             thumbRadius: 7,
-            thumbColor: context.appColors.onPrimary,
+            thumbColor: context.colors.onPrimary,
             thumbGlowRadius: 13,
-            thumbGlowColor: context.appColors.primaryFixedDim.withAlpha(100),
+            thumbGlowColor: context.colors.primaryFixedDim.withAlpha(100),
             timeLabelPadding: 10,
             timeLabelTextStyle: TextStyle(color: _textStyle.color, fontWeight: FontWeight.bold, fontSize: 14),
             timeLabelLocation: TimeLabelLocation.sides,
@@ -444,11 +444,9 @@ class _VideoPlayerState extends State<VideoPlayer> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(20)),
         constraints: const BoxConstraints.tightFor(width: 400, height: 400),
         content: TabBarView(
-          physics: BouncingScrollPhysics(),
           children: [
             if (dialogcontext.player.hasVariants)
               ListView.builder(
-                physics: BouncingScrollPhysics(),
                 itemCount: videoTracks.length,
                 itemBuilder: (context, index) {
                   final track = videoTracks.elementAt(index);
@@ -465,7 +463,6 @@ class _VideoPlayerState extends State<VideoPlayer> {
                 },
               ),
             ListView.builder(
-              physics: BouncingScrollPhysics(),
               itemCount: audioTracks.length,
               itemBuilder: (context, index) {
                 final track = audioTracks.elementAt(index);

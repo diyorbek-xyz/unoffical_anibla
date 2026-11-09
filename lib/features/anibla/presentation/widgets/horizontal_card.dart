@@ -3,7 +3,7 @@ import 'package:application/shared/utils/base_url.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/shared/image_provider/fallback_provider.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
 class HorizontalCard extends StatefulWidget {
@@ -46,7 +46,7 @@ class _HorizontalCardState extends State<HorizontalCard> {
           Ink(
             height: 160 / widget.aspectRatio,
             decoration: BoxDecoration(
-              boxShadow: [BoxShadow(color: context.appColors.surfaceContainerLowest, blurRadius: 4, offset: Offset(0, 2))],
+              boxShadow: [BoxShadow(color: context.colors.surfaceContainerLowest, blurRadius: 4, offset: Offset(0, 2))],
               image: DecorationImage(
                 isAntiAlias: true,
                 image: imageProviderFallback(addBaseUrl(widget.anime.cover)),
@@ -77,7 +77,7 @@ class _HorizontalCardState extends State<HorizontalCard> {
                     maxLines: 1,
                     textAlign: TextAlign.start,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 13, color: context.appColors.onSurface.withAlpha(150)),
+                    style: TextStyle(fontSize: 13, color: context.colors.onSurface.withAlpha(150)),
                   ),
                 Row(
                   mainAxisAlignment: .spaceBetween,

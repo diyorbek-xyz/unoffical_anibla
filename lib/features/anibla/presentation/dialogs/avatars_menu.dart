@@ -5,7 +5,7 @@ import 'package:application/features/anibla/presentation/controllers/profile_con
 import 'package:application/features/anibla/presentation/static/avatars.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 void showAvatarsMenu(BuildContext context) => showDialog(context: context, builder: (context) => AvatarsMenu());
 
@@ -38,7 +38,6 @@ class _AvatarsMenuState extends State<AvatarsMenu> {
         padding: .symmetric(vertical: 20),
         separatorBuilder: (context, index) => SizedBox(height: 20, child: Divider(height: 1)),
         itemCount: models.length,
-        physics: BouncingScrollPhysics(),
         addRepaintBoundaries: true,
         itemBuilder: (context, groupIndex) {
           final group = models[groupIndex];
@@ -52,14 +51,13 @@ class _AvatarsMenuState extends State<AvatarsMenu> {
                   padding: .symmetric(horizontal: 20),
                   child: Text(
                     group.title,
-                    style: context.textTheme.titleLarge?.copyWith(color: isGroupSelected ? context.appColors.secondary : null),
+                    style: context.textTheme.titleLarge?.copyWith(color: isGroupSelected ? context.colors.secondary : null),
                   ),
                 ),
                 Expanded(
                   child: ListView.separated(
                     padding: .symmetric(horizontal: 20),
                     addRepaintBoundaries: true,
-                    physics: BouncingScrollPhysics(),
                     separatorBuilder: (context, index) => SizedBox(width: 10),
                     shrinkWrap: true,
                     scrollDirection: .horizontal,
@@ -74,7 +72,7 @@ class _AvatarsMenuState extends State<AvatarsMenu> {
                             decoration: BoxDecoration(
                               shape: .circle,
                               border: Border.all(
-                                color: isSelected ? context.appColors.secondary : context.appColors.primary,
+                                color: isSelected ? context.colors.secondary : context.colors.primary,
                                 width: isSelected ? 4 : 2,
                                 strokeAlign: 1,
                               ),
