@@ -1,4 +1,5 @@
 import 'package:application/core/config/theme/app_theme.dart';
+import 'package:application/shared/controller/signal_state.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:application/shared/widgets/error.dart';
 import 'package:material_ui/material_ui.dart';
@@ -23,6 +24,23 @@ class Recommends extends StatefulWidget {
 
   @override
   State<Recommends> createState() => _RecommendsState();
+
+  static Widget bigSignalBuilder<T, Q>({
+    required String title,
+    required FlutterSignal<BigSignalState<T, Q>> signal,
+    required Widget Function(BuildContext context, T item) builder,
+    List<T> fake = const [],
+    final VoidCallback? onMoreClick,
+  }) => SignalBuilder(
+    builder: (context) {
+      final state = signal.value;
+      if (state.hasError) return ErrorBuilder(message: state.error.toString(), refresh: () {});
+      return Skeletonizer(
+        enabled: state.isLoading,
+        child: Recommends(title: title, onMoreClick: onMoreClick, items: state.value.map((e) => builder(context, e)).toList()),
+      );
+    },
+  );
 
   static Widget futureSignalBuilder<T>({
     required String title,

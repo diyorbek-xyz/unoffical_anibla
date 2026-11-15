@@ -32,8 +32,8 @@ abstract class BigSignalState<T, Q> with _$BigSignalState<T, Q> {
     @Default(false) bool hasError,
     @Default(Pagination()) Pagination pagination,
     @Default([]) List<T> value,
-    Q? request,
     String? error,
+    Q? request,
   }) = _BigSignalState<T, Q>;
 
   BigSignalState<T, Q> withRequest(Q request) => copyWith(request: request);
@@ -43,7 +43,7 @@ abstract class BigSignalState<T, Q> with _$BigSignalState<T, Q> {
   BigSignalState<T, Q> withValues(List<T> values) =>
       copyWith(error: null, hasError: false, hasValue: true, isLoading: false, value: value + values);
   BigSignalState<T, Q> withError(String error) =>
-      copyWith(error: error, hasError: true, hasValue: false, isLoading: false, value: value);
+      copyWith(error: error, hasError: true, hasValue: false, isLoading: false, isLoadingMore: false, value: value);
   BigSignalState<T, Q> setLoading(bool value) => copyWith(isLoading: value);
 }
 

@@ -1,7 +1,7 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/features/anibla/data/enums/data_type.dart';
 import 'package:application/features/anibla/data/view_model/profile_view.dart';
-import 'package:application/features/view/models/tab_view.dart';
+import 'package:application/features/polished/view_models/other/tab_view.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:application/features/anibla/presentation/controllers/profile_controller.dart';
 import 'package:application/features/anibla/presentation/widgets/avatar_selector.dart';
@@ -205,6 +205,4 @@ class _ProfilePageState extends State<ProfilePage> {
       ],
     ),
   );
-
-  bool get isAnibla => widget.type.isAnibla;
 }

@@ -18,14 +18,14 @@ class AppThemes {
     hoverColor: colorScheme.primary.withAlpha(25),
   );
 
-  static final pageTransitions = PageTransitionsTheme(
+  static const pageTransitions = PageTransitionsTheme(
     builders: {
+      TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+      TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
       TargetPlatform.android: CupertinoPageTransitionsBuilder(),
       TargetPlatform.fuchsia: CupertinoPageTransitionsBuilder(),
       TargetPlatform.windows: CupertinoPageTransitionsBuilder(),
-      TargetPlatform.linux: FadeUpwardsPageTransitionsBuilder(),
-      TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
-      TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+      TargetPlatform.linux: CupertinoPageTransitionsBuilder(),
     },
   );
 

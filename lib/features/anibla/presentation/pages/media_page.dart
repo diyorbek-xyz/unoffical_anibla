@@ -1,57 +1,83 @@
 import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/features/anibla/data/models/props/media_props.dart';
 import 'package:application/features/anibla/data/models/view/media_info_entry.dart';
-import 'package:application/features/anibla/data/view_model/media_view.dart';
 import 'package:application/features/anibla/presentation/menus/anime/comments_menu.dart';
 import 'package:application/features/anibla/presentation/menus/anime/episodes_menu.dart';
 import 'package:application/features/anibla/presentation/menus/anime/infos_menu.dart';
 import 'package:application/features/anibla/presentation/widgets/media_page_hero.dart';
 import 'package:application/features/anibla/presentation/wrappers/media_wrapper.dart';
+import 'package:application/features/polished/presentation/controller/media_controller.dart';
+import 'package:application/features/polished/view_models/media/media_view.dart';
+import 'package:application/injection_container.dart';
 import 'package:application/shared/image_provider/fallback_provider.dart';
 import 'package:application/shared/utils/base_url.dart';
 import 'package:application/shared/utils/extensions.dart';
+import 'package:application/shared/widgets/error.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:signals_flutter/signals_flutter.dart';
 
-class MediaPage extends StatelessWidget {
+class MediaPage extends StatefulWidget {
   final MediaProps mediaProps;
-  final MediaView mediaInfos;
-  const MediaPage({super.key, required this.mediaInfos, required this.mediaProps});
+  const MediaPage(this.mediaProps, {super.key});
+
+  @override
+  State<MediaPage> createState() => _MediaPageState();
+}
+
+class _MediaPageState extends State<MediaPage> {
+  late final _mediaController = sl<MediaController>();
+
+  @override
+  void initState() {
+    super.initState();
+    _mediaController.getFullMedia(widget.mediaProps);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final (views, items, tabs) = switch (mediaInfos.type) {
-      .serie || .movie => _animeDataMaker(context),
-      _ => _mangaDataMaker(context),
-    };
-    return DefaultTabController(
-      length: views.length,
-      child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          heroTag: "media",
-          shape: CircleBorder(),
-          onPressed: () => mediaInfos.openMedia(null),
-          child: Icon(Icons.play_arrow),
-        ),
-        body: NestedScrollView(
-          clipBehavior: Clip.hardEdge,
-          headerSliverBuilder: (_, isScrolled) => [
-            MediaPageHero(
-              tabs: tabs,
-              items: items,
-              isSaved: false,
-              isScrolled: isScrolled,
-              title: mediaInfos.title,
-              thumbnail: mediaInfos.thumbnail,
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        heroTag: "media",
+        shape: CircleBorder(),
+        onPressed: () => _mediaController.openMedia(context),
+        child: Icon(Icons.play_arrow),
+      ),
+      body: SignalBuilder(
+        builder: (context) {
+          final mediaState = _mediaController.media.value;
+          if (mediaState.hasError) return ErrorBuilder(message: mediaState.error ?? "Nimadur xato ketti", refresh: () {});
+          if (mediaState.isLoading) return Center(child: CircularProgressIndicator());
+          final view = mediaState.value!;
+          final (views, items, tabs) = switch (widget.mediaProps.type) {
+            .serie || .movie => _animeDataMaker(view),
+            _ => _mangaDataMaker(view),
+          };
+          return DefaultTabController(
+            length: views.length,
+            child: NestedScrollView(
+              clipBehavior: Clip.hardEdge,
+              headerSliverBuilder: (_, isScrolled) => [
+                MediaPageHero(
+                  cover: view.cover,
+                  heroTag: widget.mediaProps.heroTag,
+                  tabs: tabs,
+                  items: items,
+                  isSaved: false,
+                  isScrolled: isScrolled,
+                  title: view.title,
+                  thumbnail: view.thumbnail,
+                ),
+              ],
+              body: TabBarView(children: views),
             ),
-          ],
-          body: TabBarView(children: views),
-        ),
+          );
+        },
       ),
     );
   }
 
-  (List<Widget>, Map<String, Object>, List<String>) _animeDataMaker(BuildContext context) {
-    final translators = mediaInfos.translators.entries
+  (List<Widget>, Map<String, Object>, List<String>) _animeDataMaker(MediaView view) {
+    final translators = view.translators.entries
         .map(
           (e) => ActionChip(
             onPressed: () {},
@@ -62,7 +88,7 @@ class MediaPage extends StatelessWidget {
         .toList();
     final frames = SizedBox(
       height: 320,
-      child: mediaInfos.frames.isEmpty
+      child: view.frames.isEmpty
           ? null
           : CarouselView.weighted(
               elevation: 1,
@@ -74,36 +100,29 @@ class MediaPage extends StatelessWidget {
               infinite: true,
               padding: EdgeInsets.all(3),
               shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(30)),
-              onTap: (value) => openImagePreveiwDialog(context, mediaInfos.frames, value),
-              children: mediaInfos.frames
-                  .map((e) => Ink.image(fit: .cover, image: imageProviderFallback(addBaseUrl(e))))
-                  .toList(),
+              onTap: (value) => openImagePreveiwDialog(context, view.frames, value),
+              children: view.frames.map((e) => Ink.image(fit: .cover, image: imageProviderFallback(addBaseUrl(e)))).toList(),
             ),
     );
     final views = [
       AnimeInfosMenu([
-        Single("Anime haqida ma'lumot", mediaInfos.description),
+        Single("Anime haqida ma'lumot", view.description),
         Multi("Tarjimonlar", translators),
-        MultiActions("Janrlar", mediaInfos.genres.entries.map((e) => e.value).toList()),
-        MultiActions("Kategoriya", mediaInfos.categories.entries.map((e) => e.value).toList(), true),
+        MultiActions("Janrlar", view.genres.entries.map((e) => e.value).toList()),
+        MultiActions("Kategoriya", view.categories.entries.map((e) => e.value).toList(), true),
         Custom("Animedan kadrlar", frames),
       ]),
       CommentsMenu(),
-      if (mediaInfos.type.isSerie)
-        AnimeEpisodesMenu(total: mediaInfos.chapters.length, chapters: mediaInfos.chapters, openChapter: mediaInfos.openMedia),
+      if (view.type.isSerie) ChaptersMenu(),
     ];
-    final items = {
-      "Chiqarilgan yil:": "${mediaInfos.releaseYear}-yil",
-      "Studio:": mediaInfos.studio,
-      "Something:": mediaInfos.studio,
-    };
-    final tabs = ["Ma'lumotlar", "Izohlar", if (mediaInfos.type.isSerie) "Qismlar"];
+    final items = {"Chiqarilgan yil:": "${view.releaseYear}-yil", "Studio:": view.studio, "Something:": view.studio};
+    final tabs = ["Ma'lumotlar", "Izohlar", if (view.type.isSerie) "Qismlar"];
 
     return (views, items, tabs);
   }
 
-  (List<Widget>, Map<String, Object>, List<String>) _mangaDataMaker(BuildContext context) {
-    final translators = mediaInfos.translators.entries
+  (List<Widget>, Map<String, Object>, List<String>) _mangaDataMaker(MediaView view) {
+    final translators = view.translators.entries
         .map(
           (e) => ActionChip(
             onPressed: () {},
@@ -112,21 +131,16 @@ class MediaPage extends StatelessWidget {
           ),
         )
         .toList();
-    final items = {"Chiqarilgan yili": mediaInfos.releaseYear, "Ko'rishlar": mediaInfos.views, "Yoqtirishlar": mediaInfos.likes};
+    final items = {"Chiqarilgan yili": view.releaseYear, "Ko'rishlar": view.views, "Yoqtirishlar": view.likes};
     final tabs = ["Ma'lumotlar", "Boblar"];
     final views = [
       AnimeInfosMenu([
-        Single("Novella haqida ma'lumot", mediaInfos.description),
+        Single("Novella haqida ma'lumot", view.description),
         Multi("Tarjimonlar", translators),
-        if (mediaInfos.genres.isNotEmpty) MultiActions("Janrlar", mediaInfos.genres.entries.map((e) => e.value).toList()),
-        if (mediaInfos.categories.isNotEmpty)
-          MultiActions("Kategoriya", mediaInfos.categories.entries.map((e) => e.value).toList()),
+        if (view.genres.isNotEmpty) MultiActions("Janrlar", view.genres.entries.map((e) => e.value).toList()),
+        if (view.categories.isNotEmpty) MultiActions("Kategoriya", view.categories.entries.map((e) => e.value).toList()),
       ]),
-      AnimeEpisodesMenu(
-        chapters: mediaInfos.chapters,
-        total: mediaInfos.chapters.length,
-        openChapter: (key) => mediaInfos.openMedia,
-      ),
+      ChaptersMenu(),
     ];
     return (views, items, tabs);
   }

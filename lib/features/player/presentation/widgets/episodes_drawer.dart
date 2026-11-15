@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/features/anibla/data/enums/media_type.dart';
 import 'package:application/features/anibla/data/models/main/episode.dart';
-import 'package:application/features/anibla/presentation/controllers/media_controller.dart';
+import 'package:application/features/anibla/presentation/controllers/anime_controller.dart';
 import 'package:application/features/player/data/model/player_props.dart';
 import 'package:application/features/player/presentation/controller/player_controller.dart';
 import 'package:application/injection_container.dart';
@@ -18,7 +18,7 @@ class EpisodesDrawer extends StatefulWidget {
 
 class _EpisodesDrawerState extends State<EpisodesDrawer> {
   late final PlayerController _playerController;
-  late final MediaController _animeController;
+  late final AnimeController _animeController;
 
   final searchController = TextEditingController();
   bool isReversedEpisodeList = false;
@@ -52,7 +52,7 @@ class _EpisodesDrawerState extends State<EpisodesDrawer> {
 
   @override
   void initState() {
-    _animeController = sl<MediaController>();
+    _animeController = sl<AnimeController>();
     _playerController = sl<PlayerController>();
     super.initState();
   }

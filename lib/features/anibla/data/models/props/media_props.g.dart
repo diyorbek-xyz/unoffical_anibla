@@ -7,16 +7,20 @@ part of 'media_props.dart';
 // **************************************************************************
 
 _MediaProps _$MediaPropsFromJson(Map<String, dynamic> json) => _MediaProps(
-  mediaKey: json['mediaKey'] as String,
   type: MediaType.fromJson(json['type'] as String),
+  mediaKey: json['mediaKey'] as String,
+  thumbnail: json['thumbnail'] as String,
+  heroTag: json['heroTag'] as String,
   seasonKey: json['seasonKey'] as String?,
   chapterKey: json['chapterKey'] as String?,
 );
 
 Map<String, dynamic> _$MediaPropsToJson(_MediaProps instance) =>
     <String, dynamic>{
-      'mediaKey': instance.mediaKey,
       'type': _$MediaTypeEnumMap[instance.type]!,
+      'mediaKey': instance.mediaKey,
+      'thumbnail': instance.thumbnail,
+      'heroTag': instance.heroTag,
       'seasonKey': instance.seasonKey,
       'chapterKey': instance.chapterKey,
     };

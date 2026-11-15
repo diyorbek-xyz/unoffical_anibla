@@ -1,9 +1,10 @@
 import 'package:application/core/config/theme/app_colors.dart';
+import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/features/anibla/presentation/widgets/calendar.dart';
 import 'package:application/features/anibla/presentation/widgets/carousel_v2.dart';
 import 'package:application/features/anibla/presentation/widgets/media_card.dart';
 import 'package:application/features/polished/presentation/controller/media_search_controller.dart';
-import 'package:application/features/polished/presentation/things/recommend_reqs.dart';
+import 'package:application/features/polished/things/recommend_reqs.dart';
 import 'package:application/features/polished/presentation/widgets/history_widget.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/shared/utils/extensions.dart';
@@ -72,8 +73,9 @@ class _PolishedHomePageState extends State<PolishedHomePage> {
         final a = state.request!.toJson().withValue("title", title);
         a.updateAll((key, value) => value.toString());
         return Recommends.signalBuilder(
+          fake: List.generate(7, (index) => const Anime()),
           title: title,
-          value: state.value,
+          value: state.value.isEmpty ? null : state.value,
           hasError: state.hasError,
           isLoading: state.isLoading,
           error: state.error,

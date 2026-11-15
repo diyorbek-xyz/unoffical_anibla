@@ -48,7 +48,7 @@ enum MediaType {
     .serie => "series",
   };
 
-  factory MediaType.fromJson(String str) => switch (str) {
+  factory MediaType.fromJson(String str) => switch (str.toLowerCase()) {
     "komiks" => .comics,
     "manga" => .manga,
     "manhwa" => .manxva,

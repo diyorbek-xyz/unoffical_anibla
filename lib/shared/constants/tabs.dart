@@ -1,4 +1,4 @@
-import 'package:application/features/view/models/tab_view.dart';
+import 'package:application/features/polished/view_models/other/tab_view.dart';
 import 'package:material_ui/material_ui.dart';
 
 const List<TabItem> mobileTabs = [

@@ -24,8 +24,11 @@ class EpisodeRepositoryImpl implements EpisodeRepository {
       if (cache != null && !cache.isExpired) return Right(cache.data);
 
       final httResponse = await episodeApi.getEpisodes(animeSlug, seasonSlug);
+      if (!httResponse.data.success) throw ExceptionMapper.mapResponseToDio(httResponse.response);
+
       final data = httResponse.data.data;
       _cache[animeSlug] = CacheEntry(data);
+
       return Right(data);
     } on DioException catch (e) {
       return Left(ExceptionMapper.mapDioToFailure(e));

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BooksQuery {
 
-@JsonKey(name: "page") int get page;@JsonKey(name: "limit") int get limit;@JsonKey(name: "types") MediaType? get type;@JsonKey(name: "search") String? get search;@JsonKey(name: "sort_by") SortType? get sortBy;@JsonKey(name: "release_statuses") String? get releaseStatus;@JsonKey(name: "age_restrictions") String? get ageRestrictions;@JsonKey(name: "translation_statuses") String? get translationStatus;@JsonKey(name: "genre_ids")@CommaConverter() List<String>? get genreIds;@JsonKey(name: "category_ids")@CommaConverter() List<String>? get categoryIds; BooksQueryType? get queryType;
+@JsonKey(name: "page") int get page;@JsonKey(name: "limit") int get limit;@JsonKey(name: "types") MediaType? get type;@JsonKey(name: "search") String? get search;@JsonKey(name: "sort_by") SortType? get sortBy;@JsonKey(name: "release_statuses") String? get releaseStatus;@JsonKey(name: "age_restrictions") String? get ageRestrictions;@JsonKey(name: "translation_statuses") String? get translationStatus;@JsonKey(name: "genre_ids")@CommaConverter() List<String>? get genreIds;@JsonKey(name: "category_ids")@CommaConverter() List<String>? get categoryIds;@JsonKey(includeFromJson: false, includeToJson: false) Localized get title; BooksQueryType? get queryType;
 /// Create a copy of BooksQuery
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $BooksQueryCopyWith<BooksQuery> get copyWith => _$BooksQueryCopyWithImpl<BooksQu
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BooksQuery&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit)&&(identical(other.type, type) || other.type == type)&&(identical(other.search, search) || other.search == search)&&(identical(other.sortBy, sortBy) || other.sortBy == sortBy)&&(identical(other.releaseStatus, releaseStatus) || other.releaseStatus == releaseStatus)&&(identical(other.ageRestrictions, ageRestrictions) || other.ageRestrictions == ageRestrictions)&&(identical(other.translationStatus, translationStatus) || other.translationStatus == translationStatus)&&const DeepCollectionEquality().equals(other.genreIds, genreIds)&&const DeepCollectionEquality().equals(other.categoryIds, categoryIds)&&(identical(other.queryType, queryType) || other.queryType == queryType));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BooksQuery&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit)&&(identical(other.type, type) || other.type == type)&&(identical(other.search, search) || other.search == search)&&(identical(other.sortBy, sortBy) || other.sortBy == sortBy)&&(identical(other.releaseStatus, releaseStatus) || other.releaseStatus == releaseStatus)&&(identical(other.ageRestrictions, ageRestrictions) || other.ageRestrictions == ageRestrictions)&&(identical(other.translationStatus, translationStatus) || other.translationStatus == translationStatus)&&const DeepCollectionEquality().equals(other.genreIds, genreIds)&&const DeepCollectionEquality().equals(other.categoryIds, categoryIds)&&(identical(other.title, title) || other.title == title)&&(identical(other.queryType, queryType) || other.queryType == queryType));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,page,limit,type,search,sortBy,releaseStatus,ageRestrictions,translationStatus,const DeepCollectionEquality().hash(genreIds),const DeepCollectionEquality().hash(categoryIds),queryType);
+int get hashCode => Object.hash(runtimeType,page,limit,type,search,sortBy,releaseStatus,ageRestrictions,translationStatus,const DeepCollectionEquality().hash(genreIds),const DeepCollectionEquality().hash(categoryIds),title,queryType);
 
 @override
 String toString() {
-  return 'BooksQuery(page: $page, limit: $limit, type: $type, search: $search, sortBy: $sortBy, releaseStatus: $releaseStatus, ageRestrictions: $ageRestrictions, translationStatus: $translationStatus, genreIds: $genreIds, categoryIds: $categoryIds, queryType: $queryType)';
+  return 'BooksQuery(page: $page, limit: $limit, type: $type, search: $search, sortBy: $sortBy, releaseStatus: $releaseStatus, ageRestrictions: $ageRestrictions, translationStatus: $translationStatus, genreIds: $genreIds, categoryIds: $categoryIds, title: $title, queryType: $queryType)';
 }
 
 
@@ -48,11 +48,11 @@ abstract mixin class $BooksQueryCopyWith<$Res>  {
   factory $BooksQueryCopyWith(BooksQuery value, $Res Function(BooksQuery) _then) = _$BooksQueryCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "page") int page,@JsonKey(name: "limit") int limit,@JsonKey(name: "types") MediaType? type,@JsonKey(name: "search") String? search,@JsonKey(name: "sort_by") SortType? sortBy,@JsonKey(name: "release_statuses") String? releaseStatus,@JsonKey(name: "age_restrictions") String? ageRestrictions,@JsonKey(name: "translation_statuses") String? translationStatus,@JsonKey(name: "genre_ids")@CommaConverter() List<String>? genreIds,@JsonKey(name: "category_ids")@CommaConverter() List<String>? categoryIds, BooksQueryType? queryType
+@JsonKey(name: "page") int page,@JsonKey(name: "limit") int limit,@JsonKey(name: "types") MediaType? type,@JsonKey(name: "search") String? search,@JsonKey(name: "sort_by") SortType? sortBy,@JsonKey(name: "release_statuses") String? releaseStatus,@JsonKey(name: "age_restrictions") String? ageRestrictions,@JsonKey(name: "translation_statuses") String? translationStatus,@JsonKey(name: "genre_ids")@CommaConverter() List<String>? genreIds,@JsonKey(name: "category_ids")@CommaConverter() List<String>? categoryIds,@JsonKey(includeFromJson: false, includeToJson: false) Localized title, BooksQueryType? queryType
 });
 
 
-
+$LocalizedCopyWith<$Res> get title;
 
 }
 /// @nodoc
@@ -65,7 +65,7 @@ class _$BooksQueryCopyWithImpl<$Res>
 
 /// Create a copy of BooksQuery
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? page = null,Object? limit = null,Object? type = freezed,Object? search = freezed,Object? sortBy = freezed,Object? releaseStatus = freezed,Object? ageRestrictions = freezed,Object? translationStatus = freezed,Object? genreIds = freezed,Object? categoryIds = freezed,Object? queryType = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? page = null,Object? limit = null,Object? type = freezed,Object? search = freezed,Object? sortBy = freezed,Object? releaseStatus = freezed,Object? ageRestrictions = freezed,Object? translationStatus = freezed,Object? genreIds = freezed,Object? categoryIds = freezed,Object? title = null,Object? queryType = freezed,}) {
   return _then(_self.copyWith(
 page: null == page ? _self.page : page // ignore: cast_nullable_to_non_nullable
 as int,limit: null == limit ? _self.limit : limit // ignore: cast_nullable_to_non_nullable
@@ -77,11 +77,21 @@ as String?,ageRestrictions: freezed == ageRestrictions ? _self.ageRestrictions :
 as String?,translationStatus: freezed == translationStatus ? _self.translationStatus : translationStatus // ignore: cast_nullable_to_non_nullable
 as String?,genreIds: freezed == genreIds ? _self.genreIds : genreIds // ignore: cast_nullable_to_non_nullable
 as List<String>?,categoryIds: freezed == categoryIds ? _self.categoryIds : categoryIds // ignore: cast_nullable_to_non_nullable
-as List<String>?,queryType: freezed == queryType ? _self.queryType : queryType // ignore: cast_nullable_to_non_nullable
+as List<String>?,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as Localized,queryType: freezed == queryType ? _self.queryType : queryType // ignore: cast_nullable_to_non_nullable
 as BooksQueryType?,
   ));
 }
-
+/// Create a copy of BooksQuery
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$LocalizedCopyWith<$Res> get title {
+  
+  return $LocalizedCopyWith<$Res>(_self.title, (value) {
+    return _then(_self.copyWith(title: value));
+  });
+}
 }
 
 
@@ -163,10 +173,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "page")  int page, @JsonKey(name: "limit")  int limit, @JsonKey(name: "types")  MediaType? type, @JsonKey(name: "search")  String? search, @JsonKey(name: "sort_by")  SortType? sortBy, @JsonKey(name: "release_statuses")  String? releaseStatus, @JsonKey(name: "age_restrictions")  String? ageRestrictions, @JsonKey(name: "translation_statuses")  String? translationStatus, @JsonKey(name: "genre_ids")@CommaConverter()  List<String>? genreIds, @JsonKey(name: "category_ids")@CommaConverter()  List<String>? categoryIds,  BooksQueryType? queryType)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "page")  int page, @JsonKey(name: "limit")  int limit, @JsonKey(name: "types")  MediaType? type, @JsonKey(name: "search")  String? search, @JsonKey(name: "sort_by")  SortType? sortBy, @JsonKey(name: "release_statuses")  String? releaseStatus, @JsonKey(name: "age_restrictions")  String? ageRestrictions, @JsonKey(name: "translation_statuses")  String? translationStatus, @JsonKey(name: "genre_ids")@CommaConverter()  List<String>? genreIds, @JsonKey(name: "category_ids")@CommaConverter()  List<String>? categoryIds, @JsonKey(includeFromJson: false, includeToJson: false)  Localized title,  BooksQueryType? queryType)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BooksQuery() when $default != null:
-return $default(_that.page,_that.limit,_that.type,_that.search,_that.sortBy,_that.releaseStatus,_that.ageRestrictions,_that.translationStatus,_that.genreIds,_that.categoryIds,_that.queryType);case _:
+return $default(_that.page,_that.limit,_that.type,_that.search,_that.sortBy,_that.releaseStatus,_that.ageRestrictions,_that.translationStatus,_that.genreIds,_that.categoryIds,_that.title,_that.queryType);case _:
   return orElse();
 
 }
@@ -184,10 +194,10 @@ return $default(_that.page,_that.limit,_that.type,_that.search,_that.sortBy,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "page")  int page, @JsonKey(name: "limit")  int limit, @JsonKey(name: "types")  MediaType? type, @JsonKey(name: "search")  String? search, @JsonKey(name: "sort_by")  SortType? sortBy, @JsonKey(name: "release_statuses")  String? releaseStatus, @JsonKey(name: "age_restrictions")  String? ageRestrictions, @JsonKey(name: "translation_statuses")  String? translationStatus, @JsonKey(name: "genre_ids")@CommaConverter()  List<String>? genreIds, @JsonKey(name: "category_ids")@CommaConverter()  List<String>? categoryIds,  BooksQueryType? queryType)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "page")  int page, @JsonKey(name: "limit")  int limit, @JsonKey(name: "types")  MediaType? type, @JsonKey(name: "search")  String? search, @JsonKey(name: "sort_by")  SortType? sortBy, @JsonKey(name: "release_statuses")  String? releaseStatus, @JsonKey(name: "age_restrictions")  String? ageRestrictions, @JsonKey(name: "translation_statuses")  String? translationStatus, @JsonKey(name: "genre_ids")@CommaConverter()  List<String>? genreIds, @JsonKey(name: "category_ids")@CommaConverter()  List<String>? categoryIds, @JsonKey(includeFromJson: false, includeToJson: false)  Localized title,  BooksQueryType? queryType)  $default,) {final _that = this;
 switch (_that) {
 case _BooksQuery():
-return $default(_that.page,_that.limit,_that.type,_that.search,_that.sortBy,_that.releaseStatus,_that.ageRestrictions,_that.translationStatus,_that.genreIds,_that.categoryIds,_that.queryType);case _:
+return $default(_that.page,_that.limit,_that.type,_that.search,_that.sortBy,_that.releaseStatus,_that.ageRestrictions,_that.translationStatus,_that.genreIds,_that.categoryIds,_that.title,_that.queryType);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -204,10 +214,10 @@ return $default(_that.page,_that.limit,_that.type,_that.search,_that.sortBy,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "page")  int page, @JsonKey(name: "limit")  int limit, @JsonKey(name: "types")  MediaType? type, @JsonKey(name: "search")  String? search, @JsonKey(name: "sort_by")  SortType? sortBy, @JsonKey(name: "release_statuses")  String? releaseStatus, @JsonKey(name: "age_restrictions")  String? ageRestrictions, @JsonKey(name: "translation_statuses")  String? translationStatus, @JsonKey(name: "genre_ids")@CommaConverter()  List<String>? genreIds, @JsonKey(name: "category_ids")@CommaConverter()  List<String>? categoryIds,  BooksQueryType? queryType)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "page")  int page, @JsonKey(name: "limit")  int limit, @JsonKey(name: "types")  MediaType? type, @JsonKey(name: "search")  String? search, @JsonKey(name: "sort_by")  SortType? sortBy, @JsonKey(name: "release_statuses")  String? releaseStatus, @JsonKey(name: "age_restrictions")  String? ageRestrictions, @JsonKey(name: "translation_statuses")  String? translationStatus, @JsonKey(name: "genre_ids")@CommaConverter()  List<String>? genreIds, @JsonKey(name: "category_ids")@CommaConverter()  List<String>? categoryIds, @JsonKey(includeFromJson: false, includeToJson: false)  Localized title,  BooksQueryType? queryType)?  $default,) {final _that = this;
 switch (_that) {
 case _BooksQuery() when $default != null:
-return $default(_that.page,_that.limit,_that.type,_that.search,_that.sortBy,_that.releaseStatus,_that.ageRestrictions,_that.translationStatus,_that.genreIds,_that.categoryIds,_that.queryType);case _:
+return $default(_that.page,_that.limit,_that.type,_that.search,_that.sortBy,_that.releaseStatus,_that.ageRestrictions,_that.translationStatus,_that.genreIds,_that.categoryIds,_that.title,_that.queryType);case _:
   return null;
 
 }
@@ -219,7 +229,7 @@ return $default(_that.page,_that.limit,_that.type,_that.search,_that.sortBy,_tha
 @JsonSerializable()
 
 class _BooksQuery extends BooksQuery {
-  const _BooksQuery({@JsonKey(name: "page") this.page = 1, @JsonKey(name: "limit") this.limit = 20, @JsonKey(name: "types") this.type, @JsonKey(name: "search") this.search, @JsonKey(name: "sort_by") this.sortBy, @JsonKey(name: "release_statuses") this.releaseStatus, @JsonKey(name: "age_restrictions") this.ageRestrictions, @JsonKey(name: "translation_statuses") this.translationStatus, @JsonKey(name: "genre_ids")@CommaConverter() final  List<String>? genreIds, @JsonKey(name: "category_ids")@CommaConverter() final  List<String>? categoryIds, this.queryType}): _genreIds = genreIds,_categoryIds = categoryIds,super._();
+  const _BooksQuery({@JsonKey(name: "page") this.page = 1, @JsonKey(name: "limit") this.limit = 20, @JsonKey(name: "types") this.type, @JsonKey(name: "search") this.search, @JsonKey(name: "sort_by") this.sortBy, @JsonKey(name: "release_statuses") this.releaseStatus, @JsonKey(name: "age_restrictions") this.ageRestrictions, @JsonKey(name: "translation_statuses") this.translationStatus, @JsonKey(name: "genre_ids")@CommaConverter() final  List<String>? genreIds, @JsonKey(name: "category_ids")@CommaConverter() final  List<String>? categoryIds, @JsonKey(includeFromJson: false, includeToJson: false) this.title = const Localized(), this.queryType}): _genreIds = genreIds,_categoryIds = categoryIds,super._();
   factory _BooksQuery.fromJson(Map<String, dynamic> json) => _$BooksQueryFromJson(json);
 
 @override@JsonKey(name: "page") final  int page;
@@ -248,6 +258,7 @@ class _BooksQuery extends BooksQuery {
   return EqualUnmodifiableListView(value);
 }
 
+@override@JsonKey(includeFromJson: false, includeToJson: false) final  Localized title;
 @override final  BooksQueryType? queryType;
 
 /// Create a copy of BooksQuery
@@ -263,16 +274,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BooksQuery&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit)&&(identical(other.type, type) || other.type == type)&&(identical(other.search, search) || other.search == search)&&(identical(other.sortBy, sortBy) || other.sortBy == sortBy)&&(identical(other.releaseStatus, releaseStatus) || other.releaseStatus == releaseStatus)&&(identical(other.ageRestrictions, ageRestrictions) || other.ageRestrictions == ageRestrictions)&&(identical(other.translationStatus, translationStatus) || other.translationStatus == translationStatus)&&const DeepCollectionEquality().equals(other._genreIds, _genreIds)&&const DeepCollectionEquality().equals(other._categoryIds, _categoryIds)&&(identical(other.queryType, queryType) || other.queryType == queryType));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BooksQuery&&(identical(other.page, page) || other.page == page)&&(identical(other.limit, limit) || other.limit == limit)&&(identical(other.type, type) || other.type == type)&&(identical(other.search, search) || other.search == search)&&(identical(other.sortBy, sortBy) || other.sortBy == sortBy)&&(identical(other.releaseStatus, releaseStatus) || other.releaseStatus == releaseStatus)&&(identical(other.ageRestrictions, ageRestrictions) || other.ageRestrictions == ageRestrictions)&&(identical(other.translationStatus, translationStatus) || other.translationStatus == translationStatus)&&const DeepCollectionEquality().equals(other._genreIds, _genreIds)&&const DeepCollectionEquality().equals(other._categoryIds, _categoryIds)&&(identical(other.title, title) || other.title == title)&&(identical(other.queryType, queryType) || other.queryType == queryType));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,page,limit,type,search,sortBy,releaseStatus,ageRestrictions,translationStatus,const DeepCollectionEquality().hash(_genreIds),const DeepCollectionEquality().hash(_categoryIds),queryType);
+int get hashCode => Object.hash(runtimeType,page,limit,type,search,sortBy,releaseStatus,ageRestrictions,translationStatus,const DeepCollectionEquality().hash(_genreIds),const DeepCollectionEquality().hash(_categoryIds),title,queryType);
 
 @override
 String toString() {
-  return 'BooksQuery(page: $page, limit: $limit, type: $type, search: $search, sortBy: $sortBy, releaseStatus: $releaseStatus, ageRestrictions: $ageRestrictions, translationStatus: $translationStatus, genreIds: $genreIds, categoryIds: $categoryIds, queryType: $queryType)';
+  return 'BooksQuery(page: $page, limit: $limit, type: $type, search: $search, sortBy: $sortBy, releaseStatus: $releaseStatus, ageRestrictions: $ageRestrictions, translationStatus: $translationStatus, genreIds: $genreIds, categoryIds: $categoryIds, title: $title, queryType: $queryType)';
 }
 
 
@@ -283,11 +294,11 @@ abstract mixin class _$BooksQueryCopyWith<$Res> implements $BooksQueryCopyWith<$
   factory _$BooksQueryCopyWith(_BooksQuery value, $Res Function(_BooksQuery) _then) = __$BooksQueryCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "page") int page,@JsonKey(name: "limit") int limit,@JsonKey(name: "types") MediaType? type,@JsonKey(name: "search") String? search,@JsonKey(name: "sort_by") SortType? sortBy,@JsonKey(name: "release_statuses") String? releaseStatus,@JsonKey(name: "age_restrictions") String? ageRestrictions,@JsonKey(name: "translation_statuses") String? translationStatus,@JsonKey(name: "genre_ids")@CommaConverter() List<String>? genreIds,@JsonKey(name: "category_ids")@CommaConverter() List<String>? categoryIds, BooksQueryType? queryType
+@JsonKey(name: "page") int page,@JsonKey(name: "limit") int limit,@JsonKey(name: "types") MediaType? type,@JsonKey(name: "search") String? search,@JsonKey(name: "sort_by") SortType? sortBy,@JsonKey(name: "release_statuses") String? releaseStatus,@JsonKey(name: "age_restrictions") String? ageRestrictions,@JsonKey(name: "translation_statuses") String? translationStatus,@JsonKey(name: "genre_ids")@CommaConverter() List<String>? genreIds,@JsonKey(name: "category_ids")@CommaConverter() List<String>? categoryIds,@JsonKey(includeFromJson: false, includeToJson: false) Localized title, BooksQueryType? queryType
 });
 
 
-
+@override $LocalizedCopyWith<$Res> get title;
 
 }
 /// @nodoc
@@ -300,7 +311,7 @@ class __$BooksQueryCopyWithImpl<$Res>
 
 /// Create a copy of BooksQuery
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? page = null,Object? limit = null,Object? type = freezed,Object? search = freezed,Object? sortBy = freezed,Object? releaseStatus = freezed,Object? ageRestrictions = freezed,Object? translationStatus = freezed,Object? genreIds = freezed,Object? categoryIds = freezed,Object? queryType = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? page = null,Object? limit = null,Object? type = freezed,Object? search = freezed,Object? sortBy = freezed,Object? releaseStatus = freezed,Object? ageRestrictions = freezed,Object? translationStatus = freezed,Object? genreIds = freezed,Object? categoryIds = freezed,Object? title = null,Object? queryType = freezed,}) {
   return _then(_BooksQuery(
 page: null == page ? _self.page : page // ignore: cast_nullable_to_non_nullable
 as int,limit: null == limit ? _self.limit : limit // ignore: cast_nullable_to_non_nullable
@@ -312,12 +323,22 @@ as String?,ageRestrictions: freezed == ageRestrictions ? _self.ageRestrictions :
 as String?,translationStatus: freezed == translationStatus ? _self.translationStatus : translationStatus // ignore: cast_nullable_to_non_nullable
 as String?,genreIds: freezed == genreIds ? _self._genreIds : genreIds // ignore: cast_nullable_to_non_nullable
 as List<String>?,categoryIds: freezed == categoryIds ? _self._categoryIds : categoryIds // ignore: cast_nullable_to_non_nullable
-as List<String>?,queryType: freezed == queryType ? _self.queryType : queryType // ignore: cast_nullable_to_non_nullable
+as List<String>?,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as Localized,queryType: freezed == queryType ? _self.queryType : queryType // ignore: cast_nullable_to_non_nullable
 as BooksQueryType?,
   ));
 }
 
-
+/// Create a copy of BooksQuery
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$LocalizedCopyWith<$Res> get title {
+  
+  return $LocalizedCopyWith<$Res>(_self.title, (value) {
+    return _then(_self.copyWith(title: value));
+  });
+}
 }
 
 // dart format on

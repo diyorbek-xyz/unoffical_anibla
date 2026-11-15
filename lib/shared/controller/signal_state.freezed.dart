@@ -283,7 +283,7 @@ as T?,
 /// @nodoc
 mixin _$BigSignalState<T,Q> {
 
- bool get isLoading; bool get isLoadingMore; bool get hasValue; bool get hasError; Pagination get pagination; List<T> get value; Q? get request; String? get error;
+ bool get isLoading; bool get isLoadingMore; bool get hasValue; bool get hasError; Pagination get pagination; List<T> get value; String? get error; Q? get request;
 /// Create a copy of BigSignalState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -294,16 +294,16 @@ $BigSignalStateCopyWith<T, Q, BigSignalState<T, Q>> get copyWith => _$BigSignalS
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BigSignalState<T, Q>&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.isLoadingMore, isLoadingMore) || other.isLoadingMore == isLoadingMore)&&(identical(other.hasValue, hasValue) || other.hasValue == hasValue)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&(identical(other.pagination, pagination) || other.pagination == pagination)&&const DeepCollectionEquality().equals(other.value, value)&&const DeepCollectionEquality().equals(other.request, request)&&(identical(other.error, error) || other.error == error));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BigSignalState<T, Q>&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.isLoadingMore, isLoadingMore) || other.isLoadingMore == isLoadingMore)&&(identical(other.hasValue, hasValue) || other.hasValue == hasValue)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&(identical(other.pagination, pagination) || other.pagination == pagination)&&const DeepCollectionEquality().equals(other.value, value)&&(identical(other.error, error) || other.error == error)&&const DeepCollectionEquality().equals(other.request, request));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,isLoadingMore,hasValue,hasError,pagination,const DeepCollectionEquality().hash(value),const DeepCollectionEquality().hash(request),error);
+int get hashCode => Object.hash(runtimeType,isLoading,isLoadingMore,hasValue,hasError,pagination,const DeepCollectionEquality().hash(value),error,const DeepCollectionEquality().hash(request));
 
 @override
 String toString() {
-  return 'BigSignalState<$T, $Q>(isLoading: $isLoading, isLoadingMore: $isLoadingMore, hasValue: $hasValue, hasError: $hasError, pagination: $pagination, value: $value, request: $request, error: $error)';
+  return 'BigSignalState<$T, $Q>(isLoading: $isLoading, isLoadingMore: $isLoadingMore, hasValue: $hasValue, hasError: $hasError, pagination: $pagination, value: $value, error: $error, request: $request)';
 }
 
 
@@ -314,7 +314,7 @@ abstract mixin class $BigSignalStateCopyWith<T,Q,$Res>  {
   factory $BigSignalStateCopyWith(BigSignalState<T, Q> value, $Res Function(BigSignalState<T, Q>) _then) = _$BigSignalStateCopyWithImpl;
 @useResult
 $Res call({
- bool isLoading, bool isLoadingMore, bool hasValue, bool hasError, Pagination pagination, List<T> value, Q? request, String? error
+ bool isLoading, bool isLoadingMore, bool hasValue, bool hasError, Pagination pagination, List<T> value, String? error, Q? request
 });
 
 
@@ -331,7 +331,7 @@ class _$BigSignalStateCopyWithImpl<T,Q,$Res>
 
 /// Create a copy of BigSignalState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? isLoadingMore = null,Object? hasValue = null,Object? hasError = null,Object? pagination = null,Object? value = null,Object? request = freezed,Object? error = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? isLoadingMore = null,Object? hasValue = null,Object? hasError = null,Object? pagination = null,Object? value = null,Object? error = freezed,Object? request = freezed,}) {
   return _then(_self.copyWith(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,isLoadingMore: null == isLoadingMore ? _self.isLoadingMore : isLoadingMore // ignore: cast_nullable_to_non_nullable
@@ -339,9 +339,9 @@ as bool,hasValue: null == hasValue ? _self.hasValue : hasValue // ignore: cast_n
 as bool,hasError: null == hasError ? _self.hasError : hasError // ignore: cast_nullable_to_non_nullable
 as bool,pagination: null == pagination ? _self.pagination : pagination // ignore: cast_nullable_to_non_nullable
 as Pagination,value: null == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
-as List<T>,request: freezed == request ? _self.request : request // ignore: cast_nullable_to_non_nullable
-as Q?,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
-as String?,
+as List<T>,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as String?,request: freezed == request ? _self.request : request // ignore: cast_nullable_to_non_nullable
+as Q?,
   ));
 }
 /// Create a copy of BigSignalState
@@ -435,10 +435,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  bool isLoadingMore,  bool hasValue,  bool hasError,  Pagination pagination,  List<T> value,  Q? request,  String? error)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  bool isLoadingMore,  bool hasValue,  bool hasError,  Pagination pagination,  List<T> value,  String? error,  Q? request)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _BigSignalState() when $default != null:
-return $default(_that.isLoading,_that.isLoadingMore,_that.hasValue,_that.hasError,_that.pagination,_that.value,_that.request,_that.error);case _:
+return $default(_that.isLoading,_that.isLoadingMore,_that.hasValue,_that.hasError,_that.pagination,_that.value,_that.error,_that.request);case _:
   return orElse();
 
 }
@@ -456,10 +456,10 @@ return $default(_that.isLoading,_that.isLoadingMore,_that.hasValue,_that.hasErro
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  bool isLoadingMore,  bool hasValue,  bool hasError,  Pagination pagination,  List<T> value,  Q? request,  String? error)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  bool isLoadingMore,  bool hasValue,  bool hasError,  Pagination pagination,  List<T> value,  String? error,  Q? request)  $default,) {final _that = this;
 switch (_that) {
 case _BigSignalState():
-return $default(_that.isLoading,_that.isLoadingMore,_that.hasValue,_that.hasError,_that.pagination,_that.value,_that.request,_that.error);case _:
+return $default(_that.isLoading,_that.isLoadingMore,_that.hasValue,_that.hasError,_that.pagination,_that.value,_that.error,_that.request);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -476,10 +476,10 @@ return $default(_that.isLoading,_that.isLoadingMore,_that.hasValue,_that.hasErro
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  bool isLoadingMore,  bool hasValue,  bool hasError,  Pagination pagination,  List<T> value,  Q? request,  String? error)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  bool isLoadingMore,  bool hasValue,  bool hasError,  Pagination pagination,  List<T> value,  String? error,  Q? request)?  $default,) {final _that = this;
 switch (_that) {
 case _BigSignalState() when $default != null:
-return $default(_that.isLoading,_that.isLoadingMore,_that.hasValue,_that.hasError,_that.pagination,_that.value,_that.request,_that.error);case _:
+return $default(_that.isLoading,_that.isLoadingMore,_that.hasValue,_that.hasError,_that.pagination,_that.value,_that.error,_that.request);case _:
   return null;
 
 }
@@ -491,7 +491,7 @@ return $default(_that.isLoading,_that.isLoadingMore,_that.hasValue,_that.hasErro
 
 
 class _BigSignalState<T,Q> extends BigSignalState<T, Q> {
-   _BigSignalState({this.isLoading = false, this.isLoadingMore = false, this.hasValue = false, this.hasError = false, this.pagination = const Pagination(), final  List<T> value = const [], this.request, this.error}): _value = value,super._();
+   _BigSignalState({this.isLoading = false, this.isLoadingMore = false, this.hasValue = false, this.hasError = false, this.pagination = const Pagination(), final  List<T> value = const [], this.error, this.request}): _value = value,super._();
   
 
 @override@JsonKey() final  bool isLoading;
@@ -506,8 +506,8 @@ class _BigSignalState<T,Q> extends BigSignalState<T, Q> {
   return EqualUnmodifiableListView(_value);
 }
 
-@override final  Q? request;
 @override final  String? error;
+@override final  Q? request;
 
 /// Create a copy of BigSignalState
 /// with the given fields replaced by the non-null parameter values.
@@ -519,16 +519,16 @@ _$BigSignalStateCopyWith<T, Q, _BigSignalState<T, Q>> get copyWith => __$BigSign
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BigSignalState<T, Q>&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.isLoadingMore, isLoadingMore) || other.isLoadingMore == isLoadingMore)&&(identical(other.hasValue, hasValue) || other.hasValue == hasValue)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&(identical(other.pagination, pagination) || other.pagination == pagination)&&const DeepCollectionEquality().equals(other._value, _value)&&const DeepCollectionEquality().equals(other.request, request)&&(identical(other.error, error) || other.error == error));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BigSignalState<T, Q>&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.isLoadingMore, isLoadingMore) || other.isLoadingMore == isLoadingMore)&&(identical(other.hasValue, hasValue) || other.hasValue == hasValue)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&(identical(other.pagination, pagination) || other.pagination == pagination)&&const DeepCollectionEquality().equals(other._value, _value)&&(identical(other.error, error) || other.error == error)&&const DeepCollectionEquality().equals(other.request, request));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,isLoadingMore,hasValue,hasError,pagination,const DeepCollectionEquality().hash(_value),const DeepCollectionEquality().hash(request),error);
+int get hashCode => Object.hash(runtimeType,isLoading,isLoadingMore,hasValue,hasError,pagination,const DeepCollectionEquality().hash(_value),error,const DeepCollectionEquality().hash(request));
 
 @override
 String toString() {
-  return 'BigSignalState<$T, $Q>(isLoading: $isLoading, isLoadingMore: $isLoadingMore, hasValue: $hasValue, hasError: $hasError, pagination: $pagination, value: $value, request: $request, error: $error)';
+  return 'BigSignalState<$T, $Q>(isLoading: $isLoading, isLoadingMore: $isLoadingMore, hasValue: $hasValue, hasError: $hasError, pagination: $pagination, value: $value, error: $error, request: $request)';
 }
 
 
@@ -539,7 +539,7 @@ abstract mixin class _$BigSignalStateCopyWith<T,Q,$Res> implements $BigSignalSta
   factory _$BigSignalStateCopyWith(_BigSignalState<T, Q> value, $Res Function(_BigSignalState<T, Q>) _then) = __$BigSignalStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool isLoading, bool isLoadingMore, bool hasValue, bool hasError, Pagination pagination, List<T> value, Q? request, String? error
+ bool isLoading, bool isLoadingMore, bool hasValue, bool hasError, Pagination pagination, List<T> value, String? error, Q? request
 });
 
 
@@ -556,7 +556,7 @@ class __$BigSignalStateCopyWithImpl<T,Q,$Res>
 
 /// Create a copy of BigSignalState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? isLoadingMore = null,Object? hasValue = null,Object? hasError = null,Object? pagination = null,Object? value = null,Object? request = freezed,Object? error = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? isLoadingMore = null,Object? hasValue = null,Object? hasError = null,Object? pagination = null,Object? value = null,Object? error = freezed,Object? request = freezed,}) {
   return _then(_BigSignalState<T, Q>(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,isLoadingMore: null == isLoadingMore ? _self.isLoadingMore : isLoadingMore // ignore: cast_nullable_to_non_nullable
@@ -564,9 +564,9 @@ as bool,hasValue: null == hasValue ? _self.hasValue : hasValue // ignore: cast_n
 as bool,hasError: null == hasError ? _self.hasError : hasError // ignore: cast_nullable_to_non_nullable
 as bool,pagination: null == pagination ? _self.pagination : pagination // ignore: cast_nullable_to_non_nullable
 as Pagination,value: null == value ? _self._value : value // ignore: cast_nullable_to_non_nullable
-as List<T>,request: freezed == request ? _self.request : request // ignore: cast_nullable_to_non_nullable
-as Q?,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
-as String?,
+as List<T>,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as String?,request: freezed == request ? _self.request : request // ignore: cast_nullable_to_non_nullable
+as Q?,
   ));
 }
 

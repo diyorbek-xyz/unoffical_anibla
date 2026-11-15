@@ -3,6 +3,7 @@ import 'package:application/core/network/clients/mano_client.dart';
 import 'package:application/core/network/clients/neutral_client.dart';
 import 'package:application/core/network/interceptors/mano_interceptor.dart';
 import 'package:application/features/anibla/data/models/main/anibla_profile.dart';
+import 'package:application/features/anibla/presentation/controllers/anime_feed_controller.dart';
 import 'package:application/features/anibla/presentation/controllers/comment_controller.dart';
 import 'package:application/features/mano/data/models/main/book.dart';
 import 'package:application/features/mano/data/repository/book_repository_impl.dart';
@@ -17,6 +18,7 @@ import 'package:application/features/mano/domain/repository/mano_profile_repo.da
 import 'package:application/features/mano/presentation/controllers/book_controller.dart';
 import 'package:application/features/mano/presentation/controllers/mano_profile_controller.dart';
 import 'package:application/features/player/presentation/controller/player_controller.dart';
+import 'package:application/features/polished/presentation/controller/media_controller.dart';
 import 'package:application/features/polished/presentation/controller/media_search_controller.dart';
 import 'package:application/shared/utils/utils.dart';
 import 'package:application/features/anibla/data/models/data/carousel_item.dart';
@@ -25,7 +27,7 @@ import 'package:application/features/anibla/data/models/misc/premieres.dart';
 import 'package:application/features/anibla/data/repositories/profile_repository_impl.dart';
 import 'package:application/features/anibla/data/source/local/profile_local.dart';
 import 'package:application/features/anibla/data/source/local/saved_ids_local.dart';
-import 'package:application/features/anibla/presentation/controllers/media_controller.dart';
+import 'package:application/features/anibla/presentation/controllers/anime_controller.dart';
 import 'package:application/features/anibla/presentation/controllers/saved_controller.dart';
 import 'package:application/features/anibla/data/source/local/search_history_local.dart';
 import 'package:application/features/anibla/presentation/controllers/explore_controller.dart';
@@ -201,10 +203,12 @@ Future<void> initializeDependencies() async {
     ..registerLazySingleton<ManoProfileController>(() => ManoProfileController(sl(), sl()))
     ..registerLazySingleton<LocalAnimesController>(() => LocalAnimesController(sl(), sl(), sl()))
     ..registerLazySingleton<CommentController>(() => CommentController(sl(), sl()))
-    ..registerLazySingleton<MediaController>(() => MediaController(sl(), sl(), sl()))
+    ..registerLazySingleton<AnimeController>(() => AnimeController(sl(), sl(), sl()))
     ..registerLazySingleton<ExploreController>(() => ExploreController(sl(), sl()))
     ..registerLazySingleton<SliderController>(() => SliderController(sl()))
     ..registerLazySingleton<BookController>(() => BookController(sl()))
     ..registerLazySingleton<PlayerController>(() => PlayerController(sl(), sl()))
+    ..registerLazySingleton<MediaController>(() => MediaController(sl(), sl(), sl(), sl(), sl()))
+    ..registerLazySingleton<AnimeFeedController>(() => AnimeFeedController(sl()))
     ..registerFactory<MediaSearchController>(() => MediaSearchController(sl(), sl()));
 }

@@ -1,7 +1,7 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/features/anibla/data/models/props/media_props.dart';
-import 'package:application/features/anibla/presentation/controllers/media_controller.dart';
+import 'package:application/features/anibla/presentation/controllers/anime_feed_controller.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/shared/image_provider/fallback_provider.dart';
 import 'package:application/shared/utils/base_url.dart';
@@ -20,17 +20,17 @@ class HistoryWidget extends StatefulWidget {
 }
 
 class _HistoryWidgetState extends State<HistoryWidget> {
-  late final _animeController = sl<MediaController>();
+  late final _feedController = sl<AnimeFeedController>();
 
   @override
   Widget build(BuildContext context) {
     return SignalBuilder(
       builder: (context) {
-        final state = _animeController.watchHistory.value;
+        final state = _feedController.watchHistory.value;
         if (state.hasError) {
-          return ErrorBuilder(message: state.error.toString(), refresh: _animeController.watchHistory.refresh);
+          return ErrorBuilder(message: state.error.toString(), refresh: _feedController.watchHistory.refresh);
         }
-        final data = state.value ?? _animeController.fakeHistory;
+        final data = state.value ?? _feedController.fakeHistory;
 
         return Skeletonizer(
           enableSwitchAnimation: true,
@@ -71,6 +71,8 @@ class _HistoryWidgetState extends State<HistoryWidget> {
                           onTap: () => context.pushNamed(
                             "watch",
                             queryParameters: MediaProps(
+                              heroTag: randomTagGen(),
+                              thumbnail: item.thumbnail,
                               mediaKey: item.mediaSlug,
                               type: item.mediaType,
                               chapterKey: item.episodeId,

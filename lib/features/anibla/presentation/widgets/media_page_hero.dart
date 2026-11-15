@@ -2,9 +2,9 @@ import 'dart:ui';
 
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
-import 'package:application/shared/image_provider/fallback_provider.dart';
 import 'package:application/shared/utils/base_url.dart';
 import 'package:application/shared/widgets/image.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -12,12 +12,16 @@ import 'package:skeletonizer/skeletonizer.dart';
 class MediaPageHero extends StatelessWidget {
   final String title;
   final bool isSaved;
+  final String heroTag;
   final bool isScrolled;
   final String thumbnail;
+  final String cover;
   final List<String> tabs;
   final Map<String, Object> items;
   const MediaPageHero({
     super.key,
+    required this.cover,
+    required this.heroTag,
     required this.isScrolled,
     required this.isSaved,
     required this.items,
@@ -27,106 +31,118 @@ class MediaPageHero extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => SliverOverlapAbsorber(
-    handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-    sliver: SliverAppBar.medium(
-      leading: IconButton(onPressed: () => context.pop(), icon: Icon(Icons.keyboard_arrow_left)),
-      automaticallyImplyLeading: true,
-      scrolledUnderElevation: 0.0,
-      toolbarHeight: kToolbarHeight,
-      stretch: true,
-      centerTitle: false,
-      forceElevated: isScrolled,
-      expandedHeight: 350 + kTextTabBarHeight + kToolbarHeight,
-      collapsedHeight: kTextTabBarHeight + kToolbarHeight + MediaQuery.paddingOf(context).top,
-      title: Text(title),
-      bottom: TabBar(
-        tabAlignment: TabAlignment.center,
-        isScrollable: true,
-        dividerHeight: 0,
-        indicatorWeight: 3,
-        tabs: tabs.map((e) => Tab(text: e)).toList(),
-      ),
-      flexibleSpace: FlexibleSpaceBar(
-        collapseMode: CollapseMode.pin,
-        background: DecoratedBox(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: imageProviderFallback(thumbnail),
-              opacity: 0.6,
-              alignment: AlignmentGeometry.xy(0, -0.7),
-              fit: BoxFit.cover,
+  Widget build(BuildContext context) {
+    return SliverOverlapAbsorber(
+      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+      sliver: SliverAppBar.medium(
+        leading: IconButton(onPressed: () => context.pop(), icon: Icon(Icons.keyboard_arrow_left)),
+        automaticallyImplyLeading: true,
+        scrolledUnderElevation: 0.0,
+        toolbarHeight: kToolbarHeight,
+        stretch: true,
+        centerTitle: false,
+        forceElevated: isScrolled,
+        expandedHeight: 350 + kTextTabBarHeight + kToolbarHeight,
+        collapsedHeight: kTextTabBarHeight + kToolbarHeight + MediaQuery.paddingOf(context).top,
+        title: Text(title),
+        bottom: TabBar(
+          tabAlignment: TabAlignment.center,
+          isScrollable: true,
+          dividerHeight: 0,
+          indicatorWeight: 3,
+          tabs: tabs.map((e) => Tab(text: e)).toList(),
+        ),
+        flexibleSpace: FlexibleSpaceBar(
+          collapseMode: CollapseMode.pin,
+          background: DecoratedBox(
+            decoration: BoxDecoration(
+              image: isUsable(cover)
+                  ? DecorationImage(
+                      image: CachedNetworkImageProvider(cover),
+                      opacity: 0.6,
+                      alignment: AlignmentGeometry.xy(0, -0.7),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
             ),
-          ),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: AlignmentGeometry.center,
-                  end: AlignmentGeometry.bottomCenter,
-                  colors: [Colors.transparent, context.colors.surface],
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: AlignmentGeometry.center,
+                    end: AlignmentGeometry.bottomCenter,
+                    colors: [Colors.transparent, context.colors.surface],
+                  ),
                 ),
-              ),
-              padding: EdgeInsetsGeometry.only(top: kToolbarHeight, left: 10, right: 10),
-              alignment: AlignmentGeometry.topCenter,
-              child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 1000),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: .min,
-                  spacing: 20,
-                  children: [
-                    Text(title, style: context.textTheme.headlineMedium),
-                    SizedBox(
-                      height: 250,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        spacing: 20,
-                        children: [
-                          Flexible(
-                            child: Container(
-                              decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                              clipBehavior: Clip.antiAlias,
-                              constraints: BoxConstraints(maxWidth: 300, minWidth: 100),
-                              child: AspectRatio(
-                                aspectRatio: 0.65,
-                                child: isUsable(thumbnail)
-                                    ? SafeImage(imageUrl: thumbnail, fit: BoxFit.cover)
-                                    : Skeleton.leaf(enabled: true, child: Container(color: context.colors.error)),
+                padding: EdgeInsetsGeometry.only(top: kToolbarHeight, left: 10, right: 10),
+                alignment: AlignmentGeometry.topCenter,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 1000),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: .min,
+                    spacing: 20,
+                    children: [
+                      Text(title, style: context.textTheme.headlineMedium),
+                      SizedBox(
+                        height: 250,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          spacing: 20,
+                          children: [
+                            Flexible(
+                              child: Skeleton.keep(
+                                keep: true,
+                                child: Hero(
+                                  tag: heroTag,
+                                  curve: Curves.bounceInOut,
+                                  reverseCurve: Curves.bounceInOut,
+                                  child: Container(
+                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                                    clipBehavior: Clip.antiAlias,
+                                    constraints: BoxConstraints(maxWidth: 300, minWidth: 100),
+                                    child: AspectRatio(
+                                      aspectRatio: 0.65,
+                                      child: isUsable(thumbnail)
+                                          ? SafeImage(imageUrl: thumbnail, fit: BoxFit.cover)
+                                          : Skeleton.leaf(enabled: true, child: Container(color: context.colors.error)),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: .start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  spacing: 5,
-                                  crossAxisAlignment: .start,
-                                  children: items.entries.map((e) => infoItem(e)).toList(),
-                                ),
-                                FilledButton.icon(
-                                  onPressed: () {},
-                                  icon: Icon(isSaved ? Icons.bookmark : Icons.bookmark_outline),
-                                  label: Text(isSaved ? "O'chirish" : "Saqlash"),
-                                ),
-                              ],
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: .start,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    spacing: 5,
+                                    crossAxisAlignment: .start,
+                                    children: items.entries.map((e) => infoItem(e)).toList(),
+                                  ),
+                                  FilledButton.icon(
+                                    onPressed: () {},
+                                    icon: Icon(isSaved ? Icons.bookmark : Icons.bookmark_outline),
+                                    label: Text(isSaved ? "O'chirish" : "Saqlash"),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
         ),
       ),
-    ),
-  );
+    );
+  }
 
   Widget infoItem(MapEntry<String, dynamic> item) => Builder(
     builder: (context) => Column(

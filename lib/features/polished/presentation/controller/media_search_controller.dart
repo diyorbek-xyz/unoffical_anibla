@@ -9,19 +9,24 @@ import 'package:application/features/mano/domain/repository/book_repository.dart
 import 'package:application/shared/controller/paginated_signal.dart';
 import 'package:application/shared/controller/signal_state.dart';
 import 'package:application/shared/utils/extensions.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 
 class MediaSearchController {
   final AnimeRepository _animeRepository;
   final BookRepository _bookRepository;
   MediaSearchController(this._animeRepository, this._bookRepository);
 
-  late final animes = PaginatedSignal<Anime, AnimesQuery>((request, pagination) async {
+  late final animes = PaginatedSignal<Anime, AnimesQuery>((request, pagination, _) async {
     final either = await _animeRepository.getAnimes(request);
     final data = either.getData();
+    debugPrint(
+      '${data.message} |'
+      '${data.datas.first.type.name}',
+    );
     return BigSignalState(value: data.datas, pagination: data.pagination);
   });
 
-  late final books = PaginatedSignal<Book, BooksQuery>((request, pagination) async {
+  late final books = PaginatedSignal<Book, BooksQuery>((request, pagination, _) async {
     final either = await _bookRepository.getBooks(request);
     final value = either.getData();
     return BigSignalState(

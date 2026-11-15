@@ -1,5 +1,5 @@
 import 'package:application/features/anibla/data/models/props/media_props.dart';
-import 'package:application/features/view/models/notification_view.dart';
+import 'package:application/features/polished/view_models/data/notification_view.dart';
 import 'package:application/shared/image_provider/fallback_provider.dart';
 import 'package:application/shared/widgets/list.dart';
 import 'package:material_ui/material_ui.dart';
@@ -20,7 +20,12 @@ class NotificationsMenu extends StatelessWidget {
             leading: CircleAvatar(backgroundImage: imageProviderFallback(e.image)),
             onTap: () => context.pushNamed(
               "media",
-              queryParameters: MediaProps(mediaKey: e.mediaKey, type: e.type).toJson(),
+              queryParameters: MediaProps(
+                mediaKey: e.mediaKey,
+                type: e.type,
+                thumbnail: e.image,
+                heroTag: randomTagGen(),
+              ).toJson(),
             ),
             actions: e.actions.map((j) => IconButton(onPressed: j.action, icon: Icon(j.icon), tooltip: j.title)).toList(),
           ),

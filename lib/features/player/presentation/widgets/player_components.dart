@@ -1,4 +1,4 @@
-import 'package:application/features/anibla/presentation/controllers/media_controller.dart';
+import 'package:application/features/anibla/presentation/controllers/anime_controller.dart';
 import 'package:application/features/player/data/model/player_props.dart';
 import 'package:application/features/player/presentation/controller/player_controller.dart';
 import 'package:application/shared/utils/extensions.dart';
@@ -12,7 +12,7 @@ class PlayerOverlayControls extends StatelessWidget {
   final Widget bufferingIndicator;
   final bool atOverlay;
 
-  final _animeController = sl<MediaController>();
+  final _animeController = sl<AnimeController>();
   final _playerController = sl<PlayerController>();
 
   Future<void> openStream(MediaStream stream) => _playerController.init(stream);

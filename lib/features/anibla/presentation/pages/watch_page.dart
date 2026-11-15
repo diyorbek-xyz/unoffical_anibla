@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:application/features/anibla/data/enums/media_type.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/features/anibla/data/models/props/media_props.dart';
-import 'package:application/features/anibla/presentation/controllers/media_controller.dart';
+import 'package:application/features/anibla/presentation/controllers/anime_controller.dart';
 import 'package:application/features/player/data/model/player_props.dart';
 import 'package:application/features/player/presentation/controller/player_controller.dart';
 import 'package:application/features/player/presentation/widgets/video_player.dart';
@@ -23,7 +23,7 @@ class WatchPage extends StatefulWidget {
 
 class _WatchPageState extends State<WatchPage> {
   late final PlayerController _playerController;
-  late final MediaController _mediaController;
+  late final AnimeController _mediaController;
   late final EffectCleanup _cleanup;
 
   dynamic initialize() {
@@ -86,7 +86,7 @@ class _WatchPageState extends State<WatchPage> {
   void initState() {
     super.initState();
     _playerController = sl<PlayerController>();
-    _mediaController = sl<MediaController>();
+    _mediaController = sl<AnimeController>();
     _cleanup = effect(initialize);
   }
 

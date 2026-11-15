@@ -1,15 +1,14 @@
 import 'package:application/features/anibla/presentation/widgets/media_card.dart';
+import 'package:application/features/mano/data/models/main/book.dart';
+import 'package:application/features/mano/data/models/request/books_query.dart';
 import 'package:application/features/mano/presentation/controllers/book_controller.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:application/shared/utils/url_launcher.dart';
-import 'package:application/shared/widgets/error.dart';
 import 'package:application/shared/widgets/recommend.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
-import 'package:signals_flutter/signals_flutter.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class MangaPage extends StatelessWidget {
   MangaPage({super.key});
@@ -18,41 +17,29 @@ class MangaPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SignalBuilder(
-      builder: (context) {
-        final newsState = _bookController.newestMangas.value;
-        final topState = _bookController.topMangas.value;
-        final hasError = newsState.hasError || topState.hasError;
-        final error = newsState.error ?? topState.error;
-        final isLoading = newsState.isLoading || topState.isLoading;
-        final isDataLoading = newsState.value == null || topState.value == null;
-        if (hasError || (isDataLoading && !isLoading))
-          return ErrorBuilder(message: error.toString(), refresh: _bookController.refreshNewest);
-        final news = newsState.value ?? _bookController.fakeBooks;
-        final tops = topState.value ?? _bookController.fakeBooks;
-        return Skeletonizer(
-          enabled: isLoading,
-          enableSwitchAnimation: true,
-          child: Scaffold(
-            floatingActionButtonLocation: .startFloat,
-            floatingActionButton: FloatingActionButton(
-              heroTag: "manga",
-              onPressed: () => context.replaceNamed("novels"),
-              child: Icon(Icons.book),
-            ),
-            body: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: .start,
-                children: [
-                  banner(context),
-                  Recommends(title: "Yangi Asarlar", onMoreClick: () {}, items: news.map(MediaCard.fromManga).toList()),
-                  Recommends(title: "Top manga", onMoreClick: () {}, items: tops.map(MediaCard.fromManga).toList()),
-                ],
+    return Scaffold(
+      floatingActionButtonLocation: .startFloat,
+      floatingActionButton: FloatingActionButton(
+        heroTag: "manga",
+        onPressed: () => context.replaceNamed("novels"),
+        child: Icon(Icons.book),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: .start,
+          children: [
+            banner(context),
+            ..._bookController.mangaSignals.map(
+              (e) => Recommends.bigSignalBuilder<Book, BooksQuery>(
+                signal: e.signal,
+                fake: _bookController.fakeBooks,
+                title: e.state.request?.title.uz ?? "",
+                builder: (context, item) => MediaCard.fromManga(item),
               ),
             ),
-          ),
-        );
-      },
+          ],
+        ),
+      ),
     );
   }
 

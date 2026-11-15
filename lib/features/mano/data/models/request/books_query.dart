@@ -1,4 +1,5 @@
 import 'package:application/features/anibla/data/enums/media_type.dart';
+import 'package:application/features/anibla/data/models/helper/localized.dart';
 import 'package:application/features/mano/data/models/converter/list_converter.dart';
 import 'package:application/features/mano/data/models/enum/sort_type.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -28,6 +29,7 @@ abstract class BooksQuery with _$BooksQuery {
     @JsonKey(name: "translation_statuses") String? translationStatus,
     @JsonKey(name: "genre_ids") @CommaConverter() List<String>? genreIds,
     @JsonKey(name: "category_ids") @CommaConverter() List<String>? categoryIds,
+    @Default(Localized()) @JsonKey(includeFromJson: false, includeToJson: false) Localized title,
     BooksQueryType? queryType,
   }) = _BooksQuery;
 

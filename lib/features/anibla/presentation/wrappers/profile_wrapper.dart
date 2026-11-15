@@ -7,8 +7,8 @@ import 'package:application/features/anibla/presentation/menus/profile/plans_men
 import 'package:application/features/anibla/presentation/menus/profile/privacy_settings.dart';
 import 'package:application/features/anibla/presentation/pages/profile_page.dart';
 import 'package:application/features/mano/presentation/controllers/mano_profile_controller.dart';
-import 'package:application/features/view/models/notification_view.dart';
-import 'package:application/features/view/models/tab_view.dart';
+import 'package:application/features/polished/view_models/data/notification_view.dart';
+import 'package:application/features/polished/view_models/other/tab_view.dart';
 import 'package:application/shared/widgets/error.dart';
 import 'package:application/features/anibla/presentation/controllers/profile_controller.dart';
 import 'package:application/features/anibla/presentation/controllers/profile_errors.dart';

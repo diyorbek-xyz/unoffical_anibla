@@ -5,7 +5,7 @@ import 'package:application/features/anibla/data/models/data/session.dart';
 import 'package:application/core/network/resources/errors.dart';
 import 'package:dio/dio.dart';
 
-sealed class Failure implements Exception {
+sealed class Failure {
   final String message;
   const Failure(this.message);
 
@@ -26,10 +26,10 @@ final class SimpleFailure extends Failure {
 }
 
 final class NetworkFailure extends Failure {
-  const NetworkFailure() : super("connection_timeout");
+  const NetworkFailure() : super("Tarmoqqa ulanib bo'lmadi");
 
   @override
-  String toString() => Errors.connectionTimeout;
+  String toString() => ErrorMessages.requestTimeout;
 }
 
 final class SessionLimitedFailure extends Failure {
@@ -42,7 +42,7 @@ final class SessionLimitedFailure extends Failure {
 
 final class UnknownFailure extends Failure {
   final dynamic exception;
-  UnknownFailure(this.exception) : super(exception.message);
+  UnknownFailure(this.exception) : super(exception.toString());
 
   @override
   String toString() => exception.toString();

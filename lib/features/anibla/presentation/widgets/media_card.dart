@@ -10,8 +10,8 @@ import 'package:application/shared/image_provider/fallback_provider.dart';
 import 'package:application/shared/widgets/tv_focuser.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/main.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
 class MediaCard extends StatefulWidget {
@@ -19,7 +19,7 @@ class MediaCard extends StatefulWidget {
   final String title;
   final String thumbnail;
   final MediaType type;
-  final void Function(BuildContext context) navigate;
+  final MediaProps props;
   final bool? expand;
   final double? aspectRatio;
   final List<String>? badges;
@@ -27,7 +27,7 @@ class MediaCard extends StatefulWidget {
   final BorderRadius? borderRadius;
   const MediaCard({
     required this.id,
-    required this.navigate,
+    required this.props,
     required this.thumbnail,
     required this.title,
     required this.type,
@@ -57,7 +57,7 @@ class MediaCard extends StatefulWidget {
     thumbnail: anime.thumbnail,
     title: anime.title.uz,
     type: anime.type,
-    navigate: (c) => c.pushNamed("media", queryParameters: MediaProps.fromAnime(anime).toJson()),
+    props: MediaProps.fromAnime(anime),
     badges: badges,
     progress: (anime.type.isMovie || anime.totalEpisodes == 0)
         ? null
@@ -79,7 +79,7 @@ class MediaCard extends StatefulWidget {
     thumbnail: manga.thumbnail,
     title: manga.title,
     type: manga.type,
-    navigate: (c) => c.pushNamed("media", queryParameters: MediaProps.fromBook(manga).toJson()),
+    props: MediaProps.fromBook(manga),
     badges: badges,
     progress: "${manga.chaptersCount} Bob",
   );
@@ -142,31 +142,34 @@ class _MediaCardState extends State<MediaCard> {
           focusNode: node,
           mouseCursor: SystemMouseCursors.click,
           borderRadius: widget.borderRadius,
-          onTap: () => widget.navigate(context),
+          onTap: () => context.pushNamed("media", queryParameters: widget.props.toJson()),
           radius: 350,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 5,
             children: [
-              AspectRatio(
-                aspectRatio: 9 / 12,
-                child: Ink(
-                  decoration: BoxDecoration(
-                    boxShadow: [BoxShadow(color: context.colors.surfaceContainerLowest, blurRadius: 4, offset: Offset(0, 2))],
-                    image: DecorationImage(
-                      isAntiAlias: true,
-                      image: imageProviderFallback(addBaseUrl(widget.thumbnail)),
-                      fit: BoxFit.cover,
-                      alignment: AlignmentGeometry.center,
+              Hero(
+                tag: widget.props.heroTag,
+                child: AspectRatio(
+                  aspectRatio: 9 / 12,
+                  child: Ink(
+                    decoration: BoxDecoration(
+                      boxShadow: [BoxShadow(color: context.colors.surfaceContainerLowest, blurRadius: 4, offset: Offset(0, 2))],
+                      image: DecorationImage(
+                        isAntiAlias: true,
+                        image: imageProviderFallback(addBaseUrl(widget.thumbnail)),
+                        fit: BoxFit.cover,
+                        alignment: AlignmentGeometry.center,
+                      ),
+                      borderRadius: widget.borderRadius,
                     ),
-                    borderRadius: widget.borderRadius,
-                  ),
-                  padding: .all(7),
-                  child: Column(
-                    crossAxisAlignment: .end,
-                    mainAxisAlignment: .end,
-                    spacing: 2,
-                    children: badges.asMap().entries.map((e) => badge(e.value, e.key + 1, badges.length)).toList(),
+                    padding: .all(7),
+                    child: Column(
+                      crossAxisAlignment: .end,
+                      mainAxisAlignment: .end,
+                      spacing: 2,
+                      children: badges.asMap().entries.map((e) => badge(e.value, e.key + 1, badges.length)).toList(),
+                    ),
                   ),
                 ),
               ),

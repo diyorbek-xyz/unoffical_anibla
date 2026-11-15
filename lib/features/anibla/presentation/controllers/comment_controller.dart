@@ -1,13 +1,13 @@
 import 'package:application/features/anibla/data/models/data/comment.dart';
 import 'package:application/features/anibla/data/models/request/animes_query.dart';
 import 'package:application/features/anibla/domain/repositories/comment_repository.dart';
-import 'package:application/features/anibla/presentation/controllers/media_controller.dart';
+import 'package:application/features/anibla/presentation/controllers/anime_controller.dart';
 import 'package:application/shared/controller/signal_state.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
 class CommentController {
-  final MediaController _mediaController;
+  final AnimeController _mediaController;
   final CommentRepository _animeCommentRepo;
   CommentController(this._mediaController, this._animeCommentRepo);
 

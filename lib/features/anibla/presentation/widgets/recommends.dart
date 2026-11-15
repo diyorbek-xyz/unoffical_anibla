@@ -1,7 +1,7 @@
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
 import 'package:application/features/anibla/data/models/main/anime.dart';
-import 'package:application/features/anibla/presentation/controllers/media_controller.dart';
+import 'package:application/features/anibla/presentation/controllers/anime_feed_controller.dart';
 import 'package:application/features/anibla/presentation/widgets/media_card.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:application/injection_container.dart';
@@ -12,12 +12,12 @@ import 'package:signals_flutter/signals_flutter.dart';
 class AnimeRecommends extends StatelessWidget {
   AnimeRecommends({super.key});
 
-  final animeController = sl<MediaController>()..getHome(.new(limit: 30, page: 1));
+  late final animeController = sl<AnimeFeedController>().homeAnimes..fetch(.new(limit: 30, page: 1));
 
   @override
   Widget build(BuildContext context) => SignalBuilder(
     builder: (context) {
-      final state = animeController.homeState.value;
+      final state = animeController.signal.value;
       return DecoratedSliver(
         decoration: BoxDecoration(color: context.colors.surfaceContainer, borderRadius: .circular(32)),
         sliver: SliverPadding(
@@ -42,7 +42,7 @@ class AnimeRecommends extends StatelessWidget {
                 policy: OrderedTraversalPolicy(),
                 child: PagedSliverGrid<int, Anime>(
                   state: PagingState(hasNextPage: state.pagination.hasMore, keys: [0], pages: [state.value]),
-                  fetchNextPage: animeController.getHomeMore,
+                  fetchNextPage: animeController.fetchMore,
                   gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 220,
                     childAspectRatio: 9 / 15,
@@ -60,7 +60,7 @@ class AnimeRecommends extends StatelessWidget {
                           Icon(Icons.network_check, size: 50),
                           Text("Internet tarmoqni tekshiring"),
                           FilledButton.icon(
-                            onPressed: () => animeController.getHome(.new(limit: 20)),
+                            onPressed: animeController.refetch,
                             icon: Icon(Icons.refresh),
                             label: Text("Yangilash"),
                           ),
