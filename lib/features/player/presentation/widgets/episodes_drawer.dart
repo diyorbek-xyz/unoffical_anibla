@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/features/anibla/data/enums/media_type.dart';
-import 'package:application/features/anibla/data/models/main/episode.dart';
-import 'package:application/features/anibla/presentation/controllers/anime_controller.dart';
 import 'package:application/features/player/data/model/player_props.dart';
 import 'package:application/features/player/presentation/controller/player_controller.dart';
+import 'package:application/features/polished/presentation/controller/media_controller.dart';
+import 'package:application/features/polished/view_models/media/chapter_view.dart';
 import 'package:application/injection_container.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
@@ -17,8 +17,8 @@ class EpisodesDrawer extends StatefulWidget {
 }
 
 class _EpisodesDrawerState extends State<EpisodesDrawer> {
-  late final PlayerController _playerController;
-  late final AnimeController _animeController;
+  late final _playerController = sl<PlayerController>();
+  late final _mediaController = sl<MediaController>();
 
   final searchController = TextEditingController();
   bool isReversedEpisodeList = false;
@@ -36,33 +36,26 @@ class _EpisodesDrawerState extends State<EpisodesDrawer> {
     setState(() => search = val);
   }
 
-  bool checkIsContains(Episode entity) {
+  bool checkIsContains(ChapterView entity) {
     if (search == null) return true;
-    final hasRusian = entity.title.ru.toLowerCase().contains(search!.toLowerCase());
-    final hasUzbek = entity.title.uz.toLowerCase().contains(search!.toLowerCase());
-    final hasEpisode = entity.episodeNumber.toString().contains(search!.toLowerCase());
+    final hasRusian = entity.title.toLowerCase().contains(search!.toLowerCase());
+    final hasUzbek = entity.title.toLowerCase().contains(search!.toLowerCase());
+    final hasEpisode = entity.offset.toString().contains(search!.toLowerCase());
     return hasEpisode || hasUzbek || hasRusian;
   }
 
-  List<Episode> changeList(List<Episode> list) {
+  List<ChapterView> changeList(List<ChapterView> list) {
     final searched = list.where(checkIsContains).toList();
     if (isReversedEpisodeList) return searched.reversed.toList();
     return searched;
   }
 
   @override
-  void initState() {
-    _animeController = sl<AnimeController>();
-    _playerController = sl<PlayerController>();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return SignalBuilder(
       builder: (context) {
-        final state = _animeController.episodesState.value;
-        final episodes = state.value ?? _animeController.fakeEpisodes;
+        final state = _mediaController.chapters.value;
+        final episodes = state.value;
         final current = _playerController.stream?.episode;
         final entries = changeList(episodes).asMap().entries;
         return Column(
@@ -119,23 +112,23 @@ class _EpisodesDrawerState extends State<EpisodesDrawer> {
                   addRepaintBoundaries: true,
                   children: entries.map((entry) {
                     final episode = entry.value;
-                    final isCurrent = current == entry.value.episodeNumber;
-                    final title = "${episode.episodeNumber}-qism: ${episode.title.uz}";
-                    final animeState = _animeController.animeState.value;
-                    final anime = animeState.value ?? _animeController.fakeAnime;
+                    final isCurrent = current == entry.value.offset;
+                    final title = "${episode.offset}-qism: ${episode.title}";
+                    final animeState = _mediaController.media.value;
+                    final anime = animeState.value!;
                     final next = entries.where((element) => element.key == entry.key + 1).singleOrNull?.value;
                     final props = MediaStream(
                       totalEpisodes: episodes.length,
-                      episode: episode.episodeNumber,
+                      episode: episode.offset,
                       type: MediaType.serie,
-                      episodeTitle: episode.title.uz,
+                      episodeTitle: episode.title,
                       cover: anime.cover,
-                      animeTitle: anime.title.uz,
-                      url: episode.video,
-                      forCache: next?.video,
+                      animeTitle: anime.title,
+                      url: episode.mediaUrl,
+                      forCache: next?.mediaUrl,
                     );
                     final timeline = null;
-                    final typeColor = episode.type.isFree ? context.colors.secondary : context.colors.primary;
+                    final typeColor = episode.isFree ? context.colors.secondary : context.colors.primary;
                     final currentColor = typeColor.withAlpha(isCurrent ? 255 : 50);
                     return RepaintBoundary(
                       child: Tooltip(
@@ -182,8 +175,8 @@ class _EpisodesDrawerState extends State<EpisodesDrawer> {
                                   mainAxisAlignment: .center,
                                   spacing: 5,
                                   children: [
-                                    Text("${episode.episodeNumber}-qism"),
-                                    Text(episode.title.uz, maxLines: 1, overflow: .ellipsis),
+                                    Text("${episode.offset}-qism"),
+                                    Text(episode.title, maxLines: 1, overflow: .ellipsis),
                                   ],
                                 ),
                               ),

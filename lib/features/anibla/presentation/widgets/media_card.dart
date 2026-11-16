@@ -69,10 +69,10 @@ class MediaCard extends StatefulWidget {
     Book manga, {
     bool? expand,
     double? aspectRatio,
-    List<String>? badges,
-    BorderRadius? borderRadius,
+    List<String> badges = const [],
+    BorderRadius borderRadius = const .all(.circular(17)),
   }) => MediaCard(
-    borderRadius: borderRadius ?? const .all(.circular(17)),
+    borderRadius: borderRadius,
     aspectRatio: aspectRatio,
     expand: expand,
     id: manga.id,
@@ -80,7 +80,7 @@ class MediaCard extends StatefulWidget {
     title: manga.title,
     type: manga.type,
     props: MediaProps.fromBook(manga),
-    badges: badges,
+    badges: [manga.translationStatus.title, ...badges],
     progress: "${manga.chaptersCount} Bob",
   );
 }
@@ -130,10 +130,11 @@ class _MediaCardState extends State<MediaCard> {
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < MOBILE_WIDTH;
     final badges = [
-      if (widget.badges != null) ...widget.badges!,
       widget.type.toString(),
       if (widget.progress != null) widget.progress,
+      if (widget.badges != null) ...widget.badges!,
     ].cast<String>().toList();
+
     final cover = GestureDetector(
       onSecondaryTapDown: (details) => handleClick(context, details.globalPosition, 10),
       onLongPressStart: (details) => handleClick(context, details.globalPosition, 10),
@@ -148,28 +149,25 @@ class _MediaCardState extends State<MediaCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 5,
             children: [
-              Hero(
-                tag: widget.props.heroTag,
-                child: AspectRatio(
-                  aspectRatio: 9 / 12,
-                  child: Ink(
-                    decoration: BoxDecoration(
-                      boxShadow: [BoxShadow(color: context.colors.surfaceContainerLowest, blurRadius: 4, offset: Offset(0, 2))],
-                      image: DecorationImage(
-                        isAntiAlias: true,
-                        image: imageProviderFallback(addBaseUrl(widget.thumbnail)),
-                        fit: BoxFit.cover,
-                        alignment: AlignmentGeometry.center,
-                      ),
-                      borderRadius: widget.borderRadius,
+              AspectRatio(
+                aspectRatio: 9 / 12,
+                child: Ink(
+                  decoration: BoxDecoration(
+                    boxShadow: [BoxShadow(color: context.colors.surfaceContainerLowest, blurRadius: 4, offset: Offset(0, 2))],
+                    image: DecorationImage(
+                      isAntiAlias: true,
+                      image: imageProviderFallback(addBaseUrl(widget.thumbnail)),
+                      fit: BoxFit.cover,
+                      alignment: AlignmentGeometry.center,
                     ),
-                    padding: .all(7),
-                    child: Column(
-                      crossAxisAlignment: .end,
-                      mainAxisAlignment: .end,
-                      spacing: 2,
-                      children: badges.asMap().entries.map((e) => badge(e.value, e.key + 1, badges.length)).toList(),
-                    ),
+                    borderRadius: widget.borderRadius,
+                  ),
+                  padding: .all(4),
+                  child: Column(
+                    crossAxisAlignment: .end,
+                    mainAxisAlignment: .end,
+                    spacing: 2,
+                    children: badges.asMap().entries.map((e) => badge(e.value, e.key + 1, badges.length)).toList(),
                   ),
                 ),
               ),

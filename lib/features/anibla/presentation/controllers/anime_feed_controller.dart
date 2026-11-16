@@ -12,7 +12,7 @@ class AnimeFeedController {
   AnimeFeedController(this._animeRepository);
 
   late final homeAnimes = PaginatedSignal<Anime, AnimesQuery>((query, pagination, _) async {
-    final either = await _animeRepository.getHomeAnimes(query.copyWith(limit: pagination.limit, page: pagination.next));
+    final either = await _animeRepository.getHomeAnimes(query.copyPagination(pagination));
     final data = either.getData();
     return BigSignalState(value: data.datas, pagination: data.pagination);
   });

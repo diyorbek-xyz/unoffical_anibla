@@ -1,9 +1,9 @@
-import 'package:application/core/network/resources/failure.dart';
+import 'dart:async';
+
 import 'package:application/features/anibla/data/enums/media_type.dart';
 import 'package:application/features/anibla/data/models/data/video.dart';
 import 'package:application/features/anibla/data/models/helper/pagination.dart';
 import 'package:application/features/anibla/data/models/props/media_props.dart';
-import 'package:application/features/anibla/data/source/network/video_api.dart';
 import 'package:application/features/anibla/domain/repositories/anime_repository.dart';
 import 'package:application/features/anibla/domain/repositories/episode_repository.dart';
 import 'package:application/features/anibla/domain/repositories/season_repository.dart';
@@ -20,34 +20,54 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:signals_flutter/signals_flutter.dart';
 
+typedef GetVideoCallback = Future<Video?> Function(String streamUrl);
 typedef ChaptersState = BigSignalState<ChapterView, ChaptersQuery>;
 typedef ChaptersQuery = (MediaType type, String mediaKey, String? seasonKey, ChapterRequest request);
-typedef ChaptersProps = (ChaptersQuery query, Pagination pagination, OnErrorCallback<ChapterView, ChaptersQuery> onError);
+typedef ChaptersProps = (ChaptersQuery query, Pagination? pagination, OnErrorCallback<ChapterView, ChaptersQuery> onError);
 
 class MediaController {
   final AnimeRepository _animeRepository;
   final EpisodeRepository _episodeRepository;
   final SeasonRepository _seasonRepository;
   final BookRepository _bookRepository;
-  final VideoApi _videoApi;
-  MediaController(this._animeRepository, this._videoApi, this._seasonRepository, this._episodeRepository, this._bookRepository);
+  MediaController(this._animeRepository, this._seasonRepository, this._episodeRepository, this._bookRepository);
 
-  late final _chapters = PaginatedSignal<ChapterView, ChaptersQuery>((a, b, c) => _getChapters((a, b, c)));
+  //# extras
+  late final _chapters = PaginatedSignal<ChapterView, ChaptersQuery>(
+    (a, b, c) => _getChapters((a, b, c)),
+    defaultValue: .generate(10, (index) => ChapterView(type: .serie)),
+  );
+  MediaProps? _props;
 
+  //$ signals
   late final media = signal(SignalState<MediaView>());
   late final seasons = signal(SignalState<List<SeasonView>>());
   late final chapterPages = signal(SignalState<List<ChapterPage>>());
   late final chapterVideo = signal(SignalState<Video>());
   FlutterSignal<ChaptersState> get chapters => _chapters.signal;
 
-  Future<void> getFullMedia(MediaProps props) async {
+  //$ media
+  FutureOr<void> getFullMedia(MediaProps props) async {
+    final isLoading = media.isLoading || (props.type.isSerie && (seasons.isLoading || chapters.isLoading));
+    final isSame = media.value.value?.key == props.mediaKey;
+    if (isLoading || isSame) return;
+
+    String? seasonKey = props.seasonKey?.toNullable();
+    _props = props.copyWith(seasonKey: seasonKey);
+
     await getMedia(props.type, props.mediaKey);
+
+    if (props.type.isMovie) return;
     await getSeasons(props.type, props.mediaKey);
-    await getChapters(props.type, props.mediaKey, props.seasonKey);
+    seasonKey ??= seasons.value.value?.firstOrNull?.slug;
+    _props = props.copyWith(seasonKey: seasonKey);
+    await getChapters(props.type, props.mediaKey, seasonKey ?? "", .new(limit: 30));
   }
 
-  //$ media
   Future<void> getMedia(MediaType type, String mediaKey) async {
+    final isSame = media.value.value?.key == mediaKey;
+    if (isSame) return;
+    debugPrint('fetching media $type | $mediaKey');
     if (type.isAnime) await _getAnime(type, mediaKey);
     if (type.isBook) await _getBook(type, mediaKey);
   }
@@ -66,6 +86,8 @@ class MediaController {
 
   //! seasons
   Future<void> getSeasons(MediaType type, String mediaKey) async {
+    if (seasons.isLoading) return;
+    debugPrint('fetching seasons of $type | $mediaKey');
     if (type.isAnime) await _getAnimeSeasons(mediaKey);
   }
 
@@ -75,9 +97,10 @@ class MediaController {
   }
 
   //! chapters
-  Future<void> getChapters(MediaType type, String mediaKey, [String? seasonKey, ChapterRequest request = const .new()]) async {
-    final season = seasons.value.value?.firstOrNull;
-    await _chapters.fetch((type, mediaKey, seasonKey?.toNullable() ?? season?.slug.toNullable(), request));
+  Future<void> getChapters(MediaType type, String mediaKey, String seasonKey, ChapterRequest request) async {
+    if (chapters.isLoading) return;
+    debugPrint('fetching chapters of $type season | $seasonKey, $mediaKey,\n\t- request ${request.toJson()}');
+    await _chapters.fetch((type, mediaKey, seasonKey.toNullable(), request));
   }
 
   Future<ChaptersState> _getChapters(ChaptersProps props) async {
@@ -90,10 +113,7 @@ class MediaController {
     final query = props.$1;
     final pagination = props.$2;
     final onError = props.$3;
-    final either = await _bookRepository.getChapters(
-      id: query.$2,
-      request: query.$4.copyWith(page: pagination.next),
-    );
+    final either = await _bookRepository.getChapters(id: query.$2, request: query.$4.copyPagination(pagination));
     return either.fold(
       (l) => onError(l.message),
       (r) => BigSignalState(
@@ -106,50 +126,84 @@ class MediaController {
   Future<ChaptersState> _getAnimeChapters(ChaptersProps props) async {
     final query = props.$1;
     final onError = props.$3;
-    if (query.$3 == null) throw SimpleFailure("Season key is not found");
+    if (query.$3 == null) return onError("Season key is not found");
     final either = await _episodeRepository.getEpisodes(query.$2, query.$3!);
     return either.fold(
       (e) => onError(e.message),
-      (r) => BigSignalState(pagination: Pagination(), value: r.map(ChapterView.fromAnime).toList()),
+      (r) => BigSignalState(
+        pagination: Pagination(),
+        value: r.map((e) => ChapterView.fromAnime(e, total: r.length)).toList(),
+      ),
     );
   }
 
   //! chapter medias
-  Future<void> getVideo(String streamUrl) async {
+  Future<Video?> getVideo(String streamUrl) async {
+    debugPrint('fetching stream | $streamUrl');
     chapterVideo.setLoading(true);
-    try {
-      final response = await _videoApi.getVideo(streamUrl);
-      chapterVideo.setValue(response.data);
-    } catch (e) {
-      chapterVideo.setError(e.toString());
-    }
+    final either = await _episodeRepository.getVideo(streamUrl.replaceFirst("/anibla.uz/", "/media.anibla.uz/"));
+    return either.fold(
+      (e) {
+        chapterVideo.setError(e.message);
+        return null;
+      },
+      (e) {
+        chapterVideo.setValue(e);
+        return e;
+      },
+    );
+  }
+
+  Future<Video?> getVideoForced(MediaProps props) async {
+    chapterVideo.setLoading(true);
+    await getFullMedia(props);
+    final chapter = chapters.value.value.where((element) => element.key == props.chapterKey).singleOrNull;
+    final streamUrl = chapter?.mediaUrl.toNullable();
+    debugPrint('fetching stream | $streamUrl');
+    if (streamUrl == null) chapterVideo.setError("Stream url is not found");
+    return await getVideo(streamUrl!);
   }
 
   Future<void> getPages(String chapterId) async {
+    debugPrint('fetching chapter pages | $chapterId');
     chapterPages.setLoading(true);
     final either = await _bookRepository.getChapterPages(chapterId);
     either.fold((e) => chapterPages.setError(e.message), (d) => chapterPages.setValue(d.pages));
   }
 
   void openMedia(BuildContext context, {String? chapterKey, String? seasonKey}) {
+    print("object");
     final mediaValue = media.value.value;
     final seasonValue = seasons.value.value?.first;
     final chapterValue = chapters.value.value.firstOrNull;
-    if (mediaValue == null || (seasonValue == null && seasonKey == null) || (chapterValue == null && chapterKey == null)) return;
+    if (mediaValue == null) return;
+    print(mediaValue);
     final mediaType = mediaValue.type;
+    print(mediaType);
+    if (mediaType.isSerie && ((seasonValue == null && seasonKey == null) || (chapterValue == null && chapterKey == null))) return;
     final pagePath = mediaValue.type.isAnime ? "watch" : "read";
     final firstKey = mediaValue.key;
-    final seconKey = (seasonKey ?? seasonValue?.id)!;
-    final thirdKey = (chapterKey ?? chapterValue?.key)!;
-    final queries = MediaProps(
-      type: mediaType,
-      mediaKey: firstKey,
-      chapterKey: thirdKey,
-      seasonKey: seconKey,
-      thumbnail: "",
-      heroTag: "",
-    ).toJson();
+    final seconKey = seasonKey ?? seasonValue?.id;
+    final thirdKey = chapterKey ?? chapterValue?.key;
+    final queries = MediaProps(type: mediaType, mediaKey: firstKey, chapterKey: thirdKey, seasonKey: seconKey).toJson();
     context.pushNamed(pagePath, queryParameters: queries);
+  }
+
+  //$ refreshes
+  Future<void> refreshFullMedia() async {
+    if (_props != null) await getFullMedia(_props!);
+  }
+
+  Future<void> refreshMedia() async {
+    if (_props != null) await getMedia(_props!.type, _props!.mediaKey);
+  }
+
+  Future<void> refreshSeasons() async {
+    if (_props != null) await getSeasons(_props!.type, _props!.mediaKey);
+  }
+
+  Future<void> refreshChapters([ChapterRequest request = const .new()]) async {
+    if (_props != null) await getChapters(_props!.type, _props!.mediaKey, _props!.seasonKey ?? "", request);
   }
 
   //$ cleanup

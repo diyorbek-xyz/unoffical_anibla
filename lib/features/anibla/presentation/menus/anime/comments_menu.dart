@@ -20,13 +20,7 @@ class CommentsMenu extends StatefulWidget {
 }
 
 class _CommentsMenuState extends State<CommentsMenu> {
-  late final CommentController _commentController;
-
-  @override
-  void initState() {
-    super.initState();
-    _commentController = sl<CommentController>();
-  }
+  late final CommentController _commentController = sl<CommentController>();
 
   @override
   Widget build(BuildContext context) {

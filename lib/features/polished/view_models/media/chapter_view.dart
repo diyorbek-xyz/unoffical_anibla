@@ -20,9 +20,9 @@ abstract class ChapterView with _$ChapterView {
     required MediaType type,
   }) = _MediaChapter;
 
-  factory ChapterView.fromAnime(Episode episode, {int? total, bool? isFree, bool? isSaved, double? progress}) => ChapterView(
+  factory ChapterView.fromAnime(Episode episode, {int? total, bool? isSaved, double? progress}) => ChapterView(
     type: .serie,
-    isFree: isFree ?? false,
+    isFree: episode.type.isFree,
     isSaved: isSaved ?? false,
     progress: progress ?? 0.0,
     total: total ?? 0,

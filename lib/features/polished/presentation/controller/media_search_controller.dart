@@ -17,24 +17,21 @@ class MediaSearchController {
   MediaSearchController(this._animeRepository, this._bookRepository);
 
   late final animes = PaginatedSignal<Anime, AnimesQuery>((request, pagination, _) async {
-    final either = await _animeRepository.getAnimes(request);
+    final either = await _animeRepository.getAnimes(request.copyPagination(pagination));
     final data = either.getData();
-    debugPrint(
-      '${data.message} |'
-      '${data.datas.first.type.name}',
-    );
+    debugPrint('${data.message} | ${data.datas.first.type.name}');
     return BigSignalState(value: data.datas, pagination: data.pagination);
   });
 
   late final books = PaginatedSignal<Book, BooksQuery>((request, pagination, _) async {
-    final either = await _bookRepository.getBooks(request);
+    final either = await _bookRepository.getBooks(request.copyPagination(pagination));
     final value = either.getData();
     return BigSignalState(
       value: value.data,
       pagination: Pagination(
         limit: value.limit,
         page: (value.offset / value.limit).floor(),
-        pages: (value.total / value.limit).toInt(),
+        pages: (value.total / value.limit).ceil(),
         total: value.total,
       ),
     );

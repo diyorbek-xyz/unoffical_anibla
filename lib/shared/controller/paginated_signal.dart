@@ -1,25 +1,25 @@
 import 'package:application/features/anibla/data/models/helper/pagination.dart';
 import 'package:application/shared/controller/signal_state.dart';
+import 'package:flutter/foundation.dart';
 import 'package:signals_flutter/signals_flutter.dart' as sg;
 
 typedef OnErrorCallback<T, Q> = BigSignalState<T, Q> Function(String message);
-typedef PageFetcher<T, Q> = Future<BigSignalState<T, Q>> Function(Q query, Pagination pagination, OnErrorCallback<T, Q> onError);
+typedef PageFetcher<T, Q> = Future<BigSignalState<T, Q>> Function(Q query, Pagination? pagination, OnErrorCallback<T, Q> onError);
 
 class PaginatedSignal<T, Q> {
-  PaginatedSignal(this._fetcher);
+  PaginatedSignal(this._fetcher, {this.defaultValue = const []});
 
   final PageFetcher<T, Q> _fetcher;
+  final List<T> defaultValue;
 
-  final signal = sg.signal(BigSignalState<T, Q>());
+  late final signal = sg.signal(BigSignalState<T, Q>(value: defaultValue));
 
   BigSignalState<T, Q> get state => signal.value;
 
   Future<void> fetch(Q request) async {
     if (signal.value.isLoading) return;
-    signal.value = BigSignalState<T, Q>(isLoading: true, request: request);
-    final result = await _fetcher(request, const Pagination(), signal.value.withError);
-    print(result.error);
-    print(result.hasError);
+    signal.set(BigSignalState<T, Q>(isLoading: true, request: request));
+    final result = await _fetcher(request, null, _onError);
     signal.set(result.copyWith(isLoading: false, request: request));
   }
 
@@ -29,7 +29,7 @@ class PaginatedSignal<T, Q> {
     if (current.isLoading || current.isLoadingMore || !current.pagination.hasMore || query == null) return;
     signal.value = current.copyWith(isLoadingMore: true);
 
-    final result = await _fetcher(query, current.pagination, signal.value.withError);
+    final result = await _fetcher(query, current.pagination, _onError);
     signal.value = current.copyWith(
       value: [...current.value, ...result.value],
       pagination: result.pagination,
@@ -42,5 +42,10 @@ class PaginatedSignal<T, Q> {
     final request = signal.value.request;
     if (signal.value.isLoading || request == null) return;
     fetch(request);
+  }
+
+  BigSignalState<T, Q> _onError(String message) {
+    debugPrint("Failed to fetch paginated list\n\t- message | $message");
+    return signal.value.withError(message);
   }
 }

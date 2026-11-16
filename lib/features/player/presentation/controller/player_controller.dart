@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:application/features/anibla/data/enums/media_type.dart';
-import 'package:application/features/anibla/data/source/network/video_api.dart';
 import 'package:application/features/player/data/model/player_props.dart';
 import 'package:application/features/player/data/model/timeline_model.dart';
 import 'package:application/features/player/data/services/dowload_hls.dart';
 import 'package:application/features/player/data/source/local/timeline.dart';
+import 'package:application/features/polished/presentation/controller/media_controller.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:application/shared/utils/utils.dart';
 import 'package:material_ui/material_ui.dart';
@@ -22,8 +22,8 @@ enum PlayerStatus { empty, init, error, paid }
 
 class PlayerController {
   final Timeline timeline;
-  final VideoApi videoApi;
-  PlayerController(this.videoApi, this.timeline);
+  PlayerController(this.timeline, this.getVideo);
+  final GetVideoCallback getVideo;
 
   final _isBuffering = signal(false);
   final _isFullscreen = signal(false);
@@ -34,7 +34,7 @@ class PlayerController {
   final _buffer = signal(Duration.zero);
   final _duration = signal(Duration.zero);
   final _errorMessage = signal("");
-  final _playerStatus = signal(PlayerStatus.empty);
+  final playerStatus = signal(PlayerStatus.empty);
   final _playerFit = signal(BoxFit.cover);
   final _volume = signal(0.0);
   final _skipPosition = signal(<int>[]);
@@ -60,7 +60,7 @@ class PlayerController {
   Duration get duration => _duration.value;
   MediaType get mediaType => _mediaType.value;
   String get errorMessage => _errorMessage.value;
-  PlayerStatus get status => _playerStatus.value;
+  PlayerStatus get status => playerStatus.value;
   MediaStream? get stream => _currentStream.value;
   FlutterSignal<BoxFit> get playerFit => _playerFit;
 
@@ -80,11 +80,10 @@ class PlayerController {
   MPRIS? mpris;
   bool _isSubscribed = false;
   String? animeId;
-
   String? _loadingUrl;
 
   Future init(MediaStream stream) async {
-    if (stream.url.isEmpty) return _playerStatus.set(.paid);
+    if (stream.url.isEmpty) return playerStatus.set(.paid);
 
     final current = _currentStream.value;
     final streamUrl = stream.url;
@@ -94,12 +93,15 @@ class PlayerController {
     _loadingUrl = streamUrl;
 
     try {
-      print("start");
+      debugPrint("Initializing player | $streamUrl \n\t- stream | ${stream.toJson()}");
       await _notify();
       _subscribeStreams();
       if (current != null) await saveTimeline();
 
-      final video = (await videoApi.getVideo(streamUrl.replaceFirst("/anibla.uz/", "/media.anibla.uz/"))).data;
+      final video = await getVideo(streamUrl);
+      
+      if (video == null) throw Exception("Video not found");
+
       final master = await DownloadHlsPlaylist.getProxyMasterPlaylist(
         video.file.replaceFirst("/anibla.uz/", "/media.anibla.uz/"),
       );
@@ -110,23 +112,23 @@ class PlayerController {
       if (variantPath == oldPath || variantPath == null) return;
       final time = timeline.getTimeline(stream.url);
 
+      playerStatus.set(.init);
       _isBuffering.set(true);
       _skipPosition.set(skip);
-      _playerStatus.set(.init);
       _mediaType.set(stream.type);
       _totalEpisodes.set(stream.totalEpisodes);
       _offset.set(stream.episode);
       _audioTracks.set(master.audios);
-      print("opeing player");
+      debugPrint("Opening player with stream");
       await player.open(Media(audio != null ? variantPath : variantPath.toLocalUrl(), start: time?.progress), play: false);
-      print("success");
+      debugPrint("Opening player successfull");
       _currentStream.set(stream);
       if (audio != null) await setAudio(audio);
     } catch (e) {
-      print(e);
+      debugPrint("Initializing player failed | $e");
       _errorMessage.set(e.toString());
     } finally {
-      print("end");
+      debugPrint("Initializing player finished");
       _loadingUrl = null;
     }
   }
@@ -190,7 +192,7 @@ class PlayerController {
       player.stream.playing.distinct().listen((event) => _isPaused.set(!event)),
       player.stream.volume.distinct().listen((event) => (_isMuted.set(event == 0), _volume.set(event))),
       // player.stream.playlist.distinct().listen((event) => setOldTimeline()),
-      player.stream.error.distinct().listen((event) => (_playerStatus.set(.error), _errorMessage.set(event))),
+      player.stream.error.distinct().listen((event) => (playerStatus.set(.error), _errorMessage.set(event))),
       player.stream.duration.distinct().listen((event) {
         if (event > Duration.zero && Platform.isLinux) _pushMprisMetadata(event);
         _duration.set(event);
@@ -276,7 +278,7 @@ class PlayerController {
     await player.pause();
   }
 
-  void closeError() => _playerStatus.set(.init);
+  void closeError() => playerStatus.set(.init);
   Future<void> togglePlay() async => player.state.playing ? await pause() : await play();
 
   Future<void> setResolution(VideoTrack track) async => await player.setVideoTrack(track);

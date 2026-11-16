@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MediaProps {
 
- MediaType get type; String get mediaKey; String get thumbnail; String get heroTag; String? get seasonKey; String? get chapterKey;
+ MediaType get type; String get mediaKey; String? get seasonKey; String? get chapterKey;
 /// Create a copy of MediaProps
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $MediaPropsCopyWith<MediaProps> get copyWith => _$MediaPropsCopyWithImpl<MediaPr
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MediaProps&&(identical(other.type, type) || other.type == type)&&(identical(other.mediaKey, mediaKey) || other.mediaKey == mediaKey)&&(identical(other.thumbnail, thumbnail) || other.thumbnail == thumbnail)&&(identical(other.heroTag, heroTag) || other.heroTag == heroTag)&&(identical(other.seasonKey, seasonKey) || other.seasonKey == seasonKey)&&(identical(other.chapterKey, chapterKey) || other.chapterKey == chapterKey));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MediaProps&&(identical(other.type, type) || other.type == type)&&(identical(other.mediaKey, mediaKey) || other.mediaKey == mediaKey)&&(identical(other.seasonKey, seasonKey) || other.seasonKey == seasonKey)&&(identical(other.chapterKey, chapterKey) || other.chapterKey == chapterKey));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,type,mediaKey,thumbnail,heroTag,seasonKey,chapterKey);
+int get hashCode => Object.hash(runtimeType,type,mediaKey,seasonKey,chapterKey);
 
 @override
 String toString() {
-  return 'MediaProps(type: $type, mediaKey: $mediaKey, thumbnail: $thumbnail, heroTag: $heroTag, seasonKey: $seasonKey, chapterKey: $chapterKey)';
+  return 'MediaProps(type: $type, mediaKey: $mediaKey, seasonKey: $seasonKey, chapterKey: $chapterKey)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $MediaPropsCopyWith<$Res>  {
   factory $MediaPropsCopyWith(MediaProps value, $Res Function(MediaProps) _then) = _$MediaPropsCopyWithImpl;
 @useResult
 $Res call({
- MediaType type, String mediaKey, String thumbnail, String heroTag, String? seasonKey, String? chapterKey
+ MediaType type, String mediaKey, String? seasonKey, String? chapterKey
 });
 
 
@@ -65,12 +65,10 @@ class _$MediaPropsCopyWithImpl<$Res>
 
 /// Create a copy of MediaProps
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? mediaKey = null,Object? thumbnail = null,Object? heroTag = null,Object? seasonKey = freezed,Object? chapterKey = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? mediaKey = null,Object? seasonKey = freezed,Object? chapterKey = freezed,}) {
   return _then(_self.copyWith(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as MediaType,mediaKey: null == mediaKey ? _self.mediaKey : mediaKey // ignore: cast_nullable_to_non_nullable
-as String,thumbnail: null == thumbnail ? _self.thumbnail : thumbnail // ignore: cast_nullable_to_non_nullable
-as String,heroTag: null == heroTag ? _self.heroTag : heroTag // ignore: cast_nullable_to_non_nullable
 as String,seasonKey: freezed == seasonKey ? _self.seasonKey : seasonKey // ignore: cast_nullable_to_non_nullable
 as String?,chapterKey: freezed == chapterKey ? _self.chapterKey : chapterKey // ignore: cast_nullable_to_non_nullable
 as String?,
@@ -158,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( MediaType type,  String mediaKey,  String thumbnail,  String heroTag,  String? seasonKey,  String? chapterKey)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( MediaType type,  String mediaKey,  String? seasonKey,  String? chapterKey)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MediaProps() when $default != null:
-return $default(_that.type,_that.mediaKey,_that.thumbnail,_that.heroTag,_that.seasonKey,_that.chapterKey);case _:
+return $default(_that.type,_that.mediaKey,_that.seasonKey,_that.chapterKey);case _:
   return orElse();
 
 }
@@ -179,10 +177,10 @@ return $default(_that.type,_that.mediaKey,_that.thumbnail,_that.heroTag,_that.se
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( MediaType type,  String mediaKey,  String thumbnail,  String heroTag,  String? seasonKey,  String? chapterKey)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( MediaType type,  String mediaKey,  String? seasonKey,  String? chapterKey)  $default,) {final _that = this;
 switch (_that) {
 case _MediaProps():
-return $default(_that.type,_that.mediaKey,_that.thumbnail,_that.heroTag,_that.seasonKey,_that.chapterKey);case _:
+return $default(_that.type,_that.mediaKey,_that.seasonKey,_that.chapterKey);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +197,10 @@ return $default(_that.type,_that.mediaKey,_that.thumbnail,_that.heroTag,_that.se
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( MediaType type,  String mediaKey,  String thumbnail,  String heroTag,  String? seasonKey,  String? chapterKey)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( MediaType type,  String mediaKey,  String? seasonKey,  String? chapterKey)?  $default,) {final _that = this;
 switch (_that) {
 case _MediaProps() when $default != null:
-return $default(_that.type,_that.mediaKey,_that.thumbnail,_that.heroTag,_that.seasonKey,_that.chapterKey);case _:
+return $default(_that.type,_that.mediaKey,_that.seasonKey,_that.chapterKey);case _:
   return null;
 
 }
@@ -214,13 +212,11 @@ return $default(_that.type,_that.mediaKey,_that.thumbnail,_that.heroTag,_that.se
 @JsonSerializable()
 
 class _MediaProps extends MediaProps {
-  const _MediaProps({required this.type, required this.mediaKey, required this.thumbnail, required this.heroTag, this.seasonKey, this.chapterKey}): super._();
+  const _MediaProps({required this.type, required this.mediaKey, this.seasonKey, this.chapterKey}): super._();
   factory _MediaProps.fromJson(Map<String, dynamic> json) => _$MediaPropsFromJson(json);
 
 @override final  MediaType type;
 @override final  String mediaKey;
-@override final  String thumbnail;
-@override final  String heroTag;
 @override final  String? seasonKey;
 @override final  String? chapterKey;
 
@@ -237,16 +233,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MediaProps&&(identical(other.type, type) || other.type == type)&&(identical(other.mediaKey, mediaKey) || other.mediaKey == mediaKey)&&(identical(other.thumbnail, thumbnail) || other.thumbnail == thumbnail)&&(identical(other.heroTag, heroTag) || other.heroTag == heroTag)&&(identical(other.seasonKey, seasonKey) || other.seasonKey == seasonKey)&&(identical(other.chapterKey, chapterKey) || other.chapterKey == chapterKey));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MediaProps&&(identical(other.type, type) || other.type == type)&&(identical(other.mediaKey, mediaKey) || other.mediaKey == mediaKey)&&(identical(other.seasonKey, seasonKey) || other.seasonKey == seasonKey)&&(identical(other.chapterKey, chapterKey) || other.chapterKey == chapterKey));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,type,mediaKey,thumbnail,heroTag,seasonKey,chapterKey);
+int get hashCode => Object.hash(runtimeType,type,mediaKey,seasonKey,chapterKey);
 
 @override
 String toString() {
-  return 'MediaProps(type: $type, mediaKey: $mediaKey, thumbnail: $thumbnail, heroTag: $heroTag, seasonKey: $seasonKey, chapterKey: $chapterKey)';
+  return 'MediaProps(type: $type, mediaKey: $mediaKey, seasonKey: $seasonKey, chapterKey: $chapterKey)';
 }
 
 
@@ -257,7 +253,7 @@ abstract mixin class _$MediaPropsCopyWith<$Res> implements $MediaPropsCopyWith<$
   factory _$MediaPropsCopyWith(_MediaProps value, $Res Function(_MediaProps) _then) = __$MediaPropsCopyWithImpl;
 @override @useResult
 $Res call({
- MediaType type, String mediaKey, String thumbnail, String heroTag, String? seasonKey, String? chapterKey
+ MediaType type, String mediaKey, String? seasonKey, String? chapterKey
 });
 
 
@@ -274,12 +270,10 @@ class __$MediaPropsCopyWithImpl<$Res>
 
 /// Create a copy of MediaProps
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? mediaKey = null,Object? thumbnail = null,Object? heroTag = null,Object? seasonKey = freezed,Object? chapterKey = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? mediaKey = null,Object? seasonKey = freezed,Object? chapterKey = freezed,}) {
   return _then(_MediaProps(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as MediaType,mediaKey: null == mediaKey ? _self.mediaKey : mediaKey // ignore: cast_nullable_to_non_nullable
-as String,thumbnail: null == thumbnail ? _self.thumbnail : thumbnail // ignore: cast_nullable_to_non_nullable
-as String,heroTag: null == heroTag ? _self.heroTag : heroTag // ignore: cast_nullable_to_non_nullable
 as String,seasonKey: freezed == seasonKey ? _self.seasonKey : seasonKey // ignore: cast_nullable_to_non_nullable
 as String?,chapterKey: freezed == chapterKey ? _self.chapterKey : chapterKey // ignore: cast_nullable_to_non_nullable
 as String?,

@@ -20,12 +20,7 @@ class NotificationsMenu extends StatelessWidget {
             leading: CircleAvatar(backgroundImage: imageProviderFallback(e.image)),
             onTap: () => context.pushNamed(
               "media",
-              queryParameters: MediaProps(
-                mediaKey: e.mediaKey,
-                type: e.type,
-                thumbnail: e.image,
-                heroTag: randomTagGen(),
-              ).toJson(),
+              queryParameters: MediaProps(mediaKey: e.mediaKey, type: e.type).toJson(),
             ),
             actions: e.actions.map((j) => IconButton(onPressed: j.action, icon: Icon(j.icon), tooltip: j.title)).toList(),
           ),

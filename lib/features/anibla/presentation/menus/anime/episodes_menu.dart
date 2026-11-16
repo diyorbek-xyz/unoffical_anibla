@@ -1,13 +1,13 @@
-import 'dart:async';
-
 import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/core/config/theme/app_theme.dart';
+import 'package:application/features/mano/data/models/request/chapter_request.dart';
 import 'package:application/features/polished/presentation/controller/media_controller.dart';
 import 'package:application/features/polished/view_models/media/chapter_view.dart';
 import 'package:application/injection_container.dart';
 import 'package:application/shared/widgets/error.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:signals_flutter/signals_flutter.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class ChaptersMenu extends StatefulWidget {
   const ChaptersMenu({super.key});
@@ -18,62 +18,62 @@ class ChaptersMenu extends StatefulWidget {
 
 class _ChaptersMenuState extends State<ChaptersMenu> {
   late final _mediaController = sl<MediaController>();
-  final _searchController = TextEditingController();
-  bool _isReversedEpisodeList = false;
-  Timer? _debounce;
-  String? _search;
+  late final _searchController = TextEditingController()..addListener(searchListener);
+  ChapterRequest request = ChapterRequest(limit: 30);
+
+  void searchListener() {
+    onSearchChange(_searchController.text);
+  }
 
   void onSearchChange(String val) {
-    _debounce?.cancel();
-    _debounce = Timer(const Duration(seconds: 1), () => onSearchSubmit(val));
+    setState(() => request = request.copyWith(search: val));
   }
 
   void onSearchSubmit(String val) {
-    _debounce?.cancel();
-    setState(() => _search = val);
+    _mediaController.refreshChapters(request);
   }
 
-  bool checkIsContains(String title) {
-    if (_search == null) return true;
-    final hasRusian = title.toLowerCase().contains(_search!.toLowerCase());
-    final hasUzbek = title.toLowerCase().contains(_search!.toLowerCase());
-    return hasUzbek || hasRusian;
-  }
-
-  List<ChapterView> changeList(List<ChapterView> list) {
-    final searched = list.where((e) => checkIsContains(e.title)).toList();
-    if (_isReversedEpisodeList) return searched.reversed.toList();
-    return searched;
+  void toggleOrder() {
+    final OrderDirection order = request.order.isDescending ? .ascending : .descending;
+    setState(() => request = request.copyWith(order: order));
   }
 
   @override
   Widget build(BuildContext context) => SignalBuilder(
     builder: (context) {
       final state = _mediaController.chapters.value;
-      print("HasError: ${state.hasError}");
-      print("Error: ${state.error}");
-      if (state.hasError) return ErrorBuilder(message: state.error ?? "Nimadur xato ketti", refresh: () {});
-      if (state.isLoading) return Center(child: CircularProgressIndicator());
+      if (state.hasError) {
+        return ErrorBuilder(message: state.error ?? "Nimadur xato ketti", refresh: _mediaController.refreshChapters);
+      }
       final data = state.value;
-      return Center(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 1000),
-          child: CustomScrollView(
-            key: const PageStorageKey("episodes"),
-            slivers: [
-              SliverOverlapInjector(handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context)),
-              SliverToBoxAdapter(child: searchBar(state.pagination.total)),
-              SliverPadding(
-                padding: .symmetric(vertical: 10),
-                sliver: SliverGrid.extent(
-                  maxCrossAxisExtent: 160,
-                  childAspectRatio: 15 / 8,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                  children: changeList(data).map(chapterItem).toList(),
+      return Skeletonizer(
+        enabled: state.isLoading,
+        enableSwitchAnimation: true,
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: 1000),
+            child: CustomScrollView(
+              key: const PageStorageKey("episodes"),
+              slivers: [
+                SliverOverlapInjector(handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context)),
+                SliverToBoxAdapter(child: searchBar(state.pagination.total)),
+                SliverPadding(
+                  padding: .symmetric(vertical: 10),
+                  sliver: SliverGrid.builder(
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 160,
+                      childAspectRatio: 15 / 8,
+                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 10,
+                    ),
+                    addSemanticIndexes: true,
+                    addRepaintBoundaries: true,
+                    itemCount: data.length,
+                    itemBuilder: (_, i) => chapterItem(data[i]),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       );
@@ -86,14 +86,9 @@ class _ChaptersMenuState extends State<ChaptersMenu> {
       child: SearchBar(
         backgroundColor: .all(context.colors.primaryContainer.withAlpha(120)),
         controller: _searchController,
-        leading: IconButton(
-          padding: EdgeInsets.all(0),
-          onPressed: () => setState(() => _isReversedEpisodeList = !_isReversedEpisodeList),
-          icon: Icon(Icons.sort_by_alpha),
-        ),
+        leading: IconButton(padding: EdgeInsets.all(0), onPressed: toggleOrder, icon: Icon(Icons.sort_by_alpha)),
         trailing: [IconButton(onPressed: () => _searchController.clear(), padding: EdgeInsets.all(0), icon: Icon(Icons.clear))],
         hintText: "Qidirish: $total ta qism",
-        onChanged: onSearchSubmit,
         onSubmitted: onSearchSubmit,
       ),
     ),

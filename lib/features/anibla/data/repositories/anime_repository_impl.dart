@@ -29,14 +29,14 @@ class AnimeRepositoryImpl implements AnimeRepository {
     try {
       final cached = _cache[slug];
       if (cached != null && !cached.isExpired) return Right(cached.data);
-      final serie = await _animeApi.getSerie(toBeginningOfSentenceCase(type.jsonValue), slug);
-      if (serie.data.success) {
-        final data = serie.data.data;
+      final httpResponse = await _animeApi.getSerie(toBeginningOfSentenceCase(type.jsonValue), slug);
+      if (httpResponse.data.success) {
+        final data = httpResponse.data.data.copyWith(type: type);
         _cache[slug] = CacheEntry(data);
-        await _historyLocal.saveToHistory(serie.data.data);
+        await _historyLocal.saveToHistory(httpResponse.data.data);
         return Right(data);
       } else {
-        throw ExceptionMapper.mapResponseToDio(serie.response);
+        throw ExceptionMapper.mapResponseToDio(httpResponse.response);
       }
     } catch (e) {
       return failureMaker(e);

@@ -1,5 +1,6 @@
 import 'package:application/features/anibla/data/enums/media_type.dart';
 import 'package:application/features/anibla/data/models/helper/localized.dart';
+import 'package:application/features/anibla/data/models/helper/pagination.dart';
 import 'package:application/features/mano/data/models/converter/list_converter.dart';
 import 'package:application/features/mano/data/models/enum/sort_type.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -34,6 +35,8 @@ abstract class BooksQuery with _$BooksQuery {
   }) = _BooksQuery;
 
   factory BooksQuery.fromQueryString(String query) => .fromJson(Uri(query: query).queryParameters);
+
+  BooksQuery copyPagination([Pagination? p]) => copyWith(limit: p?.limit ?? limit, page: p?.next ?? page);
 
   String toQueryString() => Uri(queryParameters: toJson()).query;
 

@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MediaView {
 
- int get releaseYear; int get ageRestriction; int get views; int get likes; int get saves; String get key; String get cover; String get title; String get author; String get studio; String get thumbnail; String get description; List<String> get frames; Map<String, String> get genres; Map<String, String> get categories; Map<String, String> get translators; MediaType get type;
+ int get releaseYear; int get ageRestriction; int get views; int get likes; int get saves; String get key; String get cover; String get title; String get author; String get studio; String get mediaUrl; String get thumbnail; String get description; List<String> get frames; Map<String, String> get genres; Map<String, String> get categories; Map<String, String> get translators; MediaType get type;
 /// Create a copy of MediaView
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $MediaViewCopyWith<MediaView> get copyWith => _$MediaViewCopyWithImpl<MediaView>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MediaView&&(identical(other.releaseYear, releaseYear) || other.releaseYear == releaseYear)&&(identical(other.ageRestriction, ageRestriction) || other.ageRestriction == ageRestriction)&&(identical(other.views, views) || other.views == views)&&(identical(other.likes, likes) || other.likes == likes)&&(identical(other.saves, saves) || other.saves == saves)&&(identical(other.key, key) || other.key == key)&&(identical(other.cover, cover) || other.cover == cover)&&(identical(other.title, title) || other.title == title)&&(identical(other.author, author) || other.author == author)&&(identical(other.studio, studio) || other.studio == studio)&&(identical(other.thumbnail, thumbnail) || other.thumbnail == thumbnail)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.frames, frames)&&const DeepCollectionEquality().equals(other.genres, genres)&&const DeepCollectionEquality().equals(other.categories, categories)&&const DeepCollectionEquality().equals(other.translators, translators)&&(identical(other.type, type) || other.type == type));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MediaView&&(identical(other.releaseYear, releaseYear) || other.releaseYear == releaseYear)&&(identical(other.ageRestriction, ageRestriction) || other.ageRestriction == ageRestriction)&&(identical(other.views, views) || other.views == views)&&(identical(other.likes, likes) || other.likes == likes)&&(identical(other.saves, saves) || other.saves == saves)&&(identical(other.key, key) || other.key == key)&&(identical(other.cover, cover) || other.cover == cover)&&(identical(other.title, title) || other.title == title)&&(identical(other.author, author) || other.author == author)&&(identical(other.studio, studio) || other.studio == studio)&&(identical(other.mediaUrl, mediaUrl) || other.mediaUrl == mediaUrl)&&(identical(other.thumbnail, thumbnail) || other.thumbnail == thumbnail)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.frames, frames)&&const DeepCollectionEquality().equals(other.genres, genres)&&const DeepCollectionEquality().equals(other.categories, categories)&&const DeepCollectionEquality().equals(other.translators, translators)&&(identical(other.type, type) || other.type == type));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,releaseYear,ageRestriction,views,likes,saves,key,cover,title,author,studio,thumbnail,description,const DeepCollectionEquality().hash(frames),const DeepCollectionEquality().hash(genres),const DeepCollectionEquality().hash(categories),const DeepCollectionEquality().hash(translators),type);
+int get hashCode => Object.hash(runtimeType,releaseYear,ageRestriction,views,likes,saves,key,cover,title,author,studio,mediaUrl,thumbnail,description,const DeepCollectionEquality().hash(frames),const DeepCollectionEquality().hash(genres),const DeepCollectionEquality().hash(categories),const DeepCollectionEquality().hash(translators),type);
 
 @override
 String toString() {
-  return 'MediaView(releaseYear: $releaseYear, ageRestriction: $ageRestriction, views: $views, likes: $likes, saves: $saves, key: $key, cover: $cover, title: $title, author: $author, studio: $studio, thumbnail: $thumbnail, description: $description, frames: $frames, genres: $genres, categories: $categories, translators: $translators, type: $type)';
+  return 'MediaView(releaseYear: $releaseYear, ageRestriction: $ageRestriction, views: $views, likes: $likes, saves: $saves, key: $key, cover: $cover, title: $title, author: $author, studio: $studio, mediaUrl: $mediaUrl, thumbnail: $thumbnail, description: $description, frames: $frames, genres: $genres, categories: $categories, translators: $translators, type: $type)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $MediaViewCopyWith<$Res>  {
   factory $MediaViewCopyWith(MediaView value, $Res Function(MediaView) _then) = _$MediaViewCopyWithImpl;
 @useResult
 $Res call({
- int releaseYear, int ageRestriction, int views, int likes, int saves, String key, String cover, String title, String author, String studio, String thumbnail, String description, List<String> frames, Map<String, String> genres, Map<String, String> categories, Map<String, String> translators, MediaType type
+ int releaseYear, int ageRestriction, int views, int likes, int saves, String key, String cover, String title, String author, String studio, String mediaUrl, String thumbnail, String description, List<String> frames, Map<String, String> genres, Map<String, String> categories, Map<String, String> translators, MediaType type
 });
 
 
@@ -62,7 +62,7 @@ class _$MediaViewCopyWithImpl<$Res>
 
 /// Create a copy of MediaView
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? releaseYear = null,Object? ageRestriction = null,Object? views = null,Object? likes = null,Object? saves = null,Object? key = null,Object? cover = null,Object? title = null,Object? author = null,Object? studio = null,Object? thumbnail = null,Object? description = null,Object? frames = null,Object? genres = null,Object? categories = null,Object? translators = null,Object? type = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? releaseYear = null,Object? ageRestriction = null,Object? views = null,Object? likes = null,Object? saves = null,Object? key = null,Object? cover = null,Object? title = null,Object? author = null,Object? studio = null,Object? mediaUrl = null,Object? thumbnail = null,Object? description = null,Object? frames = null,Object? genres = null,Object? categories = null,Object? translators = null,Object? type = null,}) {
   return _then(_self.copyWith(
 releaseYear: null == releaseYear ? _self.releaseYear : releaseYear // ignore: cast_nullable_to_non_nullable
 as int,ageRestriction: null == ageRestriction ? _self.ageRestriction : ageRestriction // ignore: cast_nullable_to_non_nullable
@@ -74,6 +74,7 @@ as String,cover: null == cover ? _self.cover : cover // ignore: cast_nullable_to
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,author: null == author ? _self.author : author // ignore: cast_nullable_to_non_nullable
 as String,studio: null == studio ? _self.studio : studio // ignore: cast_nullable_to_non_nullable
+as String,mediaUrl: null == mediaUrl ? _self.mediaUrl : mediaUrl // ignore: cast_nullable_to_non_nullable
 as String,thumbnail: null == thumbnail ? _self.thumbnail : thumbnail // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,frames: null == frames ? _self.frames : frames // ignore: cast_nullable_to_non_nullable
@@ -166,10 +167,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int releaseYear,  int ageRestriction,  int views,  int likes,  int saves,  String key,  String cover,  String title,  String author,  String studio,  String thumbnail,  String description,  List<String> frames,  Map<String, String> genres,  Map<String, String> categories,  Map<String, String> translators,  MediaType type)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int releaseYear,  int ageRestriction,  int views,  int likes,  int saves,  String key,  String cover,  String title,  String author,  String studio,  String mediaUrl,  String thumbnail,  String description,  List<String> frames,  Map<String, String> genres,  Map<String, String> categories,  Map<String, String> translators,  MediaType type)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MediaView() when $default != null:
-return $default(_that.releaseYear,_that.ageRestriction,_that.views,_that.likes,_that.saves,_that.key,_that.cover,_that.title,_that.author,_that.studio,_that.thumbnail,_that.description,_that.frames,_that.genres,_that.categories,_that.translators,_that.type);case _:
+return $default(_that.releaseYear,_that.ageRestriction,_that.views,_that.likes,_that.saves,_that.key,_that.cover,_that.title,_that.author,_that.studio,_that.mediaUrl,_that.thumbnail,_that.description,_that.frames,_that.genres,_that.categories,_that.translators,_that.type);case _:
   return orElse();
 
 }
@@ -187,10 +188,10 @@ return $default(_that.releaseYear,_that.ageRestriction,_that.views,_that.likes,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int releaseYear,  int ageRestriction,  int views,  int likes,  int saves,  String key,  String cover,  String title,  String author,  String studio,  String thumbnail,  String description,  List<String> frames,  Map<String, String> genres,  Map<String, String> categories,  Map<String, String> translators,  MediaType type)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int releaseYear,  int ageRestriction,  int views,  int likes,  int saves,  String key,  String cover,  String title,  String author,  String studio,  String mediaUrl,  String thumbnail,  String description,  List<String> frames,  Map<String, String> genres,  Map<String, String> categories,  Map<String, String> translators,  MediaType type)  $default,) {final _that = this;
 switch (_that) {
 case _MediaView():
-return $default(_that.releaseYear,_that.ageRestriction,_that.views,_that.likes,_that.saves,_that.key,_that.cover,_that.title,_that.author,_that.studio,_that.thumbnail,_that.description,_that.frames,_that.genres,_that.categories,_that.translators,_that.type);case _:
+return $default(_that.releaseYear,_that.ageRestriction,_that.views,_that.likes,_that.saves,_that.key,_that.cover,_that.title,_that.author,_that.studio,_that.mediaUrl,_that.thumbnail,_that.description,_that.frames,_that.genres,_that.categories,_that.translators,_that.type);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -207,10 +208,10 @@ return $default(_that.releaseYear,_that.ageRestriction,_that.views,_that.likes,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int releaseYear,  int ageRestriction,  int views,  int likes,  int saves,  String key,  String cover,  String title,  String author,  String studio,  String thumbnail,  String description,  List<String> frames,  Map<String, String> genres,  Map<String, String> categories,  Map<String, String> translators,  MediaType type)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int releaseYear,  int ageRestriction,  int views,  int likes,  int saves,  String key,  String cover,  String title,  String author,  String studio,  String mediaUrl,  String thumbnail,  String description,  List<String> frames,  Map<String, String> genres,  Map<String, String> categories,  Map<String, String> translators,  MediaType type)?  $default,) {final _that = this;
 switch (_that) {
 case _MediaView() when $default != null:
-return $default(_that.releaseYear,_that.ageRestriction,_that.views,_that.likes,_that.saves,_that.key,_that.cover,_that.title,_that.author,_that.studio,_that.thumbnail,_that.description,_that.frames,_that.genres,_that.categories,_that.translators,_that.type);case _:
+return $default(_that.releaseYear,_that.ageRestriction,_that.views,_that.likes,_that.saves,_that.key,_that.cover,_that.title,_that.author,_that.studio,_that.mediaUrl,_that.thumbnail,_that.description,_that.frames,_that.genres,_that.categories,_that.translators,_that.type);case _:
   return null;
 
 }
@@ -222,7 +223,7 @@ return $default(_that.releaseYear,_that.ageRestriction,_that.views,_that.likes,_
 
 
 class _MediaView implements MediaView {
-  const _MediaView({this.releaseYear = 0, this.ageRestriction = 0, this.views = 0, this.likes = 0, this.saves = 0, this.key = "", this.cover = "", this.title = "", this.author = "", this.studio = "", this.thumbnail = "", this.description = "", final  List<String> frames = const [], final  Map<String, String> genres = const {}, final  Map<String, String> categories = const {}, final  Map<String, String> translators = const {}, this.type = MediaType.comics}): _frames = frames,_genres = genres,_categories = categories,_translators = translators;
+  const _MediaView({this.releaseYear = 0, this.ageRestriction = 0, this.views = 0, this.likes = 0, this.saves = 0, this.key = "", this.cover = "", this.title = "", this.author = "", this.studio = "", this.mediaUrl = "", this.thumbnail = "", this.description = "", final  List<String> frames = const [], final  Map<String, String> genres = const {}, final  Map<String, String> categories = const {}, final  Map<String, String> translators = const {}, this.type = MediaType.comics}): _frames = frames,_genres = genres,_categories = categories,_translators = translators;
   
 
 @override@JsonKey() final  int releaseYear;
@@ -235,6 +236,7 @@ class _MediaView implements MediaView {
 @override@JsonKey() final  String title;
 @override@JsonKey() final  String author;
 @override@JsonKey() final  String studio;
+@override@JsonKey() final  String mediaUrl;
 @override@JsonKey() final  String thumbnail;
 @override@JsonKey() final  String description;
  final  List<String> _frames;
@@ -277,16 +279,16 @@ _$MediaViewCopyWith<_MediaView> get copyWith => __$MediaViewCopyWithImpl<_MediaV
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MediaView&&(identical(other.releaseYear, releaseYear) || other.releaseYear == releaseYear)&&(identical(other.ageRestriction, ageRestriction) || other.ageRestriction == ageRestriction)&&(identical(other.views, views) || other.views == views)&&(identical(other.likes, likes) || other.likes == likes)&&(identical(other.saves, saves) || other.saves == saves)&&(identical(other.key, key) || other.key == key)&&(identical(other.cover, cover) || other.cover == cover)&&(identical(other.title, title) || other.title == title)&&(identical(other.author, author) || other.author == author)&&(identical(other.studio, studio) || other.studio == studio)&&(identical(other.thumbnail, thumbnail) || other.thumbnail == thumbnail)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other._frames, _frames)&&const DeepCollectionEquality().equals(other._genres, _genres)&&const DeepCollectionEquality().equals(other._categories, _categories)&&const DeepCollectionEquality().equals(other._translators, _translators)&&(identical(other.type, type) || other.type == type));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MediaView&&(identical(other.releaseYear, releaseYear) || other.releaseYear == releaseYear)&&(identical(other.ageRestriction, ageRestriction) || other.ageRestriction == ageRestriction)&&(identical(other.views, views) || other.views == views)&&(identical(other.likes, likes) || other.likes == likes)&&(identical(other.saves, saves) || other.saves == saves)&&(identical(other.key, key) || other.key == key)&&(identical(other.cover, cover) || other.cover == cover)&&(identical(other.title, title) || other.title == title)&&(identical(other.author, author) || other.author == author)&&(identical(other.studio, studio) || other.studio == studio)&&(identical(other.mediaUrl, mediaUrl) || other.mediaUrl == mediaUrl)&&(identical(other.thumbnail, thumbnail) || other.thumbnail == thumbnail)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other._frames, _frames)&&const DeepCollectionEquality().equals(other._genres, _genres)&&const DeepCollectionEquality().equals(other._categories, _categories)&&const DeepCollectionEquality().equals(other._translators, _translators)&&(identical(other.type, type) || other.type == type));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,releaseYear,ageRestriction,views,likes,saves,key,cover,title,author,studio,thumbnail,description,const DeepCollectionEquality().hash(_frames),const DeepCollectionEquality().hash(_genres),const DeepCollectionEquality().hash(_categories),const DeepCollectionEquality().hash(_translators),type);
+int get hashCode => Object.hash(runtimeType,releaseYear,ageRestriction,views,likes,saves,key,cover,title,author,studio,mediaUrl,thumbnail,description,const DeepCollectionEquality().hash(_frames),const DeepCollectionEquality().hash(_genres),const DeepCollectionEquality().hash(_categories),const DeepCollectionEquality().hash(_translators),type);
 
 @override
 String toString() {
-  return 'MediaView(releaseYear: $releaseYear, ageRestriction: $ageRestriction, views: $views, likes: $likes, saves: $saves, key: $key, cover: $cover, title: $title, author: $author, studio: $studio, thumbnail: $thumbnail, description: $description, frames: $frames, genres: $genres, categories: $categories, translators: $translators, type: $type)';
+  return 'MediaView(releaseYear: $releaseYear, ageRestriction: $ageRestriction, views: $views, likes: $likes, saves: $saves, key: $key, cover: $cover, title: $title, author: $author, studio: $studio, mediaUrl: $mediaUrl, thumbnail: $thumbnail, description: $description, frames: $frames, genres: $genres, categories: $categories, translators: $translators, type: $type)';
 }
 
 
@@ -297,7 +299,7 @@ abstract mixin class _$MediaViewCopyWith<$Res> implements $MediaViewCopyWith<$Re
   factory _$MediaViewCopyWith(_MediaView value, $Res Function(_MediaView) _then) = __$MediaViewCopyWithImpl;
 @override @useResult
 $Res call({
- int releaseYear, int ageRestriction, int views, int likes, int saves, String key, String cover, String title, String author, String studio, String thumbnail, String description, List<String> frames, Map<String, String> genres, Map<String, String> categories, Map<String, String> translators, MediaType type
+ int releaseYear, int ageRestriction, int views, int likes, int saves, String key, String cover, String title, String author, String studio, String mediaUrl, String thumbnail, String description, List<String> frames, Map<String, String> genres, Map<String, String> categories, Map<String, String> translators, MediaType type
 });
 
 
@@ -314,7 +316,7 @@ class __$MediaViewCopyWithImpl<$Res>
 
 /// Create a copy of MediaView
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? releaseYear = null,Object? ageRestriction = null,Object? views = null,Object? likes = null,Object? saves = null,Object? key = null,Object? cover = null,Object? title = null,Object? author = null,Object? studio = null,Object? thumbnail = null,Object? description = null,Object? frames = null,Object? genres = null,Object? categories = null,Object? translators = null,Object? type = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? releaseYear = null,Object? ageRestriction = null,Object? views = null,Object? likes = null,Object? saves = null,Object? key = null,Object? cover = null,Object? title = null,Object? author = null,Object? studio = null,Object? mediaUrl = null,Object? thumbnail = null,Object? description = null,Object? frames = null,Object? genres = null,Object? categories = null,Object? translators = null,Object? type = null,}) {
   return _then(_MediaView(
 releaseYear: null == releaseYear ? _self.releaseYear : releaseYear // ignore: cast_nullable_to_non_nullable
 as int,ageRestriction: null == ageRestriction ? _self.ageRestriction : ageRestriction // ignore: cast_nullable_to_non_nullable
@@ -326,6 +328,7 @@ as String,cover: null == cover ? _self.cover : cover // ignore: cast_nullable_to
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,author: null == author ? _self.author : author // ignore: cast_nullable_to_non_nullable
 as String,studio: null == studio ? _self.studio : studio // ignore: cast_nullable_to_non_nullable
+as String,mediaUrl: null == mediaUrl ? _self.mediaUrl : mediaUrl // ignore: cast_nullable_to_non_nullable
 as String,thumbnail: null == thumbnail ? _self.thumbnail : thumbnail // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,frames: null == frames ? _self._frames : frames // ignore: cast_nullable_to_non_nullable

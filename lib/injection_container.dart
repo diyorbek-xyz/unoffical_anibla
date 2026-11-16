@@ -207,8 +207,9 @@ Future<void> initializeDependencies() async {
     ..registerLazySingleton<ExploreController>(() => ExploreController(sl(), sl()))
     ..registerLazySingleton<SliderController>(() => SliderController(sl()))
     ..registerLazySingleton<BookController>(() => BookController(sl()))
-    ..registerLazySingleton<PlayerController>(() => PlayerController(sl(), sl()))
-    ..registerLazySingleton<MediaController>(() => MediaController(sl(), sl(), sl(), sl(), sl()))
+    ..registerLazySingleton<MediaController>(() => MediaController(sl(), sl(), sl(), sl()))
+    ..registerLazySingleton<GetVideoCallback>(() => sl<MediaController>().getVideo)
     ..registerLazySingleton<AnimeFeedController>(() => AnimeFeedController(sl()))
+    ..registerLazySingleton<PlayerController>(() => PlayerController(sl(), sl()))
     ..registerFactory<MediaSearchController>(() => MediaSearchController(sl(), sl()));
 }

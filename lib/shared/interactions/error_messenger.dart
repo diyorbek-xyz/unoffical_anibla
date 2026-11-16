@@ -5,14 +5,8 @@ void showErrorSnackbar(BuildContext context, String message) => ScaffoldMessenge
   SnackBar(
     behavior: SnackBarBehavior.floating,
     width: 500,
+    duration: Duration(seconds: 10),
     backgroundColor: context.colors.errorContainer,
-    content: Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      spacing: 10,
-      children: [
-        Icon(Icons.error, color: context.colors.onError),
-        Text(message, style: TextStyle(color: context.colors.onError, fontSize: 18)),
-      ],
-    ),
+    content: Text(message, style: .new(color: context.colors.onErrorContainer)),
   ),
 );

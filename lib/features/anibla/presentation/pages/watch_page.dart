@@ -1,14 +1,13 @@
-import 'dart:developer';
-
+import 'dart:async';
 import 'package:application/features/anibla/data/enums/media_type.dart';
-import 'package:application/features/anibla/data/models/main/anime.dart';
 import 'package:application/features/anibla/data/models/props/media_props.dart';
-import 'package:application/features/anibla/presentation/controllers/anime_controller.dart';
 import 'package:application/features/player/data/model/player_props.dart';
 import 'package:application/features/player/presentation/controller/player_controller.dart';
 import 'package:application/features/player/presentation/widgets/video_player.dart';
+import 'package:application/features/polished/presentation/controller/media_controller.dart';
+import 'package:application/features/polished/view_models/media/chapter_view.dart';
+import 'package:application/features/polished/view_models/media/media_view.dart';
 import 'package:application/injection_container.dart';
-import 'package:application/shared/interactions/error_messenger.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:signals_flutter/signals_core.dart';
@@ -22,71 +21,51 @@ class WatchPage extends StatefulWidget {
 }
 
 class _WatchPageState extends State<WatchPage> {
-  late final PlayerController _playerController;
-  late final AnimeController _mediaController;
+  late final _mediaController = sl<MediaController>();
+  late final _playerController = sl<PlayerController>();
   late final EffectCleanup _cleanup;
 
-  dynamic initialize() {
-    final animeState = _mediaController.animeState;
-    final seasonsState = _mediaController.seasonsState;
-    final episodesState = _mediaController.episodesState;
-    final error = animeState.error ?? seasonsState.error ?? episodesState.error;
-    if (animeState.isLoading || seasonsState.isLoading || episodesState.isLoading) return;
-    if (animeState.hasError || seasonsState.hasError || episodesState.hasError)
-      return showErrorSnackbar(context, error ?? "Xatolik");
-    final anime = animeState.data;
-    final seasons = seasonsState.data;
-    final episodes = episodesState.data;
-    log("init", zone: .current);
-    if (anime == null || (widget.props.type.isSerie && (seasons == null || episodes == null))) return fetchData();
-    if (anime.slug != widget.props.mediaKey) return fetchData();
-    if (_playerController.stream?.animeTitle == anime.title.uz) return;
-    if (widget.props.type.isMovie) initMovie(anime);
-    if (widget.props.type.isSerie) initSerie(anime);
-  }
-
-  Future<void> fetchData() async {
-    final animeState = _mediaController.animeState.value;
-    if (!animeState.isLoading && !animeState.hasError) {
-      log("fetch");
-      await _mediaController.getFullAnime(widget.props.type, widget.props.mediaKey);
+  Future<void> initialize() async {
+    await _mediaController.getFullMedia(widget.props);
+    final anime = _mediaController.media.data;
+    final episodes = _mediaController.chapters.data;
+    if (episodes == null || episodes.isEmpty || anime == null) return;
+    if (widget.props.type.isSerie) {
+      final episode = episodes.firstWhere((e) => e.key == widget.props.chapterKey, orElse: () => episodes.first);
+      await initSerie(anime, episode);
+    }
+    if (widget.props.type.isMovie) {
+      await initMovie(anime);
     }
   }
 
-  Future<void> initSerie(Anime anime) async {
-    final episodes = _mediaController.episodesState.data;
-    if (episodes == null || episodes.isEmpty) return;
-    final episode = episodes.firstWhere((e) => e.id == widget.props.chapterKey, orElse: () => episodes.first);
-    final props = MediaStream(
+  Future<void> initSerie(MediaView anime, ChapterView episode) async => await _playerController.init(
+    MediaStream(
       type: MediaType.serie,
       cover: anime.cover,
-      animeTitle: anime.title.uz,
-      episodeTitle: episode.title.uz,
-      totalEpisodes: episodes.length,
-      url: episode.video,
-      episode: episode.episodeNumber,
-    );
-    await _playerController.init(props);
-  }
+      animeTitle: anime.title,
+      episodeTitle: episode.title,
+      url: episode.mediaUrl,
+      episode: episode.offset,
+      totalEpisodes: episode.total,
+    ),
+  );
 
-  Future<void> initMovie(Anime anime) async {
-    final props = MediaStream(
+  Future<void> initMovie(MediaView anime) async => await _playerController.init(
+    MediaStream(
       episode: 0,
       totalEpisodes: 0,
-      animeTitle: anime.title.uz,
-      episodeTitle: anime.title.uz,
       cover: anime.cover,
-      url: anime.video,
+      url: anime.mediaUrl,
       type: MediaType.movie,
-    );
-    await _playerController.init(props);
-  }
+      animeTitle: anime.title,
+      episodeTitle: anime.title,
+    ),
+  );
 
   @override
   void initState() {
     super.initState();
-    _playerController = sl<PlayerController>();
-    _mediaController = sl<AnimeController>();
     _cleanup = effect(initialize);
   }
 
@@ -97,5 +76,7 @@ class _WatchPageState extends State<WatchPage> {
   }
 
   @override
-  Widget build(BuildContext context) => VideoPlayer(isPage: true);
+  Widget build(BuildContext context) {
+    return VideoPlayer(isPage: true);
+  }
 }

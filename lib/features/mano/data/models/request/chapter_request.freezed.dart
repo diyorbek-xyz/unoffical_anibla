@@ -212,8 +212,8 @@ return $default(_that.page,_that.limit,_that.offset,_that.search,_that.order);ca
 /// @nodoc
 @JsonSerializable()
 
-class _ChapterRequest implements ChapterRequest {
-  const _ChapterRequest({this.page = 1, this.limit = 10000, this.offset = 0, this.search = "", @JsonKey(name: "order_dir") this.order = OrderDirection.ascending});
+class _ChapterRequest extends ChapterRequest {
+  const _ChapterRequest({this.page = 1, this.limit = 10000, this.offset = 0, this.search = "", @JsonKey(name: "order_dir") this.order = OrderDirection.ascending}): super._();
   factory _ChapterRequest.fromJson(Map<String, dynamic> json) => _$ChapterRequestFromJson(json);
 
 @override@JsonKey() final  int page;

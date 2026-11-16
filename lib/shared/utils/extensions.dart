@@ -151,3 +151,14 @@ extension ContextExt on BuildContext {
 extension EpisodeExt on List<Episode> {
   Episode? getEpisode(int number) => where((element) => element.episodeNumber == number).singleOrNull;
 }
+
+extension MapConverter on Map<String, String> {
+  Map<String, dynamic> toDynamic() => map((key, value) => MapEntry(key, _parseValue(value)));
+
+  dynamic _parseValue(String value) {
+    if (value.toLowerCase() == 'true') return true;
+    if (value.toLowerCase() == 'false') return false;
+    if (value.toLowerCase() == 'null') return null;
+    return num.tryParse(value) ?? value;
+  }
+}

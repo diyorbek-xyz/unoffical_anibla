@@ -21,6 +21,10 @@ class BookStatusAdapter extends TypeAdapter<BookStatus> {
         return BookStatus.finished;
       case 3:
         return BookStatus.ongoing;
+      case 4:
+        return BookStatus.noTranslator;
+      case 5:
+        return BookStatus.freezed;
       default:
         return BookStatus.continuing;
     }
@@ -37,6 +41,10 @@ class BookStatusAdapter extends TypeAdapter<BookStatus> {
         writer.writeByte(2);
       case BookStatus.ongoing:
         writer.writeByte(3);
+      case BookStatus.noTranslator:
+        writer.writeByte(4);
+      case BookStatus.freezed:
+        writer.writeByte(5);
     }
   }
 

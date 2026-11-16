@@ -59,7 +59,6 @@ class _MediaPageState extends State<MediaPage> {
               headerSliverBuilder: (_, isScrolled) => [
                 MediaPageHero(
                   cover: view.cover,
-                  heroTag: widget.mediaProps.heroTag,
                   tabs: tabs,
                   items: items,
                   isSaved: false,

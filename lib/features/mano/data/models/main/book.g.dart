@@ -219,6 +219,8 @@ const _$BookStatusEnumMap = {
   BookStatus.stopped: 'stopped',
   BookStatus.finished: 'finished',
   BookStatus.ongoing: 'ongoing',
+  BookStatus.noTranslator: 'no-translator',
+  BookStatus.freezed: 'freezed',
 };
 
 const _$MediaTypeEnumMap = {

@@ -1,5 +1,5 @@
 import 'package:application/features/anibla/data/enums/media_type.dart';
-import 'package:application/features/mano/data/models/data/book_status.dart';
+import 'package:application/features/mano/data/models/enum/book_status.dart';
 import 'package:application/features/mano/data/models/data/mano_chapter.dart';
 import 'package:application/features/mano/data/models/data/mano_category.dart';
 import 'package:application/features/mano/data/models/data/mano_genre.dart';

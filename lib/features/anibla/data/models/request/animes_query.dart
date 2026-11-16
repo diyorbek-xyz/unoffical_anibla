@@ -1,3 +1,4 @@
+import 'package:application/features/anibla/data/models/helper/pagination.dart';
 import 'package:application/features/mano/data/models/converter/list_converter.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -37,6 +38,8 @@ abstract class AnimesQuery with _$AnimesQuery {
   factory AnimesQuery.fromQueryString(String query) => .fromJson(Uri(query: query).queryParameters);
 
   String toQueryString() => Uri(queryParameters: toJson()).query;
+
+  AnimesQuery copyPagination([Pagination? p]) => copyWith(limit: p?.limit ?? limit, page: p?.next ?? page);
 
   bool get isEmpty =>
       (categories == null || categories!.isEmpty) && (genres == null || genres!.isEmpty) && (search == null || search!.isEmpty);

@@ -5,6 +5,7 @@ import 'package:application/features/anibla/presentation/widgets/media_card.dart
 import 'package:application/features/mano/data/models/request/books_query.dart';
 import 'package:application/features/polished/presentation/controller/media_search_controller.dart';
 import 'package:application/injection_container.dart';
+import 'package:application/shared/utils/extensions.dart';
 import 'package:go_router/go_router.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:material_ui/material_ui.dart';
@@ -19,11 +20,11 @@ class MediasList extends StatefulWidget {
   const MediasList({super.key, this.animesQuery, this.booksQuery, required this.title, required this.type});
 
   factory MediasList.fromRoute(GoRouterState state) {
-    final query = state.uri.queryParameters;
+    final query = state.uri.queryParameters.toDynamic();
     final title = query['title'] ?? "Something";
     final mediaType = MediaType.fromJson(query['type'] ?? "");
-    final animeQuery = !mediaType.isAnime ? null : AnimesQuery.fromQueryString(query['animes'] ?? "");
-    final booksQuery = !mediaType.isBook ? null : BooksQuery.fromQueryString(query['books'] ?? "");
+    final animeQuery = !mediaType.isAnime ? null : AnimesQuery.fromJson(query).copyWith(limit: 30);
+    final booksQuery = !mediaType.isBook ? null : BooksQuery.fromJson(query).copyWith(limit: 30);
     return .new(title: title, animesQuery: animeQuery, booksQuery: booksQuery, type: mediaType);
   }
 

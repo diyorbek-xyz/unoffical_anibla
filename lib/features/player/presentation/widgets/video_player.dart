@@ -7,6 +7,7 @@ import 'package:application/core/config/theme/app_colors.dart';
 import 'package:application/features/player/presentation/controller/player_controller.dart';
 import 'package:application/features/player/presentation/widgets/player_scope.dart';
 import 'package:application/injection_container.dart';
+import 'package:application/shared/interactions/error_messenger.dart';
 import 'package:application/shared/utils/extensions.dart';
 import 'package:application/features/player/presentation/widgets/episodes_drawer.dart';
 import 'package:application/features/player/presentation/widgets/player_components.dart';
@@ -27,13 +28,13 @@ class VideoPlayer extends StatefulWidget {
 
 class _VideoPlayerState extends State<VideoPlayer> {
   final isMobilePlatform = Platform.isAndroid || Platform.isIOS;
-  late final PlayerController controller;
+  late final PlayerController controller = sl<PlayerController>();
 
   @override
   void initState() {
     super.initState();
-    controller = sl<PlayerController>();
     autoHideControls();
+    controller.playerStatus.addListener(errorListener);
   }
 
   @override
@@ -49,6 +50,17 @@ class _VideoPlayerState extends State<VideoPlayer> {
   int backwardSkipSteps = 0;
 
   late final _textStyle = TextStyle(color: context.colors.primaryContainer);
+
+  void errorListener() {
+    if (controller.status != .init) {
+      return showErrorSnackbar(context, switch (controller.status) {
+        .paid => "Bu animeni ko'rish uchun obuna sotib oling",
+        .error => controller.errorMessage,
+        .empty => "Player hali ishlagani yo'q",
+        _ => "Nimadur xato ketti",
+      });
+    }
+  }
 
   void toggleControls() => autoHideControls(!isControlsVisible);
   void hideControls() {
@@ -90,6 +102,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
   }
 
   void openSettings() => showDialog(context: context, builder: settingsDialog);
+
   KeyEventResult onKey(FocusNode node, KeyEvent event, Duration position, Duration duration) {
     final step = Duration(seconds: 5);
     if (event is! KeyDownEvent && event is! KeyRepeatEvent) {
@@ -114,7 +127,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
     dependencies: [controller.playerFit],
     builder: (context) => PlayerScope(
       controller: controller,
-      child: Video(fit: controller.playerFit.value, controller: controller.controller, controls: (_) => controlsBuilder),
+      child: Video(fit: controller.playerFit.value, controller: controller.controller, controls: (_) => controlsBuilder()),
     ),
   );
 
@@ -128,7 +141,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
     ),
   );
 
-  Widget get controlsBuilder => Theme(
+  Widget controlsBuilder() => Theme(
     data: themeData(context),
     child: CallbackShortcuts(
       bindings: keyBindings,
@@ -141,7 +154,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
                 excludeFromSemantics: true,
                 behavior: HitTestBehavior.opaque,
                 onTap: toggleControls,
-                child: controls,
+                child: controls(),
               );
             }
             return MouseRegion(
@@ -153,7 +166,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
                 onPointerMove: (event) => autoHideControls(),
                 onPointerDown: (event) => autoHideControls(),
                 onPointerUp: (event) => autoHideControls(),
-                child: controls,
+                child: controls(),
               ),
             );
           },
@@ -162,7 +175,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
     ),
   );
 
-  Widget get controls => SignalBuilder(
+  Widget controls() => SignalBuilder(
     builder: (context) {
       final state = PlayerScope.of(context);
       final isMobile = context.isMobile;
@@ -175,7 +188,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
             alignment: AlignmentGeometry.center,
             fit: StackFit.expand,
             children: [
-              skippers,
+              skippers(),
               AnimatedOpacity(
                 opacity: isControlsVisible ? 1 : 0,
                 duration: Duration(milliseconds: 200),
@@ -183,13 +196,13 @@ class _VideoPlayerState extends State<VideoPlayer> {
                   ignoring: !isControlsVisible,
                   child: Scaffold(
                     backgroundColor: Colors.transparent,
-                    endDrawer: episodesDrawer,
+                    endDrawer: episodesDrawer(),
                     endDrawerEnableOpenDragGesture: true,
-                    appBar: appBar,
+                    appBar: appBar(),
                     extendBody: true,
                     extendBodyBehindAppBar: true,
-                    bottomNavigationBar: bottomControls,
-                    body: PlayerOverlayControls(bufferingIndicator: bufferingIndicator),
+                    bottomNavigationBar: bottomControls(),
+                    body: PlayerOverlayControls(bufferingIndicator: bufferingIndicator()),
                   ),
                 ),
               ),
@@ -201,7 +214,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
     },
   );
 
-  AppBar get appBar => AppBar(
+  AppBar appBar() => AppBar(
     backgroundColor: Colors.transparent,
     automaticallyImplyLeading: false,
     automaticallyImplyActions: false,
@@ -224,38 +237,10 @@ class _VideoPlayerState extends State<VideoPlayer> {
                   )
           : Text(controller.stream?.animeTitle ?? "", style: _textStyle),
     ),
-    actions: [topControls],
+    actions: [topControls()],
   );
 
-  Container errorBuilder(BuildContext context, PlayerStatus status, String error) => Container(
-    color: context.colors.surface.withAlpha(100),
-    constraints: .expand(width: 600),
-    child: BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-      child: Column(
-        crossAxisAlignment: .center,
-        mainAxisAlignment: .center,
-        spacing: 10,
-        children: [
-          Text(
-            status == .paid ? "Bu animeni ko'rish uchun obuna sotib oling" : error,
-            style: context.textTheme.titleLarge,
-            textAlign: .center,
-          ),
-          Row(
-            mainAxisAlignment: .center,
-            spacing: 10,
-            children: [
-              FilledButton.icon(onPressed: controller.reload, icon: Icon(Icons.replay), label: Text("Qayta boshlash")),
-              FilledButton.icon(onPressed: controller.closeError, icon: Icon(Icons.close), label: Text("Yopish")),
-            ],
-          ),
-        ],
-      ),
-    ),
-  );
-
-  Widget get skippers {
+  Widget skippers() {
     Widget skipper(int step) {
       final skipping = (step < 0 && backwardSkipSteps != 0) || (step > 0 && forwardSkipSteps != 0);
       final child = AnimatedOpacity(
@@ -290,7 +275,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
     );
   }
 
-  Widget get topControls => SignalBuilder(
+  Widget topControls() => SignalBuilder(
     builder: (context) {
       final isFullscreen = controller.isFullscreen;
       final mediaType = controller.mediaType;
@@ -320,7 +305,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
     },
   );
 
-  Widget get bufferingIndicator => IgnorePointer(
+  Widget bufferingIndicator() => IgnorePointer(
     ignoring: true,
     child: Opacity(
       opacity: controller.isBuffering ? 1 : 0,
@@ -333,7 +318,7 @@ class _VideoPlayerState extends State<VideoPlayer> {
     ),
   );
 
-  Widget get bottomControls => SignalAnimatedBuilder(
+  Widget bottomControls() => SignalAnimatedBuilder(
     child: MouseRegion(
       cursor: SystemMouseCursors.click,
       child: SignalBuilder(
@@ -391,13 +376,13 @@ class _VideoPlayerState extends State<VideoPlayer> {
                                 style: context.textTheme.titleMedium!.merge(_textStyle),
                               ),
                             ),
-                            Center(child: PlayerOverlayControls(bufferingIndicator: bufferingIndicator, atOverlay: false)),
+                            Center(child: PlayerOverlayControls(bufferingIndicator: bufferingIndicator(), atOverlay: false)),
                             Expanded(child: SizedBox.shrink()),
                           ],
                         )
                 : Align(
                     alignment: .bottomCenter,
-                    child: PlayerOverlayControls(bufferingIndicator: bufferingIndicator, atOverlay: false),
+                    child: PlayerOverlayControls(bufferingIndicator: bufferingIndicator(), atOverlay: false),
                   ),
             child!,
           ],
@@ -406,22 +391,35 @@ class _VideoPlayerState extends State<VideoPlayer> {
     },
   );
 
-  Map<ShortcutActivator, VoidCallback> get keyBindings => {
-    const SingleActivator(LogicalKeyboardKey.keyF): () => controller.toggleFullscreen(context),
-    const SingleActivator(LogicalKeyboardKey.space, includeRepeats: false): () {
-      autoHideControls();
-      controller.togglePlay();
-    },
-    const SingleActivator(LogicalKeyboardKey.arrowLeft): () => skip(-5),
-    const SingleActivator(LogicalKeyboardKey.arrowRight): () => skip(5),
-    const SingleActivator(LogicalKeyboardKey.arrowUp): controller.upVolume,
-    const SingleActivator(LogicalKeyboardKey.arrowDown): controller.downVolume,
-    const SingleActivator(LogicalKeyboardKey.enter): () {
-      if (controller.hasIntro) controller.skipIntro();
-    },
-  };
+  Widget errorBuilder(BuildContext context, PlayerStatus status, String error) => Container(
+    color: context.colors.surface.withAlpha(100),
+    constraints: .expand(width: 600),
+    child: BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+      child: Column(
+        crossAxisAlignment: .center,
+        mainAxisAlignment: .center,
+        spacing: 10,
+        children: [
+          Text(
+            status == .paid ? "Bu animeni ko'rish uchun obuna sotib oling" : error,
+            style: context.textTheme.titleLarge,
+            textAlign: .center,
+          ),
+          Row(
+            mainAxisAlignment: .center,
+            spacing: 10,
+            children: [
+              FilledButton.icon(onPressed: controller.reload, icon: Icon(Icons.replay), label: Text("Qayta boshlash")),
+              FilledButton.icon(onPressed: controller.closeError, icon: Icon(Icons.close), label: Text("Yopish")),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
 
-  Widget get episodesDrawer => Drawer(width: 600, shape: Border(), child: EpisodesDrawer());
+  Widget episodesDrawer() => Drawer(width: 600, shape: Border(), child: EpisodesDrawer());
 
   Widget settingsDialog(BuildContext dialogcontext) {
     final videoTracks = [];
@@ -481,4 +479,19 @@ class _VideoPlayerState extends State<VideoPlayer> {
       ),
     );
   }
+
+  Map<ShortcutActivator, VoidCallback> get keyBindings => {
+    const SingleActivator(LogicalKeyboardKey.keyF): () => controller.toggleFullscreen(context),
+    const SingleActivator(LogicalKeyboardKey.space, includeRepeats: false): () {
+      autoHideControls();
+      controller.togglePlay();
+    },
+    const SingleActivator(LogicalKeyboardKey.arrowLeft): () => skip(-5),
+    const SingleActivator(LogicalKeyboardKey.arrowRight): () => skip(5),
+    const SingleActivator(LogicalKeyboardKey.arrowUp): controller.upVolume,
+    const SingleActivator(LogicalKeyboardKey.arrowDown): controller.downVolume,
+    const SingleActivator(LogicalKeyboardKey.enter): () {
+      if (controller.hasIntro) controller.skipIntro();
+    },
+  };
 }

@@ -12,7 +12,6 @@ import 'package:skeletonizer/skeletonizer.dart';
 class MediaPageHero extends StatelessWidget {
   final String title;
   final bool isSaved;
-  final String heroTag;
   final bool isScrolled;
   final String thumbnail;
   final String cover;
@@ -21,7 +20,6 @@ class MediaPageHero extends StatelessWidget {
   const MediaPageHero({
     super.key,
     required this.cover,
-    required this.heroTag,
     required this.isScrolled,
     required this.isSaved,
     required this.items,
@@ -92,23 +90,15 @@ class MediaPageHero extends StatelessWidget {
                           spacing: 20,
                           children: [
                             Flexible(
-                              child: Skeleton.keep(
-                                keep: true,
-                                child: Hero(
-                                  tag: heroTag,
-                                  curve: Curves.bounceInOut,
-                                  reverseCurve: Curves.bounceInOut,
-                                  child: Container(
-                                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                                    clipBehavior: Clip.antiAlias,
-                                    constraints: BoxConstraints(maxWidth: 300, minWidth: 100),
-                                    child: AspectRatio(
-                                      aspectRatio: 0.65,
-                                      child: isUsable(thumbnail)
-                                          ? SafeImage(imageUrl: thumbnail, fit: BoxFit.cover)
-                                          : Skeleton.leaf(enabled: true, child: Container(color: context.colors.error)),
-                                    ),
-                                  ),
+                              child: Container(
+                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                                clipBehavior: Clip.antiAlias,
+                                constraints: BoxConstraints(maxWidth: 300, minWidth: 100),
+                                child: AspectRatio(
+                                  aspectRatio: 0.65,
+                                  child: isUsable(thumbnail)
+                                      ? SafeImage(imageUrl: thumbnail, fit: BoxFit.cover)
+                                      : Skeleton.leaf(enabled: true, child: Container(color: context.colors.error)),
                                 ),
                               ),
                             ),

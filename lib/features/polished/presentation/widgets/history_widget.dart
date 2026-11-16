@@ -71,8 +71,6 @@ class _HistoryWidgetState extends State<HistoryWidget> {
                           onTap: () => context.pushNamed(
                             "watch",
                             queryParameters: MediaProps(
-                              heroTag: randomTagGen(),
-                              thumbnail: item.thumbnail,
                               mediaKey: item.mediaSlug,
                               type: item.mediaType,
                               chapterKey: item.episodeId,
